@@ -37,7 +37,7 @@ The PostgreSQL arrow represents the implemented connection path, not a verified 
 | `frontend/src/pages` | API-aware page states; Overview unavailable metric/history presentation; Analyse local draft editor; not-found return link. |
 | `frontend/src/components` | Brand, page heading, API status, loading/error/retry/empty states, page-level `PreviewNotice`, render-error fallback. |
 | `frontend/src/lib` | Public environment validation, GET transport, Zod response schemas, TanStack Query hooks. |
-| `frontend/src/styles.css` | Tailwind 4 semantic Forensic Intelligence tokens and shared components, light color scheme, focus and reduced-motion treatment. |
+| `frontend/src/styles.css` | Tailwind 4 semantic Forensic Intelligence tokens and shared components, light color scheme, CSS motion tokens/keyframes, focus and reduced-motion treatment. |
 | `frontend/src/test`, `*.test.ts(x)`, `frontend/e2e` | Explicit test fixtures and behavioral/browser regression tests, isolated from production imports. |
 
 The GET client omits browser credentials and disables fetch caching. It supports upstream cancellation, an eight-second timeout, safe generic errors with request references, JSON parsing and runtime schema validation. Zod validates required values and strips unknown object fields; it is not a strict extra-field rejection policy. Health refreshes every 30 seconds while visible. Production code has no mock fallback.
@@ -45,6 +45,8 @@ The GET client omits browser credentials and disables fetch caching. It supports
 Both pages show a loading state while their initial request is pending. Overview then renders its em dashes, unavailable notices, empty history and workspace status after either a valid unconfigured response or a failed query. It never calculates analytics. Analyse still requests and validates capabilities; on failure it retains the approved local editor with analysis disabled. Failed queries remain errors, with a page-level `PreviewNotice` showing the safe error, request reference when present, and retry. No fallback object is injected into the client or query cache, and health status is independent. The existing full error component and render-error boundary remain available for genuine failures.
 
 Message and URL drafts have separate component state, limits of 5,000 and 2,048 characters, content selection and clearing. Query retry preserves drafts; reload or navigation away discards them. Submission is disabled, form submission is prevented, and no result is generated. These client limits are not a future server validation contract. This fallback is specific to the optional Task 1 scaffold; future data-dependent features must handle their real failures explicitly.
+
+Motion is a presentation-only CSS layer with shared durations/easing, small entrances and control feedback. A pathname-keyed wrapper around Outlet animates the main content without remounting the persistent shell or altering query lifecycle. The API live region keeps its real health-query semantics; only its label contents are keyed for a state-change fade and one connection pulse. Input/empty-state animation timing stays local. Reduced motion removes all keyframes and motion delays; only genuinely pending states may repeat effects otherwise. No animation dependency, JavaScript timer or domain state was introduced. See [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md).
 
 ### Backend and data configuration
 

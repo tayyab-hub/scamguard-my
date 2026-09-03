@@ -43,7 +43,7 @@ export function AnalysePage() {
             </PreviewNotice>
           )}
           <div
-            className="mb-6 flex items-start gap-3 rounded-lg border border-warning/30 bg-warning-subtle px-5 py-4"
+            className="motion-fade mb-6 flex items-start gap-3 rounded-lg border border-warning/30 bg-warning-subtle px-5 py-4"
             role="status"
           >
             <Info size={18} className="mt-0.5 shrink-0 text-warning" aria-hidden="true" />
@@ -58,7 +58,10 @@ export function AnalysePage() {
             </div>
           </div>
           <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_320px]">
-            <section className="panel min-w-0 overflow-hidden" aria-labelledby="content-heading">
+            <section
+              className="panel motion-enter motion-delay-1 min-w-0 overflow-hidden"
+              aria-labelledby="content-heading"
+            >
               <div className="section-heading">
                 <span className="step-number">01</span>
                 <h2 id="content-heading" className="text-sm font-semibold">
@@ -105,7 +108,7 @@ export function AnalysePage() {
                     type="button"
                     onClick={() => setContent('')}
                     disabled={!content}
-                    className="min-h-8 rounded px-2 py-1 text-xs text-muted hover:text-ink disabled:cursor-not-allowed"
+                    className="button-quiet min-h-8 rounded px-2 py-1 text-xs text-muted hover:text-ink disabled:cursor-not-allowed"
                   >
                     Clear
                   </button>
@@ -113,7 +116,7 @@ export function AnalysePage() {
                 {inputType === 'message' ? (
                   <textarea
                     id="analysis-content"
-                    className="input-field min-h-[205px] resize-y"
+                    className="input-field motion-fade min-h-[205px] resize-y"
                     value={content}
                     onChange={(event) => setContent(event.target.value)}
                     maxLength={limit}
@@ -126,7 +129,7 @@ export function AnalysePage() {
                   <input
                     id="analysis-content"
                     type="url"
-                    className="input-field"
+                    className="input-field motion-fade"
                     value={content}
                     onChange={(event) => setContent(event.target.value)}
                     maxLength={limit}
@@ -155,7 +158,7 @@ export function AnalysePage() {
                   >
                     <ScanLine size={16} aria-hidden="true" />
                     Analyse content
-                    <ArrowRight size={15} aria-hidden="true" />
+                    <ArrowRight size={15} className="motion-arrow" aria-hidden="true" />
                   </button>
                 </div>
                 <p id="unavailable-reason" className="mt-3 text-right text-[11px] text-muted">
@@ -163,7 +166,7 @@ export function AnalysePage() {
                 </p>
               </form>
             </section>
-            <aside className="space-y-5">
+            <aside className="motion-enter motion-delay-2 space-y-5">
               <section className="panel overflow-hidden" aria-labelledby="result-heading">
                 <div className="section-heading">
                   <span className="step-number">02</span>

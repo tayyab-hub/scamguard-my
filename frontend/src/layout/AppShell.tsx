@@ -52,10 +52,10 @@ export function AppShell() {
             </p>
             <Link
               to="/analyse"
-              className="mt-4 flex min-h-8 items-center gap-2 rounded text-xs font-semibold text-accent"
+              className="action-link mt-4 flex min-h-8 items-center gap-2 rounded text-xs font-semibold text-accent"
             >
               Explore analysis
-              <ArrowUpRight size={14} aria-hidden="true" />
+              <ArrowUpRight size={14} className="motion-arrow" aria-hidden="true" />
             </Link>
           </div>
           <div className="mt-6 flex items-center gap-2 px-1 text-[11px] text-muted">
@@ -73,7 +73,9 @@ export function AppShell() {
           <div className="hidden items-center gap-3 text-xs lg:flex">
             <span className="text-muted">Workspace</span>
             <ChevronRight size={13} className="text-muted" aria-hidden="true" />
-            <span className="font-medium text-ink">{current}</span>
+            <span key={pathname} className="motion-fade font-medium text-ink">
+              {current}
+            </span>
           </div>
           <div className="hidden sm:block">
             <ApiStatus />
@@ -89,7 +91,9 @@ export function AppShell() {
           tabIndex={-1}
           className="mx-auto max-w-[1480px] px-5 pb-32 pt-8 outline-none sm:px-8 sm:pt-10 lg:pb-10 xl:px-10"
         >
-          <Outlet />
+          <div key={pathname} className="route-content">
+            <Outlet />
+          </div>
           <footer className="mt-9 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-5 text-[10px] text-muted">
             <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
               <Shield size={13} aria-hidden="true" />

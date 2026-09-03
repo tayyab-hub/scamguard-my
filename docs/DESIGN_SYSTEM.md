@@ -2,7 +2,7 @@
 
 The primary experience is a warm light workspace inspired by careful document review: ivory paper, charcoal typography, terracotta actions, fine rules, and restrained olive service indicators. Editorial headings give the product a distinct identity while compact controls and structured panels keep it practical. The palette represents application state, never invented analysis evidence or risk.
 
-All tokens live in `frontend/src/styles.css` through Tailwind 4 `@theme`. Canvas and text have separate semantic names; components use these shared tokens instead of hard-coded surface colors.
+All tokens live in `frontend/src/styles.css`: color/type tokens use Tailwind 4 `@theme`, and reusable motion tokens use `:root`. Canvas and text have separate semantic names; components use these shared tokens instead of hard-coded surface colors.
 
 Reconciled with the source on 2026-09-03. This identity is an accepted project decision in [DECISIONS.md](../DECISIONS.md); [CODEX.md](../CODEX.md) defines preservation rules. [PROGRESS.md](../PROGRESS.md) is the latest handoff. Design presentation must not imply that the planned analysis and analytics services already work.
 
@@ -49,6 +49,32 @@ Skip navigation, semantic landmarks, route-heading focus, native radio keyboard 
 The regression suite checks selected normal-text token pairs at a minimum 4.5:1 contrast and selected focus/control boundaries at 3:1. CSS honors reduced-motion preference. These checks complement screenshot inspection and do not replace a full accessibility audit. Interactive controls retain visible focus; programmatically focused page/main landmarks intentionally suppress the default outline while supporting skip navigation and route announcements.
 
 Loading, request failure, retry, explicit empty history, unavailable metrics, and analysis-unavailable messages all use the same light theme. Em dashes continue to mean unavailable values. No charts, analytics, risk scores, safety verdicts, or synthetic records are introduced. Analyse remains a memory-only draft surface with submission disabled.
+
+## Motion and interaction
+
+The Task 1 motion refinement adds CSS transitions/keyframes without a new dependency, palette, font, spacing scale or information architecture. Motion communicates entrance, selection, connectivity and pending activity. It never implies analysis is taking place.
+
+| Token | Value | Use |
+| --- | --- | --- |
+| `--motion-fast` | `150ms` | Fades, control colors, border/focus changes |
+| `--motion-standard` | `180ms` | Main-content entrance, cards, arrow movement and selection |
+| `--motion-slow` | `240ms` | Eyebrow rule reveal and a single connection pulse |
+| `--motion-step` | `40ms` | Small page/card stagger; last stage starts at 160ms |
+| `--motion-activity` | `1800ms` | Low-contrast scanning/checking cadence, only while genuinely pending |
+| `--ease-standard` | `cubic-bezier(0.2, 0, 0, 1)` | Controlled interaction feedback |
+| `--ease-emphasized` | `cubic-bezier(0.16, 1, 0.3, 1)` | Fast settling entrances without overshoot |
+
+- `motion-enter` uses opacity and a 4px upward settle; `motion-fade` changes opacity only. Content starts partially visible, remains operable during the stagger, and is never held for an exit animation. Entrance styles do not persist after completion. The longest staged page entrance completes within 340ms; nested entrance transforms can combine to at most 8px.
+- `route-content` wraps the Outlet and keys only on pathname. Only main page content remounts; persistent sidebar/header/mobile navigation, API badge, query cache, route focus and document titles retain their behavior. The breadcrumb label fades when its text changes.
+- Metric cards lift 2px with a modest existing-token border emphasis; their icon containers move 1px. These effects require a fine pointer with hover. No card becomes an interactive control merely because it has hover feedback.
+- Primary/secondary/quiet buttons and `action-link` share short transitions and a 0.99 press scale. Add `motion-arrow` to directional icons for a 3px hover movement; `motion-icon` provides a 1px response on retry icons. Disabled, `aria-disabled` and `aria-busy` actions do not receive these movement effects. Future busy states must reflect real activity.
+- Sidebar icons/chevrons move 1–2px on pointer hover. Active background/border/text colors transition without moving navigation hit areas. Mobile active-state colors transition without hover-dependent meaning.
+- Native radio selection has a short indicator settle; inputs fade only when the input type mounts, never on each keystroke. Border transitions keep the focus outline immediately visible. Input and empty-state timing is local, independent of a containing panel's delay.
+- Empty-state icons settle once from 0.97 scale; text and CTA fade briefly. Loading uses a static scan icon and an 8%-accent sweep inside the existing skeleton. No spinner, parallax, neon, filter or large-shadow animation is introduced. Loaded or unavailable content enters immediately; no old/new live regions are duplicated for a cross-fade.
+- The API live region remains stable and atomic. Its contents key on the actual label: checking fades into connected/unavailable; connected gets one restrained dot pulse. Unchanged successful polls and navigation do not replay status motion. Only a pending health query uses a subdued repeating dot signal.
+- `prefers-reduced-motion: reduce` removes all animation, delay, scanning and pulsing, and makes color transitions nearly instant. Positional hover/press effects are opt-in under `no-preference`. State labels, keyboard focus, retries and disabled controls remain available. No animation is a prerequisite for understanding or using a control.
+
+Motion is declarative CSS; no animation timers, new manual DOM animation or animation library is used. Do not animate width/height/position, add permanent `will-change` layers, or make ordinary settled panels move continuously. Browser tests exercise both OS motion preferences, including switching to reduced motion during a pending request. See [TESTING.md](TESTING.md).
 
 ## Visual evidence
 

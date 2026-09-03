@@ -8,6 +8,8 @@ The starting workspace was empty, including hidden files; no Git repository, sou
 
 The visual migration preserves the existing API contracts and backend behavior. See the [redesign verification record](docs/REDESIGN.md) for the before/after checks and [current screenshots](docs/SCREENSHOTS.md) for both pages on desktop and mobile.
 
+Task 1 also includes restrained CSS motion: short page/card entrances, small button/navigation responses, input selection feedback and truthful API status transitions. The approved colors, fonts and settled layout are preserved. Reduced motion disables decorative movement immediately. No animation dependencies were added; see the [motion rules](docs/DESIGN_SYSTEM.md#motion-and-interaction).
+
 ## Project memory and current status
 
 Before implementing code, start with [CODEX.md](CODEX.md) and follow its required reading order: CODEX → [PROGRESS](PROGRESS.md) → [ROADMAP](ROADMAP.md) → [DECISIONS](DECISIONS.md) → README → [ARCHITECTURE](docs/ARCHITECTURE.md) → [DESIGN_SYSTEM](docs/DESIGN_SYSTEM.md) → [API](docs/API.md) → [TESTING](docs/TESTING.md). These files are the persistent handoff for a new session; include CODEX.md as the starting context when handing off this folder.
@@ -183,7 +185,7 @@ Remove-Item Env:UPDATE_DOC_SCREENSHOTS
 
 Ordinary test runs write only ignored test output. Documentation screenshots under `docs/screenshots/` are deliberate deliverable assets. Dependencies, virtual environments, builds, bytecode, test output, reports, and editable-install metadata remain excluded by `.gitignore` and must not be included in a source archive.
 
-`npm run test:preview` requires the production build first and runs four additional desktop/mobile checks against a test-only static server that reads `vercel.json`. It starts no backend and tests direct routes/reloads, navigation, offline states, retries and absence of fabricated data. This is local deployment-readiness evidence, not a claim of a live Vercel deployment.
+`npm run test:preview` requires the production build first and runs six desktop/mobile checks against a test-only static server that reads `vercel.json`. It starts no backend and tests direct routes/reloads, navigation, offline states, retries, reduced-motion accessibility and absence of fabricated data. The live-API suite has sixteen cases including motion, pending health transitions, touch/press feedback and draft/focus preservation. This is local verification, not a claim of a live Vercel deployment.
 
 The normal backend suite works without PostgreSQL; only the marked integration test is skipped. To run it locally:
 
@@ -218,7 +220,7 @@ See [the API contract](docs/API.md), [the design system](docs/DESIGN_SYSTEM.md),
 
 ## Next step — verify the redeployed frontend preview
 
-After the resilience fix is pushed to the existing `main`, inspect the automatic Vercel build and verify `/`, `/analyse`, direct refresh, assets and the usable offline workspace at the deployed URL. A Git push is not independent proof that Vercel finished deploying. Actual PostgreSQL persistence and backend hosting remain Task 2 work; scam detection is later. **Do not begin Task 2 automatically.**
+After the Task 1 motion refinement is pushed to the existing `main`, inspect the automatic Vercel build and verify `/`, `/analyse`, direct refresh, motion/reduced-motion and the usable offline workspace at the deployed URL. A Git push is not independent proof that Vercel finished deploying. Actual PostgreSQL persistence and backend hosting remain Task 2 work; scam detection is later. **Do not begin Task 2 automatically.**
 
 ## Framework references
 

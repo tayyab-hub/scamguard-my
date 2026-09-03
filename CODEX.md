@@ -41,6 +41,8 @@ The primary experience must remain warm light **Forensic Intelligence**: ivory/p
 
 Preserve responsive desktop/sidebar and mobile navigation, safe-area clearance, semantic landmarks, skip link, route-heading focus, native keyboard controls, labels, live states, retries, visible focus, and reduced-motion behavior. Color alone must not convey status. For visual work, run browser regression checks, capture both pages on desktop/mobile, and inspect clipping, overflow, contrast, spacing, sizing, navigation, overlap, and focus. Token contrast checks are not a complete accessibility audit.
 
+Use the shared CSS motion system in `docs/DESIGN_SYSTEM.md`: short opacity/transform entrances and restrained interaction feedback, with no change to the approved settled layout. No animation library, JavaScript timer loops, delayed navigation, or remounting the persistent shell for motion. Respect `prefers-reduced-motion` immediately, including while loading; no decorative scanning or pulsing under reduced motion. Health animation follows real query state and must not replay on each successful poll. Only genuinely pending loading indicators may repeat. Disabled/busy actions must not receive enabled-action motion. See D18.
+
 ## Analytics integrity
 
 - Production analytics must be derived from real persisted database records with defined scope, time window, and query semantics. No fake counters, charts, trends, activity, scores, people, or analysis results.

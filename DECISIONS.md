@@ -32,6 +32,12 @@ The user reports the GitHub-connected Vercel frontend is deployed and explicitly
 
 Verification must cover successful responses, unreachable/non-JSON APIs, unavailable metrics instead of zero, independent health reporting, disabled submission/local draft privacy, retries, direct routes, and desktop/mobile behavior. Publish only after passing checks to the existing `main`; GitHub pushes are expected to trigger the user's connected Vercel deployment but do not prove hosted completion. PostgreSQL persistence and backend deployment remain paused Task 2 work.
 
+### D18 — Restrained CSS motion within the approved design (accepted 2026-09-03)
+
+The user approved short, controlled entrance and interaction motion while preserving Forensic Intelligence colors, typography, geometry, navigation and D17 offline behavior. Use existing CSS/Tailwind with shared durations/easing, primarily opacity/transform. No new animation dependency, timer loops, waiting for exit animations, constant decorative movement, or backend work. Persistent navigation and health queries must survive page transitions; disabled analysis remains disabled. Genuine pending activity alone may repeat a restrained indicator; successful health polls must not repeatedly pulse the badge.
+
+Reduced motion disables scanning, pulses, entrance/positional interaction effects and delays without hiding state or compromising keyboard focus. Tests must verify both motion preferences, live preference changes during loading, touch behavior, finite settled animation, independent truthful connectivity, local drafts and offline preview resilience. This changes presentation only and does not authorize Task 2. Keep the settled design and API contracts intact.
+
 ## Future decisions still required
 
 The first Core Platform task must settle initial supported input scope, analysis lifecycle and result schema (including D09/D10), validation and limits, authentication/ownership, raw-content handling, retention/deletion, error semantics and migration boundaries. No choice of classifier, training corpus, inference provider, OCR library, queue, object store, backend deployment host, or campaign algorithm has been accepted or implemented merely by listing a future roadmap stage.

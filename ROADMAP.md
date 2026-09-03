@@ -26,7 +26,7 @@ Security and privacy are cross-cutting requirements from the first content-handl
 
 ## Immediate next step — Task 1 preview redeployment verification
 
-The repository is published to [tayyab-hub/scamguard-my](https://github.com/tayyab-hub/scamguard-my) on `main`; the user reports Vercel is already connected and deployed. After pushing the Task 1 resilience fix, inspect the automatic Vercel deployment and verify the hosted `/` and `/analyse` routes, refresh behavior, assets and usable offline states. Follow [DEPLOYMENT.md](docs/DEPLOYMENT.md). Do not recreate the remote or Vercel connection. Backend deployment and actual PostgreSQL persistence remain Task 2 work; detection is later. The preview needs neither a live backend nor PostgreSQL.
+The repository is published to [tayyab-hub/scamguard-my](https://github.com/tayyab-hub/scamguard-my) on `main`; the user reports Vercel is already connected and deployed. Task 1 now also includes restrained CSS motion and reduced-motion support while retaining the approved design and offline resilience. After pushing this refinement, inspect the automatic Vercel deployment and verify the hosted `/` and `/analyse` routes, refresh behavior, motion preferences, assets and usable offline states. Follow [DEPLOYMENT.md](docs/DEPLOYMENT.md). Do not recreate the remote or Vercel connection. Backend deployment and actual PostgreSQL persistence remain Task 2 work; detection is later. The preview needs neither a live backend nor PostgreSQL.
 
 ## Paused future Core Platform plan
 

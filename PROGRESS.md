@@ -1,14 +1,14 @@
 # SCAMGUARD MY — current project state
 
-Updated: **2026-09-03 16:28 +08:00 (Asia/Kuala_Lumpur)** after implementing and verifying Task 1 frontend preview resilience. This is the current handoff. The earlier documentation-only handoff is preserved in [HANDOFF_2026-09-03.md](docs/HANDOFF_2026-09-03.md); [TASK_1.md](docs/TASK_1.md) and [REDESIGN.md](docs/REDESIGN.md) retain their historical evidence. Prior deployment-preparation evidence is retained below under historical headings.
+Updated: **2026-09-03 16:50 +08:00 (Asia/Kuala_Lumpur)** after implementing and verifying Task 1 motion refinement. This is the current handoff. The earlier documentation-only handoff is preserved in [HANDOFF_2026-09-03.md](docs/HANDOFF_2026-09-03.md); [TASK_1.md](docs/TASK_1.md) and [REDESIGN.md](docs/REDESIGN.md) retain their historical evidence. Prior resilience and deployment-preparation evidence is retained below under historical headings.
 
 ## Current milestone
 
-**✅ COMPLETE — Task 1 foundation, frontend deployment readiness and graceful offline preview.** Task 1 includes the application foundation, professional responsive Forensic Intelligence UI, React/TypeScript and FastAPI/PostgreSQL architecture foundation, testing infrastructure, Git repository preparation and Vercel frontend readiness. Overview and Analyse now retain their unavailable workspace after failed optional API requests.
+**✅ COMPLETE — Task 1 foundation, offline preview resilience and restrained interface motion.** Task 1 includes the application foundation, professional responsive Forensic Intelligence UI, React/TypeScript and FastAPI/PostgreSQL architecture foundation, testing infrastructure, Git preparation and Vercel frontend readiness. Overview and Analyse retain their unavailable workspace after failed optional API requests; CSS motion refines this approved design without new product functionality.
 
 The deployment target is a **frontend development preview**. Actual PostgreSQL persistence is Task 2. Scam detection and live backend hosting are later. **Task 2 is paused and has not started.** Completing frontend readiness does not claim database connectivity, content persistence, a functioning detector or production launch readiness.
 
-The Task 1 baseline `a6b996afb630cb5e14211f668074d6410d10c855` and publication handoff `6116d47` are on [tayyab-hub/scamguard-my](https://github.com/tayyab-hub/scamguard-my). `origin` remains `https://github.com/tayyab-hub/scamguard-my.git`; local `main` tracks `origin/main`. The user reports the Vercel frontend is now deployed and connected to GitHub, but no hosted URL was supplied for independent checks. This task changes only page-level failure presentation, tests and documentation. Delivery commit message: `fix: support frontend preview without deployed API`. Verify the current commit/push with `git status`, `git log -1 --oneline`, `git remote -v` and `git ls-remote origin refs/heads/main`. A push should trigger the connected Vercel redeployment; neither a completed redeployment nor remote CI success is inferred from local tests.
+The baseline, publication handoff and resilience fix `2f03739107d650a9c0883286664dcea90b7fb179` are on [tayyab-hub/scamguard-my](https://github.com/tayyab-hub/scamguard-my). `origin` remains `https://github.com/tayyab-hub/scamguard-my.git`; local `main` tracks `origin/main`. The user reports Vercel is deployed and connected to GitHub, but no hosted URL was supplied for independent checks. This task adds CSS motion, presentational component hooks, browser tests and documentation. Delivery commit message: `feat: add refined interface motion and micro-interactions`. Verify the current commit/push with `git status`, `git log -1 --oneline`, `git remote -v` and `git ls-remote origin refs/heads/main`. A push should trigger the connected Vercel redeployment; neither deployment completion nor remote CI success is inferred from local tests.
 
 ## Status legend
 
@@ -23,23 +23,24 @@ The Task 1 baseline `a6b996afb630cb5e14211f668074d6410d10c855` and publication h
 | --- | --- | --- |
 | React + TypeScript foundation | ✅ COMPLETE | Strict TS, Vite, React Router, TanStack Query, Zod API validation and render-error fallback. |
 | Professional responsive UI | ✅ COMPLETE | Approved warm light Forensic Intelligence palette, sidebar/mobile navigation, branding, accessibility baseline, focus and reduced motion. New failure notice uses existing tokens and controls; connected presentation and approved documentation screenshots remain unchanged. |
+| Restrained interface motion | ✅ COMPLETE | Reusable CSS timing/easing, short page/card/empty entrances, pointer-aware card/nav/arrow feedback, button press, input selection/focus and truthful status/loading transitions. Reduced motion removes animation immediately. No dependency or settled-design change. |
 | Overview and Analyse structures | ✅ COMPLETE | Only `/` and `/analyse` in navigation; catch-all not-found page. Loading/error/retry/unavailable states preserved. Overview is not functional analytics; Analyse is not a detector. |
 | Local draft surface | ✅ COMPLETE | Memory-only message/URL drafts after capability success or failure, clearing/selection, disabled submission, no assessment. Failure displays a safe notice with retry; retry preserves drafts. Pending initial queries retain loading states. |
 | FastAPI foundation | ✅ COMPLETE | Four versioned GET routes, typed schemas, request IDs, safe errors and explicit CORS. Backend functionality unchanged. |
 | Database architecture scaffold | ✅ COMPLETE | PostgreSQL/Psycopg/SQLAlchemy configuration, sessions/rollback, Compose and Alembic environment. No domain models or revisions. |
-| Testing infrastructure | ✅ COMPLETE | TypeScript/ESLint/Vitest/build, backend pytest/Ruff, ten live-API browser tests and four built offline-preview tests. 28 frontend unit tests now cover independent health, offline drafting and runtime validation. Remote CI results have not been checked. |
+| Testing infrastructure | ✅ COMPLETE | TypeScript/ESLint/Vitest/build, backend pytest/Ruff, sixteen live-API browser tests and six built offline-preview tests. All 28 existing frontend unit tests remain unchanged. Remote CI results have not been checked. |
 | Git preparation | ✅ COMPLETE | Local `main` baseline; expanded ignore rules and LF attributes; source review and staged-file checks exclude dependencies, environment secrets, output and caches. Existing configured author identity preserved. |
 | Vercel readiness | ✅ COMPLETE | Root `frontend`, Vite, install `npm ci`, build `npm run build`, output `dist`, Node 24; unchanged SPA rewrite and environment defaults. Built routes/reloads and usable offline pages pass locally. Hosted redeployment verification remains separate. |
 | Documentation | ✅ COMPLETE | Working instructions, current status, roadmap, decisions, README, deployment guide and testing/architecture records reconciled; historical handoff retained. |
 
 ## Current work and remaining scope
 
-No Task 2 implementation, model training, migration or backend deployment is active. The local resilience fix and its required checks are complete; the next review is the automatic frontend redeployment. Development servers are temporary; do not assume they remain running.
+No Task 2 implementation, model training, migration or backend deployment is active. Local motion refinement and required checks are complete; the next review is the automatic frontend redeployment. Development servers are temporary; do not assume they remain running.
 
 | Item | Status | What remains |
 | --- | --- | --- |
 | GitHub connection and push | ✅ COMPLETE | Baseline published to `tayyab-hub/scamguard-my`, remote hash verified, and `main` tracks `origin/main`. No force push or remote overwrite. |
-| Vercel frontend deployment / hosted verification | 🟡 IN PROGRESS | User reports the frontend is deployed and GitHub-connected. The resilience fix passes local built-preview checks; inspect its automatic redeployment and actual hosted routes next. No hosted URL or remote deployment result was independently checked here. |
+| Vercel frontend deployment / hosted verification | 🟡 IN PROGRESS | User reports the frontend is deployed and GitHub-connected. Motion/refined offline preview passes local built checks; inspect the automatic redeployment and hosted routes next. No hosted URL or remote deployment result was independently checked here. |
 | Actual PostgreSQL persistence / Core Platform | ⚪ NOT STARTED | Task 2 paused. No domain schema, submission, stored lifecycle, ownership/authentication or history service. Successful real database integration and online migration verification remain outstanding. |
 | Real database verification | 🔴 BLOCKED | `TEST_DATABASE_URL` is unset; existing pytest integration case skips. Previous live readiness returned 503. This is a later database prerequisite, not a blocker for the frontend development preview. |
 | Text intelligence, explanations, URL assessment, OCR/screenshots and QR | ⚪ NOT STARTED | No inference/extraction/evidence implementations. |
@@ -57,6 +58,34 @@ The live-API browser suite verified the existing local FastAPI/Vite behavior. No
 `VITE_API_BASE_URL` remains blank/unset by default and resolves to `/api/v1`. Development retains its port-8000 proxy; static preview has none. Vercel's SPA rewrite may return HTML for absent API routes; the unchanged client rejects it safely. After initial loading, Overview retains three em dashes/Not available yet labels, empty Recent analyses and Workspace status. Analyse retains local drafting with submission disabled. Both pages show `PreviewNotice` with the safe error, optional request reference and retry. Queries remain errors; no fake responses, capabilities, metrics or results are introduced. `ApiStatus` independently shows “API unavailable” when health fails, and a healthy endpoint never masks another failed query. A future hosted API uses an HTTPS base including `/api/v1` and a rebuild. Backend deployment and actual PostgreSQL persistence remain Task 2.
 
 ## Latest executed verification
+
+Before changes, TypeScript and ESLint passed, and all 28 Vitest tests passed in 6.50s at approximately **16:34 +08:00**. Final frontend verification ran **16:47–16:48**, with backend verification at approximately **16:42**, on 2026-09-03, Windows, Node 24.18.0, Python 3.12.13 and installed Chrome. No dependencies were installed or upgraded. Commands below ran from their named directories.
+
+| Directory | Command | Actual final result |
+| --- | --- | --- |
+| `frontend` | `npm.cmd run typecheck` | PASS |
+| `frontend` | `npm.cmd run lint` | PASS, zero warnings |
+| `frontend` | `npm.cmd test` | 28 passed in 2 files, 7.47s |
+| `frontend` | `npm.cmd run build` | PASS, Vite 5.52s; JS 371.45 kB (114.10 kB gzip), CSS 32.71 kB (6.74 kB gzip), HTML 0.67 kB |
+| `frontend` | `npm.cmd run test:e2e` | 16 passed, 22.3s; installed Chrome, desktop/mobile |
+| `frontend` | `npm.cmd run test:preview` | 6 passed, 9.5s; built SPA without backend, including reduced motion |
+| `backend` | `.\.venv\Scripts\python.exe -m pytest` | 22 passed, 1 skipped, 2 warnings, 0.53s |
+| `backend` | `.\.venv\Scripts\python.exe -m ruff check app tests migrations` | PASS |
+| `backend` | `.\.venv\Scripts\python.exe -m ruff format --check app tests migrations` | PASS; 16 files already formatted |
+
+The first browser run had two failures in newly added mobile motion tests: they attempted to select the hidden Desktop navigation. The test now records the visible navigation for the current viewport and still checks that it survives a route change. No product change or relaxed assertion was needed for those failures. All existing regression cases passed in that run; all sixteen then passed, and the final complete checks above also passed. A final CSS refinement isolates input/empty-state delays from their parent panels.
+
+Manual review used the live local browser for desktop/mobile Overview and Analyse, route navigation, native radio switching and keyboard focus. The browser reported no console warnings/errors. Fresh connected, offline, reduced-motion/focus and loading screenshots were inspected; no obvious clipping, overflow, spacing/contrast defect or navigation/control overlap was found. Automated tests also check 320/768/1024px layouts, 390px mobile touch and 1440px desktop, motion completion, live preference changes during pending requests and no draft transmission. This is scoped QA, not a physical-device performance or complete accessibility audit. The approved connected documentation PNGs are retained because the settled design is unchanged; fresh QA output stays ignored under `frontend/test-results`.
+
+Remaining limits: the real PostgreSQL integration test still skips because `TEST_DATABASE_URL` is unset; no database, backend hosting or Task 2 work was performed. Existing non-failing Zod/Rollup annotation, Starlette httpx/AnyIO deprecation and Playwright color-environment warnings remain. No warnings were suppressed. Windows bundler/browser execution used approved access. Hosted Vercel redeployment, remote CI, other browser engines/physical devices, fresh install/vulnerability audit and comprehensive security/accessibility evaluation were not verified here.
+
+## Current change scope
+
+Modified components: DashboardPage, AnalysePage, PageHeading, AppShell (sidebar/header/mobile navigation and Outlet wrapper), ApiStatus, States (loading/error/empty) and PreviewNotice; reusable motion tokens/classes live in `frontend/src/styles.css`. Added `frontend/e2e/motion.spec.ts` and two reduced-motion browser cases in the existing preview test file. Source inventory becomes 88 maintained files after commit. Updated CODEX, PROGRESS, ROADMAP, DECISIONS, README, ARCHITECTURE, DESIGN_SYSTEM and TESTING documentation.
+
+The backend, API client/query/environment logic and schemas, analysis-unavailable behavior, memory-only drafts, test fixtures/unit tests, original live foundation/visual tests, palette/typography, breakpoints, dependencies/lockfiles, deployment configuration and ignore rules remain intact. The health component's presentation changes, but its labels/conditions/query and retry semantics do not. No fake metrics, capabilities or results; no animation timers or new dependencies. State changes and navigation do not wait for animations.
+
+## Historical verification — offline resilience (16:22–16:24)
 
 Executed **2026-09-03 16:22–16:24 +08:00**, Windows, Node 24.18.0, Python 3.12.13 and installed Chrome (`PLAYWRIGHT_CHANNEL=chrome`). Existing dependencies were used. Screenshot inspection followed at approximately 16:27. Exact working commands are in [TESTING.md](docs/TESTING.md).
 
@@ -81,7 +110,7 @@ Six fresh offline images (Overview/Analyse desktop, mobile viewport and mobile f
 
 Not verified in this task: hosted Vercel URL/redeployment, remote CI, fresh installs or dependency vulnerability audit, real PostgreSQL/online migrations, other browser engines, physical devices, or comprehensive accessibility/security evaluation. No product capability is inferred from frontend checks.
 
-## Current change scope
+## Historical change scope — offline resilience
 
 Created `frontend/src/components/PreviewNotice.tsx`. Updated the two page branches, `frontend/src/app/App.test.tsx`, `frontend/e2e/foundation.spec.ts` and `frontend/e2e-preview/offline.spec.ts`. Reconciled CODEX, PROGRESS, ROADMAP, DECISIONS, README, ARCHITECTURE, API, TESTING and DEPLOYMENT documentation. The new component brings the maintained source inventory to 87 files after commit.
 
@@ -125,6 +154,6 @@ The preparation task created one baseline commit; the subsequent authorized GitH
 
 ## Exact next step
 
-**Verify the automatic Vercel redeployment of this Task 1 resilience fix.** In the existing connected project, check that the deployment uses the new `main` commit; open `/` and `/analyse` directly and refresh both. Require the normal unavailable workspace, honest health badge, disabled submission and no fabricated data or uncaught render failure. No deployment URL was supplied here. Do not recreate the remote/project or deploy the backend as a workaround.
+**Verify the automatic Vercel redeployment of this Task 1 motion refinement.** In the existing connected project, check the deployment uses the new `main` commit; open `/` and `/analyse` directly and refresh both. Review short motion and reduced motion on desktop/mobile alongside the usable unavailable workspace, truthful health badge and disabled submission. No deployment URL was supplied here. Do not recreate the remote/project or deploy the backend as a workaround.
 
-**Stop after this Task 1 fix. Task 2 remains paused and has not started.**
+**Stop after this Task 1 motion refinement. Task 2 remains paused and has not started.**

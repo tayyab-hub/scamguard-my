@@ -34,7 +34,7 @@ export function DashboardPage() {
           <Link to="/analyse" className="button-primary">
             <ScanLine size={17} aria-hidden="true" />
             Open analyser
-            <ArrowUpRight size={16} aria-hidden="true" />
+            <ArrowUpRight size={16} className="motion-arrow" aria-hidden="true" />
           </Link>
         }
       />
@@ -54,13 +54,13 @@ export function DashboardPage() {
           <div className="mb-7 grid gap-4 md:grid-cols-3">
             {metrics.map(({ label, hint, icon: Icon }) => (
               <section
-                className="panel relative overflow-hidden px-5 py-5"
+                className="panel metric-card motion-enter relative overflow-hidden px-5 py-5"
                 key={label}
                 aria-label={label}
               >
                 <div className="flex items-center justify-between gap-2">
                   <h2 className="text-xs font-semibold text-body">{label}</h2>
-                  <span className="flex size-8 items-center justify-center rounded-md border border-line bg-surface-raised">
+                  <span className="metric-icon flex size-8 items-center justify-center rounded-md border border-line bg-surface-raised">
                     <Icon size={16} className="text-muted" strokeWidth={1.6} aria-hidden="true" />
                   </span>
                 </div>
@@ -79,7 +79,10 @@ export function DashboardPage() {
           </div>
           <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_320px]">
             <div className="min-w-0 space-y-6">
-              <section className="panel overflow-hidden" aria-labelledby="recent-heading">
+              <section
+                className="panel motion-enter motion-delay-3 overflow-hidden"
+                aria-labelledby="recent-heading"
+              >
                 <div className="section-heading justify-between">
                   <div className="flex items-center gap-2.5">
                     <Activity size={17} className="text-accent" aria-hidden="true" />
@@ -95,7 +98,7 @@ export function DashboardPage() {
                   action={
                     <Link to="/analyse" className="button-secondary">
                       Explore the analyser
-                      <ArrowRight size={15} aria-hidden="true" />
+                      <ArrowRight size={15} className="motion-arrow" aria-hidden="true" />
                     </Link>
                   }
                 >
@@ -123,7 +126,7 @@ export function DashboardPage() {
                 </div>
               </section>
             </div>
-            <aside className="space-y-5">
+            <aside className="motion-enter motion-delay-4 space-y-5">
               <section className="relative overflow-hidden rounded-lg border border-accent/25 bg-accent-subtle p-6">
                 <div className="mb-6 flex items-center justify-between">
                   <span className="eyebrow !text-accent">A SAFER NEXT STEP</span>
@@ -145,10 +148,10 @@ export function DashboardPage() {
                 </p>
                 <Link
                   to="/analyse"
-                  className="flex min-h-11 items-center justify-between rounded-sm border-t border-accent/25 pt-4 text-xs font-semibold text-accent"
+                  className="action-link flex min-h-11 items-center justify-between rounded-sm border-t border-accent/25 pt-4 text-xs font-semibold text-accent"
                 >
                   Visit Analyse
-                  <ArrowRight size={16} aria-hidden="true" />
+                  <ArrowRight size={16} className="motion-arrow" aria-hidden="true" />
                 </Link>
               </section>
               <section className="panel p-5">

@@ -7,7 +7,9 @@ async function expectUnavailableWorkspace(page: Page, route: string) {
     await expect(page.getByText('Your activity starts here')).toBeVisible()
     await expect(page.getByText('Workspace status')).toBeVisible()
     await expect(page.getByText('None configured')).toBeVisible()
-    await expect(page.getByText('No live statistics are being collected or displayed.')).toBeVisible()
+    await expect(
+      page.getByText('No live statistics are being collected or displayed.'),
+    ).toBeVisible()
   } else {
     await expect(page.getByLabel('Message content')).toBeVisible()
     await expect(page.getByText('Analysis is not enabled in this release.')).toBeVisible()
@@ -60,7 +62,9 @@ test('built SPA loads and refreshes direct routes without a backend or fabricate
     })
     if (testInfo.project.name === 'mobile') {
       await page.screenshot({
-        path: testInfo.outputPath(route === '/' ? 'overview-offline-full.png' : 'analyse-offline-full.png'),
+        path: testInfo.outputPath(
+          route === '/' ? 'overview-offline-full.png' : 'analyse-offline-full.png',
+        ),
         fullPage: true,
         scale: 'css',
       })
@@ -68,7 +72,9 @@ test('built SPA loads and refreshes direct routes without a backend or fabricate
     const retry = page.getByRole('button', { name: 'Try again', exact: true })
     await retry.focus()
     await expect(retry).toBeFocused()
-    expect(await retry.evaluate((element) => getComputedStyle(element).outlineStyle)).not.toBe('none')
+    expect(await retry.evaluate((element) => getComputedStyle(element).outlineStyle)).not.toBe(
+      'none',
+    )
   }
 
   const nav = page.getByRole('navigation', {
@@ -124,4 +130,35 @@ test('built SPA keeps navigation and safe error states when API connections fail
   }
   expect(pageErrors).toEqual([])
   expect(submittedRequests).toEqual([])
+})
+
+test('reduced motion keeps the built offline workspace immediate and keyboard accessible', async ({
+  page,
+}, testInfo) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  for (const route of ['/', '/analyse']) {
+    await page.goto(route)
+    await expect(page.getByRole('alert')).toBeVisible()
+    await expectUnavailableWorkspace(page, route)
+    await expect(page.getByText('API unavailable').filter({ visible: true })).toBeVisible()
+    expect(await page.evaluate(() => document.getAnimations().length)).toBe(0)
+    const retry = page.getByRole('button', { name: 'Try again', exact: true })
+    await page.keyboard.press('Tab')
+    await retry.focus()
+    await expect(retry).toBeFocused()
+    await expect(retry).toHaveCSS('outline-style', 'solid')
+    await expect(retry).toHaveCSS('transform', 'none')
+    await page.screenshot({
+      path: testInfo.outputPath(`${route === '/' ? 'overview' : 'analyse'}-reduced-motion.png`),
+      scale: 'css',
+    })
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+  }
+  const nav = page.getByRole('navigation', {
+    name: testInfo.project.name === 'desktop' ? 'Desktop navigation' : 'Mobile navigation',
+  })
+  await nav.getByRole('link', { name: 'Overview' }).click()
+  await expect(page.getByRole('heading', { name: 'Security overview' })).toBeFocused()
+  await expectUnavailableWorkspace(page, '/')
+  expect(await page.evaluate(() => document.getAnimations().length)).toBe(0)
 })

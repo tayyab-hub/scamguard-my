@@ -28,6 +28,13 @@
 
 @layer base {
   :root {
+    --motion-fast: 150ms;
+    --motion-standard: 180ms;
+    --motion-slow: 240ms;
+    --motion-step: 40ms;
+    --motion-activity: 1800ms;
+    --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+    --ease-emphasized: cubic-bezier(0.16, 1, 0.3, 1);
     color-scheme: light;
     font-synthesis: none;
     text-rendering: optimizeLegibility;
@@ -121,13 +128,238 @@
   }
 }
 
+/* Motion is opt-in. Settled geometry and the approved theme remain unchanged. */
+@layer components {
+  :where(
+    .button-primary,
+    .button-secondary,
+    .button-quiet,
+    .action-link,
+    .nav-link,
+    .mobile-nav a,
+    .content-option,
+    .radio-indicator,
+    .input-field
+  ) {
+    transition-property: color, background-color, border-color, opacity, transform;
+    transition-duration: var(--motion-fast);
+    transition-timing-function: var(--ease-standard);
+  }
+  :where(.motion-arrow, .motion-icon, .nav-link > svg) {
+    transition: transform var(--motion-standard) var(--ease-standard);
+  }
+  .metric-card {
+    transition:
+      translate var(--motion-standard) var(--ease-standard),
+      border-color var(--motion-standard) var(--ease-standard);
+  }
+  .metric-icon {
+    transition:
+      transform var(--motion-standard) var(--ease-standard),
+      border-color var(--motion-standard) var(--ease-standard);
+  }
+  .empty-state,
+  .input-field {
+    /* Local interactions must not inherit a containing panel's entrance delay. */
+    --motion-delay: 0ms;
+  }
+  .loading-scan {
+    position: relative;
+    overflow: hidden;
+  }
+  .loading-scan::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in srgb, var(--color-accent) 8%, transparent),
+      transparent
+    );
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .motion-enter {
+    animation: workspace-enter var(--motion-standard) var(--ease-emphasized)
+      var(--motion-delay, 0ms) backwards;
+  }
+  .motion-fade {
+    animation: workspace-fade var(--motion-fast) var(--ease-standard) var(--motion-delay, 0ms)
+      backwards;
+  }
+  .route-content {
+    animation: workspace-enter var(--motion-standard) var(--ease-emphasized);
+  }
+  .motion-delay-1 {
+    --motion-delay: var(--motion-step);
+  }
+  .motion-delay-2 {
+    --motion-delay: calc(var(--motion-step) * 2);
+  }
+  .motion-delay-3 {
+    --motion-delay: calc(var(--motion-step) * 3);
+  }
+  .motion-delay-4 {
+    --motion-delay: calc(var(--motion-step) * 4);
+  }
+  .metric-card:nth-child(1) {
+    --motion-delay: var(--motion-step);
+  }
+  .metric-card:nth-child(2) {
+    --motion-delay: calc(var(--motion-step) * 2);
+  }
+  .metric-card:nth-child(3) {
+    --motion-delay: calc(var(--motion-step) * 3);
+  }
+  .eyebrow-rule {
+    transform-origin: left;
+    animation: rule-reveal var(--motion-slow) var(--ease-emphasized);
+  }
+  .empty-state-icon {
+    animation: icon-settle var(--motion-standard) var(--ease-emphasized);
+  }
+  .radio-indicator-selected {
+    animation: selection-settle var(--motion-standard) var(--ease-standard);
+  }
+  .api-status[data-state='success'] .status-dot {
+    animation: connection-settle var(--motion-slow) var(--ease-standard);
+  }
+  .api-status[data-state='pending'] .status-dot {
+    animation: checking-signal var(--motion-activity) ease-in-out infinite;
+  }
+  .loading-scan::after {
+    animation: loading-scan var(--motion-activity) ease-in-out infinite;
+  }
+  :where(.button-primary, .button-secondary, .button-quiet, .action-link):not(:disabled):not(
+      [aria-disabled='true']
+    ):not([aria-busy='true']):active {
+    transform: scale(0.99);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .metric-card:hover {
+      translate: 0 -2px;
+      border-color: var(--color-control);
+    }
+    .metric-card:hover .metric-icon {
+      transform: translateY(-1px);
+      border-color: var(--color-control);
+    }
+    .nav-link:hover > svg:first-child {
+      transform: translateX(1px);
+    }
+    .nav-link:hover > svg:last-child {
+      transform: translateX(2px);
+    }
+    :where(.button-primary, .button-secondary, .button-quiet, .action-link):not(:disabled):not(
+        [aria-disabled='true']
+      ):not([aria-busy='true']):hover
+      .motion-arrow {
+      transform: translateX(3px);
+    }
+    :where(.button-primary, .button-secondary, .button-quiet):not(:disabled):not(
+        [aria-disabled='true']
+      ):not([aria-busy='true']):hover
+      .motion-icon {
+      transform: translateX(1px);
+    }
+  }
+}
+
+/* Nothing starts fully hidden: content remains readable and usable during the short stagger. */
+@keyframes workspace-enter {
+  from {
+    opacity: 0.65;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes workspace-fade {
+  from {
+    opacity: 0.65;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes rule-reveal {
+  from {
+    opacity: 0.6;
+    transform: scaleX(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+@keyframes icon-settle {
+  from {
+    opacity: 0.65;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes selection-settle {
+  from {
+    transform: scale(0.85);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes connection-settle {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  45% {
+    opacity: 0.75;
+    transform: scale(1.2);
+  }
+}
+@keyframes checking-signal {
+  0%,
+  100% {
+    opacity: 0.65;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@keyframes loading-scan {
+  0% {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  25%,
+  65% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
+    animation: none !important;
+    animation-delay: 0ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
     scroll-behavior: auto !important;
   }
 }
