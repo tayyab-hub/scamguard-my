@@ -1,6 +1,6 @@
 # SCAMGUARD MY — current project state
 
-Updated: **2026-09-03 15:53 +08:00 (Asia/Kuala_Lumpur)**. This is the current handoff. The earlier documentation-only handoff is preserved in [HANDOFF_2026-09-03.md](docs/HANDOFF_2026-09-03.md); [TASK_1.md](docs/TASK_1.md) and [REDESIGN.md](docs/REDESIGN.md) retain their historical evidence.
+Updated: **2026-09-03 16:01 +08:00 (Asia/Kuala_Lumpur)** after GitHub publication. This is the current handoff. The earlier documentation-only handoff is preserved in [HANDOFF_2026-09-03.md](docs/HANDOFF_2026-09-03.md); [TASK_1.md](docs/TASK_1.md) and [REDESIGN.md](docs/REDESIGN.md) retain their historical evidence.
 
 ## Current milestone
 
@@ -8,7 +8,7 @@ Updated: **2026-09-03 15:53 +08:00 (Asia/Kuala_Lumpur)**. This is the current ha
 
 The deployment target is a **frontend development preview**. Actual PostgreSQL persistence is Task 2. Scam detection and live backend hosting are later. **Task 2 is paused and has not started.** Completing frontend readiness does not claim database connectivity, content persistence, a functioning detector or production launch readiness.
 
-The local Git baseline uses `main` and commit message `chore: complete Task 1 application foundation`. Resolve its exact hash with `git log -1 --oneline`; this file belongs to that baseline, so it does not embed its own commit hash. No GitHub remote is configured, no push was performed, and no Vercel deployment URL or remote CI result exists yet. Verify actual Git state on arrival with `git status` and `git remote -v`.
+The Task 1 baseline `a6b996afb630cb5e14211f668074d6410d10c855` (`chore: complete Task 1 application foundation`) was pushed to [tayyab-hub/scamguard-my](https://github.com/tayyab-hub/scamguard-my). The user supplied the target URL; the remote was empty before publication. `origin` is `https://github.com/tayyab-hub/scamguard-my.git`, and local `main` tracks `origin/main`. The remote branch hash was verified after pushing. This follow-up updates documentation only; no application tests were rerun because product/test code is unchanged. No Vercel deployment is performed and remote CI results have not been checked. Verify current Git state with `git status`, `git log -1 --oneline` and `git remote -v`.
 
 ## Status legend
 
@@ -38,7 +38,7 @@ No Task 2 implementation, model training, migration or deployment is active. Tes
 
 | Item | Status | What remains |
 | --- | --- | --- |
-| GitHub connection and push | 🔴 BLOCKED | No target repository URL provided. Use the commands in DEPLOYMENT.md once the empty repository exists. Do not invent or overwrite a remote. |
+| GitHub connection and push | ✅ COMPLETE | Baseline published to `tayyab-hub/scamguard-my`, remote hash verified, and `main` tracks `origin/main`. No force push or remote overwrite. |
 | Vercel import and live-route verification | ⚪ NOT STARTED | Import GitHub repository with Root Directory `frontend`, then inspect the actual hosted `/` and `/analyse` refresh behavior and offline states. No deployment is claimed from local tests. |
 | Actual PostgreSQL persistence / Core Platform | ⚪ NOT STARTED | Task 2 paused. No domain schema, submission, stored lifecycle, ownership/authentication or history service. Successful real database integration and online migration verification remain outstanding. |
 | Real database verification | 🔴 BLOCKED | `TEST_DATABASE_URL` is unset; existing pytest integration case skips. Previous live readiness returned 503. This is a later database prerequisite, not a blocker for the frontend development preview. |
@@ -82,7 +82,7 @@ Non-failing warnings: two Zod/Rollup annotations, Starlette TestClient httpx/Any
 
 ## Repository audit and delivery
 
-The candidate baseline contains 86 maintained files. Relative to the 79-file starting inventory, seven files were added and 15 existing files changed. All `frontend/src` presentation/API code, original tests/fixtures, approved PNGs, backend app/tests/migrations, PostgreSQL Compose configuration and dependency lockfiles are unchanged. Backend environment-example changes are comments only. The build emits the same asset hashes as before preparation.
+The committed baseline contains 86 maintained files. Relative to the 79-file preparation-start inventory, seven files were added and 15 existing files changed. All `frontend/src` presentation/API code, original tests/fixtures, approved PNGs, backend app/tests/migrations, PostgreSQL Compose configuration and dependency lockfiles are unchanged. Backend environment-example changes are comments only. The build emits the same asset hashes as before preparation. The later GitHub-publication follow-up changes only README, PROGRESS, ROADMAP and DEPLOYMENT documentation.
 
 Created: `.gitattributes`, `frontend/vercel.json`, `frontend/playwright.preview.config.ts`, `frontend/e2e-preview/offline.spec.ts`, `frontend/e2e-preview/serve.mjs`, `docs/DEPLOYMENT.md`, `docs/HANDOFF_2026-09-03.md`.
 
@@ -90,10 +90,10 @@ Updated: `.gitignore`, `.github/workflows/ci.yml`, `frontend/.env.example`, `bac
 
 Credential-pattern and manual review found only public local/test values and documentation placeholders, not real private keys/API tokens/database credentials. No root/backend/frontend `.env` files were present. Generated dependencies/builds/caches/reports, local databases/storage and `.local` artifacts are excluded; safe `.env.example`, source, tests, docs, lockfiles and Alembic configuration remain included. This scoped review is not a security certification. The historical 73-file ZIP in `.local` is stale and was not regenerated or committed.
 
-The baseline commit is the only commit created by this task. After committing, require `git status --porcelain` and `git ls-files -ci --exclude-standard` to be empty. No remote is created and no GitHub/Vercel operation is performed without its target. The baseline hash and final clean status are reported in the task completion message, with commands to verify them locally.
+The preparation task created one baseline commit; the subsequent authorized GitHub publication adds a documentation handoff commit. Require `git status --porcelain` and `git ls-files -ci --exclude-standard` to be empty after committing. No Vercel operation is performed as part of the GitHub push.
 
 ## Exact next step
 
-**Connect GitHub and import the Task 1 frontend preview into Vercel.** Follow [DEPLOYMENT.md](docs/DEPLOYMENT.md): create an empty GitHub repository, inspect remotes, add its real URL, push `main`, import with Root Directory `frontend` and the documented build settings, then check the actual hosted routes and offline behavior. No backend environment variables belong in that Vercel project.
+**Import the published Task 1 frontend preview into Vercel.** Follow [DEPLOYMENT.md](docs/DEPLOYMENT.md): import `tayyab-hub/scamguard-my` with Root Directory `frontend` and the documented build settings, then check the actual hosted routes and offline behavior. GitHub publication is complete; do not recreate the remote or repository. No backend environment variables belong in that Vercel project.
 
 **Stop after this preparation task. Task 2 remains paused and has not started.**

@@ -6,7 +6,7 @@ Status audited on 2026-09-03. Read [PROGRESS.md](PROGRESS.md) for execution evid
 
 | Order | Milestone | Status | Real current state and remaining exit criteria |
 | --- | --- | --- | --- |
-| 1 | Foundation | ✅ COMPLETE | Task 1 application foundation, professional responsive UI, frontend/backend architecture foundation, testing infrastructure, Git repository preparation and Vercel frontend readiness. The target is a frontend development preview. Actual GitHub upload/Vercel import and live-URL checks remain external next steps; no remote CI result is claimed. |
+| 1 | Foundation | ✅ COMPLETE | Task 1 application foundation, professional responsive UI, frontend/backend architecture foundation, testing infrastructure, Git preparation and GitHub publication, and Vercel frontend readiness. The target is a frontend development preview. Vercel import and live-URL checks remain next steps; no remote CI result is claimed. |
 | 2 | Core Platform | ⚪ NOT STARTED | Task 2 is paused. Actual PostgreSQL persistence, successful real database verification, domain models/migrations, submission/lifecycle, ownership/authentication and stored history remain here. Existing unavailable contracts and draft controls are scaffolding only. |
 | 3 | Text Intelligence | ⚪ NOT STARTED | No classifier, dataset, rules engine or inference. Define supported languages/inputs, genuine data provenance, an initial method and reproducible evaluation before enabling text assessment. |
 | 4 | Explainability | ⚪ NOT STARTED | No explanations or evidence schema. Explanations must trace real evidence/model behavior and state uncertainty; do not fabricate rationales. |
@@ -26,7 +26,7 @@ Security and privacy are cross-cutting requirements from the first content-handl
 
 ## Immediate next step — Task 1 preview publication
 
-Connect the local baseline to the supplied GitHub repository URL, push `main`, import the repository into Vercel with Root Directory `frontend`, and verify the deployed `/` and `/analyse` routes, refresh behavior, assets and offline states. Follow [DEPLOYMENT.md](docs/DEPLOYMENT.md). No remote URL or Vercel project is configured by local preparation. Live backend hosting and scam detection are later work. The frontend preview does not require a reachable PostgreSQL database.
+The baseline is published to [tayyab-hub/scamguard-my](https://github.com/tayyab-hub/scamguard-my) on `main`. Next, import that repository into Vercel with Root Directory `frontend`, and verify the deployed `/` and `/analyse` routes, refresh behavior, assets and offline states. Follow [DEPLOYMENT.md](docs/DEPLOYMENT.md). No Vercel project is configured by the GitHub-publication task. Live backend hosting and scam detection are later work. The frontend preview does not require a reachable PostgreSQL database.
 
 ## Paused future Core Platform plan
 

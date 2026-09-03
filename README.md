@@ -12,7 +12,7 @@ The visual migration preserves the existing API contracts and backend behavior. 
 
 Before implementing code, start with [CODEX.md](CODEX.md) and follow its required reading order: CODEX → [PROGRESS](PROGRESS.md) → [ROADMAP](ROADMAP.md) → [DECISIONS](DECISIONS.md) → README → [ARCHITECTURE](docs/ARCHITECTURE.md) → [DESIGN_SYSTEM](docs/DESIGN_SYSTEM.md) → [API](docs/API.md) → [TESTING](docs/TESTING.md). These files are the persistent handoff for a new session; include CODEX.md as the starting context when handing off this folder.
 
-The latest verified state is in PROGRESS.md. Local Git is initialized on `main`; the baseline commit is named `chore: complete Task 1 application foundation`. No remote or deployed Vercel URL is configured by this preparation task. Historical Task 1, redesign and memory-handoff counts remain in their dated reports; they are not current inventories. The earlier ignored `.local` source ZIP is historical and must not be uploaded as the current source.
+The latest verified state is in PROGRESS.md. The Task 1 baseline `a6b996a` is published on `main` at [tayyab-hub/scamguard-my](https://github.com/tayyab-hub/scamguard-my), with local `main` tracking `origin/main`. Vercel deployment remains pending. Historical Task 1, redesign and memory-handoff counts remain in their dated reports; they are not current inventories. The earlier ignored `.local` source ZIP is historical and must not be uploaded as the current source.
 
 ## Frontend quick start
 
@@ -220,7 +220,7 @@ See [the API contract](docs/API.md), [the design system](docs/DESIGN_SYSTEM.md),
 
 ## Next step — connect GitHub and verify the frontend preview
 
-Connect the prepared baseline to the provided GitHub URL, import `frontend` into Vercel, then verify `/`, `/analyse`, direct refresh, assets and offline error states at the deployed URL. GitHub upload and Vercel import are not performed without the missing repository/project context. Actual PostgreSQL persistence belongs to Task 2; the existing Core Platform plan is paused. Scam detection and live backend hosting are later work. **Stop after Task 1 preparation; do not begin Task 2 automatically.**
+The baseline is now on GitHub. Import `tayyab-hub/scamguard-my` into Vercel with Root Directory `frontend`, then verify `/`, `/analyse`, direct refresh, assets and offline error states at the deployed URL. Vercel import has not been performed. Actual PostgreSQL persistence belongs to Task 2; the existing Core Platform plan is paused. Scam detection and live backend hosting are later work. **Do not begin Task 2 automatically.**
 
 ## Framework references
 

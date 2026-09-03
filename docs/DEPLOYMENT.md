@@ -4,7 +4,7 @@ This workflow publishes the existing **SCAMGUARD MY Forensic Intelligence fronte
 
 ## Local preparation and safety
 
-Git is initialized on `main`. The baseline commit message is `chore: complete Task 1 application foundation`; use `git log -1 --oneline` to resolve its actual hash. No remote is configured by this task, and no push or Vercel deployment has been performed. Follow [PROGRESS.md](../PROGRESS.md) for actual verification, including limitations.
+Git is initialized on `main`. Baseline `a6b996afb630cb5e14211f668074d6410d10c855` (`chore: complete Task 1 application foundation`) is published to [tayyab-hub/scamguard-my](https://github.com/tayyab-hub/scamguard-my). `origin` points to that repository and `main` tracks `origin/main`; the push was verified on 2026-09-03. No Vercel deployment has been performed. Follow [PROGRESS.md](../PROGRESS.md) for actual verification, including limitations. The connection instructions below are retained for reference; this checkout is already connected.
 
 `.gitignore` excludes dependencies, virtual environments, environment secrets, generated builds/test output, caches, logs/temp files, local database/storage files, unnecessary editor/OS files and local Vercel metadata. Its unanchored `node_modules/` and `.venv/` rules apply inside frontend/backend as well. `.env` and `.env.*` are ignored; the exact safe filename `.env.example` is retained at every depth. Source, tests, documentation, package manifests/lockfiles, Python requirements/pyproject and Alembic configuration remain included. `.gitattributes` normalizes text to LF and preserves PNGs as binary.
 
@@ -119,4 +119,4 @@ Local tests already exercise built files and the checked-in rewrite using a test
 
 If a direct route gets a host 404, check that Root Directory is `frontend` and the deployed commit includes its `vercel.json`. If the build cannot find `package.json`, inspect Root Directory. If the UI reports API unavailable, that is expected for this preview; do not add mock responses to hide it. If environment changes seem ignored, redeploy. If using a later HTTPS backend, investigate its availability/CORS without enabling any Task 2 behavior incidentally.
 
-**Current boundary:** local readiness and baseline Git preparation only. No GitHub URL or Vercel project was provided; no remote push, hosted route verification or backend deployment is claimed. Stop here until the target is available. Task 2 has not started.
+**Current boundary:** local readiness and GitHub publication are complete. Import `tayyab-hub/scamguard-my` into Vercel next; hosted route verification and backend deployment have not been performed. Task 2 remains paused and has not started.
