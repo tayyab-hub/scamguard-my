@@ -1,0 +1,71 @@
+# Dependencies and generated builds (patterns apply at any directory depth)
+node_modules/
+.venv/
+venv/
+dist/
+build/
+*.tsbuildinfo
+
+# Private environment files; examples must contain only public/local test values
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+secrets/
+
+# Test output, Python caches and installed-package metadata
+coverage/
+test-results/
+playwright-report/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+.coverage.*
+htmlcov/
+*.egg-info/
+
+# Local deployment metadata, generated work files and temporary output
+.vercel/
+.local/
+.cache/
+/tmp/
+/temp/
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+*.log
+.logs/
+
+# Local database files, dumps and storage; retain source/migrations/datasets
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+*.sqlite-wal
+*.sqlite-shm
+*.sqlite3-wal
+*.sqlite3-shm
+*.dump
+*.sql.gz
+/postgres-data/
+/storage/
+/backend/storage/
+
+# Machine-specific editor and operating-system metadata
+.idea/
+.vscode/
+*.suo
+*.user
+*.code-workspace
+.DS_Store
+._*
+Thumbs.db
+Desktop.ini

@@ -1,0 +1,78 @@
+name: Foundation checks
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  foundation:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: scamguard
+          POSTGRES_PASSWORD: ci_test_only
+          POSTGRES_DB: scamguard_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U scamguard -d scamguard_test"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+    env:
+      APP_ENV: test
+      TEST_DATABASE_URL: postgresql+psycopg://scamguard:ci_test_only@127.0.0.1:5432/scamguard_test
+      DATABASE_URL: postgresql+psycopg://scamguard:ci_test_only@127.0.0.1:5432/scamguard_test
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Install backend
+        working-directory: backend
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install -c requirements.lock -e '.[dev]'
+      - name: Backend quality and PostgreSQL integration
+        working-directory: backend
+        run: |
+          .venv/bin/python -m ruff check app tests migrations
+          .venv/bin/python -m ruff format --check app tests migrations
+          .venv/bin/python -m pytest
+          .venv/bin/python -m alembic upgrade head
+      - name: Install frontend
+        working-directory: frontend
+        run: npm ci
+      - name: Frontend checks
+        working-directory: frontend
+        run: |
+          npm run typecheck
+          npm run lint
+          npm test
+          npm run build
+      - name: Install test browser
+        working-directory: frontend
+        run: npx playwright install --with-deps chromium
+      - name: Live API browser smoke tests
+        working-directory: frontend
+        run: npm run test:e2e
+      - name: Built frontend without a backend
+        working-directory: frontend
+        run: npm run test:preview
+      - uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: browser-failure-evidence
+          path: frontend/test-results/
