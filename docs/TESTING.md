@@ -29,10 +29,10 @@ npm.cmd run build
 | --- | --- |
 | `npm.cmd run typecheck` | `tsc -b` over strict application and Node/config/browser-test projects. |
 | `npm.cmd run lint` | ESLint with `--max-warnings 0`. |
-| `npm.cmd test` | Vitest in jsdom: currently 24 tests across two files. |
+| `npm.cmd test` | Vitest in jsdom: currently 28 tests across two files. |
 | `npm.cmd run build` | TypeScript plus Vite production compilation; output is ignored `frontend/dist`. |
 
-Run all four and check each exit code; do not assume PowerShell stops after an earlier command fails. Vitest covers page routing and unavailable/loading/error/retry behavior, local draft handling, safe API errors, timeout/cancellation, malformed data, and public environment parsing. Production code must never import test fixtures.
+Run all four and check each exit code; do not assume PowerShell stops after an earlier command fails. Vitest covers successful and offline page rendering, unavailable metrics instead of fabricated zeroes, pending queries, independent health recovery, local draft privacy/retry, disabled submission, rejected unsupported capabilities/HTML, routing, safe API errors, timeout/cancellation and public environment parsing. All 17 API-client tests are unchanged by the resilience fix. Production code must never import test fixtures.
 
 ## Playwright — exact working commands
 
@@ -66,9 +66,9 @@ npm.cmd run test:preview
 
 `playwright.preview.config.ts` runs four additional desktop/mobile tests on port 4173. Its test-only Node static server in `e2e-preview/serve.mjs` reads the actual `vercel.json`, serves `dist` assets and applies the SPA fallback. It starts no FastAPI process and contains no fake API responses. This tests direct page loads/reloads, not-found/navigation, safe handling of HTML instead of API JSON, honest unavailable/error states, retry and no fabricated data. A separate explicit network-abort case covers failed connections. Expected failed-network console messages in that case are distinct from uncaught page errors; the ordinary SPA-fallback case requires no console/page errors.
 
-The latest run passed all four tests. Four offline screenshots in ignored `test-results/preview` were manually inspected; the approved UI assets remain unchanged. This harness verifies local readiness, not Vercel's complete runtime or a live hosted URL. After import, perform the checks in [DEPLOYMENT.md](DEPLOYMENT.md).
+The latest run passed all four tests. They require the visible unavailable Overview and disabled Analyse workspace during HTML fallback and connection failures, truthful health, retries, no submission (including pressing Enter in the URL field), direct-route refresh and a visible retry focus outline. Six offline screenshots in ignored `test-results/preview` were manually inspected: desktop and mobile viewport captures for both pages plus two full-page mobile captures. Approved connected documentation images remain unchanged. This harness verifies local behavior, not Vercel's complete runtime or a live hosted URL. The user reports Vercel is deployed; after automatic redeployment, perform the checks in [DEPLOYMENT.md](DEPLOYMENT.md).
 
-During test development, the initial harness used Vite preview, which treats API requests differently from the explicit Vercel catch-all. Two new cases failed their expected error-message assertions. The harness was corrected to exercise `vercel.json` without weakening assertions; a missing Node `URL` import in that new server was also fixed after lint flagged it. Original tests were unchanged. Both suites now pass. `npm run preview` remains a separate local static preview with no inherited development proxy.
+Historical deployment-preparation note: the initial harness used Vite preview, which treats API requests differently from the explicit Vercel catch-all. Two new cases failed their expected error-message assertions. The harness was corrected to exercise `vercel.json` without weakening assertions; a missing Node `URL` import in that new server was also fixed after lint flagged it. Original tests were unchanged at that time. The subsequent user-requested resilience fix intentionally updates page-failure expectations to require the usable unavailable workspace and strengthens recovery/privacy assertions. No tests or skip gates were removed to obtain a pass. Both suites passed in the latest run. `npm run preview` remains a separate local static preview with no inherited development proxy.
 
 ### Intentional documentation screenshot refresh
 
@@ -133,13 +133,13 @@ curl.exe -i http://127.0.0.1:8000/api/v1/capabilities
 curl.exe -i http://127.0.0.1:5173/api/v1/health
 ```
 
-The current audit made these five GET requests using Python's `urllib.request`/`urllib.error` with a ten-second timeout, printing status and parsed JSON. Results: health 200, ready 503 `DATABASE_UNAVAILABLE`, dashboard 200 unconfigured, capabilities 200 unavailable, proxied health 200. These endpoints contain no user-submitted content. Do not log secrets or future sensitive request bodies during debugging.
+The earlier documentation audit made these five GET requests using Python's `urllib.request`/`urllib.error` with a ten-second timeout, printing status and parsed JSON. Historical results: health 200, ready 503 `DATABASE_UNAVAILABLE`, dashboard 200 unconfigured, capabilities 200 unavailable, proxied health 200. These probes were not repeated in the resilience task; current browser/unit results are in PROGRESS.md. These endpoints contain no user-submitted content. Do not log secrets or future sensitive request bodies during debugging.
 
 ## CI, warnings and evidence hygiene
 
 `.github/workflows/ci.yml` defines Node 24/Python 3.12 on Ubuntu, PostgreSQL 17, Python installation with constraints, backend tests/Ruff/migrations, npm clean install/typecheck/lint/unit/build, live-API Playwright Chromium and built offline-preview tests. Git is initialized, but no remote CI result is available. Python constraints record a Windows-resolved environment; platform extras on Linux still resolve from `pyproject.toml`.
 
-Non-failing messages in the latest run: two Zod/Rollup comment-annotation warnings, Starlette TestClient deprecations involving httpx and AnyIO, and Playwright's `NO_COLOR`/`FORCE_COLOR` warning. No warning was suppressed and no existing test was changed. These are distinct from browser application errors. Dependency consistency (`pip check`) is not a vulnerability audit.
+Non-failing messages in the latest run: two Zod/Rollup comment-annotation warnings, Starlette TestClient deprecations involving httpx and AnyIO, and Playwright's `NO_COLOR`/`FORCE_COLOR` warning. No warning was suppressed. These are distinct from browser application errors. Dependency consistency (`pip check`) is not a vulnerability audit; it last ran during deployment preparation, not the resilience fix.
 
 Bundler/browser commands required approved execution outside the restricted Windows sandbox during the audit. Ordinary local terminals do not have that agent restriction. Treat environment/permission errors as such; do not weaken tests to bypass them.
 

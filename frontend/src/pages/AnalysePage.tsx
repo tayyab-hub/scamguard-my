@@ -10,7 +10,8 @@ import {
   ShieldCheck,
 } from 'lucide-react'
 import { PageHeading } from '../components/PageHeading'
-import { EmptyState, ErrorState, LoadingState } from '../components/States'
+import { EmptyState, LoadingState } from '../components/States'
+import { PreviewNotice } from '../components/PreviewNotice'
 import { useCapabilities } from '../lib/queries'
 
 export function AnalysePage() {
@@ -30,14 +31,17 @@ export function AnalysePage() {
       />
       {capabilities.isPending ? (
         <LoadingState label="Checking analysis availability" />
-      ) : capabilities.isError ? (
-        <ErrorState
-          error={capabilities.error}
-          onRetry={() => void capabilities.refetch()}
-          retrying={capabilities.isFetching}
-        />
       ) : (
         <>
+          {capabilities.isError && (
+            <PreviewNotice
+              error={capabilities.error}
+              onRetry={() => void capabilities.refetch()}
+              retrying={capabilities.isFetching}
+            >
+              Analysis is unavailable. You can draft locally, but nothing is submitted.
+            </PreviewNotice>
+          )}
           <div
             className="mb-6 flex items-start gap-3 rounded-lg border border-warning/30 bg-warning-subtle px-5 py-4"
             role="status"

@@ -11,7 +11,8 @@ import {
   ShieldCheck,
 } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { ErrorState, EmptyState, LoadingState } from '../components/States'
+import { EmptyState, LoadingState } from '../components/States'
+import { PreviewNotice } from '../components/PreviewNotice'
 import { PageHeading } from '../components/PageHeading'
 import { useDashboard } from '../lib/queries'
 
@@ -39,14 +40,17 @@ export function DashboardPage() {
       />
       {dashboard.isPending ? (
         <LoadingState />
-      ) : dashboard.isError ? (
-        <ErrorState
-          error={dashboard.error}
-          onRetry={() => void dashboard.refetch()}
-          retrying={dashboard.isFetching}
-        />
       ) : (
         <>
+          {dashboard.isError && (
+            <PreviewNotice
+              error={dashboard.error}
+              onRetry={() => void dashboard.refetch()}
+              retrying={dashboard.isFetching}
+            >
+              Live data is unavailable. This workspace shows no statistics or history.
+            </PreviewNotice>
+          )}
           <div className="mb-7 grid gap-4 md:grid-cols-3">
             {metrics.map(({ label, hint, icon: Icon }) => (
               <section

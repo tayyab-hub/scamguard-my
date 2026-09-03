@@ -35,14 +35,16 @@ The PostgreSQL arrow represents the implemented connection path, not a verified 
 | `frontend/src/app/App.tsx` | Overview, Analyse and catch-all routes under AppShell. |
 | `frontend/src/layout/AppShell.tsx` | Desktop sidebar at 1024px+, mobile bottom navigation, headings/document titles, route focus, skip link, status and footer. |
 | `frontend/src/pages` | API-aware page states; Overview unavailable metric/history presentation; Analyse local draft editor; not-found return link. |
-| `frontend/src/components` | Brand, page heading, API status, loading/error/retry/empty states, render-error fallback. |
+| `frontend/src/components` | Brand, page heading, API status, loading/error/retry/empty states, page-level `PreviewNotice`, render-error fallback. |
 | `frontend/src/lib` | Public environment validation, GET transport, Zod response schemas, TanStack Query hooks. |
 | `frontend/src/styles.css` | Tailwind 4 semantic Forensic Intelligence tokens and shared components, light color scheme, focus and reduced-motion treatment. |
 | `frontend/src/test`, `*.test.ts(x)`, `frontend/e2e` | Explicit test fixtures and behavioral/browser regression tests, isolated from production imports. |
 
 The GET client omits browser credentials and disables fetch caching. It supports upstream cancellation, an eight-second timeout, safe generic errors with request references, JSON parsing and runtime schema validation. Zod validates required values and strips unknown object fields; it is not a strict extra-field rejection policy. Health refreshes every 30 seconds while visible. Production code has no mock fallback.
 
-Overview renders em dashes and explicit unavailable notices after the dashboard request succeeds. It does not calculate or display real analytics. Analyse retrieves capabilities before showing the editor; errors and pending requests retain their own states. Message and URL drafts have separate component state, limits of 5,000 and 2,048 characters, content selection and clearing. Reload or navigation away discards them. Submission is disabled, form submission is prevented, and no result is generated. These client limits are not a future server validation contract.
+Both pages show a loading state while their initial request is pending. Overview then renders its em dashes, unavailable notices, empty history and workspace status after either a valid unconfigured response or a failed query. It never calculates analytics. Analyse still requests and validates capabilities; on failure it retains the approved local editor with analysis disabled. Failed queries remain errors, with a page-level `PreviewNotice` showing the safe error, request reference when present, and retry. No fallback object is injected into the client or query cache, and health status is independent. The existing full error component and render-error boundary remain available for genuine failures.
+
+Message and URL drafts have separate component state, limits of 5,000 and 2,048 characters, content selection and clearing. Query retry preserves drafts; reload or navigation away discards them. Submission is disabled, form submission is prevented, and no result is generated. These client limits are not a future server validation contract. This fallback is specific to the optional Task 1 scaffold; future data-dependent features must handle their real failures explicitly.
 
 ### Backend and data configuration
 
@@ -67,8 +69,8 @@ The engine uses Psycopg 3, `pool_pre_ping`, pool size 5 with 5 overflow connecti
 - Backend requires `postgresql+psycopg://`. Development has a local-only default DSN. Production rejects missing/default passwords and HTTP CORS origins, disables `/docs` and `/openapi.json`, and can use empty CORS origins behind a same-origin proxy.
 - `VITE_API_BASE_URL` defaults to `/api/v1` and must be an absolute path or HTTP(S) URL without credentials/query/fragment. It is public bundle configuration. `API_PROXY_TARGET` is development-server configuration, defaulting to `http://127.0.0.1:8000`.
 - Local Vite binds port 5173; FastAPI is run on 8000. The production build creates static assets. Vite's development proxy is not a production API proxy; static `npm run preview` explicitly disables that proxy. Local servers are temporary development processes.
-- Task 1 now prepares Vercel with Root Directory `frontend`, Vite, `npm ci`, `npm run build`, `dist` output and a minimal `frontend/vercel.json` SPA rewrite. This is a frontend development preview only, with existing error states when the API is absent. FastAPI is not deployed to Vercel. Later backend hosting and actual PostgreSQL persistence are separate work; see [DEPLOYMENT.md](DEPLOYMENT.md).
-- Git is initialized on `main` with the Task 1 baseline. No remote push or Vercel deployment is claimed. GitHub Actions defines PostgreSQL/backend/frontend/live-browser gates plus a built offline-preview suite; remote CI has not run here. The test-only preview server reads the rewrite and serves built files without an API; it is neither deployed infrastructure nor a replacement backend.
+- Task 1 uses Vercel with Root Directory `frontend`, Vite, `npm ci`, `npm run build`, `dist` output and a minimal `frontend/vercel.json` SPA rewrite. This is a frontend development preview only, with usable unavailable-state pages when the API is absent. FastAPI is not deployed to Vercel. Backend hosting and actual PostgreSQL persistence remain Task 2 work; see [DEPLOYMENT.md](DEPLOYMENT.md).
+- GitHub is connected on `main`; the user reports the Vercel frontend preview is deployed and connected to GitHub. A live URL or remote CI result was not independently verified in this task. GitHub Actions defines PostgreSQL/backend/frontend/live-browser gates plus a built offline-preview suite. The test-only preview server reads the rewrite and serves built files without an API; it is neither deployed infrastructure nor a replacement backend.
 
 ### Current security/privacy boundary
 

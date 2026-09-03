@@ -4,7 +4,7 @@ This workflow publishes the existing **SCAMGUARD MY Forensic Intelligence fronte
 
 ## Local preparation and safety
 
-Git is initialized on `main`. Baseline `a6b996afb630cb5e14211f668074d6410d10c855` (`chore: complete Task 1 application foundation`) is published to [tayyab-hub/scamguard-my](https://github.com/tayyab-hub/scamguard-my). `origin` points to that repository and `main` tracks `origin/main`; the push was verified on 2026-09-03. No Vercel deployment has been performed. Follow [PROGRESS.md](../PROGRESS.md) for actual verification, including limitations. The connection instructions below are retained for reference; this checkout is already connected.
+Git is initialized on `main`. Baseline `a6b996afb630cb5e14211f668074d6410d10c855` (`chore: complete Task 1 application foundation`) is published to [tayyab-hub/scamguard-my](https://github.com/tayyab-hub/scamguard-my). `origin` points to that repository and `main` tracks `origin/main`; the push was verified on 2026-09-03. The user reports Vercel is deployed and connected to GitHub. The hosted URL/build has not been independently checked in the latest task. Follow [PROGRESS.md](../PROGRESS.md) for evidence and limitations. The connection instructions below are retained for reference; this checkout is already connected and must not have its remote recreated.
 
 `.gitignore` excludes dependencies, virtual environments, environment secrets, generated builds/test output, caches, logs/temp files, local database/storage files, unnecessary editor/OS files and local Vercel metadata. Its unanchored `node_modules/` and `.venv/` rules apply inside frontend/backend as well. `.env` and `.env.*` are ignored; the exact safe filename `.env.example` is retained at every depth. Source, tests, documentation, package manifests/lockfiles, Python requirements/pyproject and Alembic configuration remain included. `.gitattributes` normalizes text to LF and preserves PNGs as binary.
 
@@ -45,13 +45,13 @@ Authenticate through Git's normal credential flow. The prepared branch is `main`
 Use Node 24 with npm. No Python, Docker or database is required for the frontend-only preview.
 
 ```sh
-git clone https://github.com/YOUR_ACCOUNT/YOUR_REPOSITORY.git scamguard-my
+git clone https://github.com/tayyab-hub/scamguard-my.git scamguard-my
 cd scamguard-my/frontend
 npm ci
 npm run dev
 ```
 
-Open `http://127.0.0.1:5173`. If FastAPI is running locally, the existing `/api` development proxy reaches port 8000. Otherwise the shell still renders and API-dependent panels show approved recoverable errors. This is intentional for Task 1. Local backend instructions remain in [README.md](../README.md); they are optional for previewing the frontend.
+Open `http://127.0.0.1:5173`. If FastAPI is running locally, the existing `/api` development proxy reaches port 8000. Otherwise the Task 1 workspace still renders after loading, with a visible service-unavailable notice and retry. Local backend instructions remain in [README.md](../README.md); they are optional for previewing the frontend.
 
 From `frontend`, build and preview static output:
 
@@ -75,7 +75,7 @@ Open `http://127.0.0.1:4173`. `npm run build` is `tsc -b && vite build`, with `d
 
 For a later authorized hosted-backend task, use its public **HTTPS** API base including `/api/v1`, and configure that API's CORS for the exact frontend origins. An environment change requires rebuilding/redeploying because Vite embeds public values at build time. Do not use `localhost`, `127.0.0.1`, credentials, query tokens or private keys in deployed API configuration.
 
-No separate demo mode or fixture backend exists. With no API, the shell/branding/navigation and page headings load, “API unavailable” appears, and panels show the existing error with a retry button. The Analyse editor stays hidden after capability retrieval fails. A reachable Task 1 backend instead returns the genuine unconfigured/analysis-unavailable contracts. Neither state represents detection results or real analytics.
+No separate demo mode or fixture backend exists. With no API, the shell/branding/navigation and page headings load, and failed health requests show “API unavailable.” After initial loading, Overview retains its three unavailable metrics, empty Recent analyses and Workspace status. Analyse allows local drafts with submission disabled and no assessment. Both pages show a service-unavailable notice with the real safe error and retry; the failed queries are not converted into fake data. A reachable Task 1 backend still returns the genuine unconfigured/analysis-unavailable contracts, validated by the unchanged client. Neither state represents detection results or real analytics.
 
 ## Import into Vercel
 
@@ -102,7 +102,7 @@ The minimal `frontend/vercel.json` is:
 }
 ```
 
-This is the [documented Vercel Vite SPA rewrite](https://vercel.com/docs/frameworks/frontend/vite). It lets React Router resolve `/analyse` and the app's not-found page on direct requests. Existing built assets are served normally. There is no external/backend rewrite or Vercel Function. With no backend, the catch-all may also serve HTML for `/api/v1/*`; the existing client rejects that response as non-JSON and renders the approved error state. No API contract is fabricated. When a real same-origin backend is added later, API routing must take precedence over the SPA fallback.
+This is the [documented Vercel Vite SPA rewrite](https://vercel.com/docs/frameworks/frontend/vite). It lets React Router resolve `/analyse` and the app's not-found page on direct requests. Existing built assets are served normally. There is no external/backend rewrite or Vercel Function. With no backend, the catch-all may also serve HTML for `/api/v1/*`; the existing client rejects that response as non-JSON. Pages show a safe retry notice alongside their unavailable scaffold; the health badge remains truthful. No API contract is fabricated. When a real same-origin backend is added later, API routing must take precedence over the SPA fallback.
 
 Trigger the import deployment and inspect the build log. Even if Vercel calls a default-branch deployment “Production,” this application release remains a **Task 1 frontend development preview**.
 
@@ -110,8 +110,8 @@ Trigger the import deployment and inspect the build log. Even if Vercel calls a 
 
 Local tests already exercise built files and the checked-in rewrite using a test-only server. That server is not Vercel's runtime; an actual hosted deployment must still be checked:
 
-1. Open `/` and verify the approved theme, sidebar/mobile navigation and offline error state.
-2. Open `/analyse` directly in a new tab, then refresh. The app heading and unavailable/error state must render rather than a host 404 or blank screen.
+1. Open `/` and verify the approved theme, sidebar/mobile navigation, three unavailable metric values, empty Recent analyses, Workspace status and service-unavailable notice. The health badge must say “API unavailable” when health fails.
+2. Open `/analyse` directly in a new tab, then refresh. The local draft interface and analysis-unavailable notice must render rather than a host 404 or blank screen. Submission stays disabled and no assessment appears.
 3. Navigate between Overview and Analyse, and open an unknown frontend path to check the app's not-found view.
 4. Check that JavaScript, CSS and favicon requests succeed. Inspect console/page errors; expected failed API requests must not become an uncaught render failure.
 5. Check mobile layout, visible focus/retry controls and absence of fabricated numbers/results. Submission must remain unavailable.
@@ -119,4 +119,4 @@ Local tests already exercise built files and the checked-in rewrite using a test
 
 If a direct route gets a host 404, check that Root Directory is `frontend` and the deployed commit includes its `vercel.json`. If the build cannot find `package.json`, inspect Root Directory. If the UI reports API unavailable, that is expected for this preview; do not add mock responses to hide it. If environment changes seem ignored, redeploy. If using a later HTTPS backend, investigate its availability/CORS without enabling any Task 2 behavior incidentally.
 
-**Current boundary:** local readiness and GitHub publication are complete. Import `tayyab-hub/scamguard-my` into Vercel next; hosted route verification and backend deployment have not been performed. Task 2 remains paused and has not started.
+**Current boundary:** local readiness and GitHub publication are complete; the user reports the connected Vercel frontend is deployed. An authorized push to existing `main` should trigger automatic redeployment. Check the new build and hosted routes in that existing Vercel project; a successful push alone does not verify deployment completion. No deployment URL was supplied for independent live checks in this task. Backend deployment and PostgreSQL persistence remain paused Task 2 work.

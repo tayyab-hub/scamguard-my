@@ -1,16 +1,35 @@
-import { expect, test } from '@playwright/test'
+import { expect, test, type Page } from '@playwright/test'
+
+async function expectUnavailableWorkspace(page: Page, route: string) {
+  if (route === '/') {
+    await expect(page.getByLabel('Not available', { exact: true })).toHaveText(['—', '—', '—'])
+    await expect(page.getByText('Not available yet', { exact: true })).toHaveCount(3)
+    await expect(page.getByText('Your activity starts here')).toBeVisible()
+    await expect(page.getByText('Workspace status')).toBeVisible()
+    await expect(page.getByText('None configured')).toBeVisible()
+    await expect(page.getByText('No live statistics are being collected or displayed.')).toBeVisible()
+  } else {
+    await expect(page.getByLabel('Message content')).toBeVisible()
+    await expect(page.getByText('Analysis is not enabled in this release.')).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Analyse content' })).toBeDisabled()
+    await expect(page.getByText('No assessment yet')).toBeVisible()
+    await expect(page.getByText('No safety verdict has been made.', { exact: false })).toBeVisible()
+  }
+}
 
 test('built SPA loads and refreshes direct routes without a backend or fabricated data', async ({
   page,
 }, testInfo) => {
   const errors: string[] = []
   const apiRequests: string[] = []
+  const submittedRequests: string[] = []
   page.on('pageerror', (error) => errors.push(error.message))
   page.on('console', (message) => {
     if (message.type() === 'error') errors.push(message.text())
   })
   page.on('request', (request) => {
     if (new URL(request.url()).pathname.startsWith('/api/')) apiRequests.push(request.url())
+    if (request.method() !== 'GET' || request.postData()) submittedRequests.push(request.url())
   })
 
   // Static SPA fallback returns HTML for an unconfigured API; no response is mocked.
@@ -25,22 +44,31 @@ test('built SPA loads and refreshes direct routes without a backend or fabricate
     await expect(page.getByRole('heading', { name: heading!, exact: true })).toBeVisible()
     await expect(page.getByText('API unavailable').filter({ visible: true })).toBeVisible()
     await expect(page.getByRole('alert')).toContainText('unexpected response')
-    await expect(page.getByLabel('Not available', { exact: true })).toHaveCount(0)
-    await expect(page.getByText('Your activity starts here')).toHaveCount(0)
-    await expect(page.getByLabel('Message content')).toHaveCount(0)
-    await expect(page.getByRole('button', { name: 'Analyse content' })).toHaveCount(0)
+    await expectUnavailableWorkspace(page, route!)
     await expect(page.getByText('The workspace hit a problem')).toHaveCount(0)
     await page.getByRole('button', { name: 'Try again', exact: true }).click()
     await expect(page.getByRole('alert')).toContainText('unexpected response')
     expect((await page.reload())?.status()).toBe(200)
     await expect(page.getByRole('heading', { name: heading!, exact: true })).toBeVisible()
     await expect(page.getByRole('alert')).toBeVisible()
+    await expectUnavailableWorkspace(page, route!)
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
     await page.screenshot({
       path: testInfo.outputPath(route === '/' ? 'overview-offline.png' : 'analyse-offline.png'),
       fullPage: testInfo.project.name === 'desktop',
       scale: 'css',
     })
+    if (testInfo.project.name === 'mobile') {
+      await page.screenshot({
+        path: testInfo.outputPath(route === '/' ? 'overview-offline-full.png' : 'analyse-offline-full.png'),
+        fullPage: true,
+        scale: 'css',
+      })
+    }
+    const retry = page.getByRole('button', { name: 'Try again', exact: true })
+    await retry.focus()
+    await expect(retry).toBeFocused()
+    expect(await retry.evaluate((element) => getComputedStyle(element).outlineStyle)).not.toBe('none')
   }
 
   const nav = page.getByRole('navigation', {
@@ -55,6 +83,7 @@ test('built SPA loads and refreshes direct routes without a backend or fabricate
   await expect(page.getByRole('alert')).toBeVisible()
   expect(apiRequests.length).toBeGreaterThan(0)
   for (const url of apiRequests) expect(new URL(url).origin).toBe('http://127.0.0.1:4173')
+  expect(submittedRequests).toEqual([])
   expect(errors).toEqual([])
 })
 
@@ -62,7 +91,11 @@ test('built SPA keeps navigation and safe error states when API connections fail
   page,
 }) => {
   const pageErrors: string[] = []
+  const submittedRequests: string[] = []
   page.on('pageerror', (error) => pageErrors.push(error.message))
+  page.on('request', (request) => {
+    if (request.method() !== 'GET' || request.postData()) submittedRequests.push(request.url())
+  })
   // Explicit negative test only: emulate an unreachable configured service.
   // Browser failed-network console messages are expected for this scenario.
   await page.route('**/api/v1/**', (route) => route.abort('connectionrefused'))
@@ -70,10 +103,25 @@ test('built SPA keeps navigation and safe error states when API connections fail
     await page.goto(route)
     await expect(page.getByRole('alert')).toContainText('could not reach the service')
     await expect(page.getByText('API unavailable').filter({ visible: true })).toBeVisible()
-    await expect(page.getByLabel('Message content')).toHaveCount(0)
-    await expect(page.getByRole('button', { name: 'Analyse content' })).toHaveCount(0)
+    await expectUnavailableWorkspace(page, route)
+    if (route === '/analyse') {
+      await page.getByLabel('Message content').fill('Local offline draft')
+      await page.getByRole('radio', { name: 'Website link' }).check()
+      await page.getByLabel('Website URL').fill('https://example.com')
+      await page.getByLabel('Website URL').press('Enter')
+      await expect(page.getByRole('button', { name: 'Analyse content' })).toBeDisabled()
+      await page.getByRole('radio', { name: 'Message' }).check()
+      await expect(page.getByLabel('Message content')).toHaveValue('Local offline draft')
+    }
     await page.getByRole('button', { name: 'Try again', exact: true }).click()
     await expect(page.getByRole('alert')).toContainText('could not reach the service')
+    await expectUnavailableWorkspace(page, route)
+    if (route === '/analyse') {
+      await expect(page.getByLabel('Message content')).toHaveValue('Local offline draft')
+      await page.getByRole('button', { name: 'Clear', exact: true }).click()
+      await expect(page.getByLabel('Message content')).toHaveValue('')
+    }
   }
   expect(pageErrors).toEqual([])
+  expect(submittedRequests).toEqual([])
 })

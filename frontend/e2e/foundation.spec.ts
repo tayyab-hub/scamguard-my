@@ -59,7 +59,10 @@ test('explicit failure fixture: visible error and successful retry', async ({ pa
   })
   await page.goto('/')
   await expect(page.getByRole('alert')).toContainText('temporarily unavailable')
+  await expect(page.getByText('Your activity starts here')).toBeVisible()
+  await expect(page.getByLabel('Not available', { exact: true })).toHaveCount(3)
   fail = false
   await page.getByRole('button', { name: 'Try again' }).click()
+  await expect(page.getByRole('alert')).toHaveCount(0)
   await expect(page.getByText('Your activity starts here')).toBeVisible()
 })

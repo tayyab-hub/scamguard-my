@@ -6,7 +6,7 @@ Status audited on 2026-09-03. Read [PROGRESS.md](PROGRESS.md) for execution evid
 
 | Order | Milestone | Status | Real current state and remaining exit criteria |
 | --- | --- | --- | --- |
-| 1 | Foundation | ✅ COMPLETE | Task 1 application foundation, professional responsive UI, frontend/backend architecture foundation, testing infrastructure, Git preparation and GitHub publication, and Vercel frontend readiness. The target is a frontend development preview. Vercel import and live-URL checks remain next steps; no remote CI result is claimed. |
+| 1 | Foundation | ✅ COMPLETE | Task 1 application foundation, professional responsive UI, frontend/backend architecture foundation, testing infrastructure, Git preparation/publication and Vercel frontend readiness. The user reports the GitHub-connected Vercel preview is deployed. Failed API requests now retain the usable unavailable workspace without fake data. Verify the hosted preview after the fix redeploys; no remote CI/deployment check is claimed from local tests. |
 | 2 | Core Platform | ⚪ NOT STARTED | Task 2 is paused. Actual PostgreSQL persistence, successful real database verification, domain models/migrations, submission/lifecycle, ownership/authentication and stored history remain here. Existing unavailable contracts and draft controls are scaffolding only. |
 | 3 | Text Intelligence | ⚪ NOT STARTED | No classifier, dataset, rules engine or inference. Define supported languages/inputs, genuine data provenance, an initial method and reproducible evaluation before enabling text assessment. |
 | 4 | Explainability | ⚪ NOT STARTED | No explanations or evidence schema. Explanations must trace real evidence/model behavior and state uncertainty; do not fabricate rationales. |
@@ -24,9 +24,9 @@ Status audited on 2026-09-03. Read [PROGRESS.md](PROGRESS.md) for execution evid
 
 Security and privacy are cross-cutting requirements from the first content-handling feature onward. Their position in this list is a consolidation/audit milestone, not permission to postpone necessary safeguards. Similarly, each intelligence module needs genuine evaluation when introduced; final evaluation does not excuse unevaluated intermediate releases.
 
-## Immediate next step — Task 1 preview publication
+## Immediate next step — Task 1 preview redeployment verification
 
-The baseline is published to [tayyab-hub/scamguard-my](https://github.com/tayyab-hub/scamguard-my) on `main`. Next, import that repository into Vercel with Root Directory `frontend`, and verify the deployed `/` and `/analyse` routes, refresh behavior, assets and offline states. Follow [DEPLOYMENT.md](docs/DEPLOYMENT.md). No Vercel project is configured by the GitHub-publication task. Live backend hosting and scam detection are later work. The frontend preview does not require a reachable PostgreSQL database.
+The repository is published to [tayyab-hub/scamguard-my](https://github.com/tayyab-hub/scamguard-my) on `main`; the user reports Vercel is already connected and deployed. After pushing the Task 1 resilience fix, inspect the automatic Vercel deployment and verify the hosted `/` and `/analyse` routes, refresh behavior, assets and usable offline states. Follow [DEPLOYMENT.md](docs/DEPLOYMENT.md). Do not recreate the remote or Vercel connection. Backend deployment and actual PostgreSQL persistence remain Task 2 work; detection is later. The preview needs neither a live backend nor PostgreSQL.
 
 ## Paused future Core Platform plan
 

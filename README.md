@@ -12,20 +12,20 @@ The visual migration preserves the existing API contracts and backend behavior. 
 
 Before implementing code, start with [CODEX.md](CODEX.md) and follow its required reading order: CODEX → [PROGRESS](PROGRESS.md) → [ROADMAP](ROADMAP.md) → [DECISIONS](DECISIONS.md) → README → [ARCHITECTURE](docs/ARCHITECTURE.md) → [DESIGN_SYSTEM](docs/DESIGN_SYSTEM.md) → [API](docs/API.md) → [TESTING](docs/TESTING.md). These files are the persistent handoff for a new session; include CODEX.md as the starting context when handing off this folder.
 
-The latest verified state is in PROGRESS.md. The Task 1 baseline `a6b996a` is published on `main` at [tayyab-hub/scamguard-my](https://github.com/tayyab-hub/scamguard-my), with local `main` tracking `origin/main`. Vercel deployment remains pending. Historical Task 1, redesign and memory-handoff counts remain in their dated reports; they are not current inventories. The earlier ignored `.local` source ZIP is historical and must not be uploaded as the current source.
+The latest verified state is in PROGRESS.md. The Task 1 baseline is published on `main` at [tayyab-hub/scamguard-my](https://github.com/tayyab-hub/scamguard-my), with local `main` tracking `origin/main`. The user reports the Vercel frontend preview is deployed and connected to GitHub; its hosted URL has not been independently checked in the latest task. The frontend now retains its Task 1 workspace when the backend is unavailable. Historical Task 1, redesign and memory-handoff counts remain in their dated reports; they are not current inventories. The earlier ignored `.local` source ZIP is historical and must not be uploaded as the current source.
 
 ## Frontend quick start
 
-Only Node.js and npm are needed for the frontend preview. Use Node 24. Replace the example GitHub URL once your empty repository exists:
+Only Node.js and npm are needed for the frontend preview. Use Node 24:
 
 ```sh
-git clone https://github.com/YOUR_ACCOUNT/YOUR_REPOSITORY.git scamguard-my
+git clone https://github.com/tayyab-hub/scamguard-my.git scamguard-my
 cd scamguard-my/frontend
 npm ci
 npm run dev
 ```
 
-Open <http://127.0.0.1:5173>. In an existing checkout, run the last two commands from `frontend/`; cloning is unnecessary. No `.env` file or live backend is required to render the shell. Without the API, the approved “API unavailable” and recoverable error states are expected. No fake dashboard or result data appears, and the editor is hidden when capability retrieval fails.
+Open <http://127.0.0.1:5173>. In an existing checkout, run the last two commands from `frontend/`; cloning is unnecessary. No `.env` file or live backend is required. After the initial loading state, failed requests leave the Task 1 workspace visible with a service-unavailable notice and retry. Overview retains unavailable metrics, empty history and workspace status; Analyse allows memory-only drafts with submission disabled. The independent health badge remains “API unavailable” when health fails. No fake data, capabilities or results are produced.
 
 To build and inspect the static frontend locally, from `frontend/`:
 
@@ -38,17 +38,15 @@ Open <http://127.0.0.1:4173>. Output is `frontend/dist`. Static preview delibera
 
 ## GitHub and Vercel
 
-From the repository root, after creating an **empty** GitHub repository and replacing the URL:
+This checkout is already connected. From the repository root, inspect the existing remote before an authorized push:
 
 ```sh
 git status
 git remote -v
-# Only if no origin exists; otherwise inspect the existing remote first.
-git remote add origin https://github.com/YOUR_ACCOUNT/YOUR_REPOSITORY.git
-git push -u origin main
+git push origin main
 ```
 
-In Vercel, import that repository and use these settings:
+The connected Vercel project uses these settings (also applicable to a new import):
 
 | Setting | Value |
 | --- | --- |
@@ -60,7 +58,7 @@ In Vercel, import that repository and use these settings:
 | Node.js | 24.x |
 | Environment for this preview | Leave `VITE_API_BASE_URL` unset; add no backend secrets or `API_PROXY_TARGET` |
 
-`frontend/vercel.json` contains the SPA rewrite to `index.html`, following [Vercel's Vite guidance](https://vercel.com/docs/frameworks/frontend/vite). It enables direct `/analyse` loads and refreshes; the unchanged client catches unavailable/non-JSON API responses and displays approved error states. Local checks cover the checked-in rewrite and built files; **a live Vercel deployment/route check is still pending import**. See [DEPLOYMENT.md](docs/DEPLOYMENT.md) for the full workflow, verification steps and troubleshooting. Do not deploy FastAPI to Vercel in this task.
+`frontend/vercel.json` contains the SPA rewrite to `index.html`, following [Vercel's Vite guidance](https://vercel.com/docs/frameworks/frontend/vite). It enables direct `/analyse` loads and refreshes; the unchanged client rejects unavailable/non-JSON API responses. The pages retain their static unavailable interface with a visible error/retry notice. Local checks cover the checked-in rewrite and built files; verify the actual hosted routes after Vercel redeploys the fix. See [DEPLOYMENT.md](docs/DEPLOYMENT.md) for the workflow and troubleshooting. FastAPI is not deployed as part of this frontend task.
 
 ## Architecture
 
@@ -173,7 +171,7 @@ npm run test:preview
 
 Playwright starts both servers if the configured ports are free, or reuses existing servers locally. CI always starts its own servers. It covers real API rendering, route reloads, navigation visibility, mobile overflow, local drafting, empty states, and console/page errors. One separate test injects a 503 fixture and verifies recovery. This expected negative test can produce a browser network error; the successful live API test requires an empty console error list.
 
-The additional visual regression suite verifies the two navigation destinations, light-theme contrast, skip-link and radio/field focus, and layouts at 320, 390, 768, 1024, and 1440 pixels. The original tests are unchanged. To intentionally refresh the four documentation images from the live application:
+The additional visual regression suite verifies the two navigation destinations, light-theme contrast, skip-link and radio/field focus, and layouts at 320, 390, 768, 1024, and 1440 pixels. The Task 1 resilience fix updates failure expectations to require the unavailable workspace plus visible errors, with stronger retry and disabled-submission coverage. To intentionally refresh the four documentation images from the live application:
 
 ```powershell
 # frontend/; omit PLAYWRIGHT_CHANNEL when using Playwright's installed Chromium.
@@ -218,9 +216,9 @@ This is a production-oriented **foundation**, not a launch-ready detection servi
 
 See [the API contract](docs/API.md), [the design system](docs/DESIGN_SYSTEM.md), and [the Task 1 delivery record](docs/TASK_1.md) for implementation and verification details.
 
-## Next step — connect GitHub and verify the frontend preview
+## Next step — verify the redeployed frontend preview
 
-The baseline is now on GitHub. Import `tayyab-hub/scamguard-my` into Vercel with Root Directory `frontend`, then verify `/`, `/analyse`, direct refresh, assets and offline error states at the deployed URL. Vercel import has not been performed. Actual PostgreSQL persistence belongs to Task 2; the existing Core Platform plan is paused. Scam detection and live backend hosting are later work. **Do not begin Task 2 automatically.**
+After the resilience fix is pushed to the existing `main`, inspect the automatic Vercel build and verify `/`, `/analyse`, direct refresh, assets and the usable offline workspace at the deployed URL. A Git push is not independent proof that Vercel finished deploying. Actual PostgreSQL persistence and backend hosting remain Task 2 work; scam detection is later. **Do not begin Task 2 automatically.**
 
 ## Framework references
 

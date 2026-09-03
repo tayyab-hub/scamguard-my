@@ -20,13 +20,19 @@ Recorded: 2026-09-03, Asia/Kuala_Lumpur. These decisions come from the current i
 | D14 | Preserve contracts during redesigns | Implemented visual migration retained backend and API/client behavior. Future functional contract evolution must be explicitly scoped and coordinated across schemas, tests, and docs. Never enable capabilities based solely on a frontend control. |
 | D15 | Explicit task boundaries and honest evidence | Task 1 and its visual migration were delivered; the memory-handoff task added documentation only. No automatic Task 2 continuation. Preserve tests and historical evidence; record skips, unrun CI, environment limits and actual completion status. See D16 for the later deployment-preparation scope. |
 
-## Future decisions still required
-
 ### D16 — Task 1 deployment boundary (accepted 2026-09-03)
 
 Task 1 now explicitly includes GitHub-safe local Git preparation and Vercel readiness for the existing React/Vite frontend. Deploy/import only `frontend`, with the approved Forensic Intelligence UI and a static SPA rewrite. No FastAPI deployment, framework switch, new authentication, database model or detection feature is part of this task. Blank/unset API configuration must remain safe through existing unavailable/error states without fake data. Actual PostgreSQL persistence is Task 2; live backend hosting and scam detection are later. Task 2 is paused. This scope clarification supersedes the earlier requirement to clear real PostgreSQL verification before completing the frontend foundation milestone; it does not claim the database works.
 
 Local checks and configuration establish readiness, not an actual GitHub push, hosted URL or remote CI result. Those require the target repository/project and subsequent live verification. The baseline uses the existing configured Git author identity; no global identity or remote is overwritten.
+
+### D17 — Usable Task 1 preview without a deployed API (accepted 2026-09-03)
+
+The user reports the GitHub-connected Vercel frontend is deployed and explicitly requests a page-level resilience fix. Amend the earlier full-page request-error presentation only: failed dashboard/capabilities queries retain the approved unavailable Overview and memory-only Analyse interface with a visible safe error and retry. Initial pending states remain; submission stays disabled. No fake query data, metrics, history, capabilities or results are created. Keep the client, runtime validation, health badge, API contracts, environment defaults and backend unchanged. This does not establish a blanket fallback for future backend-required features.
+
+Verification must cover successful responses, unreachable/non-JSON APIs, unavailable metrics instead of zero, independent health reporting, disabled submission/local draft privacy, retries, direct routes, and desktop/mobile behavior. Publish only after passing checks to the existing `main`; GitHub pushes are expected to trigger the user's connected Vercel deployment but do not prove hosted completion. PostgreSQL persistence and backend deployment remain paused Task 2 work.
+
+## Future decisions still required
 
 The first Core Platform task must settle initial supported input scope, analysis lifecycle and result schema (including D09/D10), validation and limits, authentication/ownership, raw-content handling, retention/deletion, error semantics and migration boundaries. No choice of classifier, training corpus, inference provider, OCR library, queue, object store, backend deployment host, or campaign algorithm has been accepted or implemented merely by listing a future roadmap stage.
 
