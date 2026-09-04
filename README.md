@@ -4,7 +4,7 @@
 
 A general scam-awareness workspace with the approved warm light **Forensic Intelligence** identity. The project was initially Malaysia-focused and was generalized following supervisor feedback. The repository and Vercel domain retain their historical `-my` suffix.
 
-**Task 1 is complete. Task 2 is implemented on `task-2-core-platform` for review.** Message/URL submissions can be validated, saved in PostgreSQL and retrieved through history. The dashboard displays genuine submission counts and dates. `SUBMITTED` means saved, never assessed. No scam classifier, risk/confidence scores or safety verdicts exist. Phone and QR UI are complete; their intelligence is not started.
+**Task 1 is complete. Task 2 is implemented and technically audited on `task-2-core-platform` for review.** Message/URL submissions can be validated, saved in PostgreSQL and retrieved through history. The dashboard displays genuine submission counts and dates. `SUBMITTED` means saved, never assessed. No scam classifier, risk/confidence scores or safety verdicts exist. Phone and QR UI are complete; their intelligence is not started. See the [Task 2 audit](docs/TASK_2_AUDIT.md) for exact evidence and remaining limits.
 
 The existing frontend is deployed at https://scamguard-my.vercel.app/ and connected to GitHub/main. Hosted Overview/Analyse, direct refresh, four modes and unavailable-backend fallback were tested on 2026-09-04 with no page errors. Task 2 is a separate branch; do not merge automatically. No live backend is deployed.
 

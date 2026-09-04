@@ -8,7 +8,7 @@ from uuid import uuid4
 
 import pytest
 from fastapi.testclient import TestClient
-from sqlalchemy import inspect, text
+from sqlalchemy import event, inspect, text
 from sqlalchemy.engine import make_url
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
@@ -17,6 +17,7 @@ from app.core.config import Settings
 from app.db.models import Analysis, InputType
 from app.db.session import build_engine
 from app.main import create_app
+from app.services.analyses import list_submissions
 
 pytestmark = pytest.mark.integration
 
@@ -133,6 +134,40 @@ def test_real_dashboard_order_pagination_and_safe_previews(persistent):
         assert len(item["preview"]) <= 160
         assert set(item) == {"id", "input_type", "status", "created_at", "updated_at", "preview"}
     assert persistent.get("/api/v1/analyses?page=9999").json()["items"] == []
+
+
+def test_list_count_and_rows_use_one_database_snapshot(database):
+    _, engine = database
+    inserted = False
+
+    def insert_after_count(_connection, _cursor, statement, _parameters, _context, _many):
+        nonlocal inserted
+        if inserted or "count(*)" not in statement.lower():
+            return
+        inserted = True
+        with engine.begin() as writer:
+            writer.execute(
+                text(
+                    "INSERT INTO analyses (id, input_type, status, content) "
+                    "VALUES (:id, 'MESSAGE', 'SUBMITTED', 'Concurrent test submission')"
+                ),
+                {"id": uuid4()},
+            )
+
+    with engine.begin() as connection:
+        connection.execute(text("TRUNCATE TABLE analyses"))
+    event.listen(engine, "after_cursor_execute", insert_after_count)
+    try:
+        with Session(engine) as session:
+            result = list_submissions(session, page=1, page_size=10)
+    finally:
+        event.remove(engine, "after_cursor_execute", insert_after_count)
+
+    assert inserted is True
+    assert result.total == 0
+    assert result.items == []
+    with Session(engine) as session:
+        assert list_submissions(session, page=1, page_size=10).total == 1
 
 
 @pytest.mark.parametrize(

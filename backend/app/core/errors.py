@@ -17,6 +17,16 @@ class ApiError(Exception):
         self.message = message
 
 
+def safe_validation_field(error: dict) -> str:
+    location = list(error["loc"])
+    # Pydantic appends an unknown JSON key to extra-field errors. That key is
+    # user-controlled and can itself contain private data, so report its trusted
+    # parent location instead.
+    if error.get("type") == "extra_forbidden" and location:
+        location.pop()
+    return ".".join(map(str, location))
+
+
 def error_response(
     request: Request,
     status: int,
@@ -69,7 +79,7 @@ def install_error_handlers(app: FastAPI) -> None:
     ) -> JSONResponse:
         # Do not echo request values, Pydantic context, URLs or user-submitted content.
         details = [
-            {"field": ".".join(map(str, item["loc"])), "message": "Invalid value."}
+            {"field": safe_validation_field(item), "message": "Invalid value."}
             for item in exc.errors()
         ]
         return error_response(

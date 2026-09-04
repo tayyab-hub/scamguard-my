@@ -54,7 +54,7 @@ cd backend
 .\.venv\Scripts\python.exe -m pytest -q -m integration
 ```
 
-`tests/test_persistence.py` requires the database name to end in `_test`. Its module fixture applies Alembic head, checks schema drift, downgrades to base, verifies the table is removed and reapplies head. Cases truncate only that dedicated analyses table before/after tests. This is intentionally destructive to test data. They cover real Message/URL commit/read across fresh applications, invalid/oversized/unsupported input, pagination/order, safe detail, measured empty/populated dashboard, constraints/rollback, request bounds and capability separation. The original real readiness integration remains and runs with the same configured URL.
+`tests/test_persistence.py` requires the database name to end in `_test`. Its module fixture applies Alembic head, checks schema drift, downgrades to base, verifies the table is removed and reapplies head. Cases truncate only that dedicated analyses table before/after tests. This is intentionally destructive to test data. They cover real Message/URL commit/read across fresh applications, invalid/oversized/unsupported input, pagination/order, a deterministic concurrent-write snapshot check, safe detail, measured empty/populated dashboard, constraints/rollback, request bounds and capability separation. Unit coverage also verifies that unknown user-controlled JSON keys are not reflected in validation errors. The original real readiness integration remains and runs with the same configured URL.
 
 For development schema migration (from backend/):
 

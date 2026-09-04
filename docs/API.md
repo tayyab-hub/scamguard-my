@@ -10,7 +10,7 @@ Application responses include server-generated `X-Request-ID`, `Cache-Control: n
 | GET /ready | 200 `{status:"ready",database:"connected"}` after SELECT 1 and, with persistence enabled, an analyses-table query. Safe 503 if unavailable/unmigrated. |
 | GET /capabilities | Intelligence fields remain `analysis_available:false`, `supported_inputs:[]`, `reason:"Analysis is not enabled in this release."`. Adds `submission_available` and `submission_inputs`. These become true / `["MESSAGE","URL"]` only when persistence is enabled and the database/table query succeeds; otherwise false / `[]`. |
 | POST /analyses | 201 AnalysisDetail after validation and commit. Requires PERSISTENCE_ENABLED. |
-| GET /analyses?page=1&page_size=10 | `{items: AnalysisSummary[], total, page, page_size}`. Page 1–10000; size 1–100. Newest first by created_at DESC then UUID DESC. Out-of-range populated pages return an empty items array. |
+| GET /analyses?page=1&page_size=10 | `{items: AnalysisSummary[], total, page, page_size}`. Page 1–10000; size 1–100. Newest first by created_at DESC then UUID DESC. Count and rows use one request-scoped database snapshot. Out-of-range populated pages return an empty items array. |
 | GET /analyses/{analysis_id} | AnalysisDetail, UUID validation (422), missing row 404 ANALYSIS_NOT_FOUND. |
 | GET /dashboard | Real database summary when persistence is enabled; explicit not_configured otherwise. |
 
@@ -48,7 +48,7 @@ Disabled dashboard retains the Task 1 shape: `{status:"not_configured",total_ana
 {"error":{"code":"DATABASE_UNAVAILABLE","message":"Submission storage is unavailable.","request_id":"server-generated-uuid","details":[]}}
 ```
 
-422 VALIDATION_ERROR, 413 REQUEST_TOO_LARGE, 404 ANALYSIS_NOT_FOUND/HTTP_404, 405 HTTP_405, 503 PERSISTENCE_UNAVAILABLE/DATABASE_UNAVAILABLE and 500 INTERNAL_ERROR use safe envelopes. Validation reports generic field locations, never values/SQL/credentials. Unexpected exception logs contain type/request ID only. There is no `/api/v1/analyse` singular submission endpoint.
+422 VALIDATION_ERROR, 413 REQUEST_TOO_LARGE, 404 ANALYSIS_NOT_FOUND/HTTP_404, 405 HTTP_405, 503 PERSISTENCE_UNAVAILABLE/DATABASE_UNAVAILABLE and 500 INTERNAL_ERROR use safe envelopes. Validation reports generic trusted field locations, never values/SQL/credentials; an unknown user-controlled JSON key is reduced to its parent body location. Unexpected exception logs contain type/request ID only. There is no `/api/v1/analyse` singular submission endpoint.
 
 A service explicitly commits successful writes; request dependencies roll back failures and close sessions. Reads never implicitly commit. A fresh process can retrieve a committed record. If a response is lost after commit, the client cannot know whether persistence succeeded: writes have no automatic retry or idempotency key; check history before manually retrying.
 

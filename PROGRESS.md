@@ -1,6 +1,6 @@
 # SCAMGUARD — current project state
 
-Updated **2026-09-04 16:05 +0800**, Asia/Kuala_Lumpur. **Task 1 and Task 2 are ✅ COMPLETE within their documented scope.** Task 2 is published on `task-2-core-platform` for review, not merged into main. No Task 3 development is running or authorized.
+Updated **2026-09-04 18:42 +0800**, Asia/Kuala_Lumpur. **Task 1 and Task 2 are ✅ COMPLETE within their documented scope.** The Task 2 technical audit completed with three minor fixes on `task-2-core-platform`; the branch remains for review and is not merged into main. No Task 3 development is running or authorized.
 
 ## Current milestone and functionality
 
@@ -15,7 +15,7 @@ Updated **2026-09-04 16:05 +0800**, Asia/Kuala_Lumpur. **Task 1 and Task 2 are �
 | Phone intelligence / QR decoding/intelligence | ⚪ NOT STARTED | No normalization/reputation/reporting, decoding/payment routing or assessment. |
 | Text/URL intelligence, ML, risk/confidence/evidence, OCR, community, adaptive learning, campaigns, Model Lab | ⚪ NOT STARTED | No detection or external intelligence functionality. |
 | Security & Privacy | 🟡 IN PROGRESS | Input/body bounds, safe errors/ORM, exact CORS and pre-submit storage notice. Private shared dataset only. No public access/ownership, retention/deletion, authentication, consent system, encryption guarantee or rate limit. |
-| Task 2 branch publication | 🟡 IN PROGRESS | Branding bd41afa, backend be926fa and frontend 164f676 committed; documentation/publication is the final step. Main remains unchanged. |
+| Task 2 audit/publication | ✅ COMPLETE | Full local audit and three minor fixes completed and delivered on `task-2-core-platform`. Main remains unchanged. |
 
 ## Functional API state
 
@@ -29,18 +29,21 @@ Executed 2026-09-04 on Windows, Node 24.18.0, Python 3.12.13, PostgreSQL 17.11 a
 | --- | --- |
 | frontend: npm.cmd run typecheck | PASS (final source/config check); earlier new test collection/type-option errors fixed. |
 | frontend: npm.cmd run lint | PASS, zero warnings; control-regex lint issue fixed without disabling the rule. |
-| frontend: npm.cmd test | 45 passed in 3 files, 9.71s at 15:55:31. Original 32 cases retained plus 13 Task 2 cases. |
-| frontend: npm.cmd run build | PASS, Vite 3.80s; JS 395.84 kB (120.47 kB gzip), CSS 32.95 kB (6.83 kB gzip). |
-| frontend: npm.cmd run test:e2e -- --workers=2 | 18 passed, 34.0s. Existing foundation/motion/visual assertions retained; dedicated servers on 8001/5174 with persistence disabled. |
-| frontend: npm.cmd run test:persistence | 2 passed, 22.1s in final screenshot-position rerun; real PostgreSQL desktop/mobile Message+URL save, count, history/detail, refresh, disabled modes, no external requests. |
-| frontend: npm.cmd run test:preview -- --workers=2 | 6 passed, 10.0s. Built frontend, real rewrite, no API; direct refresh/offline/reduced motion. |
+| frontend: npm.cmd test | 46 passed in 3 files, 11.33s. Includes a Unicode preview-contract regression; production behavior was already correct. |
+| frontend: npm.cmd run build | PASS, Vite 4.99s; JS 395.84 kB (120.47 kB gzip), CSS 32.98 kB (6.83 kB gzip). |
+| frontend: npm.cmd run test:e2e -- --workers=2 | 18 passed, 37.6s. Existing foundation/motion/visual assertions retained; dedicated servers on 8001/5174 with persistence disabled. |
+| frontend: npm.cmd run test:persistence | 2 passed, 19.5s; real PostgreSQL desktop/mobile Message+URL save, count, history/detail, refresh, disabled modes, no external requests. |
+| frontend: npm.cmd run test:preview -- --workers=2 | 6 passed, 12.3s. Built frontend, real rewrite, no API; direct refresh/offline/reduced motion. |
 | backend: python -m ruff check app tests migrations scripts | PASS. |
 | backend: python -m ruff format --check app tests migrations scripts | PASS, 27 files already formatted (final confirmation). |
-| backend: python -m pytest -q (using backend/.venv, TEST_DATABASE_URL configured) | 53 passed, 0 skipped, 2 dependency warnings, 9.16s. Includes real PostgreSQL integration, no SQLite substitute. |
+| backend: python -m pytest -q (using backend/.venv, TEST_DATABASE_URL configured) | 55 passed, 0 skipped, 2 dependency warnings, 11.11s. Includes real PostgreSQL integration, no SQLite substitute. |
+| backend: python -m pytest -q -m integration | 28 passed, 27 deselected, 0 skipped, 2 dependency warnings, 19.63s. |
 | backend: alembic upgrade head / check | PASS on development DB; no new upgrade operations after correcting metadata constraints. |
 | Integration migration fixture | Actual PostgreSQL upgrade → check → downgrade base → upgrade head passed, plus insert/read/rollback and fresh-app retrieval. |
 
 Initial baseline was frontend TypeScript/lint PASS, 32 Vitest cases; backend 22 passed / 1 skipped because PostgreSQL was unavailable. This task established real integration rather than removing the skip. Found/fixed issues: explicit Alembic/ORM enum-check metadata alignment; lint formatting/control-regex issues; new browser/test TypeScript API misuse; duplicate disclosure IDs when recent and full history display the same record; screenshot scroll artifacts. Existing tests were not removed/weakened. Only the intentional additive capabilities response expectation changed in the old backend test.
+
+The final audit found and fixed three additional minor defects: extra-field validation errors could reflect a user-controlled JSON key; a concurrent insert between list count/row queries could return an internally inconsistent page; and switching to reduced motion could briefly retain one CSS transition. Validation now reports the trusted parent location, list count/rows use a request-scoped PostgreSQL repeatable-read snapshot, and reduced motion disables transition properties entirely. Focused regressions failed before and passed after the fixes without weakening assertions. Live `python -m app`/Vite/Chrome checks confirmed health/readiness/docs, validation, zero invalid writes, browser refresh, frontend/backend restart persistence, controlled backend outage, controlled PostgreSQL outage and recovery. See [Task 2 audit](docs/TASK_2_AUDIT.md).
 
 ## Environment, privacy and limitations
 
@@ -48,7 +51,7 @@ Official portable PostgreSQL 17.11 is local under ignored .local/pg17 with an is
 
 All stored content is visible to anyone with backend access. This is not a public content service. Before public hosting, decide authentication/ownership, authorization, consent/privacy policy, minimization/retention/deletion including backups, encryption and abuse/rate limits. No idempotency keys: a lost POST acknowledgement may have committed; check history before retry. Offset pages can shift with concurrent submissions. No intelligence/result fields, uploads, third-party calls or learning exist.
 
-Existing non-failing warnings remain: Zod/Rollup annotations, Starlette httpx/AnyIO deprecations and Playwright color environment. Nothing was suppressed. Not verified: fresh installs/dependency audit, Linux/remote CI execution, other browser engines/physical devices, comprehensive security/accessibility/performance/load testing, hosted backend or branch preview deployment. Local Windows browser/bundler/PostgreSQL execution required approved host access.
+Existing non-failing warnings remain: Zod/Rollup annotations, Starlette httpx/AnyIO deprecations and Playwright color environment. Nothing was suppressed. `pip check` passed. Docker-specific startup could not run because Docker is not installed; the same isolated tests ran against genuine PostgreSQL 17.11. Not verified: fresh installs/vulnerability audit, Linux/remote CI execution, other browser engines/physical devices, comprehensive security/accessibility/performance/load testing, hosted backend or branch preview deployment. Local Windows browser/bundler/PostgreSQL execution required approved host access.
 
 ## Visual and deployment handoff
 
@@ -58,7 +61,7 @@ The eight foundation documentation images are refreshed where pixels changed. Fo
 
 ## Exact next step
 
-**Review the published task-2-core-platform branch and merge manually only when approved.** Check its GitHub CI and Vercel deployment in the connected accounts. No implementation work remains running in this task. Recommended Task 3, separately authorized after review: the first Text Intelligence capability with dataset provenance, supported languages, held-out genuine evaluation, evidence and insufficient-information handling, with risk/confidence separated. Do not implement Task 3 automatically.
+**Review the audited `task-2-core-platform` branch and merge manually only when approved.** Check its GitHub CI and Vercel deployment in the connected accounts. No implementation work remains running in this task. Recommended Task 3, separately authorized after review: the first Text Intelligence capability with dataset provenance, supported languages, held-out genuine evaluation, evidence and insufficient-information handling, with risk/confidence separated. Do not implement Task 3 automatically.
 
 ## Historical Task 1 handoff (superseded by this task)
 

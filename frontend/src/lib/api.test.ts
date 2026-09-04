@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { ApiError, getApi, healthSchema } from './api'
+import { ApiError, analysisSummarySchema, getApi, healthSchema } from './api'
 import { parseApiBaseUrl } from './env'
 import { healthFixture } from '../test/fixtures'
 
@@ -108,5 +108,20 @@ describe('public environment validation', () => {
     '/',
   ])('rejects %s', (url) => {
     expect(() => parseApiBaseUrl(url)).toThrow('VITE_API_BASE_URL')
+  })
+})
+
+describe('persisted response validation', () => {
+  const summary = {
+    id: '01d97d2d-e1f8-45af-91e5-c7f2df98758b',
+    input_type: 'MESSAGE',
+    status: 'SUBMITTED',
+    created_at: '2026-09-04T07:00:00Z',
+    updated_at: '2026-09-04T07:00:00Z',
+  }
+
+  it('measures preview limits in Unicode code points like the backend', () => {
+    expect(analysisSummarySchema.safeParse({ ...summary, preview: '😀'.repeat(100) }).success).toBe(true)
+    expect(analysisSummarySchema.safeParse({ ...summary, preview: '😀'.repeat(161) }).success).toBe(false)
   })
 })

@@ -3,6 +3,7 @@ from uuid import UUID
 
 from fastapi import Query
 from fastapi.testclient import TestClient
+from pydantic import BaseModel, ConfigDict
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.orm import Session
 
@@ -106,6 +107,26 @@ def test_validation_errors_do_not_echo_input(app):
     assert response.json()["error"]["details"] == [
         {"field": "query.count", "message": "Invalid value."}
     ]
+    assert "private-value" not in response.text
+
+
+def test_validation_errors_do_not_echo_unknown_field_names(app):
+    class StrictPayload(BaseModel):
+        model_config = ConfigDict(extra="forbid")
+        content: str
+
+    @app.post("/test-only/strict-payload")
+    def validate(payload: StrictPayload):
+        return payload
+
+    with TestClient(app) as client:
+        response = client.post(
+            "/test-only/strict-payload",
+            json={"content": "safe", "private-secret-key": "private-value"},
+        )
+    assert response.status_code == 422
+    assert response.json()["error"]["details"] == [{"field": "body", "message": "Invalid value."}]
+    assert "private-secret-key" not in response.text
     assert "private-value" not in response.text
 
 

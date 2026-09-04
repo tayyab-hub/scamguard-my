@@ -27,7 +27,7 @@ Security and privacy are cross-cutting requirements from the first content-handl
 
 ## Active Task 2 handoff
 
-Task 2 is complete and published on `task-2-core-platform` for review. No further task is running. Do not merge into main. The main Vercel preview at https://scamguard-my.vercel.app/ was verified on 2026-09-04; branch deployment status is separate. No public backend hosting is authorized. Keep the existing remote/domain.
+Task 2 implementation and local technical audit are complete on `task-2-core-platform` for review. The audit added only validation-privacy, concurrent-list consistency and reduced-motion fixes. No further task is running. Do not merge into main automatically. The main Vercel preview at https://scamguard-my.vercel.app/ was verified on 2026-09-04; branch deployment status is separate. No public backend hosting is authorized. Keep the existing remote/domain.
 
 ## Recommended Task 3, after Task 2 review and merge
 

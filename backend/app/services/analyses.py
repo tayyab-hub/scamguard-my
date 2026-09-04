@@ -30,6 +30,9 @@ def record_submission(session: Session, data: AnalysisCreate) -> AnalysisDetail:
 
 
 def list_submissions(session: Session, page: int, page_size: int) -> AnalysisList:
+    # Keep the count and rows consistent if another request commits between them.
+    # This is request-scoped: get_session closes and rolls back the read transaction.
+    session.connection(execution_options={"isolation_level": "REPEATABLE READ"})
     total = session.scalar(select(func.count()).select_from(Analysis))
     records = session.scalars(
         select(Analysis)
