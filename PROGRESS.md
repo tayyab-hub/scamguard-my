@@ -1,6 +1,6 @@
 # SCAMGUARD — current project state
 
-Updated **2026-09-04 16:01 +08:00**, Asia/Kuala_Lumpur. Task 1 is ✅ COMPLETE. Task 2 implementation/local verification is ✅ COMPLETE; final branch publication/handoff is 🟡 IN PROGRESS on `task-2-core-platform`. Do not merge into main or begin Task 3.
+Updated **2026-09-04 16:05 +0800**, Asia/Kuala_Lumpur. **Task 1 and Task 2 are ✅ COMPLETE within their documented scope.** Task 2 is published on `task-2-core-platform` for review, not merged into main. No Task 3 development is running or authorized.
 
 ## Current milestone and functionality
 
@@ -54,11 +54,11 @@ Existing non-failing warnings remain: Zod/Rollup annotations, Starlette httpx/An
 
 Main https://scamguard-my.vercel.app/ passed read-only live Overview/Analyse loads, direct refresh, four modes and offline fallback with zero page errors at Task 2 start. That is Task 1 deployment evidence, not Task 2 branch deployment proof. Vercel/GitHub names remain unchanged; no backend hosting or automatic merge is authorized.
 
-The eight foundation documentation images are refreshed where pixels changed. Four Task 2 images show explicitly labelled real test-database submissions, never production analytics. Manual review includes desktop/mobile, 320px QR, field/file focus and real saved/history states. Screenshot scroll positioning was corrected to avoid misleading fixed-sidebar captures. All twelve current documentation views were manually inspected; no obvious clipping, horizontal overflow, spacing/contrast defect or inaccessible focus/control overlap was found in the tested states. Browser checks cover 320–1440px widths; physical-device/full accessibility certification is not claimed. Publication status is recorded below before handoff.
+The eight foundation documentation images are refreshed where pixels changed. Four Task 2 images show explicitly labelled real test-database submissions, never production analytics. Manual review includes desktop/mobile, 320px QR, field/file focus and real saved/history states. Screenshot scroll positioning was corrected to avoid misleading fixed-sidebar captures. All twelve current documentation views were manually inspected; no obvious clipping, horizontal overflow, spacing/contrast defect or inaccessible focus/control overlap was found in the tested states. Browser checks cover 320–1440px widths; physical-device/full accessibility certification is not claimed. Publication is confirmed: GitHub accepted task-2-core-platform at b9b1611. Unauthenticated GitHub deployment metadata returned HTTP 404, so a Vercel branch URL/status and remote CI result could not be verified. This is a visibility limitation, not a known deployment failure. Do not invent a preview URL.
 
 ## Exact next step
 
-Finish branch publication and report the result. Then **review Task 2 on task-2-core-platform and merge manually only when approved**. Recommended Task 3, separately authorized after review: the first Text Intelligence capability with dataset provenance, supported languages, held-out genuine evaluation, evidence and insufficient-information handling, with risk/confidence separated. Do not implement Task 3 automatically.
+**Review the published task-2-core-platform branch and merge manually only when approved.** Check its GitHub CI and Vercel deployment in the connected accounts. No implementation work remains running in this task. Recommended Task 3, separately authorized after review: the first Text Intelligence capability with dataset provenance, supported languages, held-out genuine evaluation, evidence and insufficient-information handling, with risk/confidence separated. Do not implement Task 3 automatically.
 
 ## Historical Task 1 handoff (superseded by this task)
 

@@ -18,11 +18,11 @@ Read these files completely, in this order, before implementing code:
 
 Then read any applicable directory instructions and the relevant source, tests, and task records. `docs/TASK_1.md` and `docs/REDESIGN.md` preserve delivery history; they do not override the latest verification in `PROGRESS.md`. Repository documents provide persistent context, not permission to start a roadmap item. Follow the current user's scope and applicable higher-priority instructions. If documentation and code disagree, inspect the evidence, report the discrepancy, and reconcile the documents; never fabricate completion to resolve it.
 
-## Active Task 2 authorization
+## Task 2 completion and review boundary
 
 The supervisor requested a general international product branded SCAMGUARD, formally SCAMGUARD: Multi-Modal Scam Detection & Reporting Web Application. Country-specific names in older records are historical. Keep the approved Forensic Intelligence design and the existing GitHub/Vercel names.
 
-Task 1 is complete, including the deployed and tested frontend at https://scamguard-my.vercel.app/. Work only on `task-2-core-platform`; push that branch for review and do not merge into main or begin Task 3. The current user explicitly authorizes PostgreSQL/Alembic, Message/URL submission, persisted SUBMITTED records, history and genuine dashboard counts. This supersedes historical Task 1 memory-only/paused instructions for Message/URL only. Keep intelligence unavailable and Phone/QR local/disabled. No authentication is requested: this iteration is a private/shared development workspace, not a public content service. Do not deploy a public backend before ownership/access, consent, retention/deletion and abuse controls are settled.
+Task 2 is implemented, verified and published for review; no automatic next task is authorized. Task 1 is complete, including the deployed and tested frontend at https://scamguard-my.vercel.app/. Work only on `task-2-core-platform`; push that branch for review and do not merge into main or begin Task 3. The current user explicitly authorizes PostgreSQL/Alembic, Message/URL submission, persisted SUBMITTED records, history and genuine dashboard counts. This supersedes historical Task 1 memory-only/paused instructions for Message/URL only. Keep intelligence unavailable and Phone/QR local/disabled. No authentication is requested: this iteration is a private/shared development workspace, not a public content service. Do not deploy a public backend before ownership/access, consent, retention/deletion and abuse controls are settled.
 
 ## Architecture and scope
 

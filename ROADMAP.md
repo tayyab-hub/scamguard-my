@@ -7,7 +7,7 @@ Status audited on 2026-09-04. Read [PROGRESS.md](PROGRESS.md) for execution evid
 | Order | Milestone | Status | Real current state and remaining exit criteria |
 | --- | --- | --- | --- |
 | 1 | Foundation | ✅ COMPLETE | Professional responsive four-mode UI, architecture/testing foundation, offline resilience, GitHub and verified main Vercel frontend. General SCAMGUARD branding is implemented on the review branch. |
-| 2 | Core Platform | 🟡 IN PROGRESS | PostgreSQL/Alembic, Message/URL SUBMITTED records, paginated history/detail and real total/latest/recent data are implemented and tested. Final documentation/publication is in progress. Private shared development scope only; no public backend/authentication. |
+| 2 | Core Platform | ✅ COMPLETE | Task 2 PostgreSQL/Alembic, Message/URL SUBMITTED records, paginated history/detail and real total/latest/recent data implemented, verified and published on task-2-core-platform for review. Private shared development scope only; no public backend/authentication. |
 | 3 | Text Intelligence | ⚪ NOT STARTED | No classifier, dataset, rules engine or inference. Define supported languages/inputs, genuine data provenance, an initial method and reproducible evaluation before enabling text assessment. |
 | 4 | Explainability | ⚪ NOT STARTED | No explanations or evidence schema. Explanations must trace real evidence/model behavior and state uncertainty; do not fabricate rationales. |
 | 5 | URL Intelligence | ⚪ NOT STARTED | A URL draft field is not URL analysis. Begin with non-fetching inspection; any future retrieval needs an explicitly authorized isolated design and SSRF controls. |
@@ -27,7 +27,7 @@ Security and privacy are cross-cutting requirements from the first content-handl
 
 ## Active Task 2 handoff
 
-Finish verification/documentation and publish `task-2-core-platform` for review. Do not merge into main. The main Vercel preview at https://scamguard-my.vercel.app/ was verified on 2026-09-04; branch deployment status is separate. No public backend hosting is authorized. Keep the existing remote/domain.
+Task 2 is complete and published on `task-2-core-platform` for review. No further task is running. Do not merge into main. The main Vercel preview at https://scamguard-my.vercel.app/ was verified on 2026-09-04; branch deployment status is separate. No public backend hosting is authorized. Keep the existing remote/domain.
 
 ## Recommended Task 3, after Task 2 review and merge
 
