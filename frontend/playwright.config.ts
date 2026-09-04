@@ -14,7 +14,7 @@ export default defineConfig({
   workers: process.env.CI ? 2 : undefined,
   reporter: 'list',
   use: {
-    baseURL: 'http://127.0.0.1:5173',
+    baseURL: 'http://127.0.0.1:5174',
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     channel: process.env.PLAYWRIGHT_CHANNEL || undefined,
@@ -28,16 +28,17 @@ export default defineConfig({
   ],
   webServer: [
     {
-      command: `"${python}" -m uvicorn app.main:app --app-dir ../backend --host 127.0.0.1 --port 8000`,
-      url: 'http://127.0.0.1:8000/api/v1/health',
-      reuseExistingServer: !process.env.CI,
+      command: `"${python}" -m uvicorn app.main:app --app-dir ../backend --host 127.0.0.1 --port 8001`,
+      url: 'http://127.0.0.1:8001/api/v1/health',
+      reuseExistingServer: false,
       timeout: 30_000,
-      env: { APP_ENV: 'test' },
+      env: { APP_ENV: 'test', PERSISTENCE_ENABLED: 'false' },
     },
     {
-      command: 'npm run dev',
-      url: 'http://127.0.0.1:5173',
-      reuseExistingServer: !process.env.CI,
+      command: 'npm run dev -- --port 5174',
+      url: 'http://127.0.0.1:5174',
+      env: { API_PROXY_TARGET: 'http://127.0.0.1:8001' },
+      reuseExistingServer: false,
       timeout: 30_000,
     },
   ],
