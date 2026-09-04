@@ -1,6 +1,6 @@
 # SCAMGUARD MY architecture
 
-Repository inspection: 2026-09-03. Read [PROGRESS.md](../PROGRESS.md) for current verification and [DECISIONS.md](../DECISIONS.md) for accepted constraints. This document deliberately separates running foundation code from proposed future components.
+Repository inspection: 2026-09-04. Read [PROGRESS.md](../PROGRESS.md) for current verification and [DECISIONS.md](../DECISIONS.md) for accepted constraints. This document deliberately separates running foundation code from proposed future components.
 
 ## CURRENTLY IMPLEMENTED
 
@@ -44,7 +44,13 @@ The GET client omits browser credentials and disables fetch caching. It supports
 
 Both pages show a loading state while their initial request is pending. Overview then renders its em dashes, unavailable notices, empty history and workspace status after either a valid unconfigured response or a failed query. It never calculates analytics. Analyse still requests and validates capabilities; on failure it retains the approved local editor with analysis disabled. Failed queries remain errors, with a page-level `PreviewNotice` showing the safe error, request reference when present, and retry. No fallback object is injected into the client or query cache, and health status is independent. The existing full error component and render-error boundary remain available for genuine failures.
 
-Message and URL drafts have separate component state, limits of 5,000 and 2,048 characters, content selection and clearing. Query retry preserves drafts; reload or navigation away discards them. Submission is disabled, form submission is prevented, and no result is generated. These client limits are not a future server validation contract. This fallback is specific to the optional Task 1 scaffold; future data-dependent features must handle their real failures explicitly.
+The UI-only `AnalysisMode` union is derived from `components/analysis/modes.ts`: MESSAGE, URL, PHONE and QR. It is separate from the unchanged backend capabilities schema. `AnalysisModeSelector` supplies button tabs with roving focus, Left/Right/Home/End navigation and one labelled panel. Message, URL and Phone drafts have separate component state, limits of 5,000, 2,048 and 64 characters, content selection and clearing.
+
+Phone uses `type=tel` and `inputMode=tel` without normalization or country restrictions.
+
+`QrImageInput` accepts one non-empty PNG/JPEG/WEBP file up to 5 MiB based on browser MIME/extension/size metadata. It displays filename/size, supports local drop/replacement/removal and returns focus to the picker on removal. Invalid replacements preserve the previous selection. No image bytes are read or rendered, so no object URLs or decoding resources exist to clean up. File references remain in page memory across mode changes and query retries; navigation/reload discards them. Metadata checks do not establish valid image or QR content.
+
+Phone/QR actions remain disabled with explicit planned-service explanations. Query retry preserves drafts; reload or navigation away discards them. Submission is disabled, form submission is prevented, and no result is generated. These client limits are not a future server validation contract. This fallback is specific to the optional Task 1 scaffold; future data-dependent features must handle their real failures explicitly.
 
 Motion is a presentation-only CSS layer with shared durations/easing, small entrances and control feedback. A pathname-keyed wrapper around Outlet animates the main content without remounting the persistent shell or altering query lifecycle. The API live region keeps its real health-query semantics; only its label contents are keyed for a state-change fade and one connection pulse. Input/empty-state animation timing stays local. Reduced motion removes all keyframes and motion delays; only genuinely pending states may repeat effects otherwise. No animation dependency, JavaScript timer or domain state was introduced. See [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md).
 
@@ -88,7 +94,7 @@ The following are roadmap boundaries, not implemented packages, endpoints, table
 Validated, authorized intake
   -> minimal persisted analysis lifecycle
   -> explicitly enabled evidence modules
-       text | explainability | URL | screenshot/OCR | QR
+       text | explainability | URL | phone/reputation | screenshot/OCR | QR
   -> unified assessment (risk + separate confidence + insufficient information)
   -> authorized history and real database-derived analytics
 
@@ -98,7 +104,7 @@ Reviewed community evidence -> controlled candidate datasets/models
 ```
 
 1. **Core Platform:** settle input/result/error contracts, ownership, privacy/retention and lifecycle first; then add reviewed models/migrations and persistence under a separately authorized implementation task. Route names, schema fields, authentication mechanism, and initial analysis method remain undecided.
-2. **Evidence and assessment:** implement text, explanations, URL inspection, screenshot/OCR and QR in roadmap order with independent validation/evaluation. No automatic suspicious URL browsing. Define evidence provenance, supported inputs, failures, uncertainty and calibration before returning unified assessments. An extraction failure or lack of evidence must not become a safe verdict.
+2. **Evidence and assessment:** implement text, explanations, URL inspection, phone intelligence/reporting/reputation, screenshot/OCR and QR decoding with URL/payment routing in roadmap order with independent validation/evaluation. No automatic suspicious URL browsing. Define evidence provenance, supported inputs, failures, uncertainty and calibration before returning unified assessments. An extraction failure or lack of evidence must not become a safe verdict.
 3. **Analytics and community:** derive counts and trends from real records with scope and time-window semantics. Validate and moderate community evidence; do not expose private submissions or count reports as confirmed scams by default.
 4. **Controlled learning and research:** version data/models, prevent poisoning and evaluation leakage, measure genuine metrics, review candidate promotion, and retain rollback. Campaign detection and Model Lab depend on real evidence/data; no mock analytical claims.
 5. **Security and operations throughout:** access control, content limits, privacy/deletion, secrets, deployment hardening and recovery must gate the features that need them. A later dedicated milestone consolidates verification; it does not defer essential safeguards until the end.

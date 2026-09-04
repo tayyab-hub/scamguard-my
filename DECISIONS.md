@@ -38,6 +38,12 @@ The user approved short, controlled entrance and interaction motion while preser
 
 Reduced motion disables scanning, pulses, entrance/positional interaction effects and delays without hiding state or compromising keyboard focus. Tests must verify both motion preferences, live preference changes during loading, touch behavior, finite settled animation, independent truthful connectivity, local drafts and offline preview resilience. This changes presentation only and does not authorize Task 2. Keep the settled design and API contracts intact.
 
+### D19 — Four planned Analyse interfaces, no new capabilities (accepted 2026-09-04)
+
+Task 1 exposes typed MESSAGE, URL, PHONE and QR presentation modes in the approved design. Phone and QR UI are complete only; all intelligence, phone reporting/reputation, QR decoding and URL/payment routing remain future work. Keep the existing capabilities/client/backend untouched and analysis disabled. A tab is not permission to submit to the API. Phone accepts natural international formats; normalization belongs to a future backend contract.
+
+QR selection checks local MIME/extension/size metadata for one non-empty PNG/JPEG/WEBP up to 5 MiB. Display filename/size only; do not read image bytes, decode, render a preview, create object URLs, upload, persist or request camera access. This avoids unnecessary image processing in a UI milestone. Memory-only drafts and the selected file disappear on navigation/reload. Tests must preserve Message/URL behavior and verify keyboard/responsive/reduced-motion access, local file lifecycle and no analysis requests.
+
 ## Future decisions still required
 
 The first Core Platform task must settle initial supported input scope, analysis lifecycle and result schema (including D09/D10), validation and limits, authentication/ownership, raw-content handling, retention/deletion, error semantics and migration boundaries. No choice of classifier, training corpus, inference provider, OCR library, queue, object store, backend deployment host, or campaign algorithm has been accepted or implemented merely by listing a future roadmap stage.

@@ -112,11 +112,23 @@ test('built SPA keeps navigation and safe error states when API connections fail
     await expectUnavailableWorkspace(page, route)
     if (route === '/analyse') {
       await page.getByLabel('Message content').fill('Local offline draft')
-      await page.getByRole('radio', { name: 'Website link' }).check()
+      await page.getByRole('tab', { name: 'URL', exact: true }).click()
       await page.getByLabel('Website URL').fill('https://example.com')
       await page.getByLabel('Website URL').press('Enter')
       await expect(page.getByRole('button', { name: 'Analyse content' })).toBeDisabled()
-      await page.getByRole('radio', { name: 'Message' }).check()
+      await page.getByRole('tab', { name: 'Phone Number' }).click()
+      await page.getByRole('textbox', { name: 'Phone number', exact: true }).fill('+60 12-345 6789')
+      await page.getByRole('textbox', { name: 'Phone number', exact: true }).press('Enter')
+      await expect(page.getByRole('button', { name: 'Analyse phone number' })).toBeDisabled()
+      await page.getByRole('tab', { name: 'QR Code' }).click()
+      await page.getByLabel('Upload a QR screenshot or image').setInputFiles({
+        name: 'offline-fixture.png',
+        mimeType: 'image/png',
+        buffer: Buffer.from('local metadata fixture'),
+      })
+      await expect(page.getByText('offline-fixture.png')).toBeVisible()
+      await expect(page.getByRole('button', { name: 'Analyse QR' })).toBeDisabled()
+      await page.getByRole('tab', { name: 'Message' }).click()
       await expect(page.getByLabel('Message content')).toHaveValue('Local offline draft')
     }
     await page.getByRole('button', { name: 'Try again', exact: true }).click()

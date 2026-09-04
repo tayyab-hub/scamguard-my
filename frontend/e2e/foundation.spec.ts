@@ -26,7 +26,7 @@ test('live API: responsive navigation, honest states, direct routes and no conso
   await expect(page.getByText('Analysis is not enabled in this release.')).toBeVisible()
   await expect(page.getByRole('button', { name: 'Analyse content' })).toBeDisabled()
   await page.getByLabel('Message content').fill('Local test draft')
-  await page.getByRole('radio', { name: 'Website link' }).check()
+  await page.getByRole('tab', { name: 'URL', exact: true }).click()
   await expect(page.getByLabel('Website URL')).toBeVisible()
   await page.reload()
   await expect(page.getByRole('heading', { name: 'Analyse suspicious content' })).toBeVisible()
