@@ -1,8 +1,64 @@
 # SCAMGUARD — current project state
 
-Task 1 is COMPLETE. Task 2 — Core Platform & Persistence is 🟡 IN PROGRESS on `task-2-core-platform` from clean main `c598d6c`. Phase A generalizes product branding and closes the Task 1 delivery; real persistence remains in progress. Do not merge into main or start Task 3.
+Updated **2026-09-04 16:01 +08:00**, Asia/Kuala_Lumpur. Task 1 is ✅ COMPLETE. Task 2 implementation/local verification is ✅ COMPLETE; final branch publication/handoff is 🟡 IN PROGRESS on `task-2-core-platform`. Do not merge into main or begin Task 3.
 
-The supplied deployed frontend is https://scamguard-my.vercel.app/. Its historical domain is intentionally retained. Hosted Overview/Analyse, refresh, four modes and unavailable-backend fallback passed Playwright checks on 2026-09-04, with no page errors. Baseline frontend TypeScript/lint passed; Vitest 32 passed in 11.98s. Baseline backend: 22 passed, 1 PostgreSQL integration skip, 2 warnings in 0.54s. PostgreSQL/Docker were not installed at inspection and no DATABASE_URL/TEST_DATABASE_URL was configured; actual integration must still be established.
+## Current milestone and functionality
+
+| Area | Status | Verified scope |
+| --- | --- | --- |
+| General SCAMGUARD branding / Task 1 closure | ✅ COMPLETE | Supervisor-requested international scope; sidebar/mobile/footer/metadata/copy updated. Approved Forensic Intelligence UI preserved. Historical -my repo/domain retained. |
+| PostgreSQL and Alembic | ✅ COMPLETE | Real PostgreSQL 17.11, SQLAlchemy/Psycopg sessions, revision 0001_analysis_intake, upgrade/downgrade/re-upgrade, schema comparison. |
+| Message/URL intake | ✅ COMPLETE | Validated/trimmed, UUID/timestamps, explicitly committed SUBMITTED records. Saved content survives a fresh application/engine and page reload. |
+| History/detail/dashboard | ✅ COMPLETE | Bounded pagination, newest-first summaries/on-demand detail, true total/latest/recent, measured empty zero. Flagged remains unavailable. |
+| Frontend submission/resilience | ✅ COMPLETE | Capability-gated writes, pending/success/failure, safe references, draft preservation on failure, invalidation, no automatic write retry, honest offline fallback. |
+| Phone UI / QR UI | ✅ COMPLETE | International local phone drafts; QR local filename/size/replacement/removal only, no byte reading/upload/camera. |
+| Phone intelligence / QR decoding/intelligence | ⚪ NOT STARTED | No normalization/reputation/reporting, decoding/payment routing or assessment. |
+| Text/URL intelligence, ML, risk/confidence/evidence, OCR, community, adaptive learning, campaigns, Model Lab | ⚪ NOT STARTED | No detection or external intelligence functionality. |
+| Security & Privacy | 🟡 IN PROGRESS | Input/body bounds, safe errors/ORM, exact CORS and pre-submit storage notice. Private shared dataset only. No public access/ownership, retention/deletion, authentication, consent system, encryption guarantee or rate limit. |
+| Task 2 branch publication | 🟡 IN PROGRESS | Branding bd41afa, backend be926fa and frontend 164f676 committed; documentation/publication is the final step. Main remains unchanged. |
+
+## Functional API state
+
+`GET /api/v1/health` is liveness; ready verifies PostgreSQL and the domain table when enabled. POST /analyses accepts MESSAGE/URL only; list/detail return persisted SUBMITTED records. Dashboard queries real shared all-time submissions; capabilities reports submission availability separately from permanently false intelligence. PERSISTENCE_ENABLED defaults false; unavailable storage returns honest unavailable/error states. See docs/API.md.
+
+## Latest actually verified checks
+
+Executed 2026-09-04 on Windows, Node 24.18.0, Python 3.12.13, PostgreSQL 17.11 and Chrome. Existing dependencies were used.
+
+| Command / directory | Actual result |
+| --- | --- |
+| frontend: npm.cmd run typecheck | PASS (final source/config check); earlier new test collection/type-option errors fixed. |
+| frontend: npm.cmd run lint | PASS, zero warnings; control-regex lint issue fixed without disabling the rule. |
+| frontend: npm.cmd test | 45 passed in 3 files, 9.71s at 15:55:31. Original 32 cases retained plus 13 Task 2 cases. |
+| frontend: npm.cmd run build | PASS, Vite 3.80s; JS 395.84 kB (120.47 kB gzip), CSS 32.95 kB (6.83 kB gzip). |
+| frontend: npm.cmd run test:e2e -- --workers=2 | 18 passed, 34.0s. Existing foundation/motion/visual assertions retained; dedicated servers on 8001/5174 with persistence disabled. |
+| frontend: npm.cmd run test:persistence | 2 passed, 22.1s in final screenshot-position rerun; real PostgreSQL desktop/mobile Message+URL save, count, history/detail, refresh, disabled modes, no external requests. |
+| frontend: npm.cmd run test:preview -- --workers=2 | 6 passed, 10.0s. Built frontend, real rewrite, no API; direct refresh/offline/reduced motion. |
+| backend: python -m ruff check app tests migrations scripts | PASS. |
+| backend: python -m ruff format --check app tests migrations scripts | PASS, 27 files already formatted (final confirmation). |
+| backend: python -m pytest -q (using backend/.venv, TEST_DATABASE_URL configured) | 53 passed, 0 skipped, 2 dependency warnings, 9.16s. Includes real PostgreSQL integration, no SQLite substitute. |
+| backend: alembic upgrade head / check | PASS on development DB; no new upgrade operations after correcting metadata constraints. |
+| Integration migration fixture | Actual PostgreSQL upgrade → check → downgrade base → upgrade head passed, plus insert/read/rollback and fresh-app retrieval. |
+
+Initial baseline was frontend TypeScript/lint PASS, 32 Vitest cases; backend 22 passed / 1 skipped because PostgreSQL was unavailable. This task established real integration rather than removing the skip. Found/fixed issues: explicit Alembic/ORM enum-check metadata alignment; lint formatting/control-regex issues; new browser/test TypeScript API misuse; duplicate disclosure IDs when recent and full history display the same record; screenshot scroll artifacts. Existing tests were not removed/weakened. Only the intentional additive capabilities response expectation changed in the old backend test.
+
+## Environment, privacy and limitations
+
+Official portable PostgreSQL 17.11 is local under ignored .local/pg17 with an isolated loopback cluster on 55432; no system service/global PATH changes. Separate scamguard_dev, scamguard_test and scamguard_e2e databases keep controlled tests away from development data. The ignored backend/.env enables local development persistence; no generated credentials/DSNs with real passwords are tracked. Test migration resets require *_test; browser config requires *_e2e. The development database is not seeded.
+
+All stored content is visible to anyone with backend access. This is not a public content service. Before public hosting, decide authentication/ownership, authorization, consent/privacy policy, minimization/retention/deletion including backups, encryption and abuse/rate limits. No idempotency keys: a lost POST acknowledgement may have committed; check history before retry. Offset pages can shift with concurrent submissions. No intelligence/result fields, uploads, third-party calls or learning exist.
+
+Existing non-failing warnings remain: Zod/Rollup annotations, Starlette httpx/AnyIO deprecations and Playwright color environment. Nothing was suppressed. Not verified: fresh installs/dependency audit, Linux/remote CI execution, other browser engines/physical devices, comprehensive security/accessibility/performance/load testing, hosted backend or branch preview deployment. Local Windows browser/bundler/PostgreSQL execution required approved host access.
+
+## Visual and deployment handoff
+
+Main https://scamguard-my.vercel.app/ passed read-only live Overview/Analyse loads, direct refresh, four modes and offline fallback with zero page errors at Task 2 start. That is Task 1 deployment evidence, not Task 2 branch deployment proof. Vercel/GitHub names remain unchanged; no backend hosting or automatic merge is authorized.
+
+The eight foundation documentation images are refreshed where pixels changed. Four Task 2 images show explicitly labelled real test-database submissions, never production analytics. Manual review includes desktop/mobile, 320px QR, field/file focus and real saved/history states. Screenshot scroll positioning was corrected to avoid misleading fixed-sidebar captures. All twelve current documentation views were manually inspected; no obvious clipping, horizontal overflow, spacing/contrast defect or inaccessible focus/control overlap was found in the tested states. Browser checks cover 320–1440px widths; physical-device/full accessibility certification is not claimed. Publication status is recorded below before handoff.
+
+## Exact next step
+
+Finish branch publication and report the result. Then **review Task 2 on task-2-core-platform and merge manually only when approved**. Recommended Task 3, separately authorized after review: the first Text Intelligence capability with dataset provenance, supported languages, held-out genuine evaluation, evidence and insufficient-information handling, with risk/confidence separated. Do not implement Task 3 automatically.
 
 ## Historical Task 1 handoff (superseded by this task)
 

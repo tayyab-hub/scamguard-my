@@ -53,3 +53,23 @@ Keep future changes as dated entries that reference the decision being amended a
 ### D20 — General product scope and Task 1 closure (2026-09-04)
 
 Following supervisor feedback, SCAMGUARD is a general international platform, formally **SCAMGUARD: Multi-Modal Scam Detection & Reporting Web Application**. The earlier Malaysia-focused scope is historical. Remove visible MY/country positioning while preserving Forensic Intelligence design, architecture and historical records. Keep the existing GitHub repository and Vercel domain unchanged. Task 1 is complete; the supplied deployed preview is https://scamguard-my.vercel.app/. Task 2 is now explicitly authorized on task-2-core-platform, without automatic merge or Task 3 continuation.
+
+## D21 — Task 2 is private shared development persistence (2026-09-04)
+
+Accepted: store validated Message/URL content only for intake/history in one private development dataset. No authentication was requested; do not pretend UUIDs or CORS provide ownership/access control. Warn before submission and use only non-sensitive development content. A public backend is prohibited until authentication/authorization, ownership, consent, retention/deletion including backups, encryption and abuse controls are explicitly reviewed. No training reuse is authorized.
+
+## D22 — Submission is separate from intelligence (2026-09-04)
+
+Accepted: SUBMITTED means successfully validated and committed. Current APIs produce no other status, risk/confidence/verdict/evidence/model fields or result. PROCESSING/COMPLETED/FAILED enum values reserve a lifecycle vocabulary only; no worker/transitions exist. Future result fields require reviewed Alembic migrations rather than speculative nullable columns. Phone/QR remain UI-only.
+
+Keep existing analysis_available:false and supported_inputs:[] for intelligence. Add independently verified submission_available/submission_inputs for MESSAGE/URL storage, gated by PERSISTENCE_ENABLED and an actual domain-table query. Legacy previews default missing submission capability fields to unavailable. True zero counts require a successful database query; flagged remains null.
+
+## D23 — Storage, validation and retry boundaries (2026-09-04)
+
+Accepted: PostgreSQL/SQLAlchemy/Psycopg with Alembic revision 0001_analysis_intake; UUID primary keys, timezone-aware timestamps, named enum/content CHECK constraints and descending created_at/id index. Explicit service commit and request rollback/close. Trim and validate Message/URL at the API boundary; body cap includes chunked uploads. URL validation performs no network access. History previews are minimized, not anonymized; full detail is on demand and React-escaped.
+
+Writes are never automatically retried. A lost response after commit is ambiguous, so the UI instructs checking history before retrying. Idempotency, deletion/retention and public authentication are deliberately deferred and must not be claimed complete. Pagination is bounded offset pagination; concurrent inserts can move page boundaries.
+
+## D24 — Isolated real database verification (2026-09-04)
+
+Accepted: dedicated *_test PostgreSQL database for migration upgrade/downgrade/re-upgrade, schema comparison, insert/read/rollback and fresh-app persistence. These tests reset only their explicitly named disposable test database; never development or production. Browser flow uses a separate *_e2e database and genuinely persisted test submissions. Default offline/regression suites use persistence disabled and dedicated ports, never reuse an arbitrary developer server. Local runtime/credentials/data stay under ignored paths; no SQLite substitute or production seed data.

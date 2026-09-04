@@ -1,6 +1,6 @@
 # Task 1 — GitHub and Vercel frontend preview
 
-This workflow publishes the existing **SCAMGUARD Forensic Intelligence frontend development preview**. It does not deploy FastAPI, create a database, enable submissions, or add detection. Actual PostgreSQL persistence is Task 2; scam detection and live backend hosting are later work. Task 2 Core Platform & Persistence is active on `task-2-core-platform`; do not merge automatically.
+This workflow publishes the existing **SCAMGUARD Forensic Intelligence frontend development preview**. It does not deploy FastAPI, create a database, enable submissions, or add detection. Task 2 implements PostgreSQL persistence locally; scam detection and live backend hosting remain later work. Task 2 Core Platform & Persistence is active on `task-2-core-platform`; do not merge automatically.
 
 ## Local preparation and safety
 
@@ -120,3 +120,13 @@ Local tests already exercise built files and the checked-in rewrite using a test
 If a direct route gets a host 404, check that Root Directory is `frontend` and the deployed commit includes its `vercel.json`. If the build cannot find `package.json`, inspect Root Directory. If the UI reports API unavailable, that is expected for this preview; do not add mock responses to hide it. If environment changes seem ignored, redeploy. If using a later HTTPS backend, investigate its availability/CORS without enabling any Task 2 behavior incidentally.
 
 **Current boundary:** Task 1 GitHub/Vercel delivery is complete. Task 2 runs on `task-2-core-platform`, pushed for review without an automatic main merge. A branch preview may appear; do not rename the project/domain or automatically deploy a backend. The tested main preview remains https://scamguard-my.vercel.app/.
+
+## Task 2 review branch and future backend preparation
+
+Publish task-2-core-platform only; main remains the reviewed Task 1 deployment until the user merges. Vercel may automatically create a branch preview. Verify its commit/deployment state separately; successful local tests do not establish hosted branch deployment success. Keep the current frontend-only Root Directory/build/output/rewrite and existing historical domain. No backend or database is deployed in this task.
+
+Task 2 PostgreSQL persistence is implemented and verified locally, while hosted previews remain safely offline. Before connecting any public frontend to a backend, resolve private/shared dataset access, authentication/ownership, consent, retention/deletion, encryption and abuse controls. Do not expose the current unauthenticated backend publicly simply to enable preview submission.
+
+A later suitable Python host must supply DATABASE_URL, APP_ENV, PORT and exact CORS_ORIGINS, apply reviewed Alembic migrations before serving persistence, then explicitly enable PERSISTENCE_ENABLED. `python -m app` reads PORT and binds 0.0.0.0 in production; /health is liveness and /ready checks PostgreSQL/domain table. Use a managed PostgreSQL service with the host's required TLS configuration and private credentials. The existing production configuration rejects missing/default DB passwords and non-HTTPS CORS origins. These checks do not replace full production hardening.
+
+The existing Vercel origin can be allowlisted as `["https://scamguard-my.vercel.app"]` after that security review; additional branch origins must be explicitly reviewed, not wildcarded. GET and POST preflight are supported without credentials. Set the reviewed HTTPS API base including /api/v1 as VITE_API_BASE_URL and rebuild. Never expose DATABASE_URL or backend secrets through browser variables. Do not automatically configure a backend host, change the domain, or merge the branch.

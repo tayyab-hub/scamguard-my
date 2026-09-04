@@ -31,3 +31,14 @@ Screenshots are captured at CSS-pixel scale. Desktop uses a 1440px-wide Chrome v
 ![Local QR selection UI on desktop](screenshots/qr-desktop.png)
 
 ![Local QR selection UI on mobile](screenshots/qr-mobile.png)
+
+## Task 2 — real persistence in an isolated test database
+
+Captured 2026-09-04 with the generalized SCAMGUARD brand and unchanged Forensic Intelligence design. These are **controlled E2E test submissions**, genuinely saved in a dedicated PostgreSQL *_e2e database. Counts/UUIDs/times reflect that disposable test dataset, not production users or completed scam assessments. SUBMITTED is intake only; flagged/risk remain unavailable. The eight foundation captures above show persistence-disabled states; Task 2 adds these four views. Mobile views are scrolled to the relevant success/history section; full-page QA output stays ignored.
+
+| View | Desktop | Mobile |
+| --- | --- | --- |
+| Saved Message acknowledgement | [Desktop](screenshots/task2-recorded-desktop.png) | [Mobile](screenshots/task2-recorded-mobile.png) |
+| Real submission history | [Desktop](screenshots/task2-history-desktop.png) | [Mobile](screenshots/task2-history-mobile.png) |
+
+Regenerate with UPDATE_DOC_SCREENSHOTS=1 and npm run test:persistence using E2E_DATABASE_URL. No production data is seeded. Screenshots are reviewed for layout/focus, not used as pixel-perfect golden tests.
