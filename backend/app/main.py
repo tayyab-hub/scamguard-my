@@ -6,7 +6,9 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import sessionmaker
 
+from app.api.analyses import router as analyses_router
 from app.api.routes import router
+from app.core.body_limit import BodyLimitMiddleware
 from app.core.config import Settings, get_settings
 from app.core.errors import error_response, install_error_handlers
 from app.db.session import build_engine
@@ -33,6 +35,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         redoc_url=None,
         openapi_url="/openapi.json" if config.app_env != "production" else None,
     )
+    application.state.settings = config
+    application.add_middleware(BodyLimitMiddleware, max_bytes=config.max_request_bytes)
 
     @application.middleware("http")
     async def request_context(request: Request, call_next):
@@ -59,12 +63,13 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         CORSMiddleware,
         allow_origins=config.cors_origins,
         allow_credentials=False,
-        allow_methods=["GET"],
+        allow_methods=["GET", "POST"],
         allow_headers=["Accept", "Content-Type"],
         expose_headers=["X-Request-ID"],
     )
     install_error_handlers(application)
     application.include_router(router)
+    application.include_router(analyses_router)
     return application
 
 

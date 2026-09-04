@@ -16,12 +16,15 @@ class Settings(BaseSettings):
 
     app_env: Literal["development", "test", "production"] = "development"
     database_url: PostgresDsn = Field(
-        default="postgresql+psycopg://scamguard:scamguard_local_only@127.0.0.1:5432/scamguard",
+        default="postgresql+psycopg://scamguard@127.0.0.1:5432/scamguard",
         repr=False,
     )
     cors_origins: list[str] = ["http://localhost:5173", "http://127.0.0.1:5173"]
     log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "INFO"
     db_connect_timeout_seconds: int = Field(default=3, ge=1, le=30)
+    persistence_enabled: bool = False
+    max_request_bytes: int = Field(default=65_536, ge=32_768, le=1_048_576)
+    port: int = Field(default=8000, ge=1, le=65535)
 
     @field_validator("database_url")
     @classmethod

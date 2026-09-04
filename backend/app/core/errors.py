@@ -4,6 +4,7 @@ from uuid import uuid4
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from sqlalchemy.exc import SQLAlchemyError
 from starlette.exceptions import HTTPException
 
 logger = logging.getLogger("scamguard.api")
@@ -40,6 +41,13 @@ def error_response(
 
 
 def install_error_handlers(app: FastAPI) -> None:
+    @app.exception_handler(SQLAlchemyError)
+    async def handle_database_error(request: Request, exc: SQLAlchemyError) -> JSONResponse:
+        # Never log SQL, parameters or connection details.
+        return error_response(
+            request, 503, "DATABASE_UNAVAILABLE", "Submission storage is unavailable."
+        )
+
     @app.exception_handler(ApiError)
     async def handle_api_error(request: Request, exc: ApiError) -> JSONResponse:
         return error_response(request, exc.status_code, exc.code, exc.message)

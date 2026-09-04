@@ -3,6 +3,7 @@ from logging.config import fileConfig
 from alembic import context
 
 from app.core.config import get_settings
+from app.db import models  # noqa: F401 -- register models for Alembic metadata comparison
 from app.db.base import Base
 from app.db.session import build_engine
 
