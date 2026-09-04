@@ -143,7 +143,7 @@ export function DashboardPage() {
                   Start with a check.
                 </h2>
                 <p className="mb-7 mt-3 text-xs leading-6 text-body">
-                  A dedicated place to review suspicious messages and links. Analysis will be
+                  A dedicated place to review messages, links, phone numbers and QR codes. Intelligence will be
                   available in a future release.
                 </p>
                 <Link

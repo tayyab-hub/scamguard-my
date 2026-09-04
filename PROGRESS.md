@@ -1,4 +1,12 @@
-# SCAMGUARD MY — current project state
+# SCAMGUARD — current project state
+
+Task 1 is COMPLETE. Task 2 — Core Platform & Persistence is 🟡 IN PROGRESS on `task-2-core-platform` from clean main `c598d6c`. Phase A generalizes product branding and closes the Task 1 delivery; real persistence remains in progress. Do not merge into main or start Task 3.
+
+The supplied deployed frontend is https://scamguard-my.vercel.app/. Its historical domain is intentionally retained. Hosted Overview/Analyse, refresh, four modes and unavailable-backend fallback passed Playwright checks on 2026-09-04, with no page errors. Baseline frontend TypeScript/lint passed; Vitest 32 passed in 11.98s. Baseline backend: 22 passed, 1 PostgreSQL integration skip, 2 warnings in 0.54s. PostgreSQL/Docker were not installed at inspection and no DATABASE_URL/TEST_DATABASE_URL was configured; actual integration must still be established.
+
+## Historical Task 1 handoff (superseded by this task)
+
+# SCAMGUARD MY — historical project state
 
 Updated: **2026-09-04 13:37 +08:00 (Asia/Kuala_Lumpur)**. This section supersedes the historical September 3 handoff retained below. Task 2 remains paused and has not started.
 

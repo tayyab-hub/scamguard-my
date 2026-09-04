@@ -1,6 +1,6 @@
-# SCAMGUARD MY — repository working instructions
+# SCAMGUARD — repository working instructions
 
-SCAMGUARD MY is a Malaysian scam-awareness and planned scam-analysis workspace. The current release is an application foundation, not a functioning detection service. Its identity is **Forensic Intelligence**. Do not infer implementation from a page, roadmap entry, screenshot, or earlier conversation.
+SCAMGUARD is a general scam-awareness and planned scam-analysis workspace. The current release is an application foundation, not a functioning detection service. Its identity is **Forensic Intelligence**. Do not infer implementation from a page, roadmap entry, screenshot, or earlier conversation.
 
 ## Start every implementation task here
 
@@ -18,9 +18,15 @@ Read these files completely, in this order, before implementing code:
 
 Then read any applicable directory instructions and the relevant source, tests, and task records. `docs/TASK_1.md` and `docs/REDESIGN.md` preserve delivery history; they do not override the latest verification in `PROGRESS.md`. Repository documents provide persistent context, not permission to start a roadmap item. Follow the current user's scope and applicable higher-priority instructions. If documentation and code disagree, inspect the evidence, report the discrepancy, and reconcile the documents; never fabricate completion to resolve it.
 
+## Active Task 2 authorization
+
+The supervisor requested a general international product branded SCAMGUARD, formally SCAMGUARD: Multi-Modal Scam Detection & Reporting Web Application. Country-specific names in older records are historical. Keep the approved Forensic Intelligence design and the existing GitHub/Vercel names.
+
+Task 1 is complete, including the deployed and tested frontend at https://scamguard-my.vercel.app/. Work only on `task-2-core-platform`; push that branch for review and do not merge into main or begin Task 3. The current user explicitly authorizes PostgreSQL/Alembic, Message/URL submission, persisted SUBMITTED records, history and genuine dashboard counts. This supersedes prior Task 1 memory-only/paused instructions below for Message/URL only. Keep intelligence unavailable and Phone/QR local/disabled. No authentication is requested: this iteration is a private/shared development workspace, not a public content service. Do not deploy a public backend before ownership/access, consent, retention/deletion and abuse controls are settled.
+
 ## Architecture and scope
 
-Task 1 includes the application foundation, professional responsive UI, frontend/backend architecture foundation, testing infrastructure, Git repository preparation and Vercel frontend deployment readiness. The approved deployment is a **frontend development preview**. Actual PostgreSQL persistence is Task 2; detection and live backend hosting are later. Task 2 is paused. The existing database scaffolding is not a persistence feature, and its unverified real connection does not block frontend-only preview readiness.
+Task 1 includes the application foundation, professional responsive UI, frontend/backend architecture foundation, testing infrastructure, Git repository preparation and Vercel frontend deployment readiness. The approved deployment is a **frontend development preview**. Actual PostgreSQL persistence is Task 2; detection and live backend hosting are later. Task 2 Core Platform & Persistence is active on `task-2-core-platform`; do not merge automatically. The existing database scaffolding is not a persistence feature, and its unverified real connection does not block frontend-only preview readiness.
 
 - Keep React + strict TypeScript, React Router, Tailwind, TanStack Query, and runtime API validation on the frontend. Keep FastAPI, Pydantic, SQLAlchemy 2, Psycopg 3, PostgreSQL, and Alembic on the backend.
 - Keep presentation in page/components, shared network handling in `frontend/src/lib`, HTTP schemas/routes in `backend/app/api`, configuration/errors in `backend/app/core`, and database lifecycle in `backend/app/db`. Future domain services must not be implemented inside UI components or duplicated across routes.
@@ -31,7 +37,7 @@ Task 1 includes the application foundation, professional responsive UI, frontend
 - QR selection is local metadata only: one non-empty PNG/JPEG/WEBP file up to 5 MiB, filename/size feedback, replacement/removal, no reading/decoding, upload, storage, object URLs or camera access. Drafts and the selected file remain in page memory and clear on navigation/reload.
 - The current Analyse editor is memory-only and cannot submit. Do not enable submission, persistence, or a result state until explicitly in scope and backed by implemented contracts and services.
 - Task 1 Overview and Analyse must remain usable when their optional dashboard/capabilities queries fail: retain the existing unavailable metrics, empty history and disabled local draft surface, alongside a visible `PreviewNotice` with the real safe error and retry. Keep initial loading states. This is page-level presentation, never synthetic query data or a fake successful API response. Preserve `getApi` validation/errors and the independently truthful health badge; future backend-required actions still need genuine error states. See decision D17.
-- GitHub `origin` is already connected to `tayyab-hub/scamguard-my`; the user reports the Vercel frontend preview is deployed and connected to `main`. Do not recreate either connection or hardcode its URL. Backend deployment and actual PostgreSQL persistence remain paused Task 2 work. Record user-reported hosting separately from independently verified deployment checks.
+- GitHub `origin` is already connected to `tayyab-hub/scamguard-my`; the user reports the Vercel frontend preview is deployed and connected to `main`. Do not recreate either connection or hardcode its URL. Task 2 authorizes local PostgreSQL persistence; hosted backend deployment remains later work. Record user-reported hosting separately from independently verified deployment checks.
 - Use reviewed Alembic revisions for future schema changes. No startup `create_all()`, silent destructive migrations, SQLite substitution, or implicit session commits. Services must explicitly own transactions.
 - Do not introduce ML, OCR, QR, adaptive learning, campaign detection, authentication, or other product modules as incidental work. Finish only the authorized task; never continue automatically to the next task.
 - Vercel must use `frontend` as Root Directory, Vite, `npm ci`, `npm run build`, and `dist` output. Keep `frontend/vercel.json` SPA routing. Do not deploy FastAPI, add server functions, switch frameworks or redesign the UI for this preview. Read `docs/DEPLOYMENT.md` for the GitHub/import workflow.
@@ -57,7 +63,7 @@ Use the shared CSS motion system in `docs/DESIGN_SYSTEM.md`: short opacity/trans
 These are binding rules for future work, **not claims that ML or learning exists now**.
 
 - Report only genuinely measured metrics. Record dataset provenance/license, label definitions, splits, preprocessing, model/version, evaluation command, and reproducible results. Prevent leakage and duplicates across training/evaluation sets; preserve a held-out evaluation set.
-- Do not present heuristics, hard-coded scores, demo predictions, or fabricated accuracy as trained ML. Separate measured findings, assumptions, and unavailable evidence. Document applicability to Malaysian languages and content rather than implying untested coverage.
+- Do not present heuristics, hard-coded scores, demo predictions, or fabricated accuracy as trained ML. Separate measured findings, assumptions, and unavailable evidence. Document applicability to supported languages and content rather than implying untested coverage.
 - Keep risk and confidence separate. Risk describes assessed harm/suspicion; confidence describes support for that assessment. Do not treat one as the complement of the other. Define calibration and evidence requirements before displaying numeric confidence.
 - Support an explicit insufficient-information outcome when evidence is missing, unsupported, or inconclusive. Do not force a safe/scam verdict or interpret missing evidence as low risk. This domain outcome is separate from a request error or the current service-unavailable state.
 - Community submissions and feedback are untrusted input, not immediate training truth. Controlled adaptive learning requires consent/appropriate permitted use, validation and moderation, provenance, poisoning/abuse checks, versioned candidate datasets/models, offline evaluation, explicit promotion, monitoring, and rollback.

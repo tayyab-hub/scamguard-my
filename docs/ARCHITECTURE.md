@@ -1,4 +1,4 @@
-# SCAMGUARD MY architecture
+# SCAMGUARD architecture
 
 Repository inspection: 2026-09-04. Read [PROGRESS.md](../PROGRESS.md) for current verification and [DECISIONS.md](../DECISIONS.md) for accepted constraints. This document deliberately separates running foundation code from proposed future components.
 
@@ -6,7 +6,7 @@ Repository inspection: 2026-09-04. Read [PROGRESS.md](../PROGRESS.md) for curren
 
 ### Application boundaries
 
-SCAMGUARD MY currently provides an API-aware Malaysian scam-awareness workspace. It has no detection engine and produces no safety verdicts. Only Overview (`/`) and Analyse (`/analyse`) are navigation destinations; unknown frontend paths render a not-found page.
+SCAMGUARD currently provides an API-aware general scam-awareness workspace. It has no detection engine and produces no safety verdicts. Only Overview (`/`) and Analyse (`/analyse`) are navigation destinations; unknown frontend paths render a not-found page.
 
 ```text
 Browser
@@ -78,7 +78,7 @@ The engine uses Psycopg 3, `pool_pre_ping`, pool size 5 with 5 overflow connecti
 - `VITE_API_BASE_URL` defaults to `/api/v1` and must be an absolute path or HTTP(S) URL without credentials/query/fragment. It is public bundle configuration. `API_PROXY_TARGET` is development-server configuration, defaulting to `http://127.0.0.1:8000`.
 - Local Vite binds port 5173; FastAPI is run on 8000. The production build creates static assets. Vite's development proxy is not a production API proxy; static `npm run preview` explicitly disables that proxy. Local servers are temporary development processes.
 - Task 1 uses Vercel with Root Directory `frontend`, Vite, `npm ci`, `npm run build`, `dist` output and a minimal `frontend/vercel.json` SPA rewrite. This is a frontend development preview only, with usable unavailable-state pages when the API is absent. FastAPI is not deployed to Vercel. Backend hosting and actual PostgreSQL persistence remain Task 2 work; see [DEPLOYMENT.md](DEPLOYMENT.md).
-- GitHub is connected on `main`; the user reports the Vercel frontend preview is deployed and connected to GitHub. A live URL or remote CI result was not independently verified in this task. GitHub Actions defines PostgreSQL/backend/frontend/live-browser gates plus a built offline-preview suite. The test-only preview server reads the rewrite and serves built files without an API; it is neither deployed infrastructure nor a replacement backend.
+- GitHub is connected on `main`; the user reports the Vercel frontend preview is deployed and connected to GitHub. The supplied hosted frontend at https://scamguard-my.vercel.app/ passed direct-route/refresh/offline browser checks on 2026-09-04. Remote CI was not independently verified. GitHub Actions defines PostgreSQL/backend/frontend/live-browser gates plus a built offline-preview suite. The test-only preview server reads the rewrite and serves built files without an API; it is neither deployed infrastructure nor a replacement backend.
 
 ### Current security/privacy boundary
 
@@ -109,4 +109,4 @@ Reviewed community evidence -> controlled candidate datasets/models
 4. **Controlled learning and research:** version data/models, prevent poisoning and evaluation leakage, measure genuine metrics, review candidate promotion, and retain rollback. Campaign detection and Model Lab depend on real evidence/data; no mock analytical claims.
 5. **Security and operations throughout:** access control, content limits, privacy/deletion, secrets, deployment hardening and recovery must gate the features that need them. A later dedicated milestone consolidates verification; it does not defer essential safeguards until the end.
 
-No queue technology, artifact/object store, model family, OCR provider, external intelligence provider, orchestration system, or backend hosting platform is selected by this document. Vercel is selected only for the Task 1 frontend development preview. [ROADMAP.md](../ROADMAP.md) records ordering and [PROGRESS.md](../PROGRESS.md) identifies the precise next task. Task 2 is paused.
+No queue technology, artifact/object store, model family, OCR provider, external intelligence provider, orchestration system, or backend hosting platform is selected by this document. Vercel is selected only for the Task 1 frontend development preview. [ROADMAP.md](../ROADMAP.md) records ordering and [PROGRESS.md](../PROGRESS.md) identifies the precise next task. Task 2 Core Platform & Persistence is active on `task-2-core-platform`; do not merge automatically.

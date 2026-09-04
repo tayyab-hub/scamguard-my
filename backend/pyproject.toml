@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "scamguard-my-api"
 version = "0.1.0"
-description = "SCAMGUARD MY application foundation"
+description = "SCAMGUARD application foundation"
 requires-python = ">=3.12"
 dependencies = [
   "fastapi>=0.115,<1",

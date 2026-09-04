@@ -1,5 +1,7 @@
 # Testing and verification
 
+Task 2 baseline (2026-09-04): hosted https://scamguard-my.vercel.app/ Overview/Analyse loads and direct refresh, unavailable-backend fallback and four modes passed read-only browser checks; no content was submitted. Task 1 is complete. The records below describe the starting test infrastructure; Task 2 results will be recorded in PROGRESS.md.
+
 These commands reflect the current scripts/configuration and the Windows environment actually exercised on 2026-09-04. The latest results are in [PROGRESS.md](../PROGRESS.md); [TASK_1.md](TASK_1.md) and [REDESIGN.md](REDESIGN.md) are historical verification records. Reading a test, creating a workflow or producing a screenshot does not establish that a check passed.
 
 ## Prerequisites and directories

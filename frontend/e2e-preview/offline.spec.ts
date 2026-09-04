@@ -117,7 +117,7 @@ test('built SPA keeps navigation and safe error states when API connections fail
       await page.getByLabel('Website URL').press('Enter')
       await expect(page.getByRole('button', { name: 'Analyse content' })).toBeDisabled()
       await page.getByRole('tab', { name: 'Phone Number' }).click()
-      await page.getByRole('textbox', { name: 'Phone number', exact: true }).fill('+60 12-345 6789')
+      await page.getByRole('textbox', { name: 'Phone number', exact: true }).fill('+44 20 7946 0958')
       await page.getByRole('textbox', { name: 'Phone number', exact: true }).press('Enter')
       await expect(page.getByRole('button', { name: 'Analyse phone number' })).toBeDisabled()
       await page.getByRole('tab', { name: 'QR Code' }).click()

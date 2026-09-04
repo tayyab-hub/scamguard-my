@@ -145,7 +145,7 @@ export function AnalysePage() {
                         <div className="mb-6 mt-2 flex flex-wrap justify-between gap-2 text-[11px] text-muted">
                           <p id="content-hint">
                             {inputType === 'PHONE'
-                              ? 'Malaysian and international formats welcome. Keep the country code, if known.'
+                              ? 'Include the country code, if known. International formats welcome.'
                               : 'Avoid including passwords or sensitive personal details.'}
                           </p>
                           <span id="content-count" className="font-mono">

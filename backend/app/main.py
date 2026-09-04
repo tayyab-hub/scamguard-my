@@ -26,7 +26,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             engine.dispose()
 
     application = FastAPI(
-        title="SCAMGUARD MY API",
+        title="SCAMGUARD API",
         version="0.1.0",
         lifespan=lifespan,
         docs_url="/docs" if config.app_env != "production" else None,

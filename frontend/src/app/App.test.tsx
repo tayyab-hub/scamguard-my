@@ -101,7 +101,7 @@ describe('application routes and API states', () => {
       }),
     ).toHaveAttribute('aria-current', 'page')
     await screen.findByText('Analysis is not enabled in this release.')
-    expect(document.title).toBe('Analyse · SCAMGUARD MY')
+    expect(document.title).toBe('Analyse · SCAMGUARD')
   })
 
   it('allows local drafting, content switching and clearing without submitting anything', async () => {
@@ -135,7 +135,7 @@ describe('application routes and API states', () => {
     const phone = screen.getByLabelText('Phone number')
     expect(phone).toHaveAttribute('type', 'tel')
     expect(phone).toHaveAttribute('inputmode', 'tel')
-    expect(phone).toHaveAttribute('placeholder', '+60 12-345 6789')
+    expect(phone).toHaveAttribute('placeholder', 'Enter phone number with country code')
     await user.type(phone, '+44 20 7946 0958')
     expect(screen.getByRole('button', { name: 'Analyse phone number' })).toBeDisabled()
     expect(screen.getByText(/Phone intelligence will be available/)).toBeInTheDocument()

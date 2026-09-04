@@ -49,3 +49,7 @@ QR selection checks local MIME/extension/size metadata for one non-empty PNG/JPE
 The first Core Platform task must settle initial supported input scope, analysis lifecycle and result schema (including D09/D10), validation and limits, authentication/ownership, raw-content handling, retention/deletion, error semantics and migration boundaries. No choice of classifier, training corpus, inference provider, OCR library, queue, object store, backend deployment host, or campaign algorithm has been accepted or implemented merely by listing a future roadmap stage.
 
 Keep future changes as dated entries that reference the decision being amended and explain compatibility, data/privacy implications, and the verification required. The current code remains authoritative for what runs; this document records what must guide authorized future development.
+
+### D20 — General product scope and Task 1 closure (2026-09-04)
+
+Following supervisor feedback, SCAMGUARD is a general international platform, formally **SCAMGUARD: Multi-Modal Scam Detection & Reporting Web Application**. The earlier Malaysia-focused scope is historical. Remove visible MY/country positioning while preserving Forensic Intelligence design, architecture and historical records. Keep the existing GitHub repository and Vercel domain unchanged. Task 1 is complete; the supplied deployed preview is https://scamguard-my.vercel.app/. Task 2 is now explicitly authorized on task-2-core-platform, without automatic merge or Task 3 continuation.

@@ -51,7 +51,7 @@ test('Forensic Intelligence screens retain navigation and keyboard access', asyn
   await expect(nav.getByRole('link')).toHaveText(['Overview', 'Analyse'])
   await expect(nav.getByRole('link', { name: 'Overview' })).toHaveAttribute('href', '/')
   await expect(nav.getByRole('link', { name: 'Overview' })).toHaveAttribute('aria-current', 'page')
-  await expect(page).toHaveTitle('Overview · SCAMGUARD MY')
+  await expect(page).toHaveTitle('Overview · SCAMGUARD')
   expect(await page.evaluate(() => getComputedStyle(document.documentElement).colorScheme)).toBe(
     'light',
   )

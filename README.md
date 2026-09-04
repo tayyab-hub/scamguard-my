@@ -1,14 +1,18 @@
-# SCAMGUARD MY
+# SCAMGUARD
 
-Forensic Intelligence application foundation for a Malaysian scam-awareness workspace. Task 1 includes the application foundation, professional responsive UI, frontend/backend architecture foundation, testing infrastructure, local Git repository preparation, and Vercel frontend deployment readiness. It does **not** perform scam detection or issue safety verdicts.
+**SCAMGUARD: Multi-Modal Scam Detection & Reporting Web Application**
 
-The current deployment target is a **Task 1 frontend development preview**. Actual PostgreSQL persistence is Task 2; scam detection and live backend hosting are later work. Task 2 is paused and has not started. Vercel hosts only the existing React/Vite frontend; FastAPI and the PostgreSQL architecture remain in this repository.
+The project was initially scoped as Malaysia-focused and was generalized following supervisor feedback. It serves general internet users across countries. The existing repository and Vercel domain retain their historical `-my` suffix.
+
+Forensic Intelligence application foundation for a general scam-awareness workspace. Task 1 includes the application foundation, professional responsive UI, frontend/backend architecture foundation, testing infrastructure, local Git repository preparation, and Vercel frontend deployment readiness. It does **not** perform scam detection or issue safety verdicts.
+
+The current deployment target is a **Task 1 frontend development preview**. Actual PostgreSQL persistence is Task 2; scam detection and live backend hosting are later work. Task 1 is COMPLETE. Task 2 Core Platform & Persistence is explicitly authorized and active on `task-2-core-platform`. Vercel hosts only the existing React/Vite frontend; FastAPI and the PostgreSQL architecture remain in this repository.
 
 The starting workspace was empty, including hidden files; no Git repository, source, AGENTS.md, README, separate specification, or brand guide was available. The user's Task 1 requirements were read in full and used as the specification. The current Forensic Intelligence design uses warm ivory surfaces, charcoal text, terracotta actions, and olive service indicators. Navigation exposes only **Overview** (`/`) and **Analyse** (`/analyse`).
 
 The visual migration preserves the existing API contracts and backend behavior. See the [redesign verification record](docs/REDESIGN.md) for the before/after checks and [current screenshots](docs/SCREENSHOTS.md) for both pages on desktop and mobile.
 
-Task 1 now presents **Message, URL, Phone Number and QR Code** as local Analyse modes. Phone and QR interfaces are complete; their intelligence/decoding services have not started. All analysis remains disabled. Phone accepts natural Malaysian/international drafts. QR supports local selection/drop of one PNG/JPEG/WEBP up to 5 MiB with filename/size feedback; the image is not read, uploaded or persisted. Selection and drafts clear on navigation/reload.
+Task 1 now presents **Message, URL, Phone Number and QR Code** as local Analyse modes. Phone and QR interfaces are complete; their intelligence/decoding services have not started. All analysis remains disabled. Phone accepts natural international drafts. QR supports local selection/drop of one PNG/JPEG/WEBP up to 5 MiB with filename/size feedback; the image is not read, uploaded or persisted. Selection and drafts clear on navigation/reload.
 
 Task 1 also includes restrained CSS motion: short page/card entrances, small button/navigation responses, input selection feedback and truthful API status transitions. The approved colors, fonts and settled layout are preserved. Reduced motion disables decorative movement immediately. No animation dependencies were added; see the [motion rules](docs/DESIGN_SYSTEM.md#motion-and-interaction).
 
@@ -16,7 +20,7 @@ Task 1 also includes restrained CSS motion: short page/card entrances, small but
 
 Before implementing code, start with [CODEX.md](CODEX.md) and follow its required reading order: CODEX → [PROGRESS](PROGRESS.md) → [ROADMAP](ROADMAP.md) → [DECISIONS](DECISIONS.md) → README → [ARCHITECTURE](docs/ARCHITECTURE.md) → [DESIGN_SYSTEM](docs/DESIGN_SYSTEM.md) → [API](docs/API.md) → [TESTING](docs/TESTING.md). These files are the persistent handoff for a new session; include CODEX.md as the starting context when handing off this folder.
 
-The latest verified state is in PROGRESS.md. The Task 1 baseline is published on `main` at [tayyab-hub/scamguard-my](https://github.com/tayyab-hub/scamguard-my), with local `main` tracking `origin/main`. The user reports the Vercel frontend preview is deployed and connected to GitHub; its hosted URL has not been independently checked in the latest task. The frontend now retains its Task 1 workspace when the backend is unavailable. Historical Task 1, redesign and memory-handoff counts remain in their dated reports; they are not current inventories. The earlier ignored `.local` source ZIP is historical and must not be uploaded as the current source.
+The latest verified state is in PROGRESS.md. The Task 1 baseline is published on `main` at [tayyab-hub/scamguard-my](https://github.com/tayyab-hub/scamguard-my), with local `main` tracking `origin/main`. The frontend is deployed at https://scamguard-my.vercel.app/ and connected to GitHub. On 2026-09-04, both hosted routes, direct refresh, four modes and unavailable-backend fallback passed browser checks with no page errors. Task 1 deployment work is complete. The frontend now retains its Task 1 workspace when the backend is unavailable. Historical Task 1, redesign and memory-handoff counts remain in their dated reports; they are not current inventories. The earlier ignored `.local` source ZIP is historical and must not be uploaded as the current source.
 
 ## Frontend quick start
 
