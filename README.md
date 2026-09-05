@@ -4,16 +4,16 @@
 
 A general scam-awareness workspace with the approved warm light **Forensic Intelligence** identity. The project was initially Malaysia-focused and was generalized following supervisor feedback. The repository and Vercel domain retain their historical `-my` suffix.
 
-**Task 1 Foundation and Task 2 Core Platform are complete and merged to `main`. Task 3 Message
-Intelligence is implemented on `task-3-message-intelligence` for review.** MESSAGE submissions run
+**Task 1 Foundation, Task 2 Core Platform and Task 3 Message Intelligence are complete and merged
+to `main`.** MESSAGE submissions run
 a genuine local three-class model, deterministic evidence rules and conservative fusion, then store
 an explainable result. Optional backend contextual AI is disabled by default. URL stays
 submission-only; Phone and QR remain local UI only. See [Message Intelligence](docs/MESSAGE_INTELLIGENCE.md),
 [Datasets](docs/DATASETS.md) and [Model Evaluation](docs/MODEL_EVALUATION.md).
 
 The existing frontend is deployed at https://scamguard-my.vercel.app/ and connected to GitHub/main.
-It remains a frontend preview with no live backend. Pushing Task 3 may create a branch preview, but it
-does not deploy FastAPI or prove backend availability. Do not merge Task 3 automatically.
+It remains a frontend preview with no live backend. The Task 3 merge updates frontend code only;
+it does not deploy FastAPI or prove backend availability.
 
 ## Project memory
 
@@ -26,7 +26,6 @@ Use Node 24 (minimum 22.12) and npm:
 ```sh
 git clone https://github.com/tayyab-hub/scamguard-my.git
 cd scamguard-my
-git switch task-3-message-intelligence
 cd frontend
 npm ci
 npm run dev
@@ -116,22 +115,22 @@ Before public or sensitive-content intake, decide authentication/ownership and a
 
 ## GitHub and Vercel
 
-Keep the existing origin and domain. For this task, publish only the Task 3 review branch:
+Keep the existing origin and domain. Task 3 is closed on `main`; inspect before future work:
 
 ```sh
 git status
 git remote -v
-git push -u origin task-3-message-intelligence
+git log --oneline --decorate -n 10
 ```
 
 Vercel settings remain: Root Directory `frontend`, framework Vite, install `npm ci`, build
 `npm run build`, output `dist`, Node 24. Leave `VITE_API_BASE_URL` unset for the frontend-only
-preview. `frontend/vercel.json` handles SPA direct routes. Do not deploy FastAPI to Vercel, rename
-the project, or merge Task 3 automatically. See [DEPLOYMENT](docs/DEPLOYMENT.md).
+preview. `frontend/vercel.json` handles SPA direct routes. Do not deploy FastAPI to Vercel or rename
+the project. See [DEPLOYMENT](docs/DEPLOYMENT.md).
 
 ## Verification and next step
 
 [TESTING](docs/TESTING.md) contains exact frontend/backend/real PostgreSQL/browser commands. [PROGRESS](PROGRESS.md) records actual results and limitations. Generated dependencies, builds, local PostgreSQL data, `.env` and test outputs are ignored; lockfiles, source, migrations, tests and intentional documentation screenshots stay tracked.
 
-Review Task 3 before any merge. The recommended next task is **Task 4: non-fetching URL Intelligence
+Task 3 is closed. The recommended next task is **Task 4: non-fetching URL Intelligence
 with lexical/structural evidence and no automatic browsing**. Do not start it automatically.

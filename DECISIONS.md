@@ -124,3 +124,10 @@ Message text is untrusted data; the prompt forbids following instructions or bro
 Malformed, ungrounded, refused or failed output is recorded only as a safe status and never prevents
 the local assessment. Store provider/model/status/contribution, not raw provider payload, secret,
 debug detail or chain-of-thought. Enabling third-party review remains an explicit privacy/cost choice.
+
+## D31 — Task 3 closure and main merge (2026-09-05)
+
+Task 3 passed its recorded local, database, migration, browser and manual verification gates. Its
+published feature history is accepted for a no-fast-forward merge into `main`. The optional external
+AI adapter remains disabled by default and has not been live-provider verified; no paid request was
+made. The merge does not authorize public backend deployment or Task 4 implementation.

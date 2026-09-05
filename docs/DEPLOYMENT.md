@@ -1,6 +1,6 @@
 # Task 1 — GitHub and Vercel frontend preview
 
-> Current-state note (2026-09-05): Task 2 has since been verified, merged to `main` at `425aab0`, and pushed. Task 3 Message Intelligence is implemented only on `task-3-message-intelligence` for review. The established Vercel site remains a frontend-only preview; neither PostgreSQL nor FastAPI is hosted there. Historical Task 1/Task 2 branch instructions below are retained as deployment history.
+> Current-state note (2026-09-05): Task 2 and Task 3 have been verified and accepted into `main`. The established Vercel site remains a frontend-only preview; neither PostgreSQL nor FastAPI is hosted there. Historical Task 1/Task 2 branch instructions below are retained as deployment history.
 
 This workflow publishes the existing **SCAMGUARD Forensic Intelligence frontend development preview**. It does not deploy FastAPI, create a database, enable submissions, or add detection. Task 2 implements PostgreSQL persistence locally; scam detection and live backend hosting remain later work. Task 2 Core Platform & Persistence is active on `task-2-core-platform`; do not merge automatically.
 

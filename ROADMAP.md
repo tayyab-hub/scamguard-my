@@ -6,7 +6,7 @@ Audited 2026-09-05. Status is evidence, not authorization to continue automatica
 | --- | --- | --- | --- |
 | 1 | Foundation | ✅ COMPLETE | Responsive Forensic Intelligence UI, four planned modes, honest offline states, tests, Git/Vercel frontend readiness and Windows workflow. |
 | 2 | Core Platform | ✅ COMPLETE | PostgreSQL/Alembic, Message/URL intake, detail/history, real analytics and private development controls; merged to main at `425aab0`. |
-| 3 | Text Intelligence | ✅ COMPLETE | Three-class local model, provenance, held-out evaluation, rules, optional fail-safe AI, conservative fusion, persistence/API/UI and full regression gates passed on the Task 3 review branch. |
+| 3 | Text Intelligence | ✅ COMPLETE | Three-class local model, provenance, held-out evaluation, rules, optional fail-safe AI, conservative fusion, persistence/API/UI and full regression gates passed and were accepted into main. |
 | 4 | Explainability | ✅ COMPLETE for Message only | Message results show grounded snippets, actions, components, versions, uncertainty and limitations. Cross-modal explainability remains future work. |
 | 5 | URL Intelligence | ⚪ NOT STARTED | URL storage is not intelligence. Begin with non-fetching parsing; retrieval requires isolated SSRF-safe design. |
 | 6 | Phone Intelligence | ⚪ NOT STARTED | UI complete only; normalization, report/reputation data and evidence are absent. |

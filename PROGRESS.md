@@ -1,12 +1,12 @@
 # SCAMGUARD — current project state
 
-Updated **2026-09-05 22:35 +08:00, Asia/Kuala_Lumpur** on branch `task-3-message-intelligence`.
+Updated **2026-09-05, Asia/Kuala_Lumpur** for the final Task 3 merge into `main`.
 
 ## Current milestone
 
 **✅ COMPLETE — Task 3 Message Intelligence.** Task 2 was
-fully re-verified, merged to `main` with merge commit `425aab0`, and pushed. Task 3 is isolated on
-its feature branch for review and is not merged into `main`.
+fully re-verified, merged to `main` with merge commit `425aab0`, and pushed. Task 3's retained
+feature branch passed final closure and is merged into `main`.
 
 ## Real functionality
 
@@ -20,7 +20,7 @@ its feature branch for review and is not merged into `main`.
 | Message fusion/explainability | ✅ COMPLETE | Separate risk and confidence, insufficient-evidence outcome, summaries, evidence, actions, component versions/status and limitations. |
 | Optional external AI review | ✅ COMPLETE | Backend-only provider abstraction and OpenAI Responses API structured adapter; disabled by default, redacted, grounded, zero retry, fail-safe. No paid call was made. |
 | Message persistence/API/UI | ✅ COMPLETE | POST MESSAGE persists intake, runs synchronously, stores and returns completed result; history/detail and dashboard use real stored outcomes. |
-| Final Task 3 verification/publication | ✅ COMPLETE | Full source, build, real-PostgreSQL, migration, browser, responsive screenshot and manual scenario gates passed. Logical feature commits are `73d9de2` and `417bc5d`; the branch is published for review. |
+| Final Task 3 verification/publication | ✅ COMPLETE | Full source, build, real-PostgreSQL, migration, browser, responsive screenshot and manual scenario gates passed. Logical feature commits are `73d9de2` and `417bc5d`; the branch was published and accepted for the final no-fast-forward merge. |
 | URL intelligence | ⚪ NOT STARTED | URL still validates and persists as inert SUBMITTED text. It is never fetched or assessed. |
 | Phone intelligence | ⚪ NOT STARTED | Phone UI only; no normalization, reputation or analysis. |
 | QR/Screenshot intelligence | ⚪ NOT STARTED | QR local metadata UI only; no byte read/upload/decoding/OCR/camera/payment routing. |
@@ -64,13 +64,13 @@ phone, URL, payment destination or external facts. Synchronous processing is sui
 development scale only.
 
 The backend remains a private shared development service with raw submitted Message/URL content and
-no user ownership. Do not host it publicly. The main Vercel URL is still a frontend preview; Task 3
-branch deployment is not proof of a hosted backend.
+no user ownership. Do not host it publicly. The main Vercel URL remains a frontend-only preview;
+merging Task 3 changes its UI bundle but does not deploy or enable the private backend.
 
 ## Exact next step
 
-Review the published `task-3-message-intelligence` branch and merge only after explicit approval.
-The recommended next implementation task is **Task 4 URL Intelligence: non-fetching URL parsing
+Task 3 is closed. The recommended next implementation task is **Task 4 URL Intelligence:
+non-fetching URL parsing
 and lexical evidence first, with no
 automatic browsing and a separate security design for any future retrieval.** Do not start it
 automatically.

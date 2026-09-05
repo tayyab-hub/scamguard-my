@@ -2,8 +2,8 @@
 
 SCAMGUARD is a general **Multi-Modal Scam Detection & Reporting Web Application**. Its approved
 visual identity is **Forensic Intelligence**: warm light ivory, charcoal, terracotta and olive with
-restrained editorial motion. The repository currently implements Task 1 foundation, Task 2 private
-Core Platform and Task 3 Message Intelligence on its feature branch. Never infer functionality from
+restrained editorial motion. The repository has completed Task 1 Foundation, Task 2 Core Platform
+and Task 3 Message Intelligence. Never infer functionality from
 a planned UI control, roadmap line, screenshot or old conversation.
 
 ## Required reading order
@@ -89,8 +89,8 @@ Current source is authoritative when historical wording conflicts.
   commits, discard user work, expose ignored secrets, or alter the configured remote casually.
 - Keep `node_modules`, `.venv`, `dist`, caches, coverage, logs, `.local`, test output and secrets
   ignored. Dataset source and reviewed model artifacts are intentional versioned research assets.
-- Task 2 is merged to main. Task 3 work belongs only on `task-3-message-intelligence`; push it for
-  review and **do not merge it**. Do not start Task 4 automatically.
+- Task 2 and Task 3 are merged to `main`. Retain their feature branches and published history; do
+  not rewrite them. Do not create a Task 4 branch or start Task 4 without explicit authorization.
 
 ## Definition of done and completion procedure
 
