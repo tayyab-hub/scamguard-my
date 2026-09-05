@@ -3,6 +3,7 @@ from uuid import UUID
 
 from fastapi import Query
 from fastapi.testclient import TestClient
+from pydantic import BaseModel, ConfigDict
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.orm import Session
 
@@ -12,7 +13,7 @@ from app.db.session import get_session
 def test_health_is_liveness_and_does_not_need_a_database(client):
     response = client.get("/api/v1/health")
     assert response.status_code == 200
-    assert response.json() == {"status": "ok", "service": "scamguard-my-api", "version": "0.1.0"}
+    assert response.json() == {"status": "ok", "service": "scamguard-api", "version": "0.1.0"}
     UUID(response.headers["x-request-id"])
     assert response.headers["cache-control"] == "no-store"
     assert response.headers["x-content-type-options"] == "nosniff"
@@ -33,6 +34,8 @@ def test_dashboard_is_unconfigured_not_fabricated_statistics(client):
 def test_capabilities_do_not_enable_analysis(client):
     response = client.get("/api/v1/capabilities")
     assert response.json() == {
+        "submission_available": False,
+        "submission_inputs": [],
         "analysis_available": False,
         "supported_inputs": [],
         "reason": "Analysis is not enabled in this release.",
@@ -107,6 +110,70 @@ def test_validation_errors_do_not_echo_input(app):
     assert "private-value" not in response.text
 
 
+def test_validation_errors_do_not_echo_unknown_field_names(app):
+    class StrictPayload(BaseModel):
+        model_config = ConfigDict(extra="forbid")
+        content: str
+
+    @app.post("/test-only/strict-payload")
+    def validate(payload: StrictPayload):
+        return payload
+
+    with TestClient(app) as client:
+        response = client.post(
+            "/test-only/strict-payload",
+            json={"content": "safe", "private-secret-key": "private-value"},
+        )
+    assert response.status_code == 422
+    assert response.json()["error"]["details"] == [{"field": "body", "message": "Invalid value."}]
+    assert "private-secret-key" not in response.text
+    assert "private-value" not in response.text
+
+
 def test_client_request_id_cannot_spoof_server_reference(client):
     response = client.get("/api/v1/health", headers={"X-Request-ID": "spoofed"})
     assert response.headers["x-request-id"] != "spoofed"
+
+
+def test_persistence_unavailable_keeps_safe_contracts(app, client):
+    app.state.settings.persistence_enabled = True
+    session = MagicMock(spec=Session)
+    session.execute.side_effect = OperationalError("private SQL", {}, Exception("private-password"))
+    session.scalar.side_effect = session.execute.side_effect
+    session.commit.side_effect = session.execute.side_effect
+    app.dependency_overrides[get_session] = lambda: session
+    for path in ["/api/v1/ready", "/api/v1/dashboard", "/api/v1/analyses"]:
+        response = client.get(path)
+        assert response.status_code == 503
+        assert "private" not in response.text
+    response = client.post(
+        "/api/v1/analyses", json={"input_type": "MESSAGE", "content": "private-content"}
+    )
+    assert response.status_code == 503
+    assert "private" not in response.text
+    caps = client.get("/api/v1/capabilities").json()
+    assert caps["submission_available"] is False
+    assert caps["submission_inputs"] == []
+    assert client.get("/api/v1/health").status_code == 200
+
+
+def test_disabled_storage_rejects_submission(client):
+    assert (
+        client.post(
+            "/api/v1/analyses", json={"input_type": "MESSAGE", "content": "draft"}
+        ).status_code
+        == 503
+    )
+
+
+def test_readiness_detects_missing_migration(app, client):
+    app.state.settings.persistence_enabled = True
+    session = MagicMock(spec=Session)
+    session.execute.side_effect = [
+        None,
+        OperationalError("SELECT analyses", {}, Exception("missing-table")),
+    ]
+    app.dependency_overrides[get_session] = lambda: session
+    response = client.get("/api/v1/ready")
+    assert response.status_code == 503
+    assert "missing-table" not in response.text

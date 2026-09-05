@@ -11,6 +11,8 @@ import {
   ShieldCheck,
 } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { useState } from 'react'
+import { SubmissionHistory, SubmissionRows } from '../components/SubmissionHistory'
 import { EmptyState, LoadingState } from '../components/States'
 import { PreviewNotice } from '../components/PreviewNotice'
 import { PageHeading } from '../components/PageHeading'
@@ -24,6 +26,9 @@ const metrics = [
 
 export function DashboardPage() {
   const dashboard = useDashboard()
+  const [showHistory, setShowHistory] = useState(false)
+  const data = !dashboard.isError && dashboard.data?.status === 'ready' ? dashboard.data : null
+  const latest = data?.recent_analyses[0]
   return (
     <>
       <PageHeading
@@ -66,14 +71,39 @@ export function DashboardPage() {
                 </div>
                 <div className="mb-2 mt-6 flex items-center gap-3">
                   <span
-                    className="font-display text-4xl leading-none text-ink"
-                    aria-label="Not available"
+                    className={`font-display leading-none text-ink ${label === 'Latest analysis' && latest ? 'text-2xl' : 'text-4xl'}`}
+                    aria-label={
+                      (data && label === 'Total analyses') ||
+                      (latest && label === 'Latest analysis')
+                        ? undefined
+                        : 'Not available'
+                    }
                   >
-                    —
+                    {label === 'Total analyses' && data
+                      ? data.total_analyses.toLocaleString()
+                      : label === 'Latest analysis' && latest
+                        ? latest.input_type === 'MESSAGE'
+                          ? 'Message'
+                          : 'URL'
+                        : '—'}
                   </span>
-                  <span className="status-chip">Not available yet</span>
+                  <span className="status-chip">
+                    {label === 'Total analyses' && data
+                      ? 'Recorded'
+                      : label === 'Latest analysis' && data
+                        ? latest
+                          ? 'SUBMITTED'
+                          : 'No submissions'
+                        : 'Not available yet'}
+                  </span>
                 </div>
-                <p className="border-t border-line/70 pt-3 text-[11px] text-muted">{hint}</p>
+                <p className="border-t border-line/70 pt-3 text-[11px] text-muted">
+                  {label === 'Latest analysis' && latest
+                    ? new Date(latest.created_at).toLocaleString()
+                    : label === 'Total analyses' && data
+                      ? 'Persisted submissions · no risk assessments'
+                      : hint}
+                </p>
               </section>
             ))}
           </div>
@@ -92,22 +122,43 @@ export function DashboardPage() {
                   </div>
                   <span className="eyebrow !text-[9px]">ACTIVITY</span>
                 </div>
-                <EmptyState
-                  icon={Inbox}
-                  title="Your activity starts here"
-                  action={
-                    <Link to="/analyse" className="button-secondary">
-                      Explore the analyser
-                      <ArrowRight size={15} className="motion-arrow" aria-hidden="true" />
-                    </Link>
-                  }
-                >
-                  Analysis history is not enabled yet. Once available, your completed checks will
-                  appear here.
-                </EmptyState>
+                {data && data.recent_analyses.length > 0 ? (
+                  <SubmissionRows items={data.recent_analyses} />
+                ) : (
+                  <EmptyState
+                    icon={Inbox}
+                    title="Your activity starts here"
+                    action={
+                      <Link to="/analyse" className="button-secondary">
+                        Explore the analyser
+                        <ArrowRight size={15} className="motion-arrow" aria-hidden="true" />
+                      </Link>
+                    }
+                  >
+                    {data
+                      ? 'No submissions have been recorded. Start with a message or URL.'
+                      : 'Analysis history is not enabled yet. Once available, your recorded submissions will appear here.'}
+                  </EmptyState>
+                )}
+                {data && (
+                  <div className="border-t border-line px-5 py-3">
+                    <button
+                      type="button"
+                      className="button-secondary"
+                      aria-expanded={showHistory}
+                      aria-controls="history-browser"
+                      onClick={() => setShowHistory(!showHistory)}
+                    >
+                      {showHistory ? 'Close history' : 'Browse history'}
+                    </button>
+                  </div>
+                )}
+                <div id="history-browser">{data && showHistory && <SubmissionHistory />}</div>
                 <div className="flex items-start gap-2.5 border-t border-line bg-surface-raised/40 px-5 py-3.5 text-[11px] leading-5 text-muted sm:px-6">
                   <Info size={14} className="mt-0.5 shrink-0" aria-hidden="true" />
-                  No live statistics are being collected or displayed.
+                  {data
+                    ? 'Shared development workspace. Records are submissions, not completed scam assessments.'
+                    : 'No live statistics are being collected or displayed.'}
                 </div>
               </section>
               <section className="flex items-start gap-4 rounded-lg border border-line bg-surface-raised/60 px-5 py-5">
@@ -143,8 +194,8 @@ export function DashboardPage() {
                   Start with a check.
                 </h2>
                 <p className="mb-7 mt-3 text-xs leading-6 text-body">
-                  A dedicated place to review suspicious messages and links. Analysis will be
-                  available in a future release.
+                  A dedicated place to review messages, links, phone numbers and QR codes.
+                  Intelligence will be available in a future release.
                 </p>
                 <Link
                   to="/analyse"
@@ -166,11 +217,11 @@ export function DashboardPage() {
                   </div>
                   <div className="flex justify-between gap-3">
                     <dt className="text-muted">Activity history</dt>
-                    <dd className="text-muted">Not connected</dd>
+                    <dd className="text-muted">{data ? 'Connected' : 'Not connected'}</dd>
                   </div>
                   <div className="flex justify-between gap-3">
                     <dt className="text-muted">Data source</dt>
-                    <dd className="text-body">None configured</dd>
+                    <dd className="text-body">{data ? 'PostgreSQL' : 'None configured'}</dd>
                   </div>
                 </dl>
               </section>

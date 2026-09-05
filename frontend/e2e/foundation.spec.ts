@@ -35,8 +35,9 @@ test('live API: responsive navigation, honest states, direct routes and no conso
     true,
   )
   await page.goto('/not-a-page')
-  await expect(page.getByRole('heading', { name: 'This page is off the map' })).toBeVisible()
-  await page.getByRole('link', { name: 'Back to dashboard' }).click()
+  await expect(page.getByRole('heading', { name: 'Page not found' })).toBeVisible()
+  await expect(page.getByRole('link', { name: 'Open Analyse' })).toBeVisible()
+  await page.getByRole('link', { name: 'Return to Overview' }).click()
   await expect(page.getByText('Your activity starts here')).toBeVisible()
   await page.screenshot({
     path: `test-results/dashboard-${testInfo.project.name}.png`,

@@ -1,4 +1,4 @@
-name: Foundation checks
+name: Platform checks
 
 on:
   push:
@@ -48,8 +48,8 @@ jobs:
       - name: Backend quality and PostgreSQL integration
         working-directory: backend
         run: |
-          .venv/bin/python -m ruff check app tests migrations
-          .venv/bin/python -m ruff format --check app tests migrations
+          .venv/bin/python -m ruff check app tests migrations scripts
+          .venv/bin/python -m ruff format --check app tests migrations scripts
           .venv/bin/python -m pytest
           .venv/bin/python -m alembic upgrade head
       - name: Install frontend
@@ -68,6 +68,15 @@ jobs:
       - name: Live API browser smoke tests
         working-directory: frontend
         run: npm run test:e2e
+      - name: Create isolated browser database
+        working-directory: backend
+        run: |
+          .venv/bin/python -c "import os, psycopg; c=psycopg.connect(os.environ['DATABASE_URL'].replace('postgresql+psycopg://', 'postgresql://'), autocommit=True); c.execute('CREATE DATABASE scamguard_e2e'); c.close()"
+      - name: Real PostgreSQL browser submissions
+        working-directory: frontend
+        env:
+          E2E_DATABASE_URL: postgresql+psycopg://scamguard:ci_test_only@127.0.0.1:5432/scamguard_e2e
+        run: npm run test:persistence
       - name: Built frontend without a backend
         working-directory: frontend
         run: npm run test:preview

@@ -61,7 +61,8 @@ htmlcov/
 
 # Machine-specific editor and operating-system metadata
 .idea/
-.vscode/
+.vscode/*
+!.vscode/tasks.json
 *.suo
 *.user
 *.code-workspace

@@ -4,6 +4,7 @@ from uuid import uuid4
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from sqlalchemy.exc import SQLAlchemyError
 from starlette.exceptions import HTTPException
 
 logger = logging.getLogger("scamguard.api")
@@ -14,6 +15,16 @@ class ApiError(Exception):
         self.status_code = status_code
         self.code = code
         self.message = message
+
+
+def safe_validation_field(error: dict) -> str:
+    location = list(error["loc"])
+    # Pydantic appends an unknown JSON key to extra-field errors. That key is
+    # user-controlled and can itself contain private data, so report its trusted
+    # parent location instead.
+    if error.get("type") == "extra_forbidden" and location:
+        location.pop()
+    return ".".join(map(str, location))
 
 
 def error_response(
@@ -40,6 +51,13 @@ def error_response(
 
 
 def install_error_handlers(app: FastAPI) -> None:
+    @app.exception_handler(SQLAlchemyError)
+    async def handle_database_error(request: Request, exc: SQLAlchemyError) -> JSONResponse:
+        # Never log SQL, parameters or connection details.
+        return error_response(
+            request, 503, "DATABASE_UNAVAILABLE", "Submission storage is unavailable."
+        )
+
     @app.exception_handler(ApiError)
     async def handle_api_error(request: Request, exc: ApiError) -> JSONResponse:
         return error_response(request, exc.status_code, exc.code, exc.message)
@@ -61,7 +79,7 @@ def install_error_handlers(app: FastAPI) -> None:
     ) -> JSONResponse:
         # Do not echo request values, Pydantic context, URLs or user-submitted content.
         details = [
-            {"field": ".".join(map(str, item["loc"])), "message": "Invalid value."}
+            {"field": safe_validation_field(item), "message": "Invalid value."}
             for item in exc.errors()
         ]
         return error_response(

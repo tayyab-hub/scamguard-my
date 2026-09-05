@@ -1,150 +1,118 @@
 # Testing and verification
 
-These commands reflect the current scripts/configuration and the Windows environment actually exercised on 2026-09-04. The latest results are in [PROGRESS.md](../PROGRESS.md); [TASK_1.md](TASK_1.md) and [REDESIGN.md](REDESIGN.md) are historical verification records. Reading a test, creating a workflow or producing a screenshot does not establish that a check passed.
+Exact commands for the current repository, audited 2026-09-04. Actual results belong in [PROGRESS](../PROGRESS.md), not inferred from scripts/CI. Existing dependencies were used: Node 24.18.0, Python 3.12.13, PostgreSQL 17.11 and installed Chrome. A fresh install, security audit, remote CI and other browser engines are separate checks.
 
-## Prerequisites and directories
-
-Run from a PowerShell terminal. Set the root to your own checkout if this directory moves:
+## Frontend (from frontend/)
 
 ```powershell
-# Start in the repository root; no machine-specific absolute path is required.
-$projectRoot = (Get-Location).Path
-```
-
-Verified runtime: Node 24.18.0, npm, Python 3.12.13 in `backend/.venv`, and installed Chrome. The frontend manifest requires Node >=22.12; the backend requires Python >=3.12. `npm.cmd` avoids PowerShell script-execution-policy ambiguity. Dependencies already existed for the latest run; that run did not perform a fresh install or dependency audit.
-
-For a new environment, follow [README.md](../README.md) to create the virtual environment, install Python dependencies using `requirements.lock` as constraints, and run `npm.cmd ci` in `frontend`. Python is not on PATH in the audited local workspace, but `backend/.venv/Scripts/python.exe` works. Do not ship/copy that machine-specific virtual environment as source. If creating it here without another installed Python, the base executable used for the original setup was `C:/Users/User/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe`; verify it still exists before use.
-
-## Frontend checks — exact working commands
-
-```powershell
-Set-Location -LiteralPath (Join-Path $projectRoot 'frontend')
 npm.cmd run typecheck
 npm.cmd run lint
 npm.cmd test
 npm.cmd run build
 ```
 
-| Command | What it checks |
-| --- | --- |
-| `npm.cmd run typecheck` | `tsc -b` over strict application and Node/config/browser-test projects. |
-| `npm.cmd run lint` | ESLint with `--max-warnings 0`. |
-| `npm.cmd test` | Vitest in jsdom: currently 32 tests across two files. |
-| `npm.cmd run build` | TypeScript plus Vite production compilation; output is ignored `frontend/dist`. |
+## Windows launcher regression (from repository root)
 
-Run all four and check each exit code; do not assume PowerShell stops after an earlier command fails. Vitest covers successful and offline page rendering, unavailable metrics instead of fabricated zeroes, pending queries, independent health recovery, local draft privacy/retry, disabled submission, rejected unsupported capabilities/HTML, routing, safe API errors, timeout/cancellation and public environment parsing. All 17 API-client tests are unchanged by the resilience fix. Production code must never import test fixtures.
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\Test-DevScripts.ps1
+.\dev.ps1 -NoBrowser
+.\dev.ps1 -NoBrowser
+.\stop-dev.ps1
+.\stop-dev.ps1
+```
 
-## Playwright — exact working commands
+The static suite parses both scripts and checks 14 safety contracts: prerequisite failures, disabled persistence, migration failure handling, unknown-port refusal, healthy reuse, visible terminals, browser control, identity-checked shutdown, clean PostgreSQL stop, path-safe wrappers/tasks and secret-safe output. The real sequence verifies a path containing spaces, cold start, health/readiness, duplicate-safe restart and idempotent shutdown. Failure-path inspection must not rename/delete local credentials or kill unknown services merely to manufacture a result.
 
-From `frontend`, using the installed Chrome channel exercised here:
+TypeScript includes source/config/browser tests. ESLint allows zero warnings. Vitest includes the original 32 cases and Task 2 submission/history/validation cases. Build emits ignored dist. Check every exit code: PowerShell does not automatically stop after a failed native command. Install with npm ci for a fresh checkout; never import test fixtures into production.
+
+## Browser regression and built offline preview
 
 ```powershell
 $env:PLAYWRIGHT_CHANNEL = 'chrome'
-$env:UPDATE_DOC_SCREENSHOTS = '0'
-npm.cmd run test:e2e
+npm.cmd run test:e2e -- --workers=2
+npm.cmd run test:preview -- --workers=2
 ```
 
-To use Playwright-managed Chromium instead, install it with `npx.cmd playwright install chromium` and remove the channel override with `Remove-Item Env:PLAYWRIGHT_CHANNEL -ErrorAction SilentlyContinue`. That browser-install command was not rerun during the documentation audit. On Linux CI, the configured installation command is `npx playwright install --with-deps chromium`.
+Build before test:preview with blank/unset VITE_API_BASE_URL. The eighteen existing foundation/motion/visual cases use a dedicated FastAPI on 8001 with PERSISTENCE_ENABLED=false and Vite on 5174, without reusing developer servers. They retain navigation, keyboard, four modes, no draft submission, safe errors/retry, immediate reduced motion, contrast checks and 320/768/1024/1280/1440px layouts. The six built-preview cases on 4173 read the actual vercel.json and serve dist without FastAPI or mock API data. Normal HTML API fallback must have no console/page errors; explicit network-failure fixtures allow expected network errors but no uncaught page errors.
 
-`playwright.config.ts` starts FastAPI and Vite at ports 8000 and 5173 when needed. By default it uses `../backend/.venv/Scripts/python.exe` on Windows or `../backend/.venv/bin/python` elsewhere. `E2E_PYTHON` can override the executable. The started backend receives `APP_ENV=test`. Locally, existing servers can be reused; confirm they serve this source with appropriate settings. CI does not reuse servers. The Task 1 deployment-preparation run started its own servers and completed successfully; do not assume they remain running.
+For bundled Chromium, install with npx.cmd playwright install chromium and unset PLAYWRIGHT_CHANNEL. CI installs Chromium with --with-deps. E2E_PYTHON overrides the default backend .venv executable when necessary. Mobile is Chromium emulation, not physical iPhone/Safari verification.
 
-The final local run used `npm.cmd run test:e2e -- --workers=2` to limit concurrent browser load; no tests, assertions or timeouts were removed. Earlier transient loading and reduced-motion timing failures are recorded in PROGRESS.md.
-
-There are eighteen tests: two foundation cases, four visual/keyboard/responsive/local-mode cases and three motion cases, each under desktop and mobile projects. Desktop uses 1440×1000; mobile uses iPhone 13-sized Chromium emulation at 390px width. Additional assertions exercise 320, 768, 1024, 1280 and 1440px widths, including long QR filenames and reachable actions above mobile navigation. The mobile project is Chromium emulation, not Safari or a physical iPhone.
-
-Covered behavior includes live API unavailable/empty states, only Overview/Analyse navigation, direct-route reloads, not-found recovery, disabled submission, local draft reset, error/retry recovery, light theme, horizontal overflow, mobile form/navigation overlap, skip-link activation, heading focus, tab/field focus and selected token contrast. Successful live flows must have no console or page errors. A separate test-only 503 interception intentionally exercises network failure; it is not a production fallback.
-
-These tests capture screenshots and assert layout/behavior; they do **not** perform golden-image pixel comparisons. They are not a comprehensive accessibility, security, browser-compatibility or production-load audit.
-
-`e2e/motion.spec.ts` holds only test requests pending to verify loading and truthful checking → connected/unavailable transitions. It switches the motion preference while activity is running and requires all animation to stop; settled pages must have no running animations. It checks the stagger finishes within 350ms, persistent navigation/API elements survive route changes, pointer hover preserves card geometry, touch does not depend on hover, press/arrow feedback works, disabled buttons do not animate as enabled, and typing does not remount/reanimate the input or transmit drafts. The September 4 mode enhancement changes selector locators from native radios to the explicitly requested button tabs while preserving draft, selection, focus and privacy assertions. Added coverage checks all four modes, arrow/Home/End switching, natural phone input, disabled actions, local image type/size validation, replacement/drop/removal, memory reset and no unsupported API calls. Browser tests also cover Phone/QR reduced motion and file focus.
-
-### Built frontend / Vercel rewrite / no backend
-
-From `frontend`, after building with blank/unset `VITE_API_BASE_URL`:
+## Backend checks (from backend/)
 
 ```powershell
-npm.cmd run build
-$env:PLAYWRIGHT_CHANNEL = 'chrome'
-npm.cmd run test:preview
+.\.venv\Scripts\python.exe -m ruff check app tests migrations scripts
+.\.venv\Scripts\python.exe -m ruff format --check app tests migrations scripts
+.\.venv\Scripts\python.exe -m pytest -q
 ```
 
-`playwright.preview.config.ts` runs six desktop/mobile tests on port 4173. Its test-only Node static server in `e2e-preview/serve.mjs` reads the actual `vercel.json`, serves `dist` assets and applies the SPA fallback. It starts no FastAPI process and contains no fake API responses. This tests direct page loads/reloads, not-found/navigation, safe handling of HTML instead of API JSON, honest unavailable/error states, retry and no fabricated data. A separate explicit network-abort case covers failed connections. Expected failed-network console messages in that case are distinct from uncaught page errors; the ordinary SPA-fallback case requires no console/page errors. Added reduced-motion cases require no animations on both offline pages, immediate controls, visible keyboard focus and route-heading focus.
+Without TEST_DATABASE_URL, real integration cases explicitly skip; that is not a pass for database behavior. Unit cases cover configuration, health/readiness failure, safe errors, CORS, rollback/close, disabled storage and chunked size limits.
 
-See PROGRESS.md for the latest actual results. The preview cases require the visible unavailable Overview and disabled Analyse workspace during HTML fallback and connection failures, truthful health, retries, no submission (including pressing Enter in the URL field), direct-route refresh and a visible retry focus outline. Ordinary runs capture six offline screenshots plus four reduced-motion/focus images in ignored `test-results/preview`. The four-mode enhancement refreshes Analyse documentation and adds Phone/QR desktop/mobile captures; Overview is preserved. This harness verifies local behavior, not Vercel's complete runtime or a live hosted URL. The user reports Vercel is deployed; after automatic redeployment, perform the checks in [DEPLOYMENT.md](DEPLOYMENT.md).
+## Real PostgreSQL integration — required for database changes
 
-Historical deployment-preparation note: the initial harness used Vite preview, which treats API requests differently from the explicit Vercel catch-all. Two new cases failed their expected error-message assertions. The harness was corrected to exercise `vercel.json` without weakening assertions; a missing Node `URL` import in that new server was also fixed after lint flagged it. Original tests were unchanged at that time. The subsequent user-requested resilience fix intentionally updates page-failure expectations to require the usable unavailable workspace and strengthens recovery/privacy assertions. No tests or skip gates were removed to obtain a pass. Both suites passed in the latest run. `npm run preview` remains a separate local static preview with no inherited development proxy.
-
-### Intentional documentation screenshot refresh
-
-Only after a UI change or an explicit refresh, from `frontend`:
+Start PostgreSQL 17 using README's existing Compose workflow or a local instance. Create **separate disposable test databases**, never reuse development data. With default Compose user scamguard, from repository root:
 
 ```powershell
-$env:PLAYWRIGHT_CHANNEL = 'chrome'
-$env:UPDATE_DOC_SCREENSHOTS = '1'
-try { npm.cmd run test:e2e } finally { Remove-Item Env:UPDATE_DOC_SCREENSHOTS -ErrorAction SilentlyContinue }
+docker compose exec db createdb -U scamguard scamguard_test
+docker compose exec db createdb -U scamguard scamguard_e2e
 ```
 
-Inspect the generated files in `docs/screenshots`: `dashboard-desktop.png`, `dashboard-mobile.png`, `analyse-desktop.png`, `analyse-mobile.png`, plus `phone-desktop.png`, `phone-mobile.png`, `qr-desktop.png` and `qr-mobile.png`. Phone draft values and QR filename/metadata shown in those new captures are explicit test fixtures, never live analysis evidence. Desktop captures are full-page; mobile documentation captures show the actual viewport so fixed navigation is represented correctly. Additional full-page mobile and focus evidence goes under ignored `frontend/test-results`.
-
-Manually check both pages for clipping, horizontal overflow, contrast, consistent spacing, navigation, oversized elements, mobile overlap and focus visibility. Fix issues before accepting changed images; never bless a screenshot to hide a regression. Ordinary test runs must not overwrite these source assets. The earlier documentation-only audit retained its four images. The September 4 enhancement intentionally uses `UPDATE_DOC_SCREENSHOTS=1` for eight images; Phone/QR mobile captures scroll to the controls.
-
-## Backend checks — exact working commands
+Run database creation once; an already-existing database does not need recreation. With native PostgreSQL use its createdb command against your configured host/port. Set URLs privately in your terminal, using the actual local credentials (the following is a placeholder, not a credential):
 
 ```powershell
-Set-Location -LiteralPath (Join-Path $projectRoot 'backend')
-.\.venv\Scripts\python.exe -m pytest
-.\.venv\Scripts\python.exe -m ruff check app tests migrations
-.\.venv\Scripts\python.exe -m ruff format --check app tests migrations
-.\.venv\Scripts\python.exe -m pip check
+$env:TEST_DATABASE_URL = 'postgresql+psycopg://scamguard:YOUR_LOCAL_PASSWORD@127.0.0.1:5432/scamguard_test'
+cd backend
+.\.venv\Scripts\python.exe -m pytest -q
+# Optional focused execution, not a replacement for the full suite:
+.\.venv\Scripts\python.exe -m pytest -q -m integration
 ```
 
-The ordinary suite currently collects 23 tests. Without `TEST_DATABASE_URL`, 22 pass and one real PostgreSQL test is skipped. Readiness success/failure unit tests use an explicitly mocked SQLAlchemy session; they do not prove an actual database works. Other tests cover response contracts, production settings, CORS, safe errors/input handling, request IDs, session rollback and cleanup. Ruff formatting is a non-mutating check; do not replace it with `ruff format` when merely recording the current state.
+`tests/test_persistence.py` requires the database name to end in `_test`. Its module fixture applies Alembic head, checks schema drift, downgrades to base, verifies the table is removed and reapplies head. Cases truncate only that dedicated analyses table before/after tests. This is intentionally destructive to test data. They cover real Message/URL commit/read across fresh applications, invalid/oversized/unsupported input, pagination/order, a deterministic concurrent-write snapshot check, safe detail, measured empty/populated dashboard, constraints/rollback, request bounds and capability separation. Unit coverage also verifies that unknown user-controlled JSON keys are not reflected in validation errors. The original real readiness integration remains and runs with the same configured URL.
 
-### Real PostgreSQL integration — prerequisite-dependent commands
-
-These commands need a reachable **dedicated disposable test database** and its credentials. They are documented to clear the current verification gap; no successful local run is claimed yet. Provision the database separately using approved local infrastructure and do not point tests/migrations at production.
+For development schema migration (from backend/):
 
 ```powershell
-Set-Location -LiteralPath (Join-Path $projectRoot 'backend')
-# Example shape only: replace with the real test database URL, without committing it.
-$env:TEST_DATABASE_URL = 'postgresql+psycopg://scamguard:YOUR_TEST_PASSWORD@127.0.0.1:5432/scamguard_test'
-.\.venv\Scripts\python.exe -m pytest -m integration
-# Then rerun the complete backend suite with this variable still set.
-.\.venv\Scripts\python.exe -m pytest
-```
-
-`test_real_postgresql_readiness` creates the real app with that URL and requires `/api/v1/ready` to return 200. It currently performs `SELECT 1`, not persistence/migration testing. Setting an invalid URL causes failure, not a meaningful pass. Do not remove the skip marker or substitute a fake database to conceal an unavailable dependency.
-
-Alembic uses **DATABASE_URL**, independently of `TEST_DATABASE_URL`. To exercise its online environment against the same disposable database:
-
-```powershell
-$env:DATABASE_URL = $env:TEST_DATABASE_URL
-$env:APP_ENV = 'test'
 .\.venv\Scripts\python.exe -m alembic upgrade head
+.\.venv\Scripts\python.exe -m alembic current
+.\.venv\Scripts\python.exe -m alembic check
 ```
 
-There are no domain revisions yet. Offline `alembic upgrade head --sql` can validate the offline scaffolding without contacting PostgreSQL; it cannot prove connectivity or domain migrations. It passed in the historical Task 1 run and was not rerun for this documentation-only audit. Successful online migration execution remains unverified locally. Use a separate terminal for these overrides so a later development server does not accidentally inherit test settings.
+These use DATABASE_URL/backend .env. Never run downgrade on development/production data casually. To reproduce upgrade/downgrade verification manually, first point DATABASE_URL at a disposable *_test database, then run `alembic upgrade head`, `alembic downgrade base`, `alembic upgrade head`, `alembic check`. The automated integration fixture already performs this isolated sequence.
 
-## Live endpoint checks
+The actual Windows verification used a portable official PostgreSQL 17.11 runtime under ignored .local/pg17, a loopback-only cluster on 55432, and separate scamguard_dev/scamguard_test/scamguard_e2e databases. It did not install a system service or change global PATH. Generated credentials, data and logs are ignored, not portable source. New machines should follow Compose/native setup above rather than assume that runtime exists.
 
-With the local API running, `curl.exe -i` shows status and headers without treating the expected readiness 503 as a missing route:
+## Real browser persistence (from frontend/)
 
 ```powershell
-curl.exe -i http://127.0.0.1:8000/api/v1/health
-curl.exe -i http://127.0.0.1:8000/api/v1/ready
-curl.exe -i http://127.0.0.1:8000/api/v1/dashboard
-curl.exe -i http://127.0.0.1:8000/api/v1/capabilities
-curl.exe -i http://127.0.0.1:5173/api/v1/health
+$env:E2E_DATABASE_URL = 'postgresql+psycopg://scamguard:YOUR_LOCAL_PASSWORD@127.0.0.1:5432/scamguard_e2e'
+$env:PLAYWRIGHT_CHANNEL = 'chrome'
+npm.cmd run test:persistence
 ```
 
-The earlier documentation audit made these five GET requests using Python's `urllib.request`/`urllib.error` with a ten-second timeout, printing status and parsed JSON. Historical results: health 200, ready 503 `DATABASE_UNAVAILABLE`, dashboard 200 unconfigured, capabilities 200 unavailable, proxied health 200. These probes were not repeated in the resilience task; current browser/unit results are in PROGRESS.md. These endpoints contain no user-submitted content. Do not log secrets or future sensitive request bodies during debugging.
+The config refuses a DB not ending in `_e2e`. `backend/scripts/prepare_e2e.py` applies real Alembic migrations, without seeding. Isolated FastAPI/Vite servers use 8002/5175. One worker prevents concurrent test-count interference. Desktop/mobile cases submit controlled non-sensitive test text and example.com URLs, verify acknowledgement, real count increments, history/detail, navigation/reload persistence, disabled Phone/QR and no external request or browser errors. Test submissions remain only in the disposable E2E database; every run measures its baseline count. Never target a public/development database.
 
-## CI, warnings and evidence hygiene
+## Screenshots and manual review
 
-`.github/workflows/ci.yml` defines Node 24/Python 3.12 on Ubuntu, PostgreSQL 17, Python installation with constraints, backend tests/Ruff/migrations, npm clean install/typecheck/lint/unit/build, live-API Playwright Chromium and built offline-preview tests. Git is initialized, but no remote CI result is available. Python constraints record a Windows-resolved environment; platform extras on Linux still resolve from `pyproject.toml`.
+```powershell
+$env:UPDATE_DOC_SCREENSHOTS = '1'
+npm.cmd run test:e2e -- --workers=2
+npm.cmd run test:persistence
+$env:UPDATE_DOC_SCREENSHOTS = '0'
+```
 
-Non-failing messages in the latest run: two Zod/Rollup comment-annotation warnings, Starlette TestClient deprecations involving httpx and AnyIO, and Playwright's `NO_COLOR`/`FORCE_COLOR` warning. No warning was suppressed. These are distinct from browser application errors. Dependency consistency (`pip check`) is not a vulnerability audit; it last ran during deployment preparation, not the resilience fix.
+Documentation writes are opt-in. Foundation captures cover Overview/Analyse/Phone/QR desktop/mobile in docs/screenshots. Task 2 captures show genuine submissions in the dedicated E2E dataset and must be labelled test evidence, not production activity. Ordinary test output remains ignored. Inspect clipping, horizontal overflow, spacing/contrast, navigation overlap, reachable actions, field/file focus and reduced motion. These tests take images and assert behavior/layout; they are not golden-image pixel comparisons or a comprehensive accessibility/security audit.
 
-Bundler/browser commands required approved execution outside the restricted Windows sandbox during the audit. Ordinary local terminals do not have that agent restriction. Treat environment/permission errors as such; do not weaken tests to bypass them.
+## CI and limits
 
-Keep generated dependencies, builds, bytecode, reports and caches ignored and out of source archives. Tests regenerate ignored output; that is not a product-source change. After each task record date/time/offset, commands, counts, skips, warnings, browser/environment and unverified gates in `PROGRESS.md`. Record failures honestly before fixing and rerunning the relevant checks.
+GitHub Actions configures PostgreSQL 17, isolated test/E2E databases, all frontend/backend gates, migration checks and three browser suites. A configured workflow is not proof that a remote run passed. Existing non-failing warnings include Starlette httpx/AnyIO deprecations, Zod/Rollup annotations and Playwright color-environment warnings. Do not suppress failures or weaken tests for a passing report.
+
+### Restarting this checkout's optional portable PostgreSQL
+
+Only for the existing audited Windows checkout (these files are ignored and absent from Git clones), from repository root:
+
+```powershell
+.\.local\pg17\pgsql\bin\pg_ctl.exe -D .local/pg17-data status
+# If stopped:
+.\.local\pg17\pgsql\bin\pg_ctl.exe -D .local/pg17-data -l .local/postgres.log -o '-h 127.0.0.1 -p 55432' start
+```
+
+Do not run initdb over existing data. Existing backend/.env uses that local cluster; do not overwrite it or print its password. Restart an already-running older development API process to load Task 2 code. Test servers are isolated and do not replace the developer's existing server.

@@ -4,9 +4,11 @@ import { analysisModes, type AnalysisMode } from './modes'
 export function AnalysisModeSelector({
   value,
   onChange,
+  disabled = false,
 }: {
   value: AnalysisMode
   onChange: (value: AnalysisMode) => void
+  disabled?: boolean
 }) {
   const buttons = useRef<Array<HTMLButtonElement | null>>([])
   return (
@@ -27,6 +29,7 @@ export function AnalysisModeSelector({
             }}
             id={`mode-${type}`}
             type="button"
+            disabled={disabled}
             role="tab"
             aria-selected={value === type}
             aria-controls="analysis-panel"

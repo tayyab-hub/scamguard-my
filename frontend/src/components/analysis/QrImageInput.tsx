@@ -24,8 +24,12 @@ export function QrImageInput({
       setError('Choose a PNG, JPG, JPEG or WEBP image.')
       return
     }
-    if (candidate.size === 0 || candidate.size > maxImageBytes) {
-      setError('Choose a non-empty image no larger than 5 MB.')
+    if (candidate.size === 0) {
+      setError('Choose a non-empty image.')
+      return
+    }
+    if (candidate.size > maxImageBytes) {
+      setError('Image must be 5 MB or smaller.')
       return
     }
     setError('')

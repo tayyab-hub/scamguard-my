@@ -38,7 +38,7 @@ Reconciled with the source on 2026-09-04. This identity is an accepted project d
 
 ## Navigation and responsive behavior
 
-Only **Overview** (`/`) and **Analyse** (`/analyse`) appear in navigation. There are no active links to unimplemented modules. The dashboard component and `/api/v1/dashboard` endpoint keep their existing technical names and contracts.
+Only **Overview** (`/`), **Analyse** (`/analyse`) and **Help & Support** (`/help`) appear in navigation. Help is a real local guidance/search/feedback-preparation route. There are no active links to unimplemented intelligence modules. The dashboard component and `/api/v1/dashboard` endpoint keep their existing technical names and contracts.
 
 At 1024px and above, the fixed 260px sidebar remains in place; it can scroll independently on short screens. Below that breakpoint, the bottom navigation retains safe-area padding, visible active state, and page-bottom clearance. The existing 1480px maximum content width and stacked mobile layout are preserved. Message, URL, Phone Number and QR Code use four compact button tabs. They reflow into two columns below 640px, including 320px mobile; labels may wrap and no horizontal scrolling is required.
 
@@ -48,7 +48,7 @@ Skip navigation, semantic landmarks, route-heading focus, tab keyboard interacti
 
 The regression suite checks selected normal-text token pairs at a minimum 4.5:1 contrast and selected focus/control boundaries at 3:1. CSS honors reduced-motion preference. These checks complement screenshot inspection and do not replace a full accessibility audit. Interactive controls retain visible focus; programmatically focused page/main landmarks intentionally suppress the default outline while supporting skip navigation and route announcements.
 
-Loading, request failure, retry, explicit empty history, unavailable metrics, and analysis-unavailable messages all use the same light theme. Em dashes continue to mean unavailable values. No charts, analytics, risk scores, safety verdicts, or synthetic records are introduced. Analyse remains a memory-only draft surface with submission disabled.
+Loading, request failure, retry, explicit empty history, unavailable metrics, and analysis-unavailable messages all use the same light theme. Em dashes continue to mean unavailable values. No charts, analytics, risk scores, safety verdicts, or synthetic records are introduced. Message/URL drafts remain local until an available storage service accepts submission. Saved records display SUBMITTED with no assessment; Phone/QR stay disabled. Real counts/history use the existing panels/tokens; unavailable values remain unavailable.
 
 ## Motion and interaction
 
@@ -72,10 +72,14 @@ The Task 1 motion refinement adds CSS transitions/keyframes without a new depend
 - Tab selection uses existing short color/border transitions. A keyed mode panel uses the existing 180ms opacity/4px settle, without an inherited panel delay; typing never remounts it. Border transitions keep the focus outline immediately visible. Input and empty-state timing is local, independent of a containing panel's delay.
 - Empty-state icons settle once from 0.97 scale; text and CTA fade briefly. Loading uses a static scan icon and an 8%-accent sweep inside the existing skeleton. No spinner, parallax, neon, filter or large-shadow animation is introduced. Loaded or unavailable content enters immediately; no old/new live regions are duplicated for a cross-fade.
 - The API live region remains stable and atomic. Its contents key on the actual label: checking fades into connected/unavailable; connected gets one restrained dot pulse. Unchanged successful polls and navigation do not replay status motion. Only a pending health query uses a subdued repeating dot signal.
-- `prefers-reduced-motion: reduce` removes all animation, delay, scanning and pulsing, and makes color transitions nearly instant. Positional hover/press effects are opt-in under `no-preference`. State labels, keyboard focus, retries and disabled controls remain available. No animation is a prerequisite for understanding or using a control.
+- `prefers-reduced-motion: reduce` removes all animation, delay, scanning, pulsing and transition properties. Positional hover/press effects are opt-in under `no-preference`. State labels, keyboard focus, retries and disabled controls remain available. No animation is a prerequisite for understanding or using a control.
 
 Motion is declarative CSS; no animation timers, new manual DOM animation or animation library is used. Do not animate width/height/position, add permanent `will-change` layers, or make ordinary settled panels move continuously. Browser tests exercise both OS motion preferences, including switching to reduced motion during a pending request. See [TESTING.md](TESTING.md).
 
 ## Visual evidence
 
 See [SCREENSHOTS.md](SCREENSHOTS.md) for current desktop/mobile Overview and Analyse captures, and [REDESIGN.md](REDESIGN.md) for the historical migration checks, preservation audit, and limitations. [TESTING.md](TESTING.md) documents opt-in screenshot refresh and manual review. The suite captures images and checks behavior/layout; it does not compare golden-image pixels. The September 4 interface enhancement refreshes Analyse and adds Phone/QR desktop/mobile captures. Phone uses a compact natural-entry field; QR uses a dashed local selection area, filename feedback and removable selection. Both have an Upcoming state and an explained disabled action. No camera, decoder, reputation check or assessment is implied. The warm light theme is the only supported theme; there is no alternate legacy palette.
+
+## Task 2 persistence presentation
+
+General SCAMGUARD branding follows supervisor feedback (D20). Preserve the warm palette, typography, spacing and short CSS motion. The new success copy is “Submission recorded.”, with “No assessment yet” retained. Storage is disclosed before submitting. History uses truncated escaped text, on-demand detail, uniquely identified native disclosure buttons and bounded pagination. No badge implies risk or safety.

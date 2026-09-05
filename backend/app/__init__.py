@@ -1,1 +1,1 @@
-"""SCAMGUARD MY API."""
+"""SCAMGUARD API."""

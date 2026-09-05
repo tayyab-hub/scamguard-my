@@ -126,3 +126,7 @@ Define the first narrow message/URL analysis contract, input validation, ownersh
 **Task 2 has not been started.**
 
 Workflow references: official [checkout](https://github.com/actions/checkout), [setup-node](https://github.com/actions/setup-node), [setup-python](https://github.com/actions/setup-python), and [upload-artifact](https://github.com/actions/upload-artifact) documentation.
+
+## Closure clarification — 2026-09-04
+
+Task 1 is complete, including four-mode UI, motion/accessibility, GitHub and the verified deployed frontend. Supervisor feedback generalized the visible brand to SCAMGUARD. Task 2 now adds actual PostgreSQL Message/URL submission/history on a separate review branch. Earlier no-persistence claims in this document are historical Task 1 facts, not current branch behavior; read PROGRESS.md and the current architecture/API docs. No scam intelligence was added.

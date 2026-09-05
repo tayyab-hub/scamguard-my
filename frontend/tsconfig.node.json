@@ -18,6 +18,8 @@
     "vite.config.ts",
     "playwright.config.ts",
     "playwright.preview.config.ts",
+    "playwright.persistence.config.ts",
+    "e2e-persistence",
     "e2e",
     "e2e-preview"
   ]

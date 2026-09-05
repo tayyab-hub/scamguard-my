@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { ArrowUpRight, ChevronRight, Globe2, LayoutDashboard, ScanLine, Shield } from 'lucide-react'
+import { ArrowUpRight, ChevronRight, CircleHelp, Globe2, LayoutDashboard, ScanLine, Shield } from 'lucide-react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { ApiStatus } from '../components/ApiStatus'
 import { Brand } from '../components/Brand'
@@ -7,13 +7,14 @@ import { Brand } from '../components/Brand'
 const navigation = [
   { to: '/', label: 'Overview', icon: LayoutDashboard },
   { to: '/analyse', label: 'Analyse', icon: ScanLine },
+  { to: '/help', label: 'Help & Support', icon: CircleHelp },
 ]
 
 export function AppShell() {
   const { pathname } = useLocation()
   const current = navigation.find((item) => item.to === pathname)?.label || 'Page not found'
   useEffect(() => {
-    document.title = `${current} · SCAMGUARD MY`
+    document.title = `${current} · SCAMGUARD`
     document.getElementById('page-heading')?.focus()
   }, [pathname, current])
 
@@ -25,7 +26,7 @@ export function AppShell() {
       <aside className="fixed inset-y-0 left-0 z-30 hidden w-[260px] flex-col overflow-y-auto border-r border-line bg-sidebar px-5 py-7 lg:flex">
         <Brand />
         <div className="mb-7 mt-10 border-y border-line py-4">
-          <p className="eyebrow">MALAYSIA / WORKSPACE</p>
+          <p className="eyebrow">SECURITY / WORKSPACE</p>
           <p className="mt-2 text-xs text-body">Clarity before you act.</p>
         </div>
         <p className="eyebrow mb-3 px-3">Workspace</p>
@@ -60,7 +61,7 @@ export function AppShell() {
           </div>
           <div className="mt-6 flex items-center gap-2 px-1 text-[11px] text-muted">
             <Globe2 size={14} aria-hidden="true" />
-            Built for Malaysia<span className="ml-auto font-mono">MY</span>
+            Built for safer digital decisions
           </div>
         </div>
       </aside>
@@ -82,7 +83,7 @@ export function AppShell() {
           </div>
         </header>
         <div className="flex items-center justify-between gap-2 border-b border-line bg-surface/70 px-5 py-3 sm:hidden">
-          <span className="text-[11px] text-muted">Application foundation</span>
+          <span className="text-[11px] text-muted">Forensic Intelligence</span>
           <ApiStatus />
         </div>
 
@@ -97,7 +98,7 @@ export function AppShell() {
           <footer className="mt-9 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-5 text-[10px] text-muted">
             <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
               <Shield size={13} aria-hidden="true" />
-              <span className="font-semibold">SCAMGUARD MY</span>
+              <span className="font-semibold">SCAMGUARD</span>
               <span aria-hidden="true">/</span>
               <span>Forensic Intelligence</span>
             </span>

@@ -101,7 +101,7 @@ describe('application routes and API states', () => {
       }),
     ).toHaveAttribute('aria-current', 'page')
     await screen.findByText('Analysis is not enabled in this release.')
-    expect(document.title).toBe('Analyse · SCAMGUARD MY')
+    expect(document.title).toBe('Analyse · SCAMGUARD')
   })
 
   it('allows local drafting, content switching and clearing without submitting anything', async () => {
@@ -230,7 +230,9 @@ describe('application routes and API states', () => {
       new File([new Uint8Array(5 * 1024 * 1024 + 1)], 'large.png', { type: 'image/png' }),
     ]) {
       await user.upload(input, invalid)
-      expect(screen.getByRole('alert')).toHaveTextContent('non-empty image no larger than 5 MB')
+      expect(screen.getByRole('alert')).toHaveTextContent(
+        invalid.size === 0 ? 'non-empty image' : '5 MB or smaller',
+      )
       expect(screen.getByText('first.png')).toBeInTheDocument()
     }
     await user.upload(input, new File(['<svg/>'], 'script.svg', { type: 'image/svg+xml' }))
@@ -333,13 +335,29 @@ describe('application routes and API states', () => {
     },
   )
 
-  it('shows a real not-found route with a working way back', async () => {
+  it('shows a real not-found route with working Overview and Analyse actions', async () => {
     renderApp('/missing')
-    expect(screen.getByRole('heading', { name: 'This page is off the map' })).toBeInTheDocument()
-    await userEvent.click(screen.getByRole('link', { name: 'Back to dashboard' }))
+    expect(screen.getByRole('heading', { name: 'Page not found' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Open Analyse' })).toHaveAttribute('href', '/analyse')
+    await userEvent.click(screen.getByRole('link', { name: 'Return to Overview' }))
     await waitFor(() =>
       expect(screen.getByRole('heading', { name: 'Security overview' })).toBeInTheDocument(),
     )
     await screen.findByText('Your activity starts here')
+  })
+
+  it('provides searchable help, accessible FAQs and honest local feedback preparation', async () => {
+    const user = userEvent.setup()
+    renderApp('/help')
+    expect(await screen.findByRole('heading', { name: 'Help & Support' })).toBeInTheDocument()
+    expect(screen.getAllByRole('group')).toHaveLength(14)
+    await user.type(screen.getByLabelText('Search help'), 'QR')
+    expect(screen.getByText('2 answers available')).toBeInTheDocument()
+    await user.clear(screen.getByLabelText('Search help'))
+    await user.click(screen.getByRole('button', { name: 'Prepare feedback' }))
+    expect(screen.getByText('Choose a feedback category.')).toBeInTheDocument()
+    expect(screen.getByText('Enter a short summary.')).toBeInTheDocument()
+    expect(screen.getByText(/Online feedback is being prepared/)).toBeInTheDocument()
+    expect(document.title).toBe('Help & Support · SCAMGUARD')
   })
 })
