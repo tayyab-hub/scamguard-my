@@ -4,7 +4,7 @@
 
 A general scam-awareness workspace with the approved warm light **Forensic Intelligence** identity. The project was initially Malaysia-focused and was generalized following supervisor feedback. The repository and Vercel domain retain their historical `-my` suffix.
 
-**Task 1 is complete. Task 2 is implemented and technically audited on `task-2-core-platform` for review.** Message/URL submissions can be validated, saved in PostgreSQL and retrieved through history. The dashboard displays genuine submission counts and dates. `SUBMITTED` means saved, never assessed. No scam classifier, risk/confidence scores or safety verdicts exist. Phone and QR UI are complete; their intelligence is not started. See the [Task 2 audit](docs/TASK_2_AUDIT.md) for exact evidence and remaining limits.
+**Task 1 and the scoped Task 2 Core Platform are complete on `task-2-core-platform`; the final UI and Windows development workflow are prepared for review.** Message/URL submissions can be validated, saved in PostgreSQL and retrieved through history. The dashboard displays genuine submission counts and dates. `SUBMITTED` means saved, never assessed. Help & Support, accessible validation, a polished 404, and safe local Phone/QR interfaces are included. No scam classifier, risk/confidence scores or safety verdicts exist. See the [Task 2 audit](docs/TASK_2_AUDIT.md) for evidence and limits.
 
 The existing frontend is deployed at https://scamguard-my.vercel.app/ and connected to GitHub/main. Hosted Overview/Analyse, direct refresh, four modes and unavailable-backend fallback were tested on 2026-09-04 with no page errors. Task 2 is a separate branch; do not merge automatically. No live backend is deployed.
 
@@ -26,6 +26,18 @@ npm run dev
 ```
 
 Open http://127.0.0.1:5173. Existing checkouts need only the frontend commands. Frontend preview requires no database/backend: failed API requests retain the usable unavailable workspace and truthful health badge. No fake data is substituted.
+
+## Open everything on Windows
+
+After the one-time setup below, choose one workflow from the repository root:
+
+1. Double-click `Start-SCAMGUARD.cmd` and use `Stop-SCAMGUARD.cmd` when finished.
+2. In a trusted VS Code workspace, allow the **SCAMGUARD: Start Development** folder-open task; run **SCAMGUARD: Stop Development** from **Terminal → Run Task** when finished.
+3. In PowerShell, run `.\dev.ps1` and `.\stop-dev.ps1`. Add `-NoBrowser` when you do not want the launcher to open a browser tab.
+
+The launcher checks the portable PostgreSQL runtime/data, backend `.venv` and `.env`, frontend dependencies, and persistence setting; starts the isolated database on `127.0.0.1:55432`; applies Alembic; and starts the backend and frontend in visible terminals. It reuses healthy SCAMGUARD services and refuses unknown processes on ports 8000, 5173, or 55432 without killing them. Shutdown verifies recorded process identity and stops only launcher-owned app processes, then cleanly stops this repository's PostgreSQL cluster. It never deletes the database. Final URLs are `http://127.0.0.1:5173` and `http://127.0.0.1:8000/api/v1/health`.
+
+VS Code intentionally requires workspace trust before an automatic folder-open task runs. Review `.vscode/tasks.json`, `dev.ps1`, and `stop-dev.ps1`, then trust this repository if you want that convenience. No execution-policy setting is changed globally; wrappers use a process-scoped policy for the checked-in scripts.
 
 ```sh
 npm run build
@@ -64,11 +76,12 @@ Alembic revision **0001_analysis_intake** creates the schema. PostgreSQL connect
 ## Implemented behavior
 
 - React/TypeScript/Vite, Router, Tailwind, TanStack Query and Zod; FastAPI/Pydantic, SQLAlchemy/Psycopg/PostgreSQL and Alembic.
-- Only Overview (`/`) and Analyse (`/analyse`) navigation. Approved responsive sidebar/mobile navigation, keyboard focus and reduced-motion CSS remain.
+- Overview (`/`), Analyse (`/analyse`) and Help & Support (`/help`) navigation, plus a catch-all 404. Approved responsive sidebar/mobile navigation, keyboard focus and reduced-motion CSS remain.
 - MESSAGE: trimmed non-empty text, at most 5,000 characters. URL: validated absolute HTTP(S), at most 2,048 characters; never visited automatically.
 - An available private backend accepts `POST /api/v1/analyses`, returns UUID/timestamps and SUBMITTED. UI progress, safe failure and “Submission recorded.” reflect the actual request. Failed writes are not automatically retried.
 - Real total/latest/recent data, paginated history and on-demand detail. Flagged-for-review remains unavailable. Empty database means measured zero; unavailable database means unavailable, never zero.
 - Phone accepts natural international drafts but cannot submit. QR accepts local filename/size selection for one non-empty PNG/JPEG/WEBP up to 5 MiB; no image reading, upload, storage, decoding or camera access. Unsubmitted drafts/file selection clear on navigation or reload.
+- Help search and feedback preparation run locally. `VITE_SUPPORT_EMAIL` is optional and public; when blank, the page truthfully states that online feedback is being prepared. A configured value opens the user's email application and never claims a message was sent.
 
 ## Security and privacy boundary
 

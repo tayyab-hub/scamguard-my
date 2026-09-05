@@ -1,12 +1,12 @@
 # SCAMGUARD roadmap
 
-Status audited on 2026-09-04. Read [PROGRESS.md](PROGRESS.md) for execution evidence and the exact handoff. This is an ordered plan, not authorization to begin the next item. Scaffolded pages, interfaces and configuration do not count as completed domain features.
+Status audited on 2026-09-05. Read [PROGRESS.md](PROGRESS.md) for execution evidence and the exact handoff. This is an ordered plan, not authorization to begin the next item. Scaffolded pages, interfaces and configuration do not count as completed domain features.
 
 **✅ COMPLETE** = implemented and verified in the stated scope; **🟡 IN PROGRESS** = partial, with outstanding work named; **⚪ NOT STARTED** = not implemented; **🔴 BLOCKED** = a specific prerequisite is missing. A partially complete milestone need not have an agent actively working on it.
 
 | Order | Milestone | Status | Real current state and remaining exit criteria |
 | --- | --- | --- | --- |
-| 1 | Foundation | ✅ COMPLETE | Professional responsive four-mode UI, architecture/testing foundation, offline resilience, GitHub and verified main Vercel frontend. General SCAMGUARD branding is implemented on the review branch. |
+| 1 | Foundation | ✅ COMPLETE | Professional responsive four-mode UI, accessible validation, Help & Support, polished 404, architecture/testing foundation, offline resilience, safe Windows startup/shutdown, GitHub and verified main Vercel frontend. General SCAMGUARD branding is implemented on the review branch. |
 | 2 | Core Platform | ✅ COMPLETE | Task 2 PostgreSQL/Alembic, Message/URL SUBMITTED records, paginated history/detail and real total/latest/recent data implemented, verified and published on task-2-core-platform for review. Private shared development scope only; no public backend/authentication. |
 | 3 | Text Intelligence | ⚪ NOT STARTED | No classifier, dataset, rules engine or inference. Define supported languages/inputs, genuine data provenance, an initial method and reproducible evaluation before enabling text assessment. |
 | 4 | Explainability | ⚪ NOT STARTED | No explanations or evidence schema. Explanations must trace real evidence/model behavior and state uncertainty; do not fabricate rationales. |

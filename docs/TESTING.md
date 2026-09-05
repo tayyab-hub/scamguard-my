@@ -11,6 +11,18 @@ npm.cmd test
 npm.cmd run build
 ```
 
+## Windows launcher regression (from repository root)
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\Test-DevScripts.ps1
+.\dev.ps1 -NoBrowser
+.\dev.ps1 -NoBrowser
+.\stop-dev.ps1
+.\stop-dev.ps1
+```
+
+The static suite parses both scripts and checks 14 safety contracts: prerequisite failures, disabled persistence, migration failure handling, unknown-port refusal, healthy reuse, visible terminals, browser control, identity-checked shutdown, clean PostgreSQL stop, path-safe wrappers/tasks and secret-safe output. The real sequence verifies a path containing spaces, cold start, health/readiness, duplicate-safe restart and idempotent shutdown. Failure-path inspection must not rename/delete local credentials or kill unknown services merely to manufacture a result.
+
 TypeScript includes source/config/browser tests. ESLint allows zero warnings. Vitest includes the original 32 cases and Task 2 submission/history/validation cases. Build emits ignored dist. Check every exit code: PowerShell does not automatically stop after a failed native command. Install with npm ci for a fresh checkout; never import test fixtures into production.
 
 ## Browser regression and built offline preview
