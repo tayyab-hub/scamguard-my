@@ -21,12 +21,64 @@ export const healthSchema = z.object({
 const analysisFields = {
   id: z.uuid(),
   input_type: z.enum(['MESSAGE', 'URL']),
-  status: z.literal('SUBMITTED'),
+  status: z.enum(['SUBMITTED', 'PROCESSING', 'COMPLETED', 'FAILED']),
   created_at: z.iso.datetime({ offset: true }),
   updated_at: z.iso.datetime({ offset: true }),
 }
-export const analysisDetailSchema = z.object({ ...analysisFields, content: z.string() })
-export const analysisSummarySchema = z.object({ ...analysisFields, preview: z.string().max(160) })
+const evidenceSchema = z.object({
+  category: z.string(),
+  label: z.string(),
+  snippet: z.string(),
+  source: z.enum(['DETERMINISTIC_RULE', 'EXTERNAL_AI']),
+})
+export const messageAssessmentSchema = z.object({
+  risk_level: z.enum(['LOW', 'CAUTION', 'ELEVATED', 'HIGH', 'INSUFFICIENT_EVIDENCE']),
+  risk_score: z.number().min(0).max(1).nullable(),
+  confidence_score: z.number().min(0).max(1),
+  confidence_level: z.enum(['LOW', 'MEDIUM', 'HIGH']),
+  summary: z.string(),
+  evidence: z.array(evidenceSchema),
+  recommended_actions: z.array(z.string()),
+  components: z.object({
+    local_model: z.object({
+      used: z.literal(true),
+      version: z.string(),
+      class_estimate: z.enum(['LEGITIMATE', 'SPAM', 'SCAM']),
+      class_probabilities: z.record(z.string(), z.number()),
+      confidence: z.number().min(0).max(1),
+    }),
+    deterministic_rules: z.object({
+      used: z.literal(true),
+      version: z.string(),
+      score: z.number().min(0).max(1),
+      indicator_count: z.number().int().nonnegative(),
+      contextual_suppressions: z.number().int().nonnegative(),
+    }),
+    external_ai: z.object({
+      status: z.enum(['DISABLED', 'UNAVAILABLE', 'NOT_NEEDED', 'COMPLETED', 'ERROR', 'INVALID']),
+      provider: z.string().nullable(),
+      model: z.string().nullable(),
+      contributed: z.boolean(),
+    }),
+    fusion: z.object({ version: z.string() }),
+  }),
+  limitations: z.array(z.string()),
+  completed_at: z.iso.datetime({ offset: true }),
+})
+export const analysisDetailSchema = z.object({
+  ...analysisFields,
+  content: z.string(),
+  assessment: messageAssessmentSchema.nullable().default(null),
+  failure_code: z.string().nullable().default(null),
+})
+export const analysisSummarySchema = z.object({
+  ...analysisFields,
+  preview: z.string().max(160),
+  risk_level: z
+    .enum(['LOW', 'CAUTION', 'ELEVATED', 'HIGH', 'INSUFFICIENT_EVIDENCE'])
+    .nullable()
+    .default(null),
+})
 export const analysisListSchema = z.object({
   items: z.array(analysisSummarySchema).max(100),
   total: z.number().int().nonnegative(),
@@ -34,6 +86,7 @@ export const analysisListSchema = z.object({
   page_size: z.number().int().min(1).max(100),
 })
 export type AnalysisSummary = z.infer<typeof analysisSummarySchema>
+export type MessageAssessment = z.infer<typeof messageAssessmentSchema>
 export type SubmissionInput = { input_type: 'MESSAGE' | 'URL'; content: string }
 export const dashboardSchema = z.discriminatedUnion('status', [
   z.object({
@@ -46,7 +99,7 @@ export const dashboardSchema = z.discriminatedUnion('status', [
   z.object({
     status: z.literal('ready'),
     total_analyses: z.number().int().nonnegative(),
-    flagged_analyses: z.null(),
+    flagged_analyses: z.number().int().nonnegative().nullable(),
     last_analysis_at: z.iso.datetime({ offset: true }).nullable(),
     recent_analyses: z.array(analysisSummarySchema).max(5),
   }),
@@ -55,9 +108,9 @@ export const capabilitiesSchema = z.object({
   // Older/offline previews never acquire a capability just because the UI exists.
   submission_available: z.boolean().default(false),
   submission_inputs: z.array(z.enum(['MESSAGE', 'URL'])).default([]),
-  analysis_available: z.literal(false),
-  supported_inputs: z.array(z.never()).length(0),
-  reason: z.literal('Analysis is not enabled in this release.'),
+  analysis_available: z.boolean(),
+  supported_inputs: z.array(z.enum(['MESSAGE', 'URL'])),
+  reason: z.string(),
 })
 
 export async function getApi<T>(

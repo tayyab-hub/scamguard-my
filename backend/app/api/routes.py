@@ -1,7 +1,7 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Request
-from sqlalchemy import select, text
+from sqlalchemy import func, select, text
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
@@ -45,9 +45,15 @@ def dashboard(
     if not request.app.state.settings.persistence_enabled:
         return DashboardResponse()
     records = list_submissions(session, 1, 5)
+    flagged = session.scalar(
+        select(func.count())
+        .select_from(Analysis)
+        .where(Analysis.risk_level.in_(["ELEVATED", "HIGH"]))
+    )
     return DashboardResponse(
         status="ready",
         total_analyses=records.total,
+        flagged_analyses=flagged,
         last_analysis_at=records.items[0].created_at if records.items else None,
         recent_analyses=records.items,
     )
@@ -64,4 +70,10 @@ def capabilities(
     except SQLAlchemyError:
         session.rollback()
         return CapabilitiesResponse()
-    return CapabilitiesResponse(submission_available=True, submission_inputs=list(InputType))
+    return CapabilitiesResponse(
+        submission_available=True,
+        submission_inputs=list(InputType),
+        analysis_available=True,
+        supported_inputs=[InputType.MESSAGE],
+        reason="Local message intelligence is available. URL intelligence is not enabled.",
+    )

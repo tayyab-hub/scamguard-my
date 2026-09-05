@@ -28,15 +28,52 @@ const dashboard = {
   last_analysis_at: record.created_at,
   recent_analyses: [summary],
 }
+const assessment = {
+  risk_level: 'HIGH',
+  risk_score: 0.86,
+  confidence_score: 0.81,
+  confidence_level: 'HIGH',
+  summary: 'Strong combined indicators suggest a high social-engineering risk.',
+  evidence: [
+    {
+      category: 'CREDENTIAL',
+      label: 'Credential request',
+      snippet: 'provide your OTP now',
+      source: 'DETERMINISTIC_RULE',
+    },
+  ],
+  recommended_actions: ['Do not send money, credentials or verification codes.'],
+  components: {
+    local_model: {
+      used: true,
+      version: 'message-tfidf-logreg-v1',
+      class_estimate: 'SCAM',
+      class_probabilities: { LEGITIMATE: 0.1, SPAM: 0.1, SCAM: 0.8 },
+      confidence: 0.8,
+    },
+    deterministic_rules: {
+      used: true,
+      version: 'message-rules-v1',
+      score: 0.9,
+      indicator_count: 1,
+      contextual_suppressions: 0,
+    },
+    external_ai: { status: 'DISABLED', provider: null, model: null, contributed: false },
+    fusion: { version: 'message-fusion-v1' },
+  },
+  limitations: ['This is decision support, not proof of fraud or safety.'],
+  completed_at: '2026-09-05T08:00:01Z',
+}
 
 function setup(
   post: () => Promise<Response> = async () => Response.json(record, { status: 201 }),
   empty = false,
+  capabilityResponse: Record<string, unknown> = caps,
 ) {
   const fetchMock = vi.fn(async (url: string, init?: RequestInit) => {
     if (init?.method === 'POST') return post()
     if (url.endsWith('/health')) return Response.json(healthFixture)
-    if (url.endsWith('/capabilities')) return Response.json(caps)
+    if (url.endsWith('/capabilities')) return Response.json(capabilityResponse)
     if (url.endsWith('/dashboard'))
       return Response.json(
         empty
@@ -53,6 +90,33 @@ function setup(
 }
 
 describe('persistent submission UI', () => {
+  it('renders a real message result with risk, confidence, evidence, actions and components', async () => {
+    const completed = { ...record, status: 'COMPLETED', assessment, failure_code: null }
+    setup(
+      async () => Response.json(completed, { status: 201 }),
+      false,
+      {
+        ...caps,
+        analysis_available: true,
+        supported_inputs: ['MESSAGE'],
+        reason: 'Local message intelligence is available.',
+      },
+    )
+    renderApp('/analyse')
+    fireEvent.change(await screen.findByLabelText('Message content'), {
+      target: { value: 'Provide your OTP now' },
+    })
+    await userEvent.click(screen.getByRole('button', { name: 'Analyse content' }))
+    expect(await screen.findByText('Analysis completed.')).toBeInTheDocument()
+    expect(screen.getByText('High risk')).toBeInTheDocument()
+    expect(screen.getByText(/Confidence: high \(81%\)/)).toBeInTheDocument()
+    expect(screen.getByText('Credential request')).toBeInTheDocument()
+    expect(screen.getByText('Do not send money, credentials or verification codes.')).toBeInTheDocument()
+    await userEvent.click(screen.getByText('Components and limitations'))
+    expect(screen.getByText(/SCAM · message-tfidf-logreg-v1/)).toBeInTheDocument()
+    expect(screen.getByText('disabled')).toBeInTheDocument()
+  })
+
   it('validates Message, records once, shows pending/success, and clears only after acknowledgement', async () => {
     let resolve!: (response: Response) => void
     const fetchMock = setup(
@@ -168,7 +232,7 @@ describe('persistent submission UI', () => {
       ),
     ).toBeInTheDocument()
     await userEvent.click(screen.getByRole('button', { name: /View submission/ }))
-    await screen.findByText('Saved content · No risk assessment')
+    await screen.findByText('Saved content · SUBMITTED')
     expect(document.querySelector('b')).toBeNull()
     await userEvent.click(screen.getByRole('button', { name: 'Browse history' }))
     await screen.findByText('Page 1 · 1 submissions')
@@ -247,6 +311,6 @@ describe('submission boundaries', () => {
     expect(submissionError('URL', 'https://example.com/' + 'x'.repeat(2048))).not.toBeNull()
     expect(submissionError('MESSAGE', 'x'.repeat(5000))).toBeNull()
     expect(dashboardSchema.safeParse({ ...dashboard, total_analyses: -1 }).success).toBe(false)
-    expect(dashboardSchema.safeParse({ ...dashboard, flagged_analyses: 2 }).success).toBe(false)
+    expect(dashboardSchema.safeParse({ ...dashboard, flagged_analyses: 2 }).success).toBe(true)
   })
 })

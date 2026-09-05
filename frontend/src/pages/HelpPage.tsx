@@ -5,9 +5,9 @@ import { PageHeading } from '../components/PageHeading'
 import { getSupportEmail } from '../lib/env'
 
 const faqs = [
-  ['What does SCAMGUARD do today?', 'It records supported Message and URL submissions when the configured API and database are available. It does not currently produce a scam verdict.'],
-  ['Does a saved submission mean content is safe?', 'No. SUBMITTED confirms storage only. It is not a risk score, safety verdict or verification.'],
-  ['Why is analysis unavailable?', 'Scam intelligence is planned for a later milestone. The current platform establishes the secure application and persistence foundation.'],
+  ['What does SCAMGUARD do today?', 'When the configured API and database are available, it assesses Message submissions with local machine learning and explainable indicators. URL submissions are recorded without URL intelligence.'],
+  ['Does an assessment prove content is safe or fraudulent?', 'No. Risk and confidence are decision support based on limited message evidence. They are not proof, a guarantee or professional advice.'],
+  ['Why is analysis unavailable?', 'Message intelligence requires the configured API, model artifact and database. Other intelligence modes remain planned for later milestones.'],
   ['Can I analyse a phone number?', 'You can draft a phone number locally. Phone reputation and intelligence are not implemented and the draft is not submitted.'],
   ['Can I upload a QR image?', 'You can select one supported image locally. The browser does not read, decode, upload or save it.'],
   ['Which QR image formats are accepted?', 'The local selector accepts one non-empty PNG, JPG, JPEG or WEBP image up to 5 MB.'],
@@ -55,9 +55,9 @@ export function HelpPage() {
 
       <section className="grid gap-4 md:grid-cols-3" aria-label="How SCAMGUARD works">
         {[
-          ['01', 'Choose content', 'Use Message or URL for supported storage, or explore planned Phone and QR interfaces locally.'],
+          ['01', 'Choose content', 'Use Message for an evidence-based assessment, record a URL without visiting it, or explore planned Phone and QR interfaces locally.'],
           ['02', 'Review before sharing', 'Remove passwords, codes, financial details and other sensitive information.'],
-          ['03', 'Read the status carefully', 'SUBMITTED confirms storage only. No scam assessment is available yet.'],
+          ['03', 'Read the result carefully', 'Message risk and confidence are separate signals. URL status confirms storage only and is not a safety verdict.'],
         ].map(([step, title, copy]) => (
           <article key={step} className="panel p-5 sm:p-6">
             <span className="step-number">{step}</span>

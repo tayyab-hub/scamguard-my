@@ -1,11 +1,19 @@
+from datetime import UTC, datetime
 from uuid import UUID
 
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
-from app.api.analysis_schemas import AnalysisCreate, AnalysisDetail, AnalysisList, AnalysisSummary
+from app.api.analysis_schemas import (
+    AnalysisCreate,
+    AnalysisDetail,
+    AnalysisList,
+    AnalysisSummary,
+    MessageAssessmentResponse,
+)
 from app.core.errors import ApiError
-from app.db.models import Analysis
+from app.db.models import Analysis, AnalysisStatus, InputType
+from app.ml.engine import MessageIntelligenceEngine
 
 
 def summary(record: Analysis) -> AnalysisSummary:
@@ -19,14 +27,77 @@ def summary(record: Analysis) -> AnalysisSummary:
         created_at=record.created_at,
         updated_at=record.updated_at,
         preview=preview,
+        risk_level=record.risk_level,
     )
 
 
-def record_submission(session: Session, data: AnalysisCreate) -> AnalysisDetail:
+def detail(record: Analysis) -> AnalysisDetail:
+    assessment = None
+    if record.status == AnalysisStatus.COMPLETED and record.completed_at is not None:
+        assessment = MessageAssessmentResponse(
+            risk_level=record.risk_level,
+            risk_score=record.risk_score,
+            confidence_score=record.confidence_score,
+            confidence_level=record.confidence_level,
+            summary=record.result_summary,
+            evidence=record.evidence or [],
+            recommended_actions=record.recommended_actions or [],
+            components=record.component_details or {},
+            limitations=record.limitations or [],
+            completed_at=record.completed_at,
+        )
+    return AnalysisDetail(
+        id=record.id,
+        input_type=record.input_type,
+        content=record.content,
+        status=record.status,
+        created_at=record.created_at,
+        updated_at=record.updated_at,
+        assessment=assessment,
+        failure_code=record.failure_code,
+    )
+
+
+def record_submission(
+    session: Session, data: AnalysisCreate, engine: MessageIntelligenceEngine
+) -> AnalysisDetail:
     record = Analysis(input_type=data.input_type, content=data.content)
     session.add(record)
-    session.commit()  # get_session rolls back and closes on any exception.
-    return AnalysisDetail.model_validate(record)
+    session.commit()  # First durable boundary: the validated intake exists.
+    if data.input_type == InputType.URL:
+        return detail(record)
+
+    record.status = AnalysisStatus.PROCESSING
+    session.commit()
+    try:
+        result = engine.analyse(data.content)
+        record.status = AnalysisStatus.COMPLETED
+        record.risk_level = result.risk_level
+        record.risk_score = result.risk_score
+        record.confidence_score = result.confidence_score
+        record.confidence_level = result.confidence_level
+        record.result_summary = result.summary
+        record.evidence = result.evidence
+        record.recommended_actions = result.recommended_actions
+        record.component_details = result.components
+        record.limitations = result.limitations
+        record.model_version = result.model_version
+        record.rules_version = result.rules_version
+        record.fusion_version = result.fusion_version
+        record.ai_provider = result.ai.provider
+        record.ai_model = result.ai.model
+        record.ai_status = result.ai.status
+        record.ai_contributed = result.components["external_ai"]["contributed"]
+        record.completed_at = datetime.now(UTC)
+        record.failure_code = None
+    except Exception:
+        record.status = AnalysisStatus.FAILED
+        record.failure_code = "MESSAGE_ANALYSIS_FAILED"
+    session.commit()
+    # PostgreSQL normalizes timestamptz to the connection timezone; refresh keeps POST and GET
+    # representations stable across process restarts.
+    session.refresh(record)
+    return detail(record)
 
 
 def list_submissions(session: Session, page: int, page_size: int) -> AnalysisList:
@@ -49,4 +120,4 @@ def get_submission(session: Session, analysis_id: UUID) -> AnalysisDetail:
     record = session.get(Analysis, analysis_id)
     if record is None:
         raise ApiError(404, "ANALYSIS_NOT_FOUND", "Submission not found.")
-    return AnalysisDetail.model_validate(record)
+    return detail(record)

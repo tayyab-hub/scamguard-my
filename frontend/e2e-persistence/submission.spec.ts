@@ -25,13 +25,13 @@ async function capture(page: Page, info: TestInfo, name: string) {
   if (process.env.UPDATE_DOC_SCREENSHOTS === '1') {
     await mkdir('../docs/screenshots', { recursive: true })
     await writeFile(
-      path.join('../docs/screenshots', `task2-${name}-${info.project.name}.png`),
+      path.join('../docs/screenshots', `task3-${name}-${info.project.name}.png`),
       bytes,
     )
   }
 }
 
-test('real PostgreSQL: Message and URL persist through navigation and refresh', async ({
+test('real PostgreSQL: Message result and URL intake persist through navigation and refresh', async ({
   page,
   request,
 }, testInfo) => {
@@ -45,12 +45,13 @@ test('real PostgreSQL: Message and URL persist through navigation and refresh', 
     if (!req.url().startsWith('http://127.0.0.1:5175')) unexpected.push(req.url())
   })
   const before = await (await request.get('/api/v1/dashboard')).json()
-  const message = `Browser persistence fixture ${testInfo.project.name} ${Date.now()}`
+  const message = `URGENT: Your bank account will be suspended. Click the link and provide your OTP now. Browser fixture ${testInfo.project.name} ${Date.now()}`
   await page.goto('/analyse')
   await page.getByLabel('Message content').fill(message)
   await page.getByRole('button', { name: 'Analyse content' }).click()
-  await expect(page.getByText('Submission recorded.')).toBeVisible()
-  await expect(page.getByText('No assessment yet')).toBeVisible()
+  await expect(page.getByText('Analysis completed.')).toBeVisible()
+  await expect(page.getByText('High risk')).toBeVisible()
+  await expect(page.getByText('Credential request')).toBeVisible()
   await capture(page, testInfo, 'recorded')
   const nav = page.getByRole('navigation', {
     name: testInfo.project.name === 'mobile' ? 'Mobile navigation' : 'Desktop navigation',
@@ -65,10 +66,10 @@ test('real PostgreSQL: Message and URL persist through navigation and refresh', 
   await page.reload()
   await expect(page.getByText(message)).toBeVisible()
   await expect(page.getByRole('region', { name: 'Flagged for review' })).toContainText(
-    'Not available yet',
+    String(before.flagged_analyses + 1),
   )
   await page.getByRole('button', { name: new RegExp(message) }).click()
-  await expect(page.getByText('Saved content · No risk assessment')).toBeVisible()
+  await expect(page.getByText('Saved content · COMPLETED')).toBeVisible()
   await page.getByRole('button', { name: 'Browse history' }).click()
   await expect(page.getByRole('region', { name: 'Submission history' })).toContainText(message)
   // Recent and paginated history can show the same record; disclosure IDs stay unique.
@@ -90,6 +91,7 @@ test('real PostgreSQL: Message and URL persist through navigation and refresh', 
   await expect(page.getByRole('button', { name: 'Analyse QR' })).toBeDisabled()
   const after = await (await request.get('/api/v1/dashboard')).json()
   expect(after.total_analyses).toBe(before.total_analyses + 2)
+  expect(after.flagged_analyses).toBe(before.flagged_analyses + 1)
   expect(after.recent_analyses[0].input_type).toBe('URL')
   for (const width of [320, 390, 768, 1024, 1440]) {
     await page.setViewportSize({ width, height: 950 })

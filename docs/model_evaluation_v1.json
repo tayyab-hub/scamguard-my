@@ -1,0 +1,283 @@
+{
+  "model_version": "message-tfidf-logreg-v1",
+  "artifact_sha256": "818d99f72c8502fe6ec28849e42c77f4707949366bf014bd5677079dde2c3dd3",
+  "dataset": {
+    "source_rows": 5971,
+    "exact_duplicate_rows_removed": 106,
+    "conflicting_label_rows_removed": 68,
+    "deduplicated_rows": 5797,
+    "source_sha256": "649844f1c62a6b27e145eaf17a65f7010c56c390e11a794ea8329993a05ba71e",
+    "labels_after_deduplication": {
+      "LEGITIMATE": 4834,
+      "SCAM": 528,
+      "SPAM": 435
+    },
+    "near_duplicate_clusters": 143,
+    "largest_cluster": 5
+  },
+  "split": {
+    "train": {
+      "rows": 3477,
+      "labels": {
+        "LEGITIMATE": 2900,
+        "SCAM": 316,
+        "SPAM": 261
+      }
+    },
+    "validation": {
+      "rows": 1160,
+      "labels": {
+        "LEGITIMATE": 967,
+        "SCAM": 106,
+        "SPAM": 87
+      }
+    },
+    "test": {
+      "rows": 1160,
+      "labels": {
+        "LEGITIMATE": 967,
+        "SPAM": 87,
+        "SCAM": 106
+      }
+    }
+  },
+  "validation_candidates": {
+    "logistic_regression": {
+      "classification_report": {
+        "LEGITIMATE": {
+          "precision": 0.98059244,
+          "recall": 0.99276112,
+          "f1-score": 0.98663926,
+          "support": 967.0
+        },
+        "SPAM": {
+          "precision": 0.83783784,
+          "recall": 0.71264368,
+          "f1-score": 0.77018634,
+          "support": 87.0
+        },
+        "SCAM": {
+          "precision": 0.89719626,
+          "recall": 0.90566038,
+          "f1-score": 0.90140845,
+          "support": 106.0
+        },
+        "accuracy": 0.9637931,
+        "macro avg": {
+          "precision": 0.90520885,
+          "recall": 0.87035506,
+          "f1-score": 0.88607802,
+          "support": 1160.0
+        },
+        "weighted avg": {
+          "precision": 0.96226516,
+          "recall": 0.9637931,
+          "f1-score": 0.96261696,
+          "support": 1160.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          960,
+          4,
+          3
+        ],
+        [
+          17,
+          62,
+          8
+        ],
+        [
+          2,
+          8,
+          96
+        ]
+      ],
+      "class_order": [
+        "LEGITIMATE",
+        "SPAM",
+        "SCAM"
+      ]
+    },
+    "linear_svm": {
+      "classification_report": {
+        "LEGITIMATE": {
+          "precision": 0.97376387,
+          "recall": 0.99793175,
+          "f1-score": 0.98569969,
+          "support": 967.0
+        },
+        "SPAM": {
+          "precision": 0.8358209,
+          "recall": 0.64367816,
+          "f1-score": 0.72727273,
+          "support": 87.0
+        },
+        "SCAM": {
+          "precision": 0.92156863,
+          "recall": 0.88679245,
+          "f1-score": 0.90384615,
+          "support": 106.0
+        },
+        "accuracy": 0.9612069,
+        "macro avg": {
+          "precision": 0.91038447,
+          "recall": 0.84280079,
+          "f1-score": 0.87227286,
+          "support": 1160.0
+        },
+        "weighted avg": {
+          "precision": 0.95864859,
+          "recall": 0.9612069,
+          "f1-score": 0.95883795,
+          "support": 1160.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          965,
+          2,
+          0
+        ],
+        [
+          23,
+          56,
+          8
+        ],
+        [
+          3,
+          9,
+          94
+        ]
+      ],
+      "class_order": [
+        "LEGITIMATE",
+        "SPAM",
+        "SCAM"
+      ]
+    },
+    "multinomial_naive_bayes": {
+      "classification_report": {
+        "LEGITIMATE": {
+          "precision": 0.95364892,
+          "recall": 1.0,
+          "f1-score": 0.97627461,
+          "support": 967.0
+        },
+        "SPAM": {
+          "precision": 0.88235294,
+          "recall": 0.51724138,
+          "f1-score": 0.65217391,
+          "support": 87.0
+        },
+        "SCAM": {
+          "precision": 0.94736842,
+          "recall": 0.8490566,
+          "f1-score": 0.89552239,
+          "support": 106.0
+        },
+        "accuracy": 0.95,
+        "macro avg": {
+          "precision": 0.92779009,
+          "recall": 0.78876599,
+          "f1-score": 0.84132364,
+          "support": 1160.0
+        },
+        "weighted avg": {
+          "precision": 0.94772781,
+          "recall": 0.95,
+          "f1-score": 0.94458797,
+          "support": 1160.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          967,
+          0,
+          0
+        ],
+        [
+          37,
+          45,
+          5
+        ],
+        [
+          10,
+          6,
+          90
+        ]
+      ],
+      "class_order": [
+        "LEGITIMATE",
+        "SPAM",
+        "SCAM"
+      ]
+    }
+  },
+  "selection": {
+    "selected": "logistic_regression",
+    "macro_f1_scores": {
+      "logistic_regression": 0.88607802,
+      "linear_svm": 0.87227286,
+      "multinomial_naive_bayes": 0.84132364
+    },
+    "rationale": "Probability-producing transparent model within 0.02 macro F1 of best validation candidate."
+  },
+  "untouched_test": {
+    "classification_report": {
+      "LEGITIMATE": {
+        "precision": 0.99276112,
+        "recall": 0.99276112,
+        "f1-score": 0.99276112,
+        "support": 967.0
+      },
+      "SPAM": {
+        "precision": 0.80681818,
+        "recall": 0.81609195,
+        "f1-score": 0.81142857,
+        "support": 87.0
+      },
+      "SCAM": {
+        "precision": 0.88571429,
+        "recall": 0.87735849,
+        "f1-score": 0.88151659,
+        "support": 106.0
+      },
+      "accuracy": 0.96896552,
+      "macro avg": {
+        "precision": 0.89509786,
+        "recall": 0.89540385,
+        "f1-score": 0.89523543,
+        "support": 1160.0
+      },
+      "weighted avg": {
+        "precision": 0.96903353,
+        "recall": 0.96896552,
+        "f1-score": 0.96899573,
+        "support": 1160.0
+      }
+    },
+    "confusion_matrix": [
+      [
+        960,
+        4,
+        3
+      ],
+      [
+        7,
+        71,
+        9
+      ],
+      [
+        0,
+        13,
+        93
+      ]
+    ],
+    "class_order": [
+      "LEGITIMATE",
+      "SPAM",
+      "SCAM"
+    ]
+  }
+}

@@ -2,6 +2,7 @@ import { useId, useState } from 'react'
 import type { AnalysisSummary } from '../lib/api'
 import { useAnalysisDetail, useHistory } from '../lib/queries'
 import { ErrorState, LoadingState } from './States'
+import { MessageResult } from './analysis/MessageResult'
 
 export function SubmissionRows({ items }: { items: AnalysisSummary[] }) {
   const prefix = useId()
@@ -22,7 +23,7 @@ export function SubmissionRows({ items }: { items: AnalysisSummary[] }) {
               <span className="text-sm font-semibold">
                 {item.input_type === 'MESSAGE' ? 'Message' : 'URL'}
               </span>
-              <span className="status-chip">SUBMITTED</span>
+              <span className="status-chip">{item.status.replace('_', ' ')}</span>
             </span>
             <time dateTime={item.created_at} className="mt-2 block text-[11px] text-muted">
               {new Date(item.created_at).toLocaleString()}
@@ -46,13 +47,25 @@ export function SubmissionRows({ items }: { items: AnalysisSummary[] }) {
                 />
               ) : (
                 <div className="motion-fade mt-4 rounded-lg border border-line bg-surface-raised p-4">
-                  <p className="mb-3 text-xs text-muted">Saved content · No risk assessment</p>
+                  <p className="mb-3 text-xs text-muted">
+                    Saved content · {detail.data.status.replace('_', ' ')}
+                  </p>
                   <p className="whitespace-pre-wrap break-words text-sm leading-6 [overflow-wrap:anywhere]">
                     {detail.data.content}
                   </p>
                   <p className="mt-4 break-all font-mono text-[10px] text-muted">
                     Reference: {detail.data.id}
                   </p>
+                  {detail.data.assessment && (
+                    <div className="mt-4 overflow-hidden rounded-lg border border-line bg-surface">
+                      <MessageResult assessment={detail.data.assessment} />
+                    </div>
+                  )}
+                  {detail.data.failure_code && (
+                    <p role="alert" className="mt-4 text-xs text-warning">
+                      The saved message could not be assessed. Reference: {detail.data.failure_code}
+                    </p>
+                  )}
                 </div>
               ))}
           </div>

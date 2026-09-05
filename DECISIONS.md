@@ -60,6 +60,9 @@ Accepted: store validated Message/URL content only for intake/history in one pri
 
 ## D22 — Submission is separate from intelligence (2026-09-04)
 
+**Historical Task 2 decision. D29/D30 and Alembic 0002 supersede it for MESSAGE; it still describes
+URL behavior.**
+
 Accepted: SUBMITTED means successfully validated and committed. Current APIs produce no other status, risk/confidence/verdict/evidence/model fields or result. PROCESSING/COMPLETED/FAILED enum values reserve a lifecycle vocabulary only; no worker/transitions exist. Future result fields require reviewed Alembic migrations rather than speculative nullable columns. Phone/QR remain UI-only.
 
 Keep existing analysis_available:false and supported_inputs:[] for intelligence. Add independently verified submission_available/submission_inputs for MESSAGE/URL storage, gated by PERSISTENCE_ENABLED and an actual domain-table query. Legacy previews default missing submission capability fields to unavailable. True zero counts require a successful database query; flagged remains null.
@@ -79,3 +82,52 @@ Accepted: dedicated *_test PostgreSQL database for migration upgrade/downgrade/r
 Accepted: the functional Help & Support route provides local FAQ search, safety/privacy guidance and a local feedback composer. A configured public `VITE_SUPPORT_EMAIL` may expose a mailto action; the app never claims delivery and collects no account. Message/URL feedback uses exact accessible client guidance while backend validation stays authoritative. Active health/package metadata is `scamguard-api`; the frontend temporarily accepts the former health identifier for rolling compatibility.
 
 Windows development uses repository-relative PowerShell launch/stop scripts, thin double-click wrappers and trusted-workspace VS Code tasks. The launcher requires the existing portable PostgreSQL cluster and prepared dependencies, enables no global execution policy, runs Alembic explicitly, reuses only recognized services and refuses unknown port owners. Shutdown validates stored process identity, stops only launcher-owned application processes and cleanly stops the repository PostgreSQL cluster without deleting data.
+
+## D26 — Task 2 closure and Task 3 branch boundary (2026-09-05)
+
+Task 2 passed its full frontend, backend, real PostgreSQL and browser gates, then was merged to
+`main` with a no-fast-forward merge (`425aab0`) and pushed. Task 3 is developed only on
+`task-3-message-intelligence`, may be pushed for review, and must not be merged automatically. Main
+Vercel remains a frontend preview; no public backend is authorized.
+
+## D27 — Three-class licensed message dataset and leakage control (2026-09-05)
+
+Use Mendeley Data DOI `10.17632/f45bkkt8pr.1`, version 1, under CC BY 4.0 for the first message model.
+Preserve distinct ham→LEGITIMATE, spam→SPAM and smishing→SCAM labels. Retain immutable source and
+checksums; remove conflicting normalized groups and exact duplicates before splitting; keep
+near-duplicate clusters within one fixed-seed partition. Candidate choice uses validation only and
+the test split remains untouched until final evaluation. No synthetic augmentation is included.
+
+## D28 — Transparent local model artifact and genuine evaluation (2026-09-05)
+
+The selected model is word 1–2 gram TF-IDF plus class-weighted Logistic Regression, version
+`message-tfidf-logreg-v1`. It beat Linear SVM and Multinomial Naive Bayes on validation macro F1 and
+was measured once on the untouched test split. Deploy a checksum-verified plain JSON artifact with
+vocabulary/IDF/coefficients/intercepts rather than executable pickle/joblib serialization. Every
+data, split, preprocessing, dependency or model change requires a new version and evaluation record.
+
+## D29 — Conservative Message-specific hybrid decision contract (2026-09-05)
+
+Every MESSAGE runs the local classifier and maintainable deterministic contextual rules. Fusion
+outputs LOW, CAUTION, ELEVATED, HIGH or INSUFFICIENT_EVIDENCE, with risk score separate from
+confidence. Evidence includes exact local snippets and component versions/status. Strong local
+evidence cannot be reduced by an external model; external output without grounded evidence cannot
+raise risk. Results are decision support and never absolute proof of safety or fraud. This fusion is
+Message-specific and does not complete the future cross-modal Unified Risk Engine.
+
+## D30 — Optional fail-safe backend AI review (2026-09-05)
+
+External contextual review is optional, backend-only and disabled by default. When explicitly
+enabled, ambiguous cases may use OpenAI Responses API structured output with the pinned
+`gpt-5-mini-2025-08-07`, `store=False`, timeout, zero SDK retries and best-effort secret redaction.
+Message text is untrusted data; the prompt forbids following instructions or browsing links.
+Malformed, ungrounded, refused or failed output is recorded only as a safe status and never prevents
+the local assessment. Store provider/model/status/contribution, not raw provider payload, secret,
+debug detail or chain-of-thought. Enabling third-party review remains an explicit privacy/cost choice.
+
+## D31 — Task 3 closure and main merge (2026-09-05)
+
+Task 3 passed its recorded local, database, migration, browser and manual verification gates. Its
+published feature history is accepted for a no-fast-forward merge into `main`. The optional external
+AI adapter remains disabled by default and has not been live-provider verified; no paid request was
+made. The merge does not authorize public backend deployment or Task 4 implementation.
