@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Literal
+from typing import Any
 from urllib.parse import urlsplit
 from uuid import UUID
 
@@ -13,7 +13,7 @@ from pydantic import (
     model_validator,
 )
 
-from app.db.models import InputType
+from app.db.models import AnalysisStatus, InputType
 
 
 class AnalysisCreate(BaseModel):
@@ -61,17 +61,20 @@ class AnalysisFields(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: UUID
     input_type: InputType
-    status: Literal["SUBMITTED"]
+    status: AnalysisStatus
     created_at: datetime
     updated_at: datetime
 
 
 class AnalysisDetail(AnalysisFields):
     content: str
+    assessment: "MessageAssessmentResponse | None" = None
+    failure_code: str | None = None
 
 
 class AnalysisSummary(AnalysisFields):
     preview: str
+    risk_level: str | None = None
 
 
 class AnalysisList(BaseModel):
@@ -79,3 +82,26 @@ class AnalysisList(BaseModel):
     total: int
     page: int
     page_size: int
+
+
+class EvidenceResponse(BaseModel):
+    category: str
+    label: str
+    snippet: str
+    source: str
+
+
+class MessageAssessmentResponse(BaseModel):
+    risk_level: str
+    risk_score: float | None
+    confidence_score: float
+    confidence_level: str
+    summary: str
+    evidence: list[EvidenceResponse]
+    recommended_actions: list[str]
+    components: dict[str, Any]
+    limitations: list[str]
+    completed_at: datetime
+
+
+AnalysisDetail.model_rebuild()

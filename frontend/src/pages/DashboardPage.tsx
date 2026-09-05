@@ -16,7 +16,7 @@ import { SubmissionHistory, SubmissionRows } from '../components/SubmissionHisto
 import { EmptyState, LoadingState } from '../components/States'
 import { PreviewNotice } from '../components/PreviewNotice'
 import { PageHeading } from '../components/PageHeading'
-import { useDashboard } from '../lib/queries'
+import { useCapabilities, useDashboard } from '../lib/queries'
 
 const metrics = [
   { label: 'Total analyses', hint: 'Your analysis activity', icon: FileSearch },
@@ -26,8 +26,14 @@ const metrics = [
 
 export function DashboardPage() {
   const dashboard = useDashboard()
+  const capabilities = useCapabilities()
   const [showHistory, setShowHistory] = useState(false)
   const data = !dashboard.isError && dashboard.data?.status === 'ready' ? dashboard.data : null
+  const messageAvailable = Boolean(
+    !capabilities.isError &&
+      capabilities.data?.analysis_available &&
+      capabilities.data.supported_inputs.includes('MESSAGE'),
+  )
   const latest = data?.recent_analyses[0]
   return (
     <>
@@ -81,6 +87,8 @@ export function DashboardPage() {
                   >
                     {label === 'Total analyses' && data
                       ? data.total_analyses.toLocaleString()
+                      : label === 'Flagged for review' && data && data.flagged_analyses !== null
+                        ? data.flagged_analyses.toLocaleString()
                       : label === 'Latest analysis' && latest
                         ? latest.input_type === 'MESSAGE'
                           ? 'Message'
@@ -90,9 +98,11 @@ export function DashboardPage() {
                   <span className="status-chip">
                     {label === 'Total analyses' && data
                       ? 'Recorded'
+                      : label === 'Flagged for review' && data && data.flagged_analyses !== null
+                        ? 'Evidence-based'
                       : label === 'Latest analysis' && data
                         ? latest
-                          ? 'SUBMITTED'
+                          ? latest.status.replace('_', ' ')
                           : 'No submissions'
                         : 'Not available yet'}
                   </span>
@@ -101,7 +111,9 @@ export function DashboardPage() {
                   {label === 'Latest analysis' && latest
                     ? new Date(latest.created_at).toLocaleString()
                     : label === 'Total analyses' && data
-                      ? 'Persisted submissions · no risk assessments'
+                      ? 'Persisted Message and URL submissions'
+                      : label === 'Flagged for review' && data && data.flagged_analyses !== null
+                        ? 'Completed messages at elevated or high risk'
                       : hint}
                 </p>
               </section>
@@ -157,7 +169,7 @@ export function DashboardPage() {
                 <div className="flex items-start gap-2.5 border-t border-line bg-surface-raised/40 px-5 py-3.5 text-[11px] leading-5 text-muted sm:px-6">
                   <Info size={14} className="mt-0.5 shrink-0" aria-hidden="true" />
                   {data
-                    ? 'Shared development workspace. Records are submissions, not completed scam assessments.'
+                    ? 'Shared development workspace. Message results are decision support, not proof of fraud or safety.'
                     : 'No live statistics are being collected or displayed.'}
                 </div>
               </section>
@@ -195,7 +207,9 @@ export function DashboardPage() {
                 </h2>
                 <p className="mb-7 mt-3 text-xs leading-6 text-body">
                   A dedicated place to review messages, links, phone numbers and QR codes.
-                  Intelligence will be available in a future release.
+                  {messageAvailable
+                    ? ' Message intelligence is available; other intelligence modes remain planned.'
+                    : ' Intelligence availability depends on the connected service.'}
                 </p>
                 <Link
                   to="/analyse"
@@ -213,7 +227,9 @@ export function DashboardPage() {
                 <dl className="space-y-4 text-xs">
                   <div className="flex justify-between gap-3">
                     <dt className="text-muted">Analysis service</dt>
-                    <dd className="text-warning">Not enabled</dd>
+                    <dd className={messageAvailable ? 'text-accent' : 'text-warning'}>
+                      {messageAvailable ? 'Messages enabled' : 'Not enabled'}
+                    </dd>
                   </div>
                   <div className="flex justify-between gap-3">
                     <dt className="text-muted">Activity history</dt>

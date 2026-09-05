@@ -22,7 +22,7 @@ class DashboardResponse(BaseModel):
     # None means unavailable; zero is returned only after querying PostgreSQL.
     status: Literal["not_configured", "ready"] = "not_configured"
     total_analyses: int | None = None
-    flagged_analyses: None = None
+    flagged_analyses: int | None = None
     last_analysis_at: datetime | None = None
     recent_analyses: list[AnalysisSummary] = []
 
@@ -30,8 +30,6 @@ class DashboardResponse(BaseModel):
 class CapabilitiesResponse(BaseModel):
     submission_available: bool = False
     submission_inputs: list[InputType] = []
-    analysis_available: Literal[False] = False
-    supported_inputs: list[str] = []
-    reason: Literal["Analysis is not enabled in this release."] = (
-        "Analysis is not enabled in this release."
-    )
+    analysis_available: bool = False
+    supported_inputs: list[InputType] = []
+    reason: str = "Analysis is not enabled in this release."

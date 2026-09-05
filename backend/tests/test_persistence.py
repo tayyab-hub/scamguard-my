@@ -68,8 +68,29 @@ def test_create_read_and_restart(persistent, database, mode, content):
     response = persistent.post("/api/v1/analyses", json={"input_type": mode, "content": content})
     assert response.status_code == 201
     record = response.json()
-    assert set(record) == {"id", "input_type", "content", "status", "created_at", "updated_at"}
-    assert record["status"] == "SUBMITTED"
+    assert set(record) == {
+        "id",
+        "input_type",
+        "content",
+        "status",
+        "created_at",
+        "updated_at",
+        "assessment",
+        "failure_code",
+    }
+    if mode == "MESSAGE":
+        assert record["status"] == "COMPLETED"
+        assert record["assessment"]["risk_level"] in {
+            "LOW",
+            "CAUTION",
+            "ELEVATED",
+            "HIGH",
+            "INSUFFICIENT_EVIDENCE",
+        }
+        assert record["assessment"]["components"]["local_model"]["used"] is True
+    else:
+        assert record["status"] == "SUBMITTED"
+        assert record["assessment"] is None
     assert record["content"] == content.strip()
     assert persistent.get(f"/api/v1/analyses/{record['id']}").json() == record
     # A fresh application/engine reads the committed row, not in-memory state.
@@ -109,7 +130,7 @@ def test_real_dashboard_order_pagination_and_safe_previews(persistent):
     assert empty == {
         "status": "ready",
         "total_analyses": 0,
-        "flagged_analyses": None,
+        "flagged_analyses": 0,
         "last_analysis_at": None,
         "recent_analyses": [],
     }
@@ -127,12 +148,20 @@ def test_real_dashboard_order_pagination_and_safe_previews(persistent):
     assert [item["id"] for item in second["items"]] == list(reversed(ids))[3:6]
     dashboard = persistent.get("/api/v1/dashboard").json()
     assert dashboard["total_analyses"] == 7
-    assert dashboard["flagged_analyses"] is None
+    assert isinstance(dashboard["flagged_analyses"], int)
     assert dashboard["last_analysis_at"] == first["items"][0]["created_at"]
     assert [item["id"] for item in dashboard["recent_analyses"]] == list(reversed(ids))[:5]
     for item in dashboard["recent_analyses"]:
         assert len(item["preview"]) <= 160
-        assert set(item) == {"id", "input_type", "status", "created_at", "updated_at", "preview"}
+        assert set(item) == {
+            "id",
+            "input_type",
+            "status",
+            "created_at",
+            "updated_at",
+            "preview",
+            "risk_level",
+        }
     assert persistent.get("/api/v1/analyses?page=9999").json()["items"] == []
 
 
@@ -184,12 +213,13 @@ def test_detail_errors(persistent):
     assert response.json()["error"]["code"] == "ANALYSIS_NOT_FOUND"
 
 
-def test_ready_and_submission_capability_are_not_intelligence(persistent):
+def test_ready_and_capability_distinguish_message_from_url_intelligence(persistent):
     assert persistent.get("/api/v1/ready").status_code == 200
     caps = persistent.get("/api/v1/capabilities").json()
     assert caps["submission_available"] is True
     assert caps["submission_inputs"] == ["MESSAGE", "URL"]
-    assert caps["analysis_available"] is False and caps["supported_inputs"] == []
+    assert caps["analysis_available"] is True
+    assert caps["supported_inputs"] == ["MESSAGE"]
 
 
 def test_database_constraints_and_rollback(database, persistent):
