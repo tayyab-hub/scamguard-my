@@ -4,9 +4,16 @@
 
 A general scam-awareness workspace with the approved warm light **Forensic Intelligence** identity. The project was initially Malaysia-focused and was generalized following supervisor feedback. The repository and Vercel domain retain their historical `-my` suffix.
 
-**Task 1 and the scoped Task 2 Core Platform are complete on `task-2-core-platform`; the final UI and Windows development workflow are prepared for review.** Message/URL submissions can be validated, saved in PostgreSQL and retrieved through history. The dashboard displays genuine submission counts and dates. `SUBMITTED` means saved, never assessed. Help & Support, accessible validation, a polished 404, and safe local Phone/QR interfaces are included. No scam classifier, risk/confidence scores or safety verdicts exist. See the [Task 2 audit](docs/TASK_2_AUDIT.md) for evidence and limits.
+**Task 1 Foundation and Task 2 Core Platform are complete and merged to `main`. Task 3 Message
+Intelligence is implemented on `task-3-message-intelligence` for review.** MESSAGE submissions run
+a genuine local three-class model, deterministic evidence rules and conservative fusion, then store
+an explainable result. Optional backend contextual AI is disabled by default. URL stays
+submission-only; Phone and QR remain local UI only. See [Message Intelligence](docs/MESSAGE_INTELLIGENCE.md),
+[Datasets](docs/DATASETS.md) and [Model Evaluation](docs/MODEL_EVALUATION.md).
 
-The existing frontend is deployed at https://scamguard-my.vercel.app/ and connected to GitHub/main. Hosted Overview/Analyse, direct refresh, four modes and unavailable-backend fallback were tested on 2026-09-04 with no page errors. Task 2 is a separate branch; do not merge automatically. No live backend is deployed.
+The existing frontend is deployed at https://scamguard-my.vercel.app/ and connected to GitHub/main.
+It remains a frontend preview with no live backend. Pushing Task 3 may create a branch preview, but it
+does not deploy FastAPI or prove backend availability. Do not merge Task 3 automatically.
 
 ## Project memory
 
@@ -19,7 +26,7 @@ Use Node 24 (minimum 22.12) and npm:
 ```sh
 git clone https://github.com/tayyab-hub/scamguard-my.git
 cd scamguard-my
-git switch task-2-core-platform
+git switch task-3-message-intelligence
 cd frontend
 npm ci
 npm run dev
@@ -59,7 +66,7 @@ docker compose up -d db
 docker compose ps
 cd backend
 python -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -c requirements.lock -e '.[dev]'
+.\.venv\Scripts\python.exe -m pip install -c requirements.lock -e '.[dev,ml,ai]'
 Copy-Item .env.example .env
 # Set DATABASE_URL to your local database credentials.
 # Set PERSISTENCE_ENABLED=true for this private workspace.
@@ -71,21 +78,37 @@ Compose creates the configured database with a loopback-only port and persistent
 
 `python -m app` reads `PORT` (default 8000); development binds loopback, production binds 0.0.0.0. Start the frontend in a second terminal. A changed local API port requires matching `API_PROXY_TARGET`. Development API docs are at http://127.0.0.1:8000/docs. `GET /api/v1/health` checks process liveness; `/ready` checks PostgreSQL and, when persistence is enabled, the analyses table. No automatic startup migration or `create_all()` is used.
 
-Alembic revision **0001_analysis_intake** creates the schema. PostgreSQL connection, upgrade → downgrade → upgrade, schema comparison, insert/read/rollback and fresh-application persistence were genuinely tested; see [PROGRESS](PROGRESS.md). Downgrade destroys submissions and is for disposable test databases only.
+Alembic `0001_analysis_intake` creates intake; additive `0002_message_intelligence` preserves
+Task 2 rows while adding nullable result/audit fields. Upgrade → downgrade → upgrade, schema
+comparison and fresh-process result retrieval were tested against real PostgreSQL. Downgrade
+destroys data and is for disposable test databases only.
 
 ## Implemented behavior
 
 - React/TypeScript/Vite, Router, Tailwind, TanStack Query and Zod; FastAPI/Pydantic, SQLAlchemy/Psycopg/PostgreSQL and Alembic.
 - Overview (`/`), Analyse (`/analyse`) and Help & Support (`/help`) navigation, plus a catch-all 404. Approved responsive sidebar/mobile navigation, keyboard focus and reduced-motion CSS remain.
 - MESSAGE: trimmed non-empty text, at most 5,000 characters. URL: validated absolute HTTP(S), at most 2,048 characters; never visited automatically.
-- An available private backend accepts `POST /api/v1/analyses`, returns UUID/timestamps and SUBMITTED. UI progress, safe failure and “Submission recorded.” reflect the actual request. Failed writes are not automatically retried.
-- Real total/latest/recent data, paginated history and on-demand detail. Flagged-for-review remains unavailable. Empty database means measured zero; unavailable database means unavailable, never zero.
+- An available private backend accepts `POST /api/v1/analyses`. MESSAGE persists intake, runs local
+  assessment synchronously and returns `COMPLETED` with risk, separate confidence, evidence, actions,
+  component versions and limitations. Context-poor messages can return
+  `INSUFFICIENT_EVIDENCE`. URL returns `SUBMITTED` without assessment.
+- The local TF-IDF Logistic Regression model keeps LEGITIMATE/SPAM/SCAM distinct. It achieved
+  untouched-test macro F1 0.8952 and weighted F1 0.9690 on the documented split; these are
+  dataset-specific measurements, not a promise for live messages.
+- Real total/latest/recent data, paginated history/detail and a real flagged count for completed
+  ELEVATED/HIGH messages. Empty database means measured zero; unavailable means unavailable.
 - Phone accepts natural international drafts but cannot submit. QR accepts local filename/size selection for one non-empty PNG/JPEG/WEBP up to 5 MiB; no image reading, upload, storage, decoding or camera access. Unsubmitted drafts/file selection clear on navigation or reload.
 - Help search and feedback preparation run locally. `VITE_SUPPORT_EMAIL` is optional and public; when blank, the page truthfully states that online feedback is being prepared. A configured value opens the user's email application and never claims a message was sent.
 
 ## Security and privacy boundary
 
-One shared private development dataset is visible to everyone who can access the backend. The UI discloses storage before submission. Content is stored solely for submission history, never training. UUIDs and CORS are not authorization.
+One shared private development dataset is visible to everyone who can access the backend. The UI
+discloses storage before submission. Content is stored for private submission/result history, never
+automatic training. UUIDs and CORS are not authorization. Optional external AI is backend-only,
+disabled by default and best-effort redacted; enabling it explicitly sends redacted message text to
+the configured provider. Configure `AI_REVIEW_ENABLED=true`, `OPENAI_API_KEY` and the reviewed
+backend model only in the backend process environment; normal local operation needs none of them.
+No key belongs in `.env.example`, frontend variables or source control.
 
 Implemented protections include a 64 KiB request cap (including chunked bodies), server validation, parameterized ORM writes, explicit commit/rollback/close, safe errors/request IDs, no-store/nosniff headers, exact-origin CORS and content-safe exception logging. React renders submissions as escaped text; URLs are not clickable external targets.
 
@@ -93,18 +116,22 @@ Before public or sensitive-content intake, decide authentication/ownership and a
 
 ## GitHub and Vercel
 
-Keep the existing origin and domain. For this task, publish only the review branch:
+Keep the existing origin and domain. For this task, publish only the Task 3 review branch:
 
 ```sh
 git status
 git remote -v
-git push -u origin task-2-core-platform
+git push -u origin task-3-message-intelligence
 ```
 
-Vercel settings remain: Root Directory `frontend`, framework Vite, install `npm ci`, build `npm run build`, output `dist`, Node 24. Leave `VITE_API_BASE_URL` unset for the frontend-only preview. `frontend/vercel.json` handles SPA direct routes. Vercel may generate a branch preview; report its verified status separately from main. Do not deploy FastAPI to Vercel, rename the project, or merge Task 2 automatically. See [DEPLOYMENT](docs/DEPLOYMENT.md).
+Vercel settings remain: Root Directory `frontend`, framework Vite, install `npm ci`, build
+`npm run build`, output `dist`, Node 24. Leave `VITE_API_BASE_URL` unset for the frontend-only
+preview. `frontend/vercel.json` handles SPA direct routes. Do not deploy FastAPI to Vercel, rename
+the project, or merge Task 3 automatically. See [DEPLOYMENT](docs/DEPLOYMENT.md).
 
 ## Verification and next step
 
 [TESTING](docs/TESTING.md) contains exact frontend/backend/real PostgreSQL/browser commands. [PROGRESS](PROGRESS.md) records actual results and limitations. Generated dependencies, builds, local PostgreSQL data, `.env` and test outputs are ignored; lockfiles, source, migrations, tests and intentional documentation screenshots stay tracked.
 
-Review and merge Task 2 manually before separately authorizing **Task 3: the first reproducible Text Intelligence capability with genuine evaluation and insufficient-information handling**. Do not start Task 3 automatically.
+Review Task 3 before any merge. The recommended next task is **Task 4: non-fetching URL Intelligence
+with lexical/structural evidence and no automatic browsing**. Do not start it automatically.

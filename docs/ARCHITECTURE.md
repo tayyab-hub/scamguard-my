@@ -1,64 +1,54 @@
 # SCAMGUARD architecture
 
-Audited 2026-09-04. Read PROGRESS for executed verification and DECISIONS for accepted constraints. The general international brand follows supervisor feedback; historical repository/domain/service identifiers are retained.
+Audited 2026-09-05. Read `PROGRESS.md` for executed verification and `DECISIONS.md` for constraints. The product uses the warm-light Forensic Intelligence identity and a general international scope.
 
 ## CURRENTLY IMPLEMENTED
 
 ```text
-React Router → AppShell → Overview / Analyse / Help & Support / NotFound
-  TanStack Query + centralized GET/POST transport + Zod
-    /api/v1 (Vite proxy locally, optional HTTPS API later)
-      FastAPI factory → request ID / safe errors / CORS / bounded body
-        Pydantic routes → submission services → request SQLAlchemy session
-          Psycopg → PostgreSQL 17
-                    schema managed by Alembic
+React Router → AppShell → Overview / Analyse / Help / NotFound
+  TanStack Query + Zod transport
+    /api/v1
+      FastAPI → safe request/error middleware → typed routes
+        analysis service → local Message intelligence engine
+          checksum-verified TF-IDF Logistic Regression artifact
+          deterministic contextual indicators
+          optional backend-only grounded external contextual review
+          conservative Message-specific fusion
+        SQLAlchemy/Psycopg → PostgreSQL → Alembic 0001 + 0002
 ```
-
-This is real submission persistence, not scam detection. Overview, Analyse and Help & Support appear in navigation. Help search and feedback preparation remain browser-local; no support backend or false sent state exists. Vercel hosts the frontend only; unavailable-backend states remain usable. Task 2 is on a review branch and does not change main automatically.
 
 ### Frontend
 
-`main.tsx` supplies StrictMode, error boundary, QueryClientProvider and BrowserRouter. `AppShell` retains the desktop sidebar at 1024px+, mobile navigation, skip link, route heading focus and document titles. `styles.css` supplies the unchanged warm light Forensic Intelligence tokens and shared short CSS motion/reduced-motion rules.
+React 18, TypeScript, Vite and Tailwind provide the responsive application. `AppShell` supplies the desktop sidebar, mobile navigation, skip link, focused route headings and titles. The design system centralizes the Forensic Intelligence tokens, short motion and `prefers-reduced-motion` behavior.
 
-`lib/api.ts` centralizes transport, eight-second timeouts, safe errors/request references, credentials omission, no-store and Zod runtime schemas. GETs support caller cancellation. `lib/queries.ts` owns health/dashboard/capability/history/detail queries and the submission mutation. Writes are not automatically retried; successful writes invalidate dashboard/history. Query data is never replaced with fixtures after failure. `lib/submission.ts` provides supplemental client validation.
+The four typed Analyse modes are Message, URL, Phone and QR. Message submits only when both storage and Message intelligence are advertised. It displays real risk, separate confidence, evidence, actions, components, versions and limitations returned by the API. URL validates and persists but receives no intelligence. Phone is a local text draft. QR keeps local file metadata only for one PNG/JPEG/WEBP up to 5 MiB; no bytes are read, decoded, uploaded or persisted. Phone/QR controls remain disabled for analysis.
 
-The four UI modes come from `components/analysis/modes.ts`, separate from API-supported inputs. Message/URL use the existing independent draft fields. A genuine submission capability enables their validated action. During POST, fields/modes/actions are locked; successful acknowledgement clears the submitted draft and shows “Submission recorded.” Failed requests preserve drafts and explain that history should be checked before retrying. The assessment panel remains empty. Stored content survives browser refresh and backend restart because it resides in PostgreSQL.
+Overview uses real database totals, flagged counts, latest time and recent records. A flagged record has stored `ELEVATED` or `HIGH` risk. Loading, unavailable, failure and genuine-empty states never fall back to fixtures. History retrieves persisted detail on demand and renders submitted URLs as inert text. Help and support preparation remain browser-local.
 
-Phone remains a local international tel draft. QR retains local metadata-only selection/drop of one non-empty PNG/JPEG/WEBP up to 5 MiB, replacement/removal and keyboard focus. No image bytes are read, decoded, uploaded or persisted; no object URLs or camera calls exist. Phone/QR actions remain disabled even when Message/URL persistence is available. Unsubmitted drafts/file references clear on navigation/reload.
+### Backend and local Message intelligence
 
-Overview displays API-derived total, newest type/time/status and up to five recent summaries. Flagged remains unavailable. An actual empty database produces zero plus a polished empty state. Failed/unconfigured queries show unavailable values, never synthetic zero. `SubmissionHistory` provides bounded pagination and `SubmissionRows` fetches full escaped content only on disclosure; unique disclosure IDs avoid conflicts between recent/history lists. Submitted URLs remain inert text. Native keyboard controls, live pending/error/success states and reduced motion remain intact.
+FastAPI owns the `/api/v1` contract, request IDs, no-store/nosniff headers, exact-origin CORS, safe error envelopes and bounded bodies. SQLAlchemy sessions use explicit commits and rollback/close handling. PostgreSQL readiness checks both connectivity and the domain table when enabled.
 
-### Backend and database
+Message processing is synchronous after durable intake. The checksum-verified JSON artifact contains a three-class word-ngram TF-IDF Logistic Regression model (`LEGITIMATE`, `SPAM`, `SCAM`); no pickle is loaded. Deterministic indicators cover urgency, threat, credentials, financial requests, impersonation, prizes, investments, job/tasks, delivery/account themes, secrecy, redirection and suspicious actions. Context rules suppress safety, education and negated examples.
 
-| Source | Responsibility |
-| --- | --- |
-| app/main.py | Factory, lazy engine/session lifespan, disposal, request IDs/no-store/nosniff, CORS, route registration |
-| app/__main__.py | Environment PORT entry point, loopback in development |
-| app/core/config.py | PostgreSQL DSN, APP_ENV, PERSISTENCE_ENABLED (default false), exact CORS, bounded request/connection settings |
-| app/core/errors.py, body_limit.py | Safe errors including SQLAlchemy failures; 64 KiB bounded body, including chunked requests |
-| app/api/routes.py, schemas.py | Health/readiness, actual dashboard, separate submission/intelligence capabilities |
-| app/api/analyses.py, analysis_schemas.py | Typed validated create/list/detail routes |
-| app/services/analyses.py | Explicit commit, bounded list/detail queries, count and safe short previews |
-| app/db/base.py, models.py, session.py | Declarative model, typed enums, pool/session/rollback lifecycle |
-| migrations/versions/0001_analysis_intake.py | Deterministic initial schema upgrade/downgrade |
-| tests, scripts/prepare_e2e.py | Isolated PostgreSQL integration and migrated browser-test database setup |
+Message-specific fusion keeps risk separate from confidence and returns `LOW`, `CAUTION`, `ELEVATED`, `HIGH`, or `INSUFFICIENT_EVIDENCE`. Strong local evidence has a floor. External AI cannot lower it or dominate the result; unsupported high AI signals are discarded. Short context-poor messages return insufficient evidence. Details and measured limitations are documented in `MESSAGE_INTELLIGENCE.md`.
 
-The analyses table contains UUID id (PK), input_type, content (TEXT), status, timezone-aware created_at and updated_at. InputType is MESSAGE/URL; AnalysisStatus declares SUBMITTED/PROCESSING/COMPLETED/FAILED for lifecycle evolution. Current routes only create/expose SUBMITTED and cannot change status. No worker or intelligence transition exists. The VARCHAR enum storage has named database CHECK constraints; additional checks enforce nonblank content and Message/URL lengths. A descending composite index on created_at/id supports stable newest-first order. Future risk/result columns are deliberately absent.
+Optional OpenAI contextual review is backend-only and disabled by default. When an administrator deliberately enables it and supplies a key, only ambiguous cases are considered. Best-effort redaction runs first, the message is treated as untrusted data, responses must match a Pydantic schema and evidence must be an exact redacted-message snippet. Provider errors become component status while local processing completes. No URL browsing or client-side key exists.
 
-The engine uses Psycopg, pool_pre_ping, pool size 5 plus 5 overflow, a default three-second connect/pool wait and five-second statement timeout, with SQL parameters hidden. The app creates the engine lazily without requiring a live database at startup. Services explicitly commit writes; request sessions roll back errors and close. List count and rows use one request-scoped repeatable-read snapshot so a concurrent commit cannot produce an internally inconsistent page. Alembic runs explicitly, never through startup create_all. Upgrade/downgrade/re-upgrade and metadata comparison are tested against real PostgreSQL.
+### Database and migrations
 
-Health is process liveness only. Readiness probes PostgreSQL and the domain table when persistence is enabled. Capabilities become submission-available only after a successful table query; intelligence remains false. Disabled storage returns the legacy unavailable dashboard; enabled but broken storage returns a safe 503. Database errors do not expose DSNs, SQL or content.
+Alembic `0001_analysis_intake` creates the analyses table and constraints. Additive `0002_message_intelligence` preserves all Task 2 rows while adding nullable risk/confidence, summary, evidence/actions/components/limitations, component versions, AI metadata/status/contribution, completion time and safe failure code. Historic rows and URL rows remain valid with null results.
 
-### Configuration/deployment/privacy
+`AnalysisStatus` is `SUBMITTED`, `PROCESSING`, `COMPLETED`, or `FAILED`. Message records normally complete; URL records stay submitted. The composite newest-first index supports history. Dashboard flagged counts derive only from stored elevated/high risk values.
 
-Root .env configures existing local PostgreSQL Compose. backend/.env is loaded relative to the backend, with process variables taking precedence. Only safe .env.example files are tracked. DATABASE_URL uses postgresql+psycopg; production rejects missing/default passwords and non-HTTPS CORS. PORT configures python -m app. Frontend VITE_API_BASE_URL is public build-time configuration; API_PROXY_TARGET is dev-only. No production logic depends on local absolute paths.
+### Configuration, deployment and privacy
 
-Current main Vercel frontend at https://scamguard-my.vercel.app/ passed hosted checks on 2026-09-04. Branch deployment/CI status is separate. Root frontend, Vite build/dist and SPA rewrite remain unchanged; no backend deployment is authorized.
+Backend settings load from `backend/.env` with process variables taking precedence. Persistence defaults off. `DATABASE_URL` requires `postgresql+psycopg`; production rejects missing/default passwords and non-HTTPS CORS. The model artifact path and optional AI settings are environment controlled; secrets use Pydantic `SecretStr` and are never returned.
 
-The persisted dataset is shared, private development data without authentication/ownership. The UI warns before submission. Limits, parameterized ORM, safe errors and escaped rendering reduce specific risks; they do not make public hosting safe. No retention/deletion service, encryption-at-rest guarantee, rate limit, authentication, authorization, user consent system, backup recovery or public-launch security certification exists. Default proxy/access logs require review before hosting. Test data lives only in dedicated *_test and *_e2e databases.
+Vercel serves only the frontend and remains safe without an API. The current unauthenticated backend is a private shared-development service with no ownership boundary. It must not be publicly hosted until authentication/authorization, purpose and consent, rate limiting, retention/deletion, encryption, abuse controls, and deployment logging are resolved. External redaction is best-effort and does not make sensitive data safe to submit.
 
 ## PLANNED ARCHITECTURE
 
-Text classification/explainability, URL reputation, international phone normalization/reporting/reputation, screenshot/OCR, QR decoding and URL/payment routing, unified risk/confidence/evidence, community intelligence/moderation, controlled adaptive learning, campaign intelligence and Model Lab are not implemented. There are no workers, model runtime, external intelligence calls or risk scores.
+URL reputation/static intelligence, phone normalization/reporting/reputation, screenshot/OCR, QR decoding and URL/payment routing, cross-modal unified risk, community moderation, controlled adaptive learning, campaign intelligence and Model Lab are not implemented. Suspicious URLs must never be automatically browsed. Community reports must not directly retrain or promote a model. Genuine metrics and held-out evaluation are required for every learned component.
 
-Future modules require reviewed contracts/migrations, measured evaluation, insufficient-information handling, risk/confidence separation and privacy/access policy. Suspicious URLs must never be automatically browsed. Community feedback cannot directly retrain/promote models. Public backend hosting needs an explicit security/privacy decision and suitable Python/managed PostgreSQL hosting. No new vendor, queue, authentication system or model is selected here. Task 3 requires separate authorization after Task 2 review.
+Task 3 fusion applies only to Message evidence; it is not the planned cross-modal risk engine. A future queue/worker is also unselected and should be justified by measured latency or reliability needs rather than added speculatively.

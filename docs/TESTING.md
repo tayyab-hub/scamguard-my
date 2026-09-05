@@ -1,6 +1,6 @@
 # Testing and verification
 
-Exact commands for the current repository, audited 2026-09-04. Actual results belong in [PROGRESS](../PROGRESS.md), not inferred from scripts/CI. Existing dependencies were used: Node 24.18.0, Python 3.12.13, PostgreSQL 17.11 and installed Chrome. A fresh install, security audit, remote CI and other browser engines are separate checks.
+Exact commands for the current repository, audited 2026-09-05. Actual results belong in [PROGRESS](../PROGRESS.md), not inferred from scripts/CI. Existing dependencies were used: Node 24.18.0, Python 3.12.13, PostgreSQL 17.11 and installed Chrome. A fresh install, security audit, remote CI and other browser engines are separate checks.
 
 ## Frontend (from frontend/)
 
@@ -23,7 +23,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\Test-DevScript
 
 The static suite parses both scripts and checks 14 safety contracts: prerequisite failures, disabled persistence, migration failure handling, unknown-port refusal, healthy reuse, visible terminals, browser control, identity-checked shutdown, clean PostgreSQL stop, path-safe wrappers/tasks and secret-safe output. The real sequence verifies a path containing spaces, cold start, health/readiness, duplicate-safe restart and idempotent shutdown. Failure-path inspection must not rename/delete local credentials or kill unknown services merely to manufacture a result.
 
-TypeScript includes source/config/browser tests. ESLint allows zero warnings. Vitest includes the original 32 cases and Task 2 submission/history/validation cases. Build emits ignored dist. Check every exit code: PowerShell does not automatically stop after a failed native command. Install with npm ci for a fresh checkout; never import test fixtures into production.
+TypeScript includes source/config/browser tests. ESLint allows zero warnings. Vitest covers the foundation, submission/history/validation and real Message result presentation. Build emits ignored dist. Check every exit code: PowerShell does not automatically stop after a failed native command. Install with npm ci for a fresh checkout; never import test fixtures into production.
 
 ## Browser regression and built offline preview
 
@@ -45,7 +45,30 @@ For bundled Chromium, install with npx.cmd playwright install chromium and unset
 .\.venv\Scripts\python.exe -m pytest -q
 ```
 
-Without TEST_DATABASE_URL, real integration cases explicitly skip; that is not a pass for database behavior. Unit cases cover configuration, health/readiness failure, safe errors, CORS, rollback/close, disabled storage and chunked size limits.
+Without TEST_DATABASE_URL, real integration cases explicitly skip; that is not a pass for database behavior. Unit cases cover configuration, health/readiness failure, safe errors, CORS, rollback/close, disabled storage, chunked size limits, every indicator family, contextual suppression, three-class local inference, insufficient evidence, fusion and mocked external-review redaction/grounding/failure. Normal tests make no paid provider call.
+
+### Reproducible model evaluation (from repository root)
+
+```powershell
+.\backend\.venv\Scripts\python.exe backend\scripts\train_message_model.py
+```
+
+The command must reproduce artifact SHA-256
+`818d99f72c8502fe6ec28849e42c77f4707949366bf014bd5677079dde2c3dd3` and the checked-in report.
+It verifies the reviewed source checksum first. A changed checksum or metric requires investigation
+and a new reviewed model version, not an edit to the expected hash merely to make the check pass.
+
+The live OpenAI smoke test is excluded from normal verification. It may incur cost and runs only
+when a developer deliberately supplies a backend key and opts in:
+
+```powershell
+$env:RUN_OPENAI_INTEGRATION = '1'
+$env:OPENAI_API_KEY = 'set privately; never commit or paste into logs'
+cd backend
+.\.venv\Scripts\python.exe -m pytest -q -m external_ai
+```
+
+Unset both variables afterward. Mocked provider tests are the required default evidence.
 
 ## Real PostgreSQL integration — required for database changes
 
@@ -66,7 +89,7 @@ cd backend
 .\.venv\Scripts\python.exe -m pytest -q -m integration
 ```
 
-`tests/test_persistence.py` requires the database name to end in `_test`. Its module fixture applies Alembic head, checks schema drift, downgrades to base, verifies the table is removed and reapplies head. Cases truncate only that dedicated analyses table before/after tests. This is intentionally destructive to test data. They cover real Message/URL commit/read across fresh applications, invalid/oversized/unsupported input, pagination/order, a deterministic concurrent-write snapshot check, safe detail, measured empty/populated dashboard, constraints/rollback, request bounds and capability separation. Unit coverage also verifies that unknown user-controlled JSON keys are not reflected in validation errors. The original real readiness integration remains and runs with the same configured URL.
+`tests/test_persistence.py` requires the database name to end in `_test`. Its module fixture applies Alembic head, checks schema drift, downgrades to base, verifies the table is removed and reapplies head. Cases truncate only that dedicated analyses table before/after tests. This is intentionally destructive to test data. They cover real Message completion and result retrieval across a fresh app, inert URL intake, historical-row compatibility, invalid/oversized/unsupported input, pagination/order, a deterministic concurrent-write snapshot, safe detail, measured dashboard/flagged counts, constraints/rollback, request bounds and capability separation. Unit coverage verifies that unknown user-controlled JSON keys are not reflected in validation errors. The original real readiness integration runs with the same configured URL.
 
 For development schema migration (from backend/):
 
@@ -88,7 +111,7 @@ $env:PLAYWRIGHT_CHANNEL = 'chrome'
 npm.cmd run test:persistence
 ```
 
-The config refuses a DB not ending in `_e2e`. `backend/scripts/prepare_e2e.py` applies real Alembic migrations, without seeding. Isolated FastAPI/Vite servers use 8002/5175. One worker prevents concurrent test-count interference. Desktop/mobile cases submit controlled non-sensitive test text and example.com URLs, verify acknowledgement, real count increments, history/detail, navigation/reload persistence, disabled Phone/QR and no external request or browser errors. Test submissions remain only in the disposable E2E database; every run measures its baseline count. Never target a public/development database.
+The config refuses a DB not ending in `_e2e`. `backend/scripts/prepare_e2e.py` applies real Alembic migrations, without seeding. Isolated FastAPI/Vite servers use 8002/5175. One worker prevents concurrent test-count interference. Desktop/mobile cases submit controlled non-sensitive test messages and example.com URLs, verify a real Message assessment and evidence, URL acknowledgement without intelligence, real total/flagged increments, history/detail, navigation/reload persistence, disabled Phone/QR and no uncaught browser errors. External review stays disabled. Test submissions remain only in the disposable E2E database; every run measures its baseline count. Never target a public/development database.
 
 ## Screenshots and manual review
 
@@ -99,7 +122,7 @@ npm.cmd run test:persistence
 $env:UPDATE_DOC_SCREENSHOTS = '0'
 ```
 
-Documentation writes are opt-in. Foundation captures cover Overview/Analyse/Phone/QR desktop/mobile in docs/screenshots. Task 2 captures show genuine submissions in the dedicated E2E dataset and must be labelled test evidence, not production activity. Ordinary test output remains ignored. Inspect clipping, horizontal overflow, spacing/contrast, navigation overlap, reachable actions, field/file focus and reduced motion. These tests take images and assert behavior/layout; they are not golden-image pixel comparisons or a comprehensive accessibility/security audit.
+Documentation writes are opt-in. Foundation captures cover Overview/Analyse/Phone/QR desktop/mobile in docs/screenshots. Task 2 captures remain historical. Task 3 opt-in persistence captures show controlled genuine test assessments from the dedicated E2E dataset and must be labelled test evidence, not production activity. Ordinary test output remains ignored. Inspect clipping, horizontal overflow, spacing/contrast, navigation overlap, reachable actions, field/file focus, non-color risk labels and reduced motion. These tests take images and assert behavior/layout; they are not golden-image pixel comparisons or a comprehensive accessibility/security audit.
 
 ## CI and limits
 
@@ -115,4 +138,4 @@ Only for the existing audited Windows checkout (these files are ignored and abse
 .\.local\pg17\pgsql\bin\pg_ctl.exe -D .local/pg17-data -l .local/postgres.log -o '-h 127.0.0.1 -p 55432' start
 ```
 
-Do not run initdb over existing data. Existing backend/.env uses that local cluster; do not overwrite it or print its password. Restart an already-running older development API process to load Task 2 code. Test servers are isolated and do not replace the developer's existing server.
+Do not run initdb over existing data. Existing backend/.env uses that local cluster; do not overwrite it or print its password. Restart an already-running older development API process to load current code. Test servers are isolated and do not replace the developer's existing server.
