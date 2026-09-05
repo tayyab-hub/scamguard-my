@@ -1,12 +1,12 @@
 # Task 2 API contract
 
-Base: `/api/v1`. Reconciled with source on 2026-09-04. This is a private shared development API, without authentication or per-user ownership. Do not host it publicly before the security/privacy gate. No endpoint performs scam assessment.
+Base: `/api/v1`. Reconciled with source on 2026-09-05. This is a private shared development API, without authentication or per-user ownership. Do not host it publicly before the security/privacy gate. No endpoint performs scam assessment.
 
 Application responses include server-generated `X-Request-ID`, `Cache-Control: no-store`, `X-Content-Type-Options: nosniff`. Exact-origin CORS exposes request IDs and allows GET/POST with credentials disabled. Preflight/proxy responses may differ.
 
 | Method/path | Contract |
 | --- | --- |
-| GET /health | 200 `{status:"ok",service:"scamguard-my-api",version:"0.1.0"}`. Liveness only; the historical service identifier is retained for compatibility. |
+| GET /health | 200 `{status:"ok",service:"scamguard-api",version:"0.1.0"}`. Liveness only. The frontend temporarily accepts the former identifier during rolling upgrades, but active backend metadata is neutral. |
 | GET /ready | 200 `{status:"ready",database:"connected"}` after SELECT 1 and, with persistence enabled, an analyses-table query. Safe 503 if unavailable/unmigrated. |
 | GET /capabilities | Intelligence fields remain `analysis_available:false`, `supported_inputs:[]`, `reason:"Analysis is not enabled in this release."`. Adds `submission_available` and `submission_inputs`. These become true / `["MESSAGE","URL"]` only when persistence is enabled and the database/table query succeeds; otherwise false / `[]`. |
 | POST /analyses | 201 AnalysisDetail after validation and commit. Requires PERSISTENCE_ENABLED. |

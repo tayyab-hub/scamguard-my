@@ -22,7 +22,7 @@ export function PreviewNotice({
       <CircleAlert size={18} className="mt-0.5 shrink-0 text-warning" aria-hidden="true" />
       <div className="min-w-0 flex-1 basis-48">
         <p className="text-sm font-medium text-warning">
-          Development preview · Service unavailable
+          Service unavailable
         </p>
         <p className="mt-1 text-xs leading-5 text-muted">{children}</p>
         <p className="mt-1 text-xs leading-5 text-muted">{error.message}</p>

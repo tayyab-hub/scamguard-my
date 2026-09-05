@@ -70,6 +70,7 @@ Open `http://127.0.0.1:4173`. `npm run build` is `tsc -b && vite build`, with `d
 | Variable | Local behavior | Task 1 Vercel setting |
 | --- | --- | --- |
 | `VITE_API_BASE_URL` | Optional. Blank/unset resolves to `/api/v1`. `frontend/.env.example` documents it. | Leave unset for the backend-free preview; adding it as blank has the same effect. |
+| `VITE_SUPPORT_EMAIL` | Optional public address for preparing a `mailto:` feedback action. Blank preserves the honest unavailable state. | Set only to an approved public project-support address, or leave unset. Never use a private/personal address. |
 | `API_PROXY_TARGET` | Vite development-only target; default `http://127.0.0.1:8000`. | Do not set. There is no development proxy in the deployed static frontend. |
 | `DATABASE_URL`, `POSTGRES_*`, backend settings | Backend/Compose only. | Do not import or configure them for this frontend project. |
 

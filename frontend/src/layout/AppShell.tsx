@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { ArrowUpRight, ChevronRight, Globe2, LayoutDashboard, ScanLine, Shield } from 'lucide-react'
+import { ArrowUpRight, ChevronRight, CircleHelp, Globe2, LayoutDashboard, ScanLine, Shield } from 'lucide-react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { ApiStatus } from '../components/ApiStatus'
 import { Brand } from '../components/Brand'
@@ -7,6 +7,7 @@ import { Brand } from '../components/Brand'
 const navigation = [
   { to: '/', label: 'Overview', icon: LayoutDashboard },
   { to: '/analyse', label: 'Analyse', icon: ScanLine },
+  { to: '/help', label: 'Help & Support', icon: CircleHelp },
 ]
 
 export function AppShell() {

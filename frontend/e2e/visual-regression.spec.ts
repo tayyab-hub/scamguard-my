@@ -48,7 +48,7 @@ test('Forensic Intelligence screens retain navigation and keyboard access', asyn
   const nav = page.getByRole('navigation', {
     name: testInfo.project.name === 'desktop' ? 'Desktop navigation' : 'Mobile navigation',
   })
-  await expect(nav.getByRole('link')).toHaveText(['Overview', 'Analyse'])
+  await expect(nav.getByRole('link')).toHaveText(['Overview', 'Analyse', 'Help & Support'])
   await expect(nav.getByRole('link', { name: 'Overview' })).toHaveAttribute('href', '/')
   await expect(nav.getByRole('link', { name: 'Overview' })).toHaveAttribute('aria-current', 'page')
   await expect(page).toHaveTitle('Overview · SCAMGUARD')
@@ -91,6 +91,11 @@ test('Forensic Intelligence screens retain navigation and keyboard access', asyn
     await url.evaluate((element) => Number.parseFloat(getComputedStyle(element).outlineWidth)),
   ).toBeGreaterThanOrEqual(2)
   await page.screenshot({ path: testInfo.outputPath('input-focus.png'), scale: 'css' })
+
+  await nav.getByRole('link', { name: 'Help & Support' }).click()
+  await expect(page.getByRole('heading', { name: 'Help & Support' })).toBeFocused()
+  await expect(page.getByRole('group')).toHaveCount(14)
+  await capture(page, testInfo, 'help')
   expect(failures).toEqual([])
 })
 
@@ -99,12 +104,14 @@ test('small mobile, tablet, and sidebar breakpoint preserve usable content', asy
 }, testInfo) => {
   for (const width of [320, 768, 1024, 1280, 1440]) {
     await page.setViewportSize({ width, height: 900 })
-    for (const route of ['/', '/analyse']) {
+    for (const route of ['/', '/analyse', '/help']) {
       await page.goto(route)
       await expect(
-        page.getByText(
-          route === '/' ? 'Your activity starts here' : 'Analysis is not enabled in this release.',
-        ),
+        route === '/'
+          ? page.getByText('Your activity starts here')
+          : route === '/analyse'
+            ? page.getByText('Analysis is not enabled in this release.')
+            : page.getByRole('heading', { name: 'Help & Support' }),
       ).toBeVisible()
       expect(
         await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth),

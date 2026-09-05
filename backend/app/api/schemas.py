@@ -9,7 +9,7 @@ from app.db.models import InputType
 
 class HealthResponse(BaseModel):
     status: Literal["ok"] = "ok"
-    service: Literal["scamguard-my-api"] = "scamguard-my-api"
+    service: Literal["scamguard-api"] = "scamguard-api"
     version: str = "0.1.0"
 
 

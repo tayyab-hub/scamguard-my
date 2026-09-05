@@ -100,9 +100,10 @@ describe('persistent submission UI', () => {
     await userEvent.click(screen.getByRole('tab', { name: 'URL' }))
     const input = screen.getByLabelText('Website URL')
     fireEvent.change(input, { target: { value: 'javascript:alert(1)' } })
+    fireEvent.blur(input)
     expect(screen.getByRole('button', { name: 'Analyse content' })).toBeDisabled()
     expect(
-      screen.getByText('Enter a complete HTTP or HTTPS URL without sign-in details.'),
+      screen.getByText('Enter a valid URL starting with http:// or https://.'),
     ).toBeInTheDocument()
     fireEvent.change(input, { target: { value: 'https://example.com' } })
     await userEvent.click(screen.getByRole('button', { name: 'Analyse content' }))
@@ -126,7 +127,7 @@ describe('persistent submission UI', () => {
     const input = await screen.findByLabelText('Message content')
     fireEvent.change(input, { target: { value: 'Retain this draft' } })
     await userEvent.click(screen.getByRole('button', { name: 'Analyse content' }))
-    expect(await screen.findByRole('alert')).toHaveTextContent('Check history before trying again')
+    expect(await screen.findByRole('alert')).toHaveTextContent('Check your history before trying again')
     expect(screen.getByRole('alert')).toHaveTextContent('test-reference')
     expect(screen.getByRole('alert')).not.toHaveTextContent('not-for-ui')
     expect(input).toHaveValue('Retain this draft')
@@ -210,6 +211,28 @@ describe('persistent submission UI', () => {
 })
 
 describe('submission boundaries', () => {
+  it('shows exact Message and URL feedback only after interaction and updates while invalid', async () => {
+    setup()
+    renderApp('/analyse')
+    const message = await screen.findByLabelText('Message content')
+    expect(screen.queryByText('Enter a message to analyse.')).not.toBeInTheDocument()
+    fireEvent.blur(message)
+    expect(screen.getByText('Enter a message to analyse.')).toBeInTheDocument()
+    fireEvent.change(message, { target: { value: 'x'.repeat(5001) } })
+    expect(screen.getByText('Message must be 5,000 characters or fewer.')).toBeInTheDocument()
+    expect(message).toHaveAttribute('aria-invalid', 'true')
+
+    await userEvent.click(screen.getByRole('tab', { name: 'URL' }))
+    const url = screen.getByLabelText('Website URL')
+    expect(screen.queryByText('Enter a URL to analyse.')).not.toBeInTheDocument()
+    fireEvent.submit(url.closest('form')!)
+    expect(screen.getByText('Enter a URL to analyse.')).toBeInTheDocument()
+    fireEvent.change(url, { target: { value: 'https://example.com/' + 'x'.repeat(2048) } })
+    expect(screen.getByText('URL must be 2,048 characters or fewer.')).toBeInTheDocument()
+    fireEvent.change(url, { target: { value: 'example.com' } })
+    expect(screen.getByText('Enter a valid URL starting with http:// or https://.')).toBeInTheDocument()
+  })
+
   it.each([
     'https://user:secret@example.com',
     'https://example.com:99999',

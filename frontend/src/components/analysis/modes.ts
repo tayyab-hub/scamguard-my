@@ -18,7 +18,7 @@ export const draftFields = {
     limit: 5000,
   },
   URL: { label: 'Website URL', placeholder: 'https://example.com', limit: 2048 },
-  PHONE: { label: 'Phone number', placeholder: 'Enter phone number with country code', limit: 64 },
+  PHONE: { label: 'Phone number', placeholder: '+60 12-345 6789', limit: 64 },
 } satisfies Record<DraftMode, { label: string; placeholder: string; limit: number }>
 
 export const analysisActions = {

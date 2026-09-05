@@ -21,3 +21,16 @@ export function parseApiBaseUrl(value: string): string {
 export function getApiBaseUrl(): string {
   return parseApiBaseUrl(import.meta.env.VITE_API_BASE_URL || '/api/v1')
 }
+
+export function parseSupportEmail(value: string): string | null {
+  const normalized = value.trim()
+  if (!normalized) return null
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalized)) {
+    throw new Error('VITE_SUPPORT_EMAIL must be a valid public support email address.')
+  }
+  return normalized
+}
+
+export function getSupportEmail(): string | null {
+  return parseSupportEmail(import.meta.env.VITE_SUPPORT_EMAIL || '')
+}

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import { ApiError, analysisSummarySchema, getApi, healthSchema } from './api'
-import { parseApiBaseUrl } from './env'
+import { parseApiBaseUrl, parseSupportEmail } from './env'
 import { healthFixture } from '../test/fixtures'
 
 describe('API transport', () => {
@@ -47,6 +47,17 @@ describe('API transport', () => {
       status: 503,
       requestId: 'request-123',
       message: 'The service is temporarily unavailable.',
+    })
+  })
+
+  it('maps validation failures to safe actionable form feedback', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue(Response.json({ private: 'value' }, { status: 422 })),
+    )
+    await expect(getApi('/health', healthSchema)).rejects.toMatchObject({
+      status: 422,
+      message: 'Check the highlighted fields and try again.',
     })
   })
 
@@ -108,6 +119,11 @@ describe('public environment validation', () => {
     '/',
   ])('rejects %s', (url) => {
     expect(() => parseApiBaseUrl(url)).toThrow('VITE_API_BASE_URL')
+  })
+  it('accepts a valid optional support address and rejects unsafe values', () => {
+    expect(parseSupportEmail(' help@example.com ')).toBe('help@example.com')
+    expect(parseSupportEmail('')).toBeNull()
+    expect(() => parseSupportEmail('not-an-email')).toThrow('VITE_SUPPORT_EMAIL')
   })
 })
 

@@ -14,7 +14,8 @@ export class ApiError extends Error {
 
 export const healthSchema = z.object({
   status: z.literal('ok'),
-  service: z.literal('scamguard-my-api'),
+  // Accept the previous identifier during rolling upgrades; the API now emits scamguard-api.
+  service: z.enum(['scamguard-api', 'scamguard-my-api']),
   version: z.string(),
 })
 const analysisFields = {
@@ -98,9 +99,11 @@ async function requestApi<T>(
     })
     if (!response.ok) {
       throw new ApiError(
-        response.status >= 500
-          ? 'The service is temporarily unavailable.'
-          : 'The request could not be completed.',
+        response.status === 422
+          ? 'Check the highlighted fields and try again.'
+          : response.status >= 500
+            ? 'The service is temporarily unavailable.'
+            : 'The request could not be completed.',
         response.status,
         response.headers.get('X-Request-ID') || undefined,
       )

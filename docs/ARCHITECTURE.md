@@ -5,7 +5,7 @@ Audited 2026-09-04. Read PROGRESS for executed verification and DECISIONS for ac
 ## CURRENTLY IMPLEMENTED
 
 ```text
-React Router → AppShell → Overview / Analyse / NotFound
+React Router → AppShell → Overview / Analyse / Help & Support / NotFound
   TanStack Query + centralized GET/POST transport + Zod
     /api/v1 (Vite proxy locally, optional HTTPS API later)
       FastAPI factory → request ID / safe errors / CORS / bounded body
@@ -14,7 +14,7 @@ React Router → AppShell → Overview / Analyse / NotFound
                     schema managed by Alembic
 ```
 
-This is real submission persistence, not scam detection. Only Overview and Analyse appear in navigation. Vercel hosts the frontend only; unavailable-backend states remain usable. Task 2 is on a review branch and does not change main automatically.
+This is real submission persistence, not scam detection. Overview, Analyse and Help & Support appear in navigation. Help search and feedback preparation remain browser-local; no support backend or false sent state exists. Vercel hosts the frontend only; unavailable-backend states remain usable. Task 2 is on a review branch and does not change main automatically.
 
 ### Frontend
 

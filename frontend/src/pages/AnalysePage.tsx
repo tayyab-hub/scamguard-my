@@ -25,6 +25,14 @@ export function AnalysePage() {
     PHONE: '',
   })
   const [qrFile, setQrFile] = useState<File | null>(null)
+  const [touched, setTouched] = useState<Record<'MESSAGE' | 'URL', boolean>>({
+    MESSAGE: false,
+    URL: false,
+  })
+  const [submitAttempted, setSubmitAttempted] = useState<Record<'MESSAGE' | 'URL', boolean>>({
+    MESSAGE: false,
+    URL: false,
+  })
   const content = inputType === 'QR' ? '' : drafts[inputType]
   const field = inputType === 'QR' ? null : draftFields[inputType]
   const setContent = (value: string) =>
@@ -35,9 +43,15 @@ export function AnalysePage() {
   const available =
     supportedMode && canStore && capabilities.data?.submission_inputs.includes(inputType)
   const validation = supportedMode ? submissionError(inputType, content) : null
+  const validationVisible =
+    supportedMode && Boolean(validation) && (touched[inputType] || submitAttempted[inputType])
   const reason =
     supportedMode && available
-      ? (validation ?? 'Records your submission only. Scam intelligence is not enabled.')
+      ? validationVisible
+        ? 'Correct the highlighted field to enable submission.'
+        : validation
+          ? `${inputType === 'MESSAGE' ? 'Add a valid message' : 'Add a valid URL'} to enable submission.`
+          : 'Records your submission only. Scam intelligence is not enabled.'
       : action.reason
   return (
     <>
@@ -91,7 +105,9 @@ export function AnalysePage() {
                 noValidate
                 onSubmit={(event) => {
                   event.preventDefault()
-                  if (!supportedMode || !available || validation || submission.isPending) return
+                  if (!supportedMode || !available || submission.isPending) return
+                  setSubmitAttempted((previous) => ({ ...previous, [inputType]: true }))
+                  if (validation) return
                   const mode = inputType
                   submission.mutate(
                     { input_type: mode, content: content.trim() },
@@ -156,14 +172,12 @@ export function AnalysePage() {
                             value={content}
                             disabled={submission.isPending}
                             onChange={(event) => setContent(event.target.value)}
-                            maxLength={field.limit}
-                            placeholder={field.placeholder}
-                            aria-describedby="content-hint content-count unavailable-reason"
-                            aria-invalid={
-                              available && Boolean(content) && Boolean(validation)
-                                ? true
-                                : undefined
+                            onBlur={() =>
+                              setTouched((previous) => ({ ...previous, MESSAGE: true }))
                             }
+                            placeholder={field.placeholder}
+                            aria-describedby={`content-hint content-count unavailable-reason${validationVisible ? ' content-error' : ''}`}
+                            aria-invalid={validationVisible || undefined}
                             autoComplete="off"
                             spellCheck={false}
                           />
@@ -176,14 +190,14 @@ export function AnalysePage() {
                             value={content}
                             disabled={submission.isPending}
                             onChange={(event) => setContent(event.target.value)}
-                            maxLength={field.limit}
-                            placeholder={field.placeholder}
-                            aria-describedby="content-hint content-count unavailable-reason"
-                            aria-invalid={
-                              available && Boolean(content) && Boolean(validation)
-                                ? true
-                                : undefined
+                            onBlur={() =>
+                              inputType === 'URL' &&
+                              setTouched((previous) => ({ ...previous, URL: true }))
                             }
+                            maxLength={inputType === 'PHONE' ? field.limit : undefined}
+                            placeholder={field.placeholder}
+                            aria-describedby={`content-hint content-count unavailable-reason${validationVisible ? ' content-error' : ''}`}
+                            aria-invalid={validationVisible || undefined}
                             autoComplete="off"
                             spellCheck={false}
                           />
@@ -198,6 +212,11 @@ export function AnalysePage() {
                             {content.length.toLocaleString()} / {field.limit.toLocaleString()}
                           </span>
                         </div>
+                        {validationVisible && (
+                          <p id="content-error" role="alert" className="-mt-3 mb-6 text-xs text-danger">
+                            {validation}
+                          </p>
+                        )}
                       </>
                     )
                   )}
@@ -233,7 +252,7 @@ export function AnalysePage() {
                     role="alert"
                     className="mt-4 rounded-lg border border-warning/30 bg-warning-subtle p-4 text-sm text-warning"
                   >
-                    <p>We could not confirm your submission. Check history before trying again.</p>
+                    <p>We could not confirm your submission. Check your history before trying again.</p>
                     <p className="mt-2 text-xs">{submission.error.message}</p>
                     {submission.error instanceof ApiError && submission.error.requestId && (
                       <p className="mt-2 break-all text-xs">

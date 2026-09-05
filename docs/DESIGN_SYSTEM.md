@@ -38,7 +38,7 @@ Reconciled with the source on 2026-09-04. This identity is an accepted project d
 
 ## Navigation and responsive behavior
 
-Only **Overview** (`/`) and **Analyse** (`/analyse`) appear in navigation. There are no active links to unimplemented modules. The dashboard component and `/api/v1/dashboard` endpoint keep their existing technical names and contracts.
+Only **Overview** (`/`), **Analyse** (`/analyse`) and **Help & Support** (`/help`) appear in navigation. Help is a real local guidance/search/feedback-preparation route. There are no active links to unimplemented intelligence modules. The dashboard component and `/api/v1/dashboard` endpoint keep their existing technical names and contracts.
 
 At 1024px and above, the fixed 260px sidebar remains in place; it can scroll independently on short screens. Below that breakpoint, the bottom navigation retains safe-area padding, visible active state, and page-bottom clearance. The existing 1480px maximum content width and stacked mobile layout are preserved. Message, URL, Phone Number and QR Code use four compact button tabs. They reflow into two columns below 640px, including 320px mobile; labels may wrap and no horizontal scrolling is required.
 

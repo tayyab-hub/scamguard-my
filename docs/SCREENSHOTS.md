@@ -18,7 +18,13 @@ Captured from the running Task 1 application with real FastAPI responses. Unavai
 
 ![Forensic Intelligence Analyse on mobile](screenshots/analyse-mobile.png)
 
-Screenshots are captured at CSS-pixel scale. Desktop uses a 1440px-wide Chrome viewport and full-page capture. Mobile uses a 390px-wide Chromium viewport capture (Phone/QR scroll to the controls), so its fixed bottom navigation appears in its actual screen position. Additional full-page mobile captures and focus evidence are inspected from the ignored Playwright output folder. These eight images are deliberate documentation assets. Analyse/Phone/QR were captured on 2026-09-04. The Phone draft and QR filename/metadata are explicit local test fixtures, not intelligence or analysis results. No file bytes are read or uploaded. See the README for the opt-in screenshot regeneration command.
+Screenshots are captured at CSS-pixel scale. Desktop uses a 1440px-wide Chrome viewport and full-page capture. Mobile uses a 390px-wide Chromium viewport capture (Phone/QR scroll to the controls), so its fixed bottom navigation appears in its actual screen position. Additional full-page mobile captures and focus evidence are inspected from the ignored Playwright output folder. These ten foundation images are deliberate documentation assets and were refreshed on 2026-09-05. The Phone draft and QR filename/metadata are explicit local test fixtures, not intelligence or analysis results. No file bytes are read or uploaded. See the README for the opt-in screenshot regeneration command.
+
+## Help & Support — desktop / mobile
+
+![Help and Support on desktop](screenshots/help-desktop.png)
+
+![Help and Support on mobile](screenshots/help-mobile.png)
 
 ## Phone UI — desktop / mobile
 
@@ -34,7 +40,7 @@ Screenshots are captured at CSS-pixel scale. Desktop uses a 1440px-wide Chrome v
 
 ## Task 2 — real persistence in an isolated test database
 
-Captured 2026-09-04 with the generalized SCAMGUARD brand and unchanged Forensic Intelligence design. These are **controlled E2E test submissions**, genuinely saved in a dedicated PostgreSQL *_e2e database. Counts/UUIDs/times reflect that disposable test dataset, not production users or completed scam assessments. SUBMITTED is intake only; flagged/risk remain unavailable. The eight foundation captures above show persistence-disabled states; Task 2 adds these four views. Mobile views are scrolled to the relevant success/history section; full-page QA output stays ignored.
+Captured 2026-09-04 with the generalized SCAMGUARD brand and unchanged Forensic Intelligence design. These are **controlled E2E test submissions**, genuinely saved in a dedicated PostgreSQL *_e2e database. Counts/UUIDs/times reflect that disposable test dataset, not production users or completed scam assessments. SUBMITTED is intake only; flagged/risk remain unavailable. The foundation captures above show persistence-disabled states; Task 2 adds these four views. Mobile views are scrolled to the relevant success/history section; full-page QA output stays ignored.
 
 | View | Desktop | Mobile |
 | --- | --- | --- |

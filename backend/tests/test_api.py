@@ -13,7 +13,7 @@ from app.db.session import get_session
 def test_health_is_liveness_and_does_not_need_a_database(client):
     response = client.get("/api/v1/health")
     assert response.status_code == 200
-    assert response.json() == {"status": "ok", "service": "scamguard-my-api", "version": "0.1.0"}
+    assert response.json() == {"status": "ok", "service": "scamguard-api", "version": "0.1.0"}
     UUID(response.headers["x-request-id"])
     assert response.headers["cache-control"] == "no-store"
     assert response.headers["x-content-type-options"] == "nosniff"
