@@ -17,6 +17,8 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+ai = ["openai>=2.0,<3"]
+ml = ["scikit-learn>=1.7,<2"]
 dev = ["pytest>=8.3,<10", "httpx>=0.28,<1", "ruff>=0.11,<1"]
 
 [tool.setuptools.packages.find]
@@ -25,7 +27,10 @@ include = ["app*"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-ra"
-markers = ["integration: requires TEST_DATABASE_URL pointing at a disposable PostgreSQL database"]
+markers = [
+  "integration: requires TEST_DATABASE_URL pointing at a disposable PostgreSQL database",
+  "external_ai: opt-in live external-provider smoke test; may incur cost",
+]
 
 [tool.ruff]
 target-version = "py312"

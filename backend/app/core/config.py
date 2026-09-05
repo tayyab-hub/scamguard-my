@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Literal
 from urllib.parse import urlparse
 
-from pydantic import Field, PostgresDsn, field_validator, model_validator
+from pydantic import Field, PostgresDsn, SecretStr, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -25,6 +25,11 @@ class Settings(BaseSettings):
     persistence_enabled: bool = False
     max_request_bytes: int = Field(default=65_536, ge=32_768, le=1_048_576)
     port: int = Field(default=8000, ge=1, le=65535)
+    message_model_path: str = "backend/app/ml/artifacts/message_tfidf_v1.json"
+    ai_review_enabled: bool = False
+    openai_api_key: SecretStr | None = Field(default=None, repr=False)
+    openai_model: str = "gpt-5-mini-2025-08-07"
+    ai_timeout_seconds: float = Field(default=8.0, ge=1.0, le=30.0)
 
     @field_validator("database_url")
     @classmethod
