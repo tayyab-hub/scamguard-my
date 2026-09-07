@@ -1,0 +1,48 @@
+{
+  "source_sha256": "0a639fd03aea6308c5b1c10c92aa23c2ce1505447a9137271865cd0badc9a59a",
+  "seed": 20260907,
+  "feature_version": "url_features_v1",
+  "counts": {
+    "original_rows": 235795,
+    "duplicate_rows": 1107,
+    "invalid_rows": 13,
+    "conflicting_groups_removed": 1,
+    "cleaned_rows": 234674
+  },
+  "original_labels": {
+    "1": 134850,
+    "0": 100945
+  },
+  "splits": {
+    "train": {
+      "rows": 164074,
+      "labels": {
+        "LEGITIMATE": 94755,
+        "PHISHING": 69319
+      },
+      "domains": 138389
+    },
+    "validation": {
+      "rows": 33699,
+      "labels": {
+        "LEGITIMATE": 20159,
+        "PHISHING": 13540
+      },
+      "domains": 29656
+    },
+    "test": {
+      "rows": 36901,
+      "labels": {
+        "LEGITIMATE": 19935,
+        "PHISHING": 16966
+      },
+      "domains": 29655
+    }
+  },
+  "outputs_sha256": {
+    "split_manifest_v1.csv": "7e27869c7a539bf45368b6c22ac3b4754ab066ecadcfe7bd39bebdcbb914f8e3",
+    "test_v1.csv": "2c1eb713277dce8d2d786ba05a69068752a7b4ba8be22325131b04496d161743",
+    "train_v1.csv": "55ebe94de60bb86c7e718d2842c043db7cefee015b9ff51c6b21a4ef1ea7d857",
+    "validation_v1.csv": "8c885329bbdafab2b553cad472c4174f1f4a482462354bbebf8e305a96ccd418"
+  }
+}
