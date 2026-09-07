@@ -3,6 +3,7 @@ import type { AnalysisSummary } from '../lib/api'
 import { useAnalysisDetail, useHistory } from '../lib/queries'
 import { ErrorState, LoadingState } from './States'
 import { AssessmentResult } from './analysis/URLResult'
+import { riskCopy } from '../lib/resultPresentation'
 
 export function SubmissionRows({ items }: { items: AnalysisSummary[] }) {
   const prefix = useId()
@@ -14,7 +15,7 @@ export function SubmissionRows({ items }: { items: AnalysisSummary[] }) {
         <li key={item.id} className="min-w-0 p-5 sm:px-6">
           <button
             type="button"
-            className="button-quiet block w-full rounded text-left"
+            className="history-trigger button-quiet block w-full rounded text-left"
             aria-expanded={selected === item.id}
             aria-controls={`${prefix}-detail-${item.id}`}
             onClick={() => setSelected(selected === item.id ? null : item.id)}
@@ -25,6 +26,9 @@ export function SubmissionRows({ items }: { items: AnalysisSummary[] }) {
               </span>
               <span className="status-chip">{item.status.replace('_', ' ')}</span>
             </span>
+            {item.risk_level && (
+              <span className="history-risk mt-2 inline-block">{riskCopy[item.risk_level]}</span>
+            )}
             <time dateTime={item.created_at} className="mt-2 block text-[11px] text-muted">
               {new Date(item.created_at).toLocaleString()}
             </time>
@@ -58,12 +62,16 @@ export function SubmissionRows({ items }: { items: AnalysisSummary[] }) {
                   </p>
                   {detail.data.assessment && (
                     <div className="mt-4 overflow-hidden rounded-lg border border-line bg-surface">
-                      <AssessmentResult assessment={detail.data.assessment} />
+                      <AssessmentResult
+                        assessment={detail.data.assessment}
+                        analysisId={detail.data.id}
+                      />
                     </div>
                   )}
                   {detail.data.failure_code && (
                     <p role="alert" className="mt-4 text-xs text-warning">
-                      The saved submission could not be assessed. Reference: {detail.data.failure_code}
+                      The saved submission could not be assessed. Reference:{' '}
+                      {detail.data.failure_code}
                     </p>
                   )}
                 </div>

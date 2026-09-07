@@ -29,11 +29,11 @@ export function DashboardPage() {
   const capabilities = useCapabilities()
   const [showHistory, setShowHistory] = useState(false)
   const data = !dashboard.isError && dashboard.data?.status === 'ready' ? dashboard.data : null
-  const messageAvailable = Boolean(
-    !capabilities.isError &&
-      capabilities.data?.analysis_available &&
-      capabilities.data.supported_inputs.includes('MESSAGE'),
-  )
+  const availableModes =
+    !capabilities.isError && capabilities.data?.analysis_available
+      ? capabilities.data.supported_inputs.map((input) => (input === 'MESSAGE' ? 'Message' : 'URL'))
+      : []
+  const intelligenceLabel = availableModes.join(' and ')
   const latest = data?.recent_analyses[0]
   return (
     <>
@@ -80,6 +80,7 @@ export function DashboardPage() {
                     className={`font-display leading-none text-ink ${label === 'Latest analysis' && latest ? 'text-2xl' : 'text-4xl'}`}
                     aria-label={
                       (data && label === 'Total analyses') ||
+                      (data && label === 'Flagged for review' && data.flagged_analyses !== null) ||
                       (latest && label === 'Latest analysis')
                         ? undefined
                         : 'Not available'
@@ -89,22 +90,22 @@ export function DashboardPage() {
                       ? data.total_analyses.toLocaleString()
                       : label === 'Flagged for review' && data && data.flagged_analyses !== null
                         ? data.flagged_analyses.toLocaleString()
-                      : label === 'Latest analysis' && latest
-                        ? latest.input_type === 'MESSAGE'
-                          ? 'Message'
-                          : 'URL'
-                        : '—'}
+                        : label === 'Latest analysis' && latest
+                          ? latest.input_type === 'MESSAGE'
+                            ? 'Message'
+                            : 'URL'
+                          : '—'}
                   </span>
                   <span className="status-chip">
                     {label === 'Total analyses' && data
                       ? 'Recorded'
                       : label === 'Flagged for review' && data && data.flagged_analyses !== null
                         ? 'Evidence-based'
-                      : label === 'Latest analysis' && data
-                        ? latest
-                          ? latest.status.replace('_', ' ')
-                          : 'No submissions'
-                        : 'Not available yet'}
+                        : label === 'Latest analysis' && data
+                          ? latest
+                            ? latest.status.replace('_', ' ')
+                            : 'No submissions'
+                          : 'Not available yet'}
                   </span>
                 </div>
                 <p className="border-t border-line/70 pt-3 text-[11px] text-muted">
@@ -113,8 +114,8 @@ export function DashboardPage() {
                     : label === 'Total analyses' && data
                       ? 'Persisted Message and URL submissions'
                       : label === 'Flagged for review' && data && data.flagged_analyses !== null
-                        ? 'Completed messages at elevated or high risk'
-                      : hint}
+                        ? 'Message and URL results at elevated or high risk'
+                        : hint}
                 </p>
               </section>
             ))}
@@ -169,7 +170,7 @@ export function DashboardPage() {
                 <div className="flex items-start gap-2.5 border-t border-line bg-surface-raised/40 px-5 py-3.5 text-[11px] leading-5 text-muted sm:px-6">
                   <Info size={14} className="mt-0.5 shrink-0" aria-hidden="true" />
                   {data
-                    ? 'Shared development workspace. Message results are decision support, not proof of fraud or safety.'
+                    ? 'Shared development workspace. Message and URL results are decision support, not proof of fraud or safety.'
                     : 'No live statistics are being collected or displayed.'}
                 </div>
               </section>
@@ -207,8 +208,8 @@ export function DashboardPage() {
                 </h2>
                 <p className="mb-7 mt-3 text-xs leading-6 text-body">
                   A dedicated place to review messages, links, phone numbers and QR codes.
-                  {messageAvailable
-                    ? ' Message intelligence is available; other intelligence modes remain planned.'
+                  {availableModes.length > 0
+                    ? ` ${intelligenceLabel} intelligence is available. Phone and QR intelligence remain planned.`
                     : ' Intelligence availability depends on the connected service.'}
                 </p>
                 <Link
@@ -227,8 +228,10 @@ export function DashboardPage() {
                 <dl className="space-y-4 text-xs">
                   <div className="flex justify-between gap-3">
                     <dt className="text-muted">Analysis service</dt>
-                    <dd className={messageAvailable ? 'text-accent' : 'text-warning'}>
-                      {messageAvailable ? 'Messages enabled' : 'Not enabled'}
+                    <dd
+                      className={`min-w-0 text-right ${availableModes.length > 0 ? 'text-accent' : 'text-warning'}`}
+                    >
+                      {availableModes.length > 0 ? `${intelligenceLabel} enabled` : 'Not enabled'}
                     </dd>
                   </div>
                   <div className="flex justify-between gap-3">

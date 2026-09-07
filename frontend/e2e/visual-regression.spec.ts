@@ -94,7 +94,7 @@ test('Forensic Intelligence screens retain navigation and keyboard access', asyn
 
   await nav.getByRole('link', { name: 'Help & Support' }).click()
   await expect(page.getByRole('heading', { name: 'Help & Support' })).toBeFocused()
-  await expect(page.getByRole('group')).toHaveCount(15)
+  await expect(page.getByRole('group')).toHaveCount(17)
   await capture(page, testInfo, 'help')
   expect(failures).toEqual([])
 })
@@ -188,6 +188,9 @@ test('text, controls, and focus tokens have sufficient contrast in the light the
         'accent-subtle',
         'on-accent',
         'success',
+        'success-subtle',
+        'danger',
+        'danger-subtle',
         'warning',
         'warning-subtle',
         'control',
@@ -224,6 +227,9 @@ test('text, controls, and focus tokens have sufficient contrast in the light the
     ['accent', 'accent-subtle'],
     ['warning', 'warning-subtle'],
     ['success', 'surface'],
+    ['success', 'success-subtle'],
+    ['danger', 'danger-subtle'],
+    ['danger', 'surface'],
   ]) {
     expect(contrast(foreground!, background!)).toBeGreaterThanOrEqual(4.5)
   }

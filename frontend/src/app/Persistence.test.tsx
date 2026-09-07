@@ -5,6 +5,8 @@ import { renderApp } from '../test/render'
 import { capabilitiesFixture, healthFixture } from '../test/fixtures'
 import { submissionError } from '../lib/submission'
 import { dashboardSchema } from '../lib/api'
+import { messageAssessmentSchema } from '../lib/api'
+import { riskScorePresentation } from '../lib/resultPresentation'
 
 // Explicit test fixtures; never imported by application code.
 const record = {
@@ -90,18 +92,38 @@ function setup(
 }
 
 describe('persistent submission UI', () => {
+  it.each([
+    [['MESSAGE', 'URL'], 'Message and URL enabled'],
+    [['MESSAGE'], 'Message enabled'],
+    [['URL'], 'URL enabled'],
+    [[], 'Not enabled'],
+  ])('Overview reports only advertised intelligence modes %s', async (inputs, label) => {
+    setup(undefined, false, { ...caps, analysis_available: true, supported_inputs: inputs })
+    renderApp('/')
+    expect(await screen.findByText(label as string)).toBeInTheDocument()
+  })
+  it.each([0, 0.1999, 0.2, 0.4199, 0.42, 0.6499, 0.65, 0.86, 1, null])(
+    'presents the stored Message score %s without recomputing fusion or confidence',
+    (score) => {
+      const value = messageAssessmentSchema.parse({ ...assessment, risk_score: score })
+      const before = structuredClone(value)
+      expect(riskScorePresentation(value).value).toBe(
+        score === null ? null : Math.round(score * 100),
+      )
+      expect(value).toEqual(before)
+      expect(
+        riskScorePresentation({ ...value, risk_level: 'INSUFFICIENT_EVIDENCE' }).value,
+      ).toBeNull()
+    },
+  )
   it('renders a real message result with risk, confidence, evidence, actions and components', async () => {
     const completed = { ...record, status: 'COMPLETED', assessment, failure_code: null }
-    setup(
-      async () => Response.json(completed, { status: 201 }),
-      false,
-      {
-        ...caps,
-        analysis_available: true,
-        supported_inputs: ['MESSAGE'],
-        reason: 'Local message intelligence is available.',
-      },
-    )
+    setup(async () => Response.json(completed, { status: 201 }), false, {
+      ...caps,
+      analysis_available: true,
+      supported_inputs: ['MESSAGE'],
+      reason: 'Local message intelligence is available.',
+    })
     renderApp('/analyse')
     fireEvent.change(await screen.findByLabelText('Message content'), {
       target: { value: 'Provide your OTP now' },
@@ -109,12 +131,20 @@ describe('persistent submission UI', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Analyse content' }))
     expect(await screen.findByText('Analysis completed.')).toBeInTheDocument()
     expect(screen.getByText('High risk')).toBeInTheDocument()
-    expect(screen.getByText(/Confidence: high \(81%\)/)).toBeInTheDocument()
-    expect(screen.getByText('Credential request')).toBeInTheDocument()
-    expect(screen.getByText('Do not send money, credentials or verification codes.')).toBeInTheDocument()
+    expect(screen.getByText('Confidence: high')).toBeInTheDocument()
+    expect(
+      within(screen.getByRole('region', { name: 'Detected evidence' })).getByText(
+        'Credential request',
+      ),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByText('Do not send money, credentials or verification codes.'),
+    ).toBeInTheDocument()
     await userEvent.click(screen.getByText('Components and limitations'))
     expect(screen.getByText(/SCAM · message-tfidf-logreg-v1/)).toBeInTheDocument()
-    expect(screen.getByText('disabled')).toBeInTheDocument()
+    expect(screen.getByText('disabled · no contribution')).toBeInTheDocument()
+    expect(screen.getByRole('meter')).toHaveAttribute('aria-valuenow', '86')
+    expect(screen.getByText(record.id)).toBeInTheDocument()
   })
 
   it('validates Message, records once, shows pending/success, and clears only after acknowledgement', async () => {
@@ -191,7 +221,9 @@ describe('persistent submission UI', () => {
     const input = await screen.findByLabelText('Message content')
     fireEvent.change(input, { target: { value: 'Retain this draft' } })
     await userEvent.click(screen.getByRole('button', { name: 'Analyse content' }))
-    expect(await screen.findByRole('alert')).toHaveTextContent('Check your history before trying again')
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'Check your history before trying again',
+    )
     expect(screen.getByRole('alert')).toHaveTextContent('test-reference')
     expect(screen.getByRole('alert')).not.toHaveTextContent('not-for-ui')
     expect(input).toHaveValue('Retain this draft')
@@ -294,7 +326,9 @@ describe('submission boundaries', () => {
     fireEvent.change(url, { target: { value: 'https://example.com/' + 'x'.repeat(2048) } })
     expect(screen.getByText('URL must be 2,048 characters or fewer.')).toBeInTheDocument()
     fireEvent.change(url, { target: { value: 'example.com' } })
-    expect(screen.getByText('Enter a valid URL starting with http:// or https://.')).toBeInTheDocument()
+    expect(
+      screen.getByText('Enter a valid URL starting with http:// or https://.'),
+    ).toBeInTheDocument()
   })
 
   it.each([
