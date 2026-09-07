@@ -3,7 +3,7 @@
 SCAMGUARD is a general **Multi-Modal Scam Detection & Reporting Web Application**. Its approved
 visual identity is **Forensic Intelligence**: warm light ivory, charcoal, terracotta and olive with
 restrained editorial motion. The repository has completed Task 1 Foundation, Task 2 Core Platform
-and Task 3 Message Intelligence; Task 4 URL Intelligence is COMPLETE and merged to main at `386e4b7`. The post-Task 4 UI/UX refinement is on `codex/ui-ux-result-refinement`. Never infer functionality from
+and Task 3 Message Intelligence; Task 4 URL Intelligence is COMPLETE and merged to main at `386e4b7`. The completed post-Task 4 UI/UX refinement is on `codex/ui-ux-result-refinement` for its authorized closure merge. Never infer functionality from
 a planned UI control, roadmap line, screenshot or old conversation.
 
 ## Required reading order
@@ -88,7 +88,7 @@ Current source is authoritative when historical wording conflicts.
   commits, discard user work, expose ignored secrets, or alter the configured remote casually.
 - Keep `node_modules`, `.venv`, `dist`, caches, coverage, logs, `.local`, test output and secrets
   ignored. Dataset source and reviewed model artifacts are intentional versioned research assets.
-- Tasks 2, 3 and 4 are merged to `main` (Task 4 merge `386e4b7`). The current authorization is frontend UI/UX refinement, logical commits and pushing `codex/ui-ux-result-refinement` only. Do not merge it to main. Retain `task-4-url-intelligence` and prior branches/history. Task 5, Phone/QR intelligence and authentication are not started or authorized.
+- Tasks 2, 3 and 4 are merged to `main` (Task 4 merge `386e4b7`). The completed frontend UI/UX refinement is authorized for a no-fast-forward merge after verification. Then create and push `task-5-auth-production` from updated `main`; keep all Task 5 work there and do not merge Task 5 automatically. Retain prior branches/history. Phone/QR intelligence, community reporting and adaptive learning remain out of scope.
 
 ## Definition of done and completion procedure
 

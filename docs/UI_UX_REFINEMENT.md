@@ -1,6 +1,6 @@
 # Post-Task 4 UI/UX refinement
 
-This frontend-only refinement preserves the Forensic Intelligence identity, routes, contracts, stored assessments, local models, rules, fusion and capability boundaries. It follows the accepted Task 4 merge `386e4b7` and is reviewed on `codex/ui-ux-result-refinement`; it is not Task 5 and must not be merged automatically.
+This frontend-only refinement preserves the Forensic Intelligence identity, routes, contracts, stored assessments, local models, rules, fusion and capability boundaries. It follows the accepted Task 4 merge `386e4b7`, is COMPLETE on `codex/ui-ux-result-refinement`, and is authorized for its closure merge before Task 5 begins.
 
 ## Advisory score presentation: risk-presentation-v1
 
@@ -39,7 +39,7 @@ Existing page, tab, card, hover and press motion is retained. New score reveal u
 
 See PROGRESS.md for final executed checks and docs/TESTING.md for reproduction. Browser assertions use real local Message/URL assessments in the dedicated PostgreSQL *_e2e database. The delayed-response case holds a real response to inspect pending UI; it does not manufacture results. UI unit fixtures are test-only. Screenshots are labelled controlled test evidence, never production analytics. This is browser-assisted verification, not a human usability study or comprehensive accessibility audit.
 
-Verification completed on 2026-09-07: typecheck and zero-warning lint passed; 73 Vitest tests, 18 foundation/motion/visual Playwright cases, six built offline-preview cases and six real PostgreSQL browser cases passed. Backend tests were not rerun because no backend code/API fields changed. Implementation and regression coverage: `c4bcd5e` (`feat: refine forensic UI and explainable result presentation`). Existing non-failing Zod build and Playwright colour-environment warnings remain. Main was not merged or pushed by this task.
+Verification completed on 2026-09-07 and was repeated before closure: typecheck and zero-warning lint passed; 73 Vitest tests, 18 foundation/motion/visual Playwright cases, six built offline-preview cases and six real PostgreSQL browser cases passed. Backend tests were not rerun because no backend code/API fields changed. Implementation and regression coverage: `c4bcd5e` (`feat: refine forensic UI and explainable result presentation`). Existing non-failing Zod build and Playwright colour-environment warnings remain. The authoritative Task 5 handoff subsequently authorized the completed branch's no-fast-forward merge into `main`.
 
 ### Controlled visual evidence
 

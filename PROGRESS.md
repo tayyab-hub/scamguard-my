@@ -4,8 +4,8 @@ Updated **2026-09-07, Asia/Kuala_Lumpur** for the post-Task 4 UI/UX refinement.
 
 ## Current milestone
 
-**Task 4 URL Intelligence COMPLETE and merged to main at `386e4b7`. Post-Task 4 UI/UX refinement COMPLETE on `codex/ui-ux-result-refinement` for review.**
-The UI branch starts at the accepted Task 4 main merge. It contains frontend presentation, regression coverage, documentation and controlled test screenshots only. No backend, API contract, model, fusion, dataset or migration changes were made. Task 5 has not started; no merge to main is authorized for this refinement.
+**Task 4 URL Intelligence COMPLETE and merged to main at `386e4b7`. Post-Task 4 UI/UX refinement COMPLETE on `codex/ui-ux-result-refinement` and authorized for closure merge.**
+The UI branch starts at the accepted Task 4 main merge. It contains frontend presentation, regression coverage, documentation and controlled test screenshots only. No backend, API contract, model, fusion, dataset or migration changes were made. The completed branch was reverified before merge; Task 5 has not yet started at this closure checkpoint.
 
 ## UI/UX refinement verification
 
@@ -75,4 +75,4 @@ The original Message model remains mainly English historical SMS with the docume
 
 ## Current review boundary
 
-Task 4's accepted [report](docs/TASK_4_REPORT.md), [URL methodology](docs/URL_INTELLIGENCE.md), [dataset provenance](docs/URL_DATASETS.md), and [model evaluation](docs/URL_MODEL_EVALUATION.md) remain valid. Stop after committing, pushing and verifying the UI feature branch. Do not merge it, start Task 5, expose the backend publicly or provision cloud services.
+Task 4's accepted [report](docs/TASK_4_REPORT.md), [URL methodology](docs/URL_INTELLIGENCE.md), [dataset provenance](docs/URL_DATASETS.md), and [model evaluation](docs/URL_MODEL_EVALUATION.md) remain valid. The authoritative Task 5 handoff authorizes committing and pushing this closure record, merging the completed UI branch into `main`, then creating `task-5-auth-production`. Task 5 must remain on that branch and must not be merged automatically.

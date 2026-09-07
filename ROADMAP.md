@@ -23,4 +23,4 @@ Audited 2026-09-07. Status is evidence, not authorization to continue automatica
 
 ## Closure boundary
 
-Task 4 URL Intelligence is COMPLETE and merged to main at `386e4b7`; preserve its branch and [evidence](docs/TASK_4_REPORT.md). The post-Task 4 UI/UX refinement is COMPLETE on `codex/ui-ux-result-refinement` for review, with no main merge authorized. See [UI/UX refinement](docs/UI_UX_REFINEMENT.md). Task 5 Phone Intelligence has not started and must not begin automatically.
+Task 4 URL Intelligence is COMPLETE and merged to main at `386e4b7`; preserve its branch and [evidence](docs/TASK_4_REPORT.md). The post-Task 4 UI/UX refinement is COMPLETE on `codex/ui-ux-result-refinement` and authorized for its closure merge. See [UI/UX refinement](docs/UI_UX_REFINEMENT.md). Task 5 is Authentication, User Ownership, Privacy Controls and Production Deployment; Phone and QR Intelligence remain future work and must not begin.
