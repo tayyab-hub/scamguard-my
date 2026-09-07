@@ -1,5 +1,13 @@
 import { useEffect } from 'react'
-import { ArrowUpRight, ChevronRight, CircleHelp, Globe2, LayoutDashboard, ScanLine, Shield } from 'lucide-react'
+import {
+  ArrowUpRight,
+  ChevronRight,
+  CircleHelp,
+  Globe2,
+  LayoutDashboard,
+  ScanLine,
+  Shield,
+} from 'lucide-react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { ApiStatus } from '../components/ApiStatus'
 import { Brand } from '../components/Brand'
@@ -23,7 +31,7 @@ export function AppShell() {
       <a href="#main-content" className="skip-link">
         Skip to content
       </a>
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-[260px] flex-col overflow-y-auto border-r border-line bg-sidebar px-5 py-7 lg:flex">
+      <aside className="workspace-sidebar fixed inset-y-0 left-0 z-30 hidden w-[260px] flex-col overflow-y-auto border-r border-line bg-sidebar px-5 py-7 lg:flex">
         <Brand />
         <div className="mb-7 mt-10 border-y border-line py-4">
           <p className="eyebrow">SECURITY / WORKSPACE</p>
@@ -66,7 +74,7 @@ export function AppShell() {
         </div>
       </aside>
 
-      <div className="lg:pl-[260px]">
+      <div className="workspace-canvas lg:pl-[260px]">
         <header className="flex min-h-[78px] items-center justify-between gap-4 border-b border-line bg-surface/70 px-5 sm:px-8 xl:px-10">
           <div className="lg:hidden">
             <Brand />

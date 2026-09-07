@@ -159,3 +159,11 @@ No schema change is required: existing neutral result, audit/version/component J
 ## D38 — Task 4 accepted closure and main merge (2026-09-07)
 
 Task 4 URL Intelligence is COMPLETE and manually accepted by the user. Closure, publishing the final feature-branch commit, a no-fast-forward merge into main and pushing main are explicitly authorized, superseding D32's review-only merge boundary. Closure changes documentation only; retain the existing verification evidence without rerunning Task 4 tests. Preserve the Task 4 branch and history, never force-push, and stop after verifying the merge and remote state. Task 5 has not started. No backend deployment is authorized; Git push success alone does not establish Vercel deployment success.
+
+## D39 — Post-Task 4 UI/UX and advisory score presentation (2026-09-07)
+
+The user authorized a frontend refinement on `codex/ui-ux-result-refinement`, logical commits and feature-branch push, with no main merge. Preserve core intelligence and scope. Reuse the stored Message fusion score, scaled to 0–100; show URL final categorical risk as a transparent equally spaced ordinal index, never an invented empirical risk measurement. Confidence stays separate, URL API score remains null, insufficient evidence remains unscored, and modality scores are explicitly not comparable. Sort URL signals by existing severity/family; retain Message source order without invented contribution weights. Shared semantic result components, modest paper-surface polish and CSS motion preserve accessibility and live reduced-motion support. No backend change, Task 5, Phone/QR intelligence, authentication or deployment is authorized. Details and limitations are in docs/UI_UX_REFINEMENT.md.
+
+## D40 — UI refinement closure and Task 5 authorization (2026-09-07)
+
+The authoritative Task 5 handoff accepts the completed post-Task 4 UI/UX refinement for closure after re-verification and authorizes its no-fast-forward merge into `main`, superseding D39's earlier review-only boundary. After updating and pushing `main`, create `task-5-auth-production` and keep all authentication, ownership, privacy and production-preparation work there. Do not merge Task 5 automatically. Phone Intelligence, QR Intelligence, community reporting and adaptive learning remain explicitly out of scope.

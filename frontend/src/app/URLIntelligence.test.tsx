@@ -1,10 +1,11 @@
-import { fireEvent, screen } from '@testing-library/react'
+import { fireEvent, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import { renderApp } from '../test/render'
 import { healthFixture } from '../test/fixtures'
 import { submissionError } from '../lib/submission'
 import type { URLAssessment } from '../lib/api'
+import { orderedEvidence, riskScorePresentation, topSignals } from '../lib/resultPresentation'
 
 const assessment: URLAssessment = {
   risk_level: 'CAUTION',
@@ -96,7 +97,29 @@ describe('URL intelligence results', () => {
     await submit()
     expect(await screen.findByText('Analysis completed.')).toBeInTheDocument()
     expect(screen.getByText(label)).toBeInTheDocument()
-    expect(screen.getByText('IP address host')).toBeInTheDocument()
+    if (risk === 'INSUFFICIENT_EVIDENCE') {
+      expect(screen.queryByRole('meter')).not.toBeInTheDocument()
+      expect(screen.getByText('Not enough evidence to score.')).toBeInTheDocument()
+    } else {
+      const expected = { LOW: 0, CAUTION: 33, ELEVATED: 67, HIGH: 100 }[risk]
+      expect(screen.getByRole('meter', { name: 'RISK SCORE' })).toHaveAttribute(
+        'aria-valuenow',
+        String(expected),
+      )
+      expect(screen.getByRole('meter')).toHaveAttribute(
+        'aria-valuetext',
+        expect.stringContaining('not a probability'),
+      )
+    }
+    await userEvent.click(screen.getByText('How to read this score'))
+    expect(
+      screen.getByText(/0 does not mean safe; 100 does not mean certain fraud/),
+    ).toBeInTheDocument()
+    expect(
+      within(screen.getByRole('region', { name: 'Detected evidence' })).getByText(
+        'IP address host',
+      ),
+    ).toBeInTheDocument()
     expect(screen.getByText('Verify the destination independently.')).toBeInTheDocument()
     await userEvent.click(screen.getByText('Components and limitations'))
     expect(screen.getByText('Optional reputation review')).toBeInTheDocument()
@@ -139,5 +162,56 @@ describe('URL intelligence results', () => {
     ]) {
       expect(submissionError('URL', value)).not.toBeNull()
     }
+  })
+  it('orders URL severity stably, groups related top signals and never alters the stored assessment', () => {
+    const weak = assessment.evidence[0]!
+    const meaningful = {
+      ...weak,
+      category: 'CREDENTIALS',
+      family: 'credentials',
+      severity: 'MEANINGFUL' as const,
+    }
+    const related = { ...meaningful, category: 'AT_SIGN' }
+    const context = { ...weak, category: 'PUNYCODE', severity: 'CONTEXT' as const }
+    const value = { ...assessment, evidence: [context, weak, meaningful, related] }
+    const before = structuredClone(value)
+    expect(orderedEvidence(value).map((item) => item.category)).toEqual([
+      'CREDENTIALS',
+      'AT_SIGN',
+      'IP_ADDRESS_HOST',
+      'PUNYCODE',
+    ])
+    expect(topSignals(value).map((item) => item.category)).toEqual([
+      'CREDENTIALS',
+      'IP_ADDRESS_HOST',
+    ])
+    expect(riskScorePresentation(value).value).toBe(33)
+    expect(value).toEqual(before)
+    expect(value.risk_score).toBeNull()
+  })
+  it('shows unavailable confidence when the URL model is missing without suppressing rule risk', async () => {
+    setup(async () =>
+      Response.json({
+        ...base,
+        status: 'COMPLETED',
+        assessment: {
+          ...assessment,
+          confidence_score: null,
+          confidence_level: 'LOW',
+          components: {
+            ...assessment.components,
+            url_model: {
+              status: 'UNAVAILABLE',
+              version: null,
+              class_estimate: null,
+              confidence: null,
+            },
+          },
+        },
+      }),
+    )
+    await submit()
+    expect(await screen.findByText('Confidence: unavailable')).toBeInTheDocument()
+    expect(screen.getByRole('meter')).toHaveAttribute('aria-valuenow', '33')
   })
 })

@@ -11,9 +11,10 @@ async function capture(page: Page, info: TestInfo, name: string) {
     animations: 'disabled',
   })
   if (info.project.name === 'mobile') {
-    const target = name === 'recorded'
-      ? page.getByRole('heading', { name: 'Analysis result' })
-      : page.getByRole('heading', { name: 'Submission history' })
+    const target =
+      name === 'recorded'
+        ? page.getByRole('heading', { name: 'Analysis result' })
+        : page.getByRole('heading', { name: 'Submission history' })
     await target.evaluate((element) => element.scrollIntoView({ block: 'start' }))
   }
   const bytes = await page.screenshot({
@@ -51,7 +52,9 @@ test('real PostgreSQL: Message and URL results persist through navigation and re
   await page.getByRole('button', { name: 'Analyse content' }).click()
   await expect(page.getByText('Analysis completed.')).toBeVisible()
   await expect(page.getByText('High risk')).toBeVisible()
-  await expect(page.getByText('Credential request')).toBeVisible()
+  await expect(
+    page.getByRole('region', { name: 'Detected evidence' }).getByText('Credential request'),
+  ).toBeVisible()
   await capture(page, testInfo, 'recorded')
   const nav = page.getByRole('navigation', {
     name: testInfo.project.name === 'mobile' ? 'Mobile navigation' : 'Desktop navigation',

@@ -12,7 +12,7 @@ export function PageHeading({
   action?: ReactNode
 }) {
   return (
-    <div className="mb-8 flex flex-wrap items-end justify-between gap-5">
+    <div className="page-heading mb-8 flex flex-wrap items-end justify-between gap-5">
       <div>
         <p className="eyebrow motion-fade mb-3 flex items-center gap-2">
           <span aria-hidden="true" className="eyebrow-rule h-px w-5 bg-accent" />

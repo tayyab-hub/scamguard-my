@@ -3,7 +3,7 @@
 SCAMGUARD is a general **Multi-Modal Scam Detection & Reporting Web Application**. Its approved
 visual identity is **Forensic Intelligence**: warm light ivory, charcoal, terracotta and olive with
 restrained editorial motion. The repository has completed Task 1 Foundation, Task 2 Core Platform
-and Task 3 Message Intelligence; Task 4 URL Intelligence is COMPLETE and manually accepted for main. Never infer functionality from
+and Task 3 Message Intelligence; Task 4 URL Intelligence is COMPLETE and merged to main at `386e4b7`. The completed post-Task 4 UI/UX refinement is on `codex/ui-ux-result-refinement` for its authorized closure merge. Never infer functionality from
 a planned UI control, roadmap line, screenshot or old conversation.
 
 ## Required reading order
@@ -61,6 +61,7 @@ Current source is authoritative when historical wording conflicts.
 - Risk and confidence are separate. Use `LOW`, `CAUTION`, `ELEVATED`, `HIGH` and
   `INSUFFICIENT_EVIDENCE`; never present an absolute SAFE/SCAM verdict or certainty unsupported by
   evidence.
+- Result presentation uses `risk-presentation-v1`: scale the stored Message score to points out of 100; map URL categories to the documented ordinal index 0/33/67/100. These methods are advisory and not comparable across modalities. Never infer within-category precision or a fraud probability. Preserve missing scores, separate confidence and the stored categorical decision. See `docs/UI_UX_REFINEMENT.md`.
 - Adaptive learning remains unimplemented. Community input may never directly retrain or promote a
   model. Future learning requires moderation, provenance, offline evaluation, explicit promotion,
   rollback and audit history.
@@ -87,7 +88,7 @@ Current source is authoritative when historical wording conflicts.
   commits, discard user work, expose ignored secrets, or alter the configured remote casually.
 - Keep `node_modules`, `.venv`, `dist`, caches, coverage, logs, `.local`, test output and secrets
   ignored. Dataset source and reviewed model artifacts are intentional versioned research assets.
-- Task 2 and Task 3 are merged to `main`. Task 4 is COMPLETE and manually accepted; its closure, no-fast-forward merge into `main` and main push are explicitly authorized on 2026-09-07. Retain `task-4-url-intelligence` and prior branches/history. Task 5 is not started and is not authorized.
+- Tasks 2, 3 and 4 are merged to `main` (Task 4 merge `386e4b7`). The completed frontend UI/UX refinement is authorized for a no-fast-forward merge after verification. Then create and push `task-5-auth-production` from updated `main`; keep all Task 5 work there and do not merge Task 5 automatically. Retain prior branches/history. Phone/QR intelligence, community reporting and adaptive learning remain out of scope.
 
 ## Definition of done and completion procedure
 

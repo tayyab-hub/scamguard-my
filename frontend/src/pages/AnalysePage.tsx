@@ -110,7 +110,7 @@ export function AnalysePage() {
               </p>
             </div>
           </div>
-          <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_320px]">
+          <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,0.95fr)]">
             <section
               className="panel motion-enter motion-delay-1 min-w-0 overflow-hidden"
               aria-labelledby="content-heading"
@@ -241,7 +241,7 @@ export function AnalysePage() {
                           <p
                             id="content-error"
                             role="alert"
-                            className="-mt-3 mb-6 text-xs text-danger"
+                            className="validation-feedback -mt-3 mb-6 text-xs text-danger"
                           >
                             {validation}
                           </p>
@@ -263,13 +263,16 @@ export function AnalysePage() {
                     type="submit"
                     className="button-primary"
                     disabled={!available || Boolean(validation) || submission.isPending}
+                    aria-busy={submission.isPending}
                     aria-describedby="unavailable-reason"
                   >
                     <ScanLine size={16} aria-hidden="true" />
                     {submission.isPending
                       ? inputType === 'MESSAGE' && canAnalyseMessage
                         ? 'Analysing message…'
-                        : inputType === 'URL' && canAnalyseURL ? 'Analysing URL…' : 'Recording submission…'
+                        : inputType === 'URL' && canAnalyseURL
+                          ? 'Analysing URL…'
+                          : 'Recording submission…'
                       : action.label}
                     <ArrowRight size={15} className="motion-arrow" aria-hidden="true" />
                   </button>
@@ -278,11 +281,26 @@ export function AnalysePage() {
                   {reason}
                 </p>
                 {submission.isPending && (
-                  <p role="status" className="mt-4 text-sm text-muted">
+                  <p
+                    role="status"
+                    className="submission-pending loading-scan mt-4 text-sm text-muted"
+                  >
                     {inputType === 'MESSAGE' && canAnalyseMessage
                       ? 'Running local message assessment…'
-                      : inputType === 'URL' && canAnalyseURL ? 'Running local URL assessment…' : 'Recording your submission…'}
+                      : inputType === 'URL' && canAnalyseURL
+                        ? 'Running local URL assessment…'
+                        : 'Recording your submission…'}
                   </p>
+                )}
+                {submission.data?.assessment && (
+                  <a
+                    href="#result-heading"
+                    className="action-link mt-4 inline-flex min-h-11 items-center gap-2 rounded text-xs font-semibold text-accent"
+                    onClick={() => document.getElementById('result-heading')?.focus()}
+                  >
+                    View assessment{' '}
+                    <ArrowRight size={15} className="motion-arrow" aria-hidden="true" />
+                  </a>
                 )}
                 {submission.isError && (
                   <div
@@ -302,29 +320,31 @@ export function AnalysePage() {
                 )}
               </form>
             </section>
-            <aside className="motion-enter motion-delay-2 space-y-5">
+            <aside className="motion-enter motion-delay-2 min-w-0 space-y-5">
               <section className="panel overflow-hidden" aria-labelledby="result-heading">
                 <div className="section-heading">
                   <span className="step-number">02</span>
-                  <h2 id="result-heading" className="text-sm font-semibold">
+                  <h2 id="result-heading" tabIndex={-1} className="text-sm font-semibold">
                     Analysis result
                   </h2>
                 </div>
                 {submission.isSuccess && (
-                  <div role="status" className="border-b border-line p-5 text-sm">
+                  <div
+                    role="status"
+                    className="submission-confirmation border-b border-line px-5 py-3 text-sm"
+                  >
                     <p className="font-semibold text-accent">
                       {submission.data.assessment ? 'Analysis completed.' : 'Submission recorded.'}
                     </p>
-                    <p className="mt-2 text-xs text-muted">
+                    <p className="mt-1 text-[11px] text-muted">
                       {submission.data.input_type === 'MESSAGE' ? 'Message' : 'URL'} ·{' '}
                       {submission.data.status}
                     </p>
-                    <p className="mt-2 text-xs text-muted">
-                      {new Date(submission.data.created_at).toLocaleString()}
-                    </p>
-                    <p className="mt-2 break-all font-mono text-[11px] text-muted">
-                      {submission.data.id}
-                    </p>
+                    {!submission.data.assessment && (
+                      <p className="mt-2 break-all font-mono text-[11px] text-muted">
+                        {submission.data.id}
+                      </p>
+                    )}
                   </div>
                 )}
                 {submission.data?.failure_code && (
@@ -333,8 +353,18 @@ export function AnalysePage() {
                     {submission.data.failure_code}
                   </p>
                 )}
-                {submission.data?.assessment ? (
-                  <AssessmentResult assessment={submission.data.assessment} />
+                {submission.isPending ? (
+                  <div aria-hidden="true" className="p-5">
+                    <div className="loading-scan h-40 rounded-lg border border-line bg-surface-raised" />
+                    <div className="mt-4 h-3 w-2/3 rounded bg-line" />
+                    <div className="mt-3 h-3 w-1/2 rounded bg-line" />
+                  </div>
+                ) : submission.data?.assessment ? (
+                  <AssessmentResult
+                    key={submission.data.id}
+                    assessment={submission.data.assessment}
+                    analysisId={submission.data.id}
+                  />
                 ) : (
                   <EmptyState icon={ShieldCheck} title="No assessment yet">
                     {submission.isSuccess && submission.data.input_type === 'URL'
