@@ -7,8 +7,7 @@ A general scam-awareness workspace with the approved warm light **Forensic Intel
 **Task 1 Foundation, Task 2 Core Platform and Task 3 Message Intelligence are complete and merged
 to `main`.** MESSAGE submissions run
 a genuine local three-class model, deterministic evidence rules and conservative fusion, then store
-an explainable result. Optional backend contextual AI is disabled by default. URL stays
-submission-only; Phone and QR remain local UI only. See [Message Intelligence](docs/MESSAGE_INTELLIGENCE.md),
+an explainable result. Optional backend contextual AI is disabled by default. **Task 4 URL Intelligence is implemented on `task-4-url-intelligence` for review, without merging to main.** URL submissions now receive local model, structural evidence and conservative risk assessments without fetching destinations. Phone and QR remain local UI only. See [Message Intelligence](docs/MESSAGE_INTELLIGENCE.md),
 [Datasets](docs/DATASETS.md) and [Model Evaluation](docs/MODEL_EVALUATION.md).
 
 The existing frontend is deployed at https://scamguard-my.vercel.app/ and connected to GitHub/main.
@@ -90,12 +89,13 @@ destroys data and is for disposable test databases only.
 - An available private backend accepts `POST /api/v1/analyses`. MESSAGE persists intake, runs local
   assessment synchronously and returns `COMPLETED` with risk, separate confidence, evidence, actions,
   component versions and limitations. Context-poor messages can return
-  `INSUFFICIENT_EVIDENCE`. URL returns `SUBMITTED` without assessment.
+  `INSUFFICIENT_EVIDENCE`. URL uses its own offline intelligence pipeline and persists a completed assessment; URL risk has no percentage score.
 - The local TF-IDF Logistic Regression model keeps LEGITIMATE/SPAM/SCAM distinct. It achieved
   untouched-test macro F1 0.8952 and weighted F1 0.9690 on the documented split; these are
   dataset-specific measurements, not a promise for live messages.
+- The local URL random forest achieved held-out macro F1 0.984698, with substantial source homepage/HTTPS bias. ML alone cannot produce elevated/high risk. Runtime parsing uses an offline public-suffix snapshot, and embedded userinfo is removed before storage. No live reputation adapter is configured.
 - Real total/latest/recent data, paginated history/detail and a real flagged count for completed
-  ELEVATED/HIGH messages. Empty database means measured zero; unavailable means unavailable.
+  ELEVATED/HIGH Message or URL assessments. Empty database means measured zero; unavailable means unavailable.
 - Phone accepts natural international drafts but cannot submit. QR accepts local filename/size selection for one non-empty PNG/JPEG/WEBP up to 5 MiB; no image reading, upload, storage, decoding or camera access. Unsubmitted drafts/file selection clear on navigation or reload.
 - Help search and feedback preparation run locally. `VITE_SUPPORT_EMAIL` is optional and public; when blank, the page truthfully states that online feedback is being prepared. A configured value opens the user's email application and never claims a message was sent.
 
@@ -132,5 +132,4 @@ the project. See [DEPLOYMENT](docs/DEPLOYMENT.md).
 
 [TESTING](docs/TESTING.md) contains exact frontend/backend/real PostgreSQL/browser commands. [PROGRESS](PROGRESS.md) records actual results and limitations. Generated dependencies, builds, local PostgreSQL data, `.env` and test outputs are ignored; lockfiles, source, migrations, tests and intentional documentation screenshots stay tracked.
 
-Task 3 is closed. The recommended next task is **Task 4: non-fetching URL Intelligence
-with lexical/structural evidence and no automatic browsing**. Do not start it automatically.
+Task 4 is implemented and verified for review on its feature branch. See [URL methodology](docs/URL_INTELLIGENCE.md), [URL data](docs/URL_DATASETS.md), [URL evaluation](docs/URL_MODEL_EVALUATION.md) and [Task 4 report](docs/TASK_4_REPORT.md). Do not merge Task 4 or begin Task 5 automatically.

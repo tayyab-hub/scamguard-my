@@ -131,3 +131,27 @@ Task 3 passed its recorded local, database, migration, browser and manual verifi
 published feature history is accepted for a no-fast-forward merge into `main`. The optional external
 AI adapter remains disabled by default and has not been live-provider verified; no paid request was
 made. The merge does not authorize public backend deployment or Task 4 implementation.
+
+## D32 — Task 4 offline URL intelligence (2026-09-07)
+
+Task 4 is explicitly authorized on `task-4-url-intelligence`, based on remote-verified main at `7625a6f`. Preserve Message/Phone/QR boundaries and do not merge or begin Task 5. URL analysis is string-only: no DNS, HTTP GET/HEAD, webpage rendering, redirects, files, browser navigation or arbitrary-port contact. This supersedes D22's URL intake-only behavior. Future retrieval requires separately reviewed SSRF isolation and strict DNS/address/redirect/resource controls.
+
+## D33 — URL normalization, suffixes and privacy
+
+Centralize strict parsing in the URL domain. Pin tldextract 5.3.1 and its bundled snapshot with downloads/cache disabled and private suffixes included. Use IDNA/UTS46, preserve path/query escapes and a credential-redacted original, exclude fragments/userinfo from model input while retaining corresponding evidence, and remove userinfo before the first database write. General path/query secret anonymization is not claimed. No destination links are clickable.
+
+## D34 — Licensed URL-only training and honest bias
+
+Use the UCI PhiUSIIL CC BY 4.0 archive with source checksum, attribution and URL/label only. Validate, remove normalized duplicates/conflicts before splitting, and hold registrable-domain groups within one partition. Fixed seed 20260907; validation selects among three fixed classical candidates. The selected 120-tree random forest exports checksum-verified JSON as url_ml_v1. Domain-held-out macro F1 is 0.984698, but all legitimate training URLs are HTTPS homepages; source bias and residual cross-domain campaign overlap prohibit broad real-world accuracy claims. No webpage-derived or supplied reputation/similarity feature is used.
+
+## D35 — URL-specific conservative fusion
+
+Version parser/features/model/rules/fusion independently. url_fusion_v1 is an explicit categorical decision table, with no invented scam percentage. ML alone and accumulated weak evidence are capped at Caution. Related indicators count once by family; elevated/high requires meaningful corroboration or a validated attributed reputation signal. HTTPS never proves legitimacy. A missing/corrupt model is explicitly unavailable; rules still run, and a no-indicator case yields insufficient evidence.
+
+## D36 — Reputation protocol without a live adapter
+
+An injectable validated reputation interface is useful for testing future integration. Default DISABLED; no provider/key/network adapter exists, and no live request was made. Mocked success, timeout, error and invalid output preserve local results. Future fixed-endpoint backend adapters require strict transport timeouts, validated output, environment-only keys and deliberate privacy authorization. Historical retrieval never repeats analysis/provider work.
+
+## D37 — Reuse neutral Task 3 result storage
+
+No schema change is required: existing neutral result, audit/version/component JSON and completion fields hold URL results. Keep Alembic 0001 and 0002 byte-for-byte unchanged. URL rows use their own component versions; Message rows/metadata remain intact. New URL API and frontend schemas distinguish the two modalities, and URL details omit percentage risk displays. Package the URL JSON artifact for installed-backend deployments; URL_MODEL_PATH is an optional operator override. Local launchers remain development-only and the unauthenticated backend stays private.

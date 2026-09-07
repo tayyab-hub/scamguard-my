@@ -135,3 +135,13 @@ A later suitable Python host must supply DATABASE_URL, APP_ENV, PORT and exact C
 The existing Vercel origin can be allowlisted as `["https://scamguard-my.vercel.app"]` after that security review; additional branch origins must be explicitly reviewed, not wildcarded. GET and POST preflight are supported without credentials. Set the reviewed HTTPS API base including /api/v1 as VITE_API_BASE_URL and rebuild. Never expose DATABASE_URL or backend secrets through browser variables. Do not automatically configure a backend host, change the domain, or merge the branch.
 
 Task 2 publication verification (2026-09-04): GitHub accepted the new task-2-core-platform branch, without changing main. Unauthenticated deployment metadata returned HTTP 404; no branch preview URL or remote CI result is independently confirmed. Inspect the connected GitHub/Vercel accounts before review/merge. This does not imply deployment failure.
+
+## Task 4 URL deployment additions (2026-09-07)
+
+Task 4 is reviewed only on `task-4-url-intelligence`; main still contains the Task 3 merge. No Task 4 merge, backend deployment, cloud provisioning or paid provider call is part of this change. Existing Vercel frontend settings remain unchanged. Any automatically generated branch preview is not proof of a deployed API or remote CI success.
+
+The URL model is bundled as non-executable JSON (`url_ml_v1`) and checksum-verified before use. It defaults to the module's artifact directory, independent of current working directory. Optional URL_MODEL_PATH can point to an operator-managed artifact with the expected checksum; relative overrides resolve against the checkout root. tldextract 5.3.1 includes its offline suffix snapshot; parsing does not need outbound connectivity, a writable home cache or a reputation key. A missing/corrupt model is reported unavailable while local evidence can still be assessed.
+
+No database revision is added: apply existing Alembic head `0002_message_intelligence`. No historical migration is modified. The backend remains configurable through DATABASE_URL. Install locked dependencies normally; training alone needs the `ml` extra. No Docker workflow was added for Task 4. Existing native PostgreSQL was used for verification.
+
+Local Start/Stop is development-only. Final production must run independently of a developer laptop and requires the previously documented access/authentication, privacy and abuse gates before public intake. Never deploy the current unauthenticated shared backend publicly. Reputation secrets, if a future reviewed adapter is implemented, belong only in backend environment settings, never VITE variables.
