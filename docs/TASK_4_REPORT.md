@@ -1,5 +1,7 @@
 # Task 4 final verification report
 
+Closure update (2026-09-07): **Task 4 COMPLETE and manually accepted.** The user explicitly authorized closure, a no-fast-forward merge to main and main push. This supersedes the review-only merge boundary in the historical verification record below. Closure edits documentation only; tests are not rerun. Retain the Task 4 branch; Task 5 has not started.
+
 Verified 2026-09-07. URL Intelligence is ready for supervisor-style review on `task-4-url-intelligence`. Task 4 has not been merged. Task 5 has not started. The unauthenticated backend remains private.
 
 ## Git / start

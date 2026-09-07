@@ -8,7 +8,7 @@ Audited 2026-09-07. Status is evidence, not authorization to continue automatica
 | 2 | Core Platform | ✅ COMPLETE | PostgreSQL/Alembic, Message/URL intake, detail/history, real analytics and private development controls; merged to main at `425aab0`. |
 | 3 | Text Intelligence | ✅ COMPLETE | Three-class local model, provenance, held-out evaluation, rules, optional fail-safe AI, conservative fusion, persistence/API/UI and full regression gates passed and were accepted into main. |
 | 4 | Explainability | ✅ COMPLETE for Message and URL | Message/URL results show grounded snippets, actions, components, versions, uncertainty and limitations. Cross-modal explainability remains future work. |
-| 5 | URL Intelligence (Task 4) | ✅ COMPLETE | Offline parser, licensed local ML, explainable rules, conservative fusion, optional provider boundary and persisted results; verified on the Task 4 review branch. |
+| 5 | URL Intelligence (Task 4) | ✅ COMPLETE | Offline parser, licensed local ML, explainable rules, conservative fusion, optional provider boundary and persisted results; verified and manually accepted for main. |
 | 6 | Phone Intelligence | ⚪ NOT STARTED | UI complete only; normalization, report/reputation data and evidence are absent. |
 | 7 | Screenshot Intelligence | ⚪ NOT STARTED | No upload, OCR or image processing. |
 | 8 | QR Intelligence | ⚪ NOT STARTED | UI/local file metadata only; no decode, URL/payment routing or camera. |
@@ -21,6 +21,6 @@ Audited 2026-09-07. Status is evidence, not authorization to continue automatica
 | 15 | Security & Privacy | 🟡 IN PROGRESS | Baseline controls and optional-AI redaction exist; public access/auth/ownership/consent/retention/encryption/rate limits remain. |
 | 16 | Final Evaluation | ⚪ NOT STARTED | Task 3 held-out evaluation is module evidence, not final product evaluation. |
 
-## Review boundary
+## Closure boundary
 
-Task 4 URL Intelligence is complete on `task-4-url-intelligence`. Main still ends at the Task 3 merge. Review [Task 4 evidence](docs/TASK_4_REPORT.md) manually before any separate merge authorization. Task 5 Phone Intelligence has not started and must not begin automatically.
+Task 4 URL Intelligence is COMPLETE and manually accepted. Its closure, no-fast-forward merge from `task-4-url-intelligence` to main and push are explicitly authorized on 2026-09-07. Preserve the feature branch and [Task 4 evidence](docs/TASK_4_REPORT.md). Task 5 Phone Intelligence has not started and must not begin automatically.

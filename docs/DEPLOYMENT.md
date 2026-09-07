@@ -138,7 +138,7 @@ Task 2 publication verification (2026-09-04): GitHub accepted the new task-2-cor
 
 ## Task 4 URL deployment additions (2026-09-07)
 
-Task 4 is reviewed only on `task-4-url-intelligence`; main still contains the Task 3 merge. No Task 4 merge, backend deployment, cloud provisioning or paid provider call is part of this change. Existing Vercel frontend settings remain unchanged. Any automatically generated branch preview is not proof of a deployed API or remote CI success.
+Task 4 is COMPLETE and manually accepted; closure, a no-fast-forward main merge and main push are explicitly authorized on 2026-09-07. Backend deployment, cloud provisioning and paid provider calls remain outside this closure. Existing Vercel frontend settings remain unchanged. A Git push or automatically generated preview is not proof of a successful deployment, a deployed API or remote CI success; verify deployment status separately.
 
 The URL model is bundled as non-executable JSON (`url_ml_v1`) and checksum-verified before use. It defaults to the module's artifact directory, independent of current working directory. Optional URL_MODEL_PATH can point to an operator-managed artifact with the expected checksum; relative overrides resolve against the checkout root. tldextract 5.3.1 includes its offline suffix snapshot; parsing does not need outbound connectivity, a writable home cache or a reputation key. A missing/corrupt model is reported unavailable while local evidence can still be assessed.
 

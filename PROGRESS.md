@@ -1,11 +1,11 @@
 # SCAMGUARD — current project state
 
-Updated **2026-09-07, Asia/Kuala_Lumpur** for Task 4 URL Intelligence verification.
+Updated **2026-09-07, Asia/Kuala_Lumpur** for Task 4 URL Intelligence closure and main merge authorization.
 
 ## Current milestone
 
-**Task 3 COMPLETE and merged to main. Task 4 URL Intelligence COMPLETE on its review branch.**
-Main was verified against GitHub at `7625a6f54b904532d5cd0273139d429ab1aadcb6` before work. The initially clean checkout was updated with `pull --ff-only`; `task-4-url-intelligence` was created and its upstream pushed. Task 4 must not be merged automatically. Task 5 has not started.
+**Task 3 COMPLETE and merged to main. Task 4 URL Intelligence COMPLETE and manually accepted for main.**
+Task 4 was based on remote-verified main at `7625a6f54b904532d5cd0273139d429ab1aadcb6`; implementation and verification were published on `task-4-url-intelligence`. The user explicitly authorized closure, a no-fast-forward main merge and main push on 2026-09-07, superseding the earlier review-only boundary. Retain the Task 4 branch. Task 5 has not started.
 
 ## Implemented capabilities
 
@@ -52,6 +52,6 @@ URL model `url_ml_v1` selected a 120-tree depth-12 random forest. Test phishing 
 
 The original Message model remains mainly English historical SMS with the documented class imbalance and calibration limitations. No paid external request was made and no private submission was used for training.
 
-## Review handoff
+## Accepted closure
 
-Read [Task 4 report](docs/TASK_4_REPORT.md), [URL methodology](docs/URL_INTELLIGENCE.md), [dataset provenance](docs/URL_DATASETS.md), [model evaluation](docs/URL_MODEL_EVALUATION.md), and [testing](docs/TESTING.md). Task 4 is ready for manual supervisor-style verification. Stop at this review boundary: do not merge Task 4, begin Phone Intelligence, expose the backend publicly or provision cloud services.
+Read [Task 4 report](docs/TASK_4_REPORT.md), [URL methodology](docs/URL_INTELLIGENCE.md), [dataset provenance](docs/URL_DATASETS.md), [model evaluation](docs/URL_MODEL_EVALUATION.md), and [testing](docs/TESTING.md). Manual acceptance is complete. Closure changes documentation only, so the recorded Task 4 tests are not rerun. Stop after the authorized merge, push and Git verification; do not begin Phone Intelligence, expose the backend publicly or provision cloud services. A main push alone is not evidence of a successful Vercel deployment.

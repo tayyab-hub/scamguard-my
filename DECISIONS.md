@@ -155,3 +155,7 @@ An injectable validated reputation interface is useful for testing future integr
 ## D37 — Reuse neutral Task 3 result storage
 
 No schema change is required: existing neutral result, audit/version/component JSON and completion fields hold URL results. Keep Alembic 0001 and 0002 byte-for-byte unchanged. URL rows use their own component versions; Message rows/metadata remain intact. New URL API and frontend schemas distinguish the two modalities, and URL details omit percentage risk displays. Package the URL JSON artifact for installed-backend deployments; URL_MODEL_PATH is an optional operator override. Local launchers remain development-only and the unauthenticated backend stays private.
+
+## D38 — Task 4 accepted closure and main merge (2026-09-07)
+
+Task 4 URL Intelligence is COMPLETE and manually accepted by the user. Closure, publishing the final feature-branch commit, a no-fast-forward merge into main and pushing main are explicitly authorized, superseding D32's review-only merge boundary. Closure changes documentation only; retain the existing verification evidence without rerunning Task 4 tests. Preserve the Task 4 branch and history, never force-push, and stop after verifying the merge and remote state. Task 5 has not started. No backend deployment is authorized; Git push success alone does not establish Vercel deployment success.

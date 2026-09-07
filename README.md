@@ -7,7 +7,7 @@ A general scam-awareness workspace with the approved warm light **Forensic Intel
 **Task 1 Foundation, Task 2 Core Platform and Task 3 Message Intelligence are complete and merged
 to `main`.** MESSAGE submissions run
 a genuine local three-class model, deterministic evidence rules and conservative fusion, then store
-an explainable result. Optional backend contextual AI is disabled by default. **Task 4 URL Intelligence is implemented on `task-4-url-intelligence` for review, without merging to main.** URL submissions now receive local model, structural evidence and conservative risk assessments without fetching destinations. Phone and QR remain local UI only. See [Message Intelligence](docs/MESSAGE_INTELLIGENCE.md),
+an explainable result. Optional backend contextual AI is disabled by default. **Task 4 URL Intelligence is COMPLETE and manually accepted for main.** URL submissions now receive local model, structural evidence and conservative risk assessments without fetching destinations. Phone and QR remain local UI only. See [Message Intelligence](docs/MESSAGE_INTELLIGENCE.md),
 [Datasets](docs/DATASETS.md) and [Model Evaluation](docs/MODEL_EVALUATION.md).
 
 The existing frontend is deployed at https://scamguard-my.vercel.app/ and connected to GitHub/main.
@@ -132,4 +132,4 @@ the project. See [DEPLOYMENT](docs/DEPLOYMENT.md).
 
 [TESTING](docs/TESTING.md) contains exact frontend/backend/real PostgreSQL/browser commands. [PROGRESS](PROGRESS.md) records actual results and limitations. Generated dependencies, builds, local PostgreSQL data, `.env` and test outputs are ignored; lockfiles, source, migrations, tests and intentional documentation screenshots stay tracked.
 
-Task 4 is implemented and verified for review on its feature branch. See [URL methodology](docs/URL_INTELLIGENCE.md), [URL data](docs/URL_DATASETS.md), [URL evaluation](docs/URL_MODEL_EVALUATION.md) and [Task 4 report](docs/TASK_4_REPORT.md). Do not merge Task 4 or begin Task 5 automatically.
+Task 4 is COMPLETE, verified and manually accepted; closure and a no-fast-forward main merge are explicitly authorized. See [URL methodology](docs/URL_INTELLIGENCE.md), [URL data](docs/URL_DATASETS.md), [URL evaluation](docs/URL_MODEL_EVALUATION.md) and [Task 4 report](docs/TASK_4_REPORT.md). Retain `task-4-url-intelligence`. Task 5 has not started and must not begin automatically.
