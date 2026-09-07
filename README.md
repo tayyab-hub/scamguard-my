@@ -7,7 +7,7 @@ A general scam-awareness workspace with the approved warm light **Forensic Intel
 **Task 1 Foundation, Task 2 Core Platform and Task 3 Message Intelligence are complete and merged
 to `main`.** MESSAGE submissions run
 a genuine local three-class model, deterministic evidence rules and conservative fusion, then store
-an explainable result. Optional backend contextual AI is disabled by default. **Task 4 URL Intelligence is COMPLETE and manually accepted for main.** URL submissions now receive local model, structural evidence and conservative risk assessments without fetching destinations. Phone and QR remain local UI only. See [Message Intelligence](docs/MESSAGE_INTELLIGENCE.md),
+an explainable result. Optional backend contextual AI is disabled by default. **Task 4 URL Intelligence is COMPLETE and merged to main.** URL submissions now receive local model, structural evidence and conservative risk assessments without fetching destinations. Phone and QR remain local UI only. See [Message Intelligence](docs/MESSAGE_INTELLIGENCE.md),
 [Datasets](docs/DATASETS.md) and [Model Evaluation](docs/MODEL_EVALUATION.md).
 
 The existing frontend is deployed at https://scamguard-my.vercel.app/ and connected to GitHub/main.
@@ -133,3 +133,9 @@ the project. See [DEPLOYMENT](docs/DEPLOYMENT.md).
 [TESTING](docs/TESTING.md) contains exact frontend/backend/real PostgreSQL/browser commands. [PROGRESS](PROGRESS.md) records actual results and limitations. Generated dependencies, builds, local PostgreSQL data, `.env` and test outputs are ignored; lockfiles, source, migrations, tests and intentional documentation screenshots stay tracked.
 
 Task 4 is COMPLETE, verified and manually accepted; closure and a no-fast-forward main merge are explicitly authorized. See [URL methodology](docs/URL_INTELLIGENCE.md), [URL data](docs/URL_DATASETS.md), [URL evaluation](docs/URL_MODEL_EVALUATION.md) and [Task 4 report](docs/TASK_4_REPORT.md). Retain `task-4-url-intelligence`. Task 5 has not started and must not begin automatically.
+
+## Post-Task 4 UI/UX refinement
+
+The frontend now shares result summary, risk meter, confidence, evidence, actions and metadata components across Message and URL, including history. Message shows its stored fusion score as points out of 100; URL shows an explicitly labelled ordinal category index (0/33/67/100). They are advisory, not probabilities or mutually comparable measurements. Confidence stays separate; missing evidence has no score. Read [UI/UX refinement](docs/UI_UX_REFINEMENT.md) for the exact mapping and limitations.
+
+Layered paper surfaces, refined navigation and panels, stronger result hierarchy, keyboard metadata, mobile result navigation and lightweight CSS motion preserve the forensic identity. Reduced-motion changes take effect immediately. This work is confined to `codex/ui-ux-result-refinement`; Task 4 is merged on main, Task 5 remains NOT STARTED, and no merge is authorized for this refinement.

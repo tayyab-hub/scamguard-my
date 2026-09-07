@@ -1,11 +1,32 @@
 # SCAMGUARD — current project state
 
-Updated **2026-09-07, Asia/Kuala_Lumpur** for Task 4 URL Intelligence closure and main merge authorization.
+Updated **2026-09-07, Asia/Kuala_Lumpur** for the post-Task 4 UI/UX refinement.
 
 ## Current milestone
 
-**Task 3 COMPLETE and merged to main. Task 4 URL Intelligence COMPLETE and manually accepted for main.**
-Task 4 was based on remote-verified main at `7625a6f54b904532d5cd0273139d429ab1aadcb6`; implementation and verification were published on `task-4-url-intelligence`. The user explicitly authorized closure, a no-fast-forward main merge and main push on 2026-09-07, superseding the earlier review-only boundary. Retain the Task 4 branch. Task 5 has not started.
+**Task 4 URL Intelligence COMPLETE and merged to main at `386e4b7`. Post-Task 4 UI/UX refinement COMPLETE on `codex/ui-ux-result-refinement` for review.**
+The UI branch starts at the accepted Task 4 main merge. It contains frontend presentation, regression coverage, documentation and controlled test screenshots only. No backend, API contract, model, fusion, dataset or migration changes were made. Task 5 has not started; no merge to main is authorized for this refinement.
+
+## UI/UX refinement verification
+
+Shared result heroes, labelled score meters, separate confidence, severity-aware evidence, action checklists and collapsible metadata are used by Message/URL submission and history. Paper surfaces, sidebar, headers, metric cards, validation/pending states and keyboard result navigation are refined. Overview accurately reports the API's available Message/URL modes. See [UI/UX refinement](docs/UI_UX_REFINEMENT.md) for exact score derivation and limitations.
+
+| Current check | Observed result |
+| --- | --- |
+| TypeScript / ESLint | PASS / PASS; zero lint warnings. |
+| Vitest | PASS: 73 tests in four files, including score/null/rounding, evidence ordering, unavailable confidence and advertised capabilities. |
+| Production build | PASS: 1,753 modules; JS 431.70 kB (129.84 kB gzip), CSS 41.08 kB (8.46 kB gzip). No dependency added. |
+| Foundation/motion/visual Playwright | PASS: 18 desktop/mobile tests, including semantic risk-colour contrast. |
+| Built offline preview | PASS: six desktop/mobile cases. |
+| Real PostgreSQL browser suite | PASS: six desktop/mobile cases covering Message/URL persistence, score presentation, keyboard metadata, real timestamps/IDs, insufficient evidence and live reduced motion. |
+| Browser-assisted visual review | PASS: Message, URL, Overview, Help, validation, held-real-response loading, long URL, keyboard metadata and 320px layouts; no console/page errors or off-origin requests. |
+| Backend tests | Not rerun: backend and API fields unchanged, as requested. Accepted Task 4 evidence below remains historical. |
+
+Message risk points are the stored fusion score ×100, rounded; URL uses an explicitly labelled ordinal index (Low 0, Caution 33, Elevated 67, High 100), with no within-category precision. Scores are advisory, not scam probabilities or comparable across modalities. Confidence retains its separate existing meaning. Missing evidence remains unscored.
+
+Initial checks caught one outdated exact metadata assertion and a new Help disclosure selector that included a decorative symbol. Assertions were corrected to match the intended rendered content; all affected checks then passed. Screenshot review also caught stale Overview capability copy, which was corrected and covered. Existing non-failing Zod/Rollup and Playwright colour-environment warnings remain. No remote CI/deployment result or human usability study is claimed.
+
+Current screenshots use the `docs/screenshots/ui-refinement-*` prefix and show controlled records from the disposable *_e2e database, not production users or analytics. Temporary manual-review servers are stopped after capture. Keyboard/focus and live reduced-motion behavior passed; 320/390/768/1024/1440 widths are covered by browser checks. These are not a comprehensive accessibility audit or physical-device/Safari validation.
 
 ## Implemented capabilities
 
@@ -23,7 +44,7 @@ Task 4 was based on remote-verified main at `7625a6f54b904532d5cd0273139d429ab1a
 | Auth/community/adaptive/campaign/extensions | NOT STARTED | No new implementation. |
 | Production/public backend | NOT READY | The unauthenticated shared backend must remain private; developer launchers are not production hosting. |
 
-## Verified checks
+## Accepted Task 4 verification (historical)
 
 | Check | Observed result |
 | --- | --- |
@@ -52,6 +73,6 @@ URL model `url_ml_v1` selected a 120-tree depth-12 random forest. Test phishing 
 
 The original Message model remains mainly English historical SMS with the documented class imbalance and calibration limitations. No paid external request was made and no private submission was used for training.
 
-## Accepted closure
+## Current review boundary
 
-Read [Task 4 report](docs/TASK_4_REPORT.md), [URL methodology](docs/URL_INTELLIGENCE.md), [dataset provenance](docs/URL_DATASETS.md), [model evaluation](docs/URL_MODEL_EVALUATION.md), and [testing](docs/TESTING.md). Manual acceptance is complete. Closure changes documentation only, so the recorded Task 4 tests are not rerun. Stop after the authorized merge, push and Git verification; do not begin Phone Intelligence, expose the backend publicly or provision cloud services. A main push alone is not evidence of a successful Vercel deployment.
+Task 4's accepted [report](docs/TASK_4_REPORT.md), [URL methodology](docs/URL_INTELLIGENCE.md), [dataset provenance](docs/URL_DATASETS.md), and [model evaluation](docs/URL_MODEL_EVALUATION.md) remain valid. Stop after committing, pushing and verifying the UI feature branch. Do not merge it, start Task 5, expose the backend publicly or provision cloud services.
