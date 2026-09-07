@@ -52,6 +52,7 @@ jobs:
           .venv/bin/python -m ruff format --check app tests migrations scripts
           .venv/bin/python -m pytest
           .venv/bin/python -m alembic upgrade head
+          .venv/bin/python scripts/verify_url_pipeline.py
       - name: Install frontend
         working-directory: frontend
         run: npm ci

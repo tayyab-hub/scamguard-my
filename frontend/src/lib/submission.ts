@@ -15,9 +15,9 @@ export function submissionError(type: SubmissionInput['input_type'], value: stri
       if (
         !['http:', 'https:'].includes(url.protocol) ||
         !url.hostname ||
-        url.username ||
-        url.password ||
         /[\s\\]/u.test(content) ||
+        /%(?![0-9a-f]{2})/i.test(content) ||
+        /[\p{Cc}\p{Cf}\p{Cs}]/u.test(value) ||
         [...content].some((char) => char.charCodeAt(0) < 32) ||
         !/^https?:\/\//i.test(content)
       ) {

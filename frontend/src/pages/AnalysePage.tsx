@@ -8,7 +8,7 @@ import { ApiError } from '../lib/api'
 import { submissionError } from '../lib/submission'
 import { AnalysisModeSelector } from '../components/analysis/AnalysisModeSelector'
 import { QrImageInput } from '../components/analysis/QrImageInput'
-import { MessageResult } from '../components/analysis/MessageResult'
+import { AssessmentResult } from '../components/analysis/URLResult'
 import {
   analysisActions,
   draftFields,
@@ -45,6 +45,10 @@ export function AnalysePage() {
     !capabilities.isError &&
     capabilities.data?.analysis_available === true &&
     capabilities.data.supported_inputs.includes('MESSAGE')
+  const canAnalyseURL =
+    !capabilities.isError &&
+    capabilities.data?.analysis_available === true &&
+    capabilities.data.supported_inputs.includes('URL')
   const available =
     supportedMode && canStore && capabilities.data?.submission_inputs.includes(inputType)
   const validation = supportedMode ? submissionError(inputType, content) : null
@@ -58,7 +62,9 @@ export function AnalysePage() {
           ? `${inputType === 'MESSAGE' ? 'Add a valid message' : 'Add a valid URL'} to enable submission.`
           : inputType === 'MESSAGE' && canAnalyseMessage
             ? 'Runs local message intelligence and records the result.'
-            : 'Records the URL only. URL intelligence is not enabled.'
+            : inputType === 'URL' && canAnalyseURL
+              ? 'Runs local URL intelligence without opening the website.'
+              : 'Records the submission only. Intelligence is unavailable.'
       : action.reason
   return (
     <>
@@ -88,15 +94,19 @@ export function AnalysePage() {
             <div>
               <p className="text-sm font-medium text-warning">
                 {canAnalyseMessage
-                  ? 'Local message intelligence is available.'
+                  ? canAnalyseURL
+                    ? 'Local Message and URL intelligence are available.'
+                    : 'Local message intelligence is available.'
                   : 'Analysis is not enabled in this release.'}
               </p>
               <p className="mt-1 text-xs leading-5 text-muted">
                 {canAnalyseMessage
-                  ? 'Messages receive a local evidence-based assessment. URLs are recorded without URL intelligence.'
+                  ? canAnalyseURL
+                    ? 'Messages and URLs receive local evidence-based assessments. Submitted websites are never opened or fetched.'
+                    : 'Messages receive a local evidence-based assessment. URL intelligence is unavailable.'
                   : canStore
                     ? 'Message and URL submissions can be recorded. No risk assessment is generated.'
-                  : 'You can explore this workspace. No content is submitted and no risk assessment is generated.'}
+                    : 'You can explore this workspace. No content is submitted and no risk assessment is generated.'}
               </p>
             </div>
           </div>
@@ -123,7 +133,11 @@ export function AnalysePage() {
                   submission.mutate(
                     { input_type: mode, content: content.trim() },
                     {
-                      onSuccess: () => setDrafts((previous) => ({ ...previous, [mode]: '' })),
+                      onSuccess: () => {
+                        setDrafts((previous) => ({ ...previous, [mode]: '' }))
+                        setTouched((previous) => ({ ...previous, [mode]: false }))
+                        setSubmitAttempted((previous) => ({ ...previous, [mode]: false }))
+                      },
                     },
                   )
                 }}
@@ -224,7 +238,11 @@ export function AnalysePage() {
                           </span>
                         </div>
                         {validationVisible && (
-                          <p id="content-error" role="alert" className="-mt-3 mb-6 text-xs text-danger">
+                          <p
+                            id="content-error"
+                            role="alert"
+                            className="-mt-3 mb-6 text-xs text-danger"
+                          >
                             {validation}
                           </p>
                         )}
@@ -251,7 +269,7 @@ export function AnalysePage() {
                     {submission.isPending
                       ? inputType === 'MESSAGE' && canAnalyseMessage
                         ? 'Analysing message…'
-                        : 'Recording submission…'
+                        : inputType === 'URL' && canAnalyseURL ? 'Analysing URL…' : 'Recording submission…'
                       : action.label}
                     <ArrowRight size={15} className="motion-arrow" aria-hidden="true" />
                   </button>
@@ -263,7 +281,7 @@ export function AnalysePage() {
                   <p role="status" className="mt-4 text-sm text-muted">
                     {inputType === 'MESSAGE' && canAnalyseMessage
                       ? 'Running local message assessment…'
-                      : 'Recording your submission…'}
+                      : inputType === 'URL' && canAnalyseURL ? 'Running local URL assessment…' : 'Recording your submission…'}
                   </p>
                 )}
                 {submission.isError && (
@@ -271,7 +289,9 @@ export function AnalysePage() {
                     role="alert"
                     className="mt-4 rounded-lg border border-warning/30 bg-warning-subtle p-4 text-sm text-warning"
                   >
-                    <p>We could not confirm your submission. Check your history before trying again.</p>
+                    <p>
+                      We could not confirm your submission. Check your history before trying again.
+                    </p>
                     <p className="mt-2 text-xs">{submission.error.message}</p>
                     {submission.error instanceof ApiError && submission.error.requestId && (
                       <p className="mt-2 break-all text-xs">
@@ -307,13 +327,19 @@ export function AnalysePage() {
                     </p>
                   </div>
                 )}
+                {submission.data?.failure_code && (
+                  <p role="alert" className="p-5 text-xs text-warning">
+                    The saved submission could not be assessed. Reference:{' '}
+                    {submission.data.failure_code}
+                  </p>
+                )}
                 {submission.data?.assessment ? (
-                  <MessageResult assessment={submission.data.assessment} />
+                  <AssessmentResult assessment={submission.data.assessment} />
                 ) : (
                   <EmptyState icon={ShieldCheck} title="No assessment yet">
                     {submission.isSuccess && submission.data.input_type === 'URL'
-                      ? 'The URL was recorded. URL intelligence is planned for a later milestone.'
-                      : 'Submit a message when intelligence is available. No safety verdict has been made.'}
+                      ? 'The URL was recorded without an assessment.'
+                      : 'Submit a message or URL when intelligence is available. No safety verdict has been made.'}
                   </EmptyState>
                 )}
               </section>

@@ -9,11 +9,13 @@ from app.api.analysis_schemas import (
     AnalysisDetail,
     AnalysisList,
     AnalysisSummary,
-    MessageAssessmentResponse,
+    AssessmentResponse,
 )
 from app.core.errors import ApiError
 from app.db.models import Analysis, AnalysisStatus, InputType
 from app.ml.engine import MessageIntelligenceEngine
+from app.url_intelligence.engine import URLIntelligenceEngine
+from app.url_intelligence.parsing import parse_url
 
 
 def summary(record: Analysis) -> AnalysisSummary:
@@ -34,7 +36,7 @@ def summary(record: Analysis) -> AnalysisSummary:
 def detail(record: Analysis) -> AnalysisDetail:
     assessment = None
     if record.status == AnalysisStatus.COMPLETED and record.completed_at is not None:
-        assessment = MessageAssessmentResponse(
+        assessment = AssessmentResponse(
             risk_level=record.risk_level,
             risk_score=record.risk_score,
             confidence_score=record.confidence_score,
@@ -59,18 +61,20 @@ def detail(record: Analysis) -> AnalysisDetail:
 
 
 def record_submission(
-    session: Session, data: AnalysisCreate, engine: MessageIntelligenceEngine
+    session: Session,
+    data: AnalysisCreate,
+    engine: MessageIntelligenceEngine,
+    url_engine: URLIntelligenceEngine,
 ) -> AnalysisDetail:
-    record = Analysis(input_type=data.input_type, content=data.content)
+    content = parse_url(data.content).original if data.input_type == InputType.URL else data.content
+    record = Analysis(input_type=data.input_type, content=content)
     session.add(record)
     session.commit()  # First durable boundary: the validated intake exists.
-    if data.input_type == InputType.URL:
-        return detail(record)
 
     record.status = AnalysisStatus.PROCESSING
     session.commit()
     try:
-        result = engine.analyse(data.content)
+        result = (url_engine if data.input_type == InputType.URL else engine).analyse(data.content)
         record.status = AnalysisStatus.COMPLETED
         record.risk_level = result.risk_level
         record.risk_score = result.risk_score
@@ -84,15 +88,16 @@ def record_submission(
         record.model_version = result.model_version
         record.rules_version = result.rules_version
         record.fusion_version = result.fusion_version
-        record.ai_provider = result.ai.provider
-        record.ai_model = result.ai.model
-        record.ai_status = result.ai.status
-        record.ai_contributed = result.components["external_ai"]["contributed"]
+        if data.input_type == InputType.MESSAGE:
+            record.ai_provider = result.ai.provider
+            record.ai_model = result.ai.model
+            record.ai_status = result.ai.status
+            record.ai_contributed = result.components["external_ai"]["contributed"]
         record.completed_at = datetime.now(UTC)
         record.failure_code = None
     except Exception:
         record.status = AnalysisStatus.FAILED
-        record.failure_code = "MESSAGE_ANALYSIS_FAILED"
+        record.failure_code = f"{data.input_type.value}_ANALYSIS_FAILED"
     session.commit()
     # PostgreSQL normalizes timestamptz to the connection timezone; refresh keeps POST and GET
     # representations stable across process restarts.
