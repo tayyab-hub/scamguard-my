@@ -5,13 +5,14 @@ import { PageHeading } from '../components/PageHeading'
 import { getSupportEmail } from '../lib/env'
 
 const faqs = [
-  ['What does SCAMGUARD do today?', 'When the configured API and database are available, it assesses Message submissions with local machine learning and explainable indicators. URL submissions are recorded without URL intelligence.'],
-  ['Does an assessment prove content is safe or fraudulent?', 'No. Risk and confidence are decision support based on limited message evidence. They are not proof, a guarantee or professional advice.'],
-  ['Why is analysis unavailable?', 'Message intelligence requires the configured API, model artifact and database. Other intelligence modes remain planned for later milestones.'],
+  ['What does SCAMGUARD do today?', 'When the configured API and database are available, it assesses Message submissions with local machine learning and explainable indicators. URL submissions receive a local model and structural evidence assessment without opening the website.'],
+  ['Does an assessment prove content is safe or fraudulent?', 'No. Risk and confidence are decision support based on limited available evidence. They are not proof, a guarantee or professional advice.'],
+  ['Why is analysis unavailable?', 'Message and URL intelligence require the configured API and database. Other intelligence modes remain planned.'],
   ['Can I analyse a phone number?', 'You can draft a phone number locally. Phone reputation and intelligence are not implemented and the draft is not submitted.'],
   ['Can I upload a QR image?', 'You can select one supported image locally. The browser does not read, decode, upload or save it.'],
   ['Which QR image formats are accepted?', 'The local selector accepts one non-empty PNG, JPG, JPEG or WEBP image up to 5 MB.'],
-  ['Does SCAMGUARD open submitted links?', 'No. The current service validates and stores a URL but does not browse or visit it.'],
+  ['Does SCAMGUARD open submitted links?', 'No. URL intelligence analyses the URL string and structure locally. It never browses, fetches, renders or scans the webpage. Avoid visiting suspicious URLs merely to test them.'],
+  ['What URL format is required?', 'Enter a full http:// or https:// URL, up to 2,048 characters. HTTPS encrypts a connection but does not prove the destination is trustworthy. Embedded credentials are removed before storage, but avoid submitting secrets in paths or queries.'],
   ['What information should I avoid submitting?', 'Do not include passwords, authentication codes, financial details, identity documents or sensitive personal information.'],
   ['Who can see stored submissions?', 'This development workspace has no user accounts. Anyone with access to the backend may be able to view stored submissions.'],
   ['Why are dashboard values unavailable?', 'Values remain unavailable when persistence cannot be verified. SCAMGUARD never fills those states with invented statistics.'],
@@ -55,9 +56,9 @@ export function HelpPage() {
 
       <section className="grid gap-4 md:grid-cols-3" aria-label="How SCAMGUARD works">
         {[
-          ['01', 'Choose content', 'Use Message for an evidence-based assessment, record a URL without visiting it, or explore planned Phone and QR interfaces locally.'],
+          ['01', 'Choose content', 'Use Message for an evidence-based assessment, analyse a URL without visiting it, or explore planned Phone and QR interfaces locally.'],
           ['02', 'Review before sharing', 'Remove passwords, codes, financial details and other sensitive information.'],
-          ['03', 'Read the result carefully', 'Message risk and confidence are separate signals. URL status confirms storage only and is not a safety verdict.'],
+          ['03', 'Read the result carefully', 'Risk and classifier confidence are separate signals. Assessments are advisory; HTTPS does not guarantee safety.'],
         ].map(([step, title, copy]) => (
           <article key={step} className="panel p-5 sm:p-6">
             <span className="step-number">{step}</span>

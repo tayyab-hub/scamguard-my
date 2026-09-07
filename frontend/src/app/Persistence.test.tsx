@@ -298,7 +298,6 @@ describe('submission boundaries', () => {
   })
 
   it.each([
-    'https://user:secret@example.com',
     'https://example.com:99999',
     'https://example.com/a b',
     'https:example.com',

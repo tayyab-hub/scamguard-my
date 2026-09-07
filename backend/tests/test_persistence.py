@@ -89,8 +89,8 @@ def test_create_read_and_restart(persistent, database, mode, content):
         }
         assert record["assessment"]["components"]["local_model"]["used"] is True
     else:
-        assert record["status"] == "SUBMITTED"
-        assert record["assessment"] is None
+        assert record["status"] == "COMPLETED"
+        assert record["assessment"]["components"]["url_model"]["status"] == "COMPLETED"
     assert record["content"] == content.strip()
     assert persistent.get(f"/api/v1/analyses/{record['id']}").json() == record
     # A fresh application/engine reads the committed row, not in-memory state.
@@ -106,7 +106,6 @@ def test_create_read_and_restart(persistent, database, mode, content):
         {"input_type": "MESSAGE", "content": "bad\u0000text"},
         {"input_type": "URL", "content": "not a URL"},
         {"input_type": "URL", "content": "javascript:alert(1)"},
-        {"input_type": "URL", "content": "https://user:secret@example.com"},
         {"input_type": "URL", "content": "https://example.com:99999"},
         {"input_type": "URL", "content": "https://%"},
         {"input_type": "URL", "content": "https://example.com/" + "x" * 2048},
@@ -219,7 +218,7 @@ def test_ready_and_capability_distinguish_message_from_url_intelligence(persiste
     assert caps["submission_available"] is True
     assert caps["submission_inputs"] == ["MESSAGE", "URL"]
     assert caps["analysis_available"] is True
-    assert caps["supported_inputs"] == ["MESSAGE"]
+    assert caps["supported_inputs"] == ["MESSAGE", "URL"]
 
 
 def test_database_constraints_and_rollback(database, persistent):
@@ -250,3 +249,69 @@ def test_request_size_limit_and_post_cors(persistent):
     )
     assert preflight.status_code == 200
     assert "POST" in preflight.headers["access-control-allow-methods"]
+
+
+def test_url_credentials_removed_and_history_never_reanalyses(persistent, database, monkeypatch):
+    import json
+
+    from app.url_intelligence.engine import URLIntelligenceEngine
+    from app.url_intelligence.reputation import ReputationSignal
+
+    class Provider:
+        calls = 0
+
+        def review(self, url):
+            self.calls += 1
+            assert "secret" not in url and "@" not in url
+            return ReputationSignal(
+                status="COMPLETED", provider="test-only", version="v1", verdict="MALICIOUS"
+            )
+
+    provider = Provider()
+    persistent.app.state.url_engine.provider = provider
+    response = persistent.post(
+        "/api/v1/analyses",
+        json={"input_type": "URL", "content": "https://alice:secret@example.com/login"},
+    )
+    result = response.json()
+    assert result["status"] == "COMPLETED" and result["assessment"]["risk_level"] == "HIGH"
+    assert "alice" not in response.text and "secret" not in response.text
+    assert provider.calls == 1
+    with Session(database[1]) as session:
+        row = session.get(Analysis, result["id"])
+        assert row.model_version == "url_ml_v1" and row.rules_version == "url_rules_v1"
+        assert row.fusion_version == "url_fusion_v1" and row.ai_provider is None
+        assert "secret" not in json.dumps(row.component_details) + row.content
+
+    def forbidden(*args):
+        raise AssertionError("History must not run intelligence")
+
+    monkeypatch.setattr(URLIntelligenceEngine, "analyse", forbidden)
+    assert persistent.get(f"/api/v1/analyses/{result['id']}").json() == result
+    with TestClient(create_app(database[0])) as restarted:
+        assert restarted.get(f"/api/v1/analyses/{result['id']}").json() == result
+    assert provider.calls == 1
+
+
+def test_url_pipeline_failure_is_persisted_and_safe(persistent, monkeypatch):
+    def fail(content):
+        raise RuntimeError("private submitted content must not leak")
+
+    monkeypatch.setattr(persistent.app.state.url_engine, "analyse", fail)
+    result = persistent.post(
+        "/api/v1/analyses", json={"input_type": "URL", "content": "https://example.com/"}
+    ).json()
+    assert result["status"] == "FAILED" and result["failure_code"] == "URL_ANALYSIS_FAILED"
+    assert result["assessment"] is None
+
+
+def test_historical_message_and_url_intake_still_read(persistent, database):
+    with Session(database[1]) as session:
+        message = Analysis(input_type=InputType.MESSAGE, content="Historical message intake")
+        url = Analysis(input_type=InputType.URL, content="https://example.org/historical")
+        session.add_all([message, url])
+        session.commit()
+        ids = [str(message.id), str(url.id)]
+    for identity in ids:
+        result = persistent.get(f"/api/v1/analyses/{identity}").json()
+        assert result["status"] == "SUBMITTED" and result["assessment"] is None

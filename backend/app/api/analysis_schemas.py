@@ -1,19 +1,18 @@
 from datetime import datetime
 from typing import Any
-from urllib.parse import urlsplit
 from uuid import UUID
 
 from pydantic import (
-    AnyHttpUrl,
     BaseModel,
     ConfigDict,
     Field,
-    TypeAdapter,
+    ValidationInfo,
     field_validator,
     model_validator,
 )
 
 from app.db.models import AnalysisStatus, InputType
+from app.url_intelligence.parsing import parse_url
 
 
 class AnalysisCreate(BaseModel):
@@ -23,7 +22,9 @@ class AnalysisCreate(BaseModel):
 
     @field_validator("content")
     @classmethod
-    def trim_content(cls, value: str) -> str:
+    def trim_content(cls, value: str, info: ValidationInfo) -> str:
+        if info.data.get("input_type") == InputType.URL:
+            parse_url(value)
         value = value.strip()
         if not value or "\x00" in value:
             raise ValueError("Content must be non-empty text")
@@ -39,21 +40,7 @@ class AnalysisCreate(BaseModel):
         if len(self.content) > limit:
             raise ValueError("Content exceeds the input limit")
         if self.input_type == InputType.URL:
-            try:
-                parsed = urlsplit(self.content)
-                if (
-                    parsed.scheme not in {"http", "https"}
-                    or not parsed.hostname
-                    or parsed.username is not None
-                    or parsed.password is not None
-                    or any(char.isspace() or ord(char) < 32 for char in self.content)
-                    or "\\" in self.content
-                ):
-                    raise ValueError("Invalid URL")
-                _ = parsed.port
-                TypeAdapter(AnyHttpUrl).validate_python(self.content)
-            except ValueError as exc:
-                raise ValueError("Use an absolute HTTP(S) URL without credentials") from exc
+            parse_url(self.content)
         return self
 
 
@@ -68,7 +55,7 @@ class AnalysisFields(BaseModel):
 
 class AnalysisDetail(AnalysisFields):
     content: str
-    assessment: "MessageAssessmentResponse | None" = None
+    assessment: "AssessmentResponse | None" = None
     failure_code: str | None = None
 
 
@@ -91,13 +78,19 @@ class EvidenceResponse(BaseModel):
     source: str
 
 
-class MessageAssessmentResponse(BaseModel):
+class URLEvidenceResponse(EvidenceResponse):
+    severity: str
+    explanation: str
+    family: str
+
+
+class AssessmentResponse(BaseModel):
     risk_level: str
     risk_score: float | None
-    confidence_score: float
+    confidence_score: float | None
     confidence_level: str
     summary: str
-    evidence: list[EvidenceResponse]
+    evidence: list[URLEvidenceResponse | EvidenceResponse]
     recommended_actions: list[str]
     components: dict[str, Any]
     limitations: list[str]

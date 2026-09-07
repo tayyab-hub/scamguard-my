@@ -65,10 +65,61 @@ export const messageAssessmentSchema = z.object({
   limitations: z.array(z.string()),
   completed_at: z.iso.datetime({ offset: true }),
 })
+export const urlAssessmentSchema = z.object({
+  risk_level: z.enum(['LOW', 'CAUTION', 'ELEVATED', 'HIGH', 'INSUFFICIENT_EVIDENCE']),
+  risk_score: z.null(),
+  confidence_score: z.number().min(0).max(1).nullable(),
+  confidence_level: z.enum(['LOW', 'MEDIUM', 'HIGH']),
+  summary: z.string(),
+  evidence: z.array(
+    z.object({
+      category: z.string(),
+      label: z.string(),
+      snippet: z.string(),
+      source: z.enum(['DETERMINISTIC_RULE', 'REPUTATION']),
+      severity: z.enum(['CONTEXT', 'WEAK', 'MEANINGFUL']),
+      explanation: z.string(),
+      family: z.string(),
+    }),
+  ),
+  recommended_actions: z.array(z.string()),
+  components: z.object({
+    url_model: z.object({
+      status: z.enum(['COMPLETED', 'UNAVAILABLE']),
+      version: z.string().nullable(),
+      class_estimate: z.enum(['LEGITIMATE', 'PHISHING']).nullable(),
+      confidence: z.number().min(0).max(1).nullable(),
+    }),
+    url_rules: z.object({
+      status: z.literal('COMPLETED'),
+      version: z.string(),
+      indicator_count: z.number().int().nonnegative(),
+    }),
+    reputation: z.object({
+      status: z.enum(['DISABLED', 'UNAVAILABLE', 'COMPLETED', 'ERROR', 'TIMEOUT', 'INVALID']),
+      provider: z.string().nullable(),
+      version: z.string().nullable(),
+      verdict: z.enum(['UNKNOWN', 'NO_KNOWN_MATCH', 'MALICIOUS']),
+    }),
+    fusion: z.object({ version: z.string() }),
+    url_structure: z.object({
+      parser_version: z.string(),
+      hostname: z.string(),
+      registrable_domain: z.string().nullable(),
+      scheme: z.enum(['http', 'https']),
+      credentials_removed: z.boolean(),
+      fragment_excluded: z.boolean(),
+    }),
+  }),
+  limitations: z.array(z.string()),
+  completed_at: z.iso.datetime({ offset: true }),
+})
+export type URLAssessment = z.infer<typeof urlAssessmentSchema>
+export type Assessment = MessageAssessment | URLAssessment
 export const analysisDetailSchema = z.object({
   ...analysisFields,
   content: z.string(),
-  assessment: messageAssessmentSchema.nullable().default(null),
+  assessment: z.union([messageAssessmentSchema, urlAssessmentSchema]).nullable().default(null),
   failure_code: z.string().nullable().default(null),
 })
 export const analysisSummarySchema = z.object({

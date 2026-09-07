@@ -13,6 +13,7 @@ from app.core.config import Settings, get_settings
 from app.core.errors import error_response, install_error_handlers
 from app.db.session import build_engine
 from app.ml.engine import build_message_engine
+from app.url_intelligence.engine import build_url_engine
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
@@ -24,6 +25,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         engine = build_engine(config)
         application.state.session_factory = sessionmaker(bind=engine, expire_on_commit=False)
         application.state.message_engine = build_message_engine(config)
+        application.state.url_engine = build_url_engine(config)
         try:
             yield
         finally:

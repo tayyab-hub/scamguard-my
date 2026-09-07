@@ -89,7 +89,7 @@ cd backend
 .\.venv\Scripts\python.exe -m pytest -q -m integration
 ```
 
-`tests/test_persistence.py` requires the database name to end in `_test`. Its module fixture applies Alembic head, checks schema drift, downgrades to base, verifies the table is removed and reapplies head. Cases truncate only that dedicated analyses table before/after tests. This is intentionally destructive to test data. They cover real Message completion and result retrieval across a fresh app, inert URL intake, historical-row compatibility, invalid/oversized/unsupported input, pagination/order, a deterministic concurrent-write snapshot, safe detail, measured dashboard/flagged counts, constraints/rollback, request bounds and capability separation. Unit coverage verifies that unknown user-controlled JSON keys are not reflected in validation errors. The original real readiness integration runs with the same configured URL.
+`tests/test_persistence.py` requires the database name to end in `_test`. Its module fixture applies Alembic head, checks schema drift, downgrades to base, verifies the table is removed and reapplies head. Cases truncate only that dedicated analyses table before/after tests. This is intentionally destructive to test data. They cover real Message completion and result retrieval across a fresh app, completed offline URL assessments, historical-row compatibility, invalid/oversized/unsupported input, pagination/order, a deterministic concurrent-write snapshot, safe detail, measured dashboard/flagged counts, constraints/rollback, request bounds and capability separation. Unit coverage verifies that unknown user-controlled JSON keys are not reflected in validation errors. The original real readiness integration runs with the same configured URL.
 
 For development schema migration (from backend/):
 
@@ -111,7 +111,7 @@ $env:PLAYWRIGHT_CHANNEL = 'chrome'
 npm.cmd run test:persistence
 ```
 
-The config refuses a DB not ending in `_e2e`. `backend/scripts/prepare_e2e.py` applies real Alembic migrations, without seeding. Isolated FastAPI/Vite servers use 8002/5175. One worker prevents concurrent test-count interference. Desktop/mobile cases submit controlled non-sensitive test messages and example.com URLs, verify a real Message assessment and evidence, URL acknowledgement without intelligence, real total/flagged increments, history/detail, navigation/reload persistence, disabled Phone/QR and no uncaught browser errors. External review stays disabled. Test submissions remain only in the disposable E2E database; every run measures its baseline count. Never target a public/development database.
+The config refuses a DB not ending in `_e2e`. `backend/scripts/prepare_e2e.py` applies real Alembic migrations, without seeding. Isolated FastAPI/Vite servers use 8002/5175. One worker prevents concurrent test-count interference. Desktop/mobile cases submit controlled non-sensitive test messages and example.com URLs, verify a real Message assessment and evidence, completed URL evidence and actions, real total/flagged increments, history/detail, navigation/reload persistence, disabled Phone/QR and no uncaught browser errors. External review stays disabled. Test submissions remain only in the disposable E2E database; every run measures its baseline count. Never target a public/development database.
 
 ## Screenshots and manual review
 
@@ -139,3 +139,28 @@ Only for the existing audited Windows checkout (these files are ignored and abse
 ```
 
 Do not run initdb over existing data. Existing backend/.env uses that local cluster; do not overwrite it or print its password. Restart an already-running older development API process to load current code. Test servers are isolated and do not replace the developer's existing server.
+
+## Task 4 URL checks (2026-09-07)
+
+Current URL behavior supersedes historical intake-only test descriptions above. MESSAGE regression stays in the same full suites. URLs now complete using the dedicated offline pipeline; historical SUBMITTED rows remain readable. No schema revision was needed, so a Task 4-only downgrade/re-upgrade is not applicable. The disposable *_test fixture still exercises existing Alembic head/check/downgrade-to-base/re-upgrade, never the development DB.
+
+Backend gates (from backend):
+
+```powershell
+.\.venv\Scripts\python.exe -m ruff check app tests migrations scripts
+.\.venv\Scripts\python.exe -m ruff format --check app tests migrations scripts
+.\.venv\Scripts\python.exe -m pytest -q
+.\.venv\Scripts\python.exe -m alembic upgrade head
+.\.venv\Scripts\python.exe -m alembic current
+.\.venv\Scripts\python.exe -m alembic heads
+.\.venv\Scripts\python.exe -m alembic check
+.\.venv\Scripts\python.exe scripts/verify_url_pipeline.py
+```
+
+Set TEST_DATABASE_URL privately to the existing disposable *_test database to enable integration. URL unit tests replace socket.connect, DNS getaddrinfo, requests Session.request and httpx Client.request with raising guards, including cold suffix parsing and hostile local/private/metadata/IP/Unicode/userinfo/encoding examples. No live reputation adapter exists; protocol tests inject mocks only. Real PostgreSQL tests verify URL versions, redaction before persistence, safe pipeline failure, historical rows, fresh-app retrieval and zero re-analysis/provider calls on GET.
+
+Dataset reproduction uses `prepare_url_dataset.py`, `train_url_model.py --verify`, and `verify_url_pipeline.py` from backend/scripts. The latter checks all 234,674 processed URL hashes, 197,700 isolated domain groups and exported inference on all 36,901 held-out test rows. The training verification asserts identical model bytes and 512-row confidence parity against sklearn. Source/download provenance is in URL_DATASETS.md. No destination URL from the dataset is accessed.
+
+Frontend gates remain `npm.cmd run typecheck`, `npm.cmd run lint`, `npm.cmd test`, `npm.cmd run build`, `npm.cmd run test:e2e -- --workers=2`, `npm.cmd run test:preview`, and `npm.cmd run test:persistence`. On this Windows checkout set PLAYWRIGHT_CHANNEL=chrome and E2E_DATABASE_URL privately to scamguard_e2e. Task 4 adds five risk presentation states, URL pending/failure/status/evidence/actions, strict validation and no-destination-link tests. Real browser tests cover five URL structures, rejection, history/reload, keyboard disclosure, reduced motion and 320/390/768/1440 widths. They assert no off-origin browser request.
+
+Browser-assisted manual review ran the real private application on isolated local test ports, then inspected desktop/320px screenshots and backend restart persistence. Direct CUA initialization was unavailable due a Windows sandbox ACL error, so Playwright controlled the local browser. This is not a human-only usability study. Intentional test evidence is saved as docs/screenshots/task4-url-desktop.png and task4-url-320.png; ordinary artifacts/logs remain ignored. No submitted destination was opened. Consult TASK_4_REPORT.md for final counts and any limitations.

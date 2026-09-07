@@ -1,79 +1,57 @@
 # SCAMGUARD — current project state
 
-Updated **2026-09-05, Asia/Kuala_Lumpur** for the final Task 3 merge into `main`.
+Updated **2026-09-07, Asia/Kuala_Lumpur** for Task 4 URL Intelligence closure and main merge authorization.
 
 ## Current milestone
 
-**✅ COMPLETE — Task 3 Message Intelligence.** Task 2 was
-fully re-verified, merged to `main` with merge commit `425aab0`, and pushed. Task 3's retained
-feature branch passed final closure and is merged into `main`.
+**Task 3 COMPLETE and merged to main. Task 4 URL Intelligence COMPLETE and manually accepted for main.**
+Task 4 was based on remote-verified main at `7625a6f54b904532d5cd0273139d429ab1aadcb6`; implementation and verification were published on `task-4-url-intelligence`. The user explicitly authorized closure, a no-fast-forward main merge and main push on 2026-09-07, superseding the earlier review-only boundary. Retain the Task 4 branch. Task 5 has not started.
 
-## Real functionality
+## Implemented capabilities
 
 | Area | Status | Current behavior |
 | --- | --- | --- |
-| Task 1 Foundation | ✅ COMPLETE | Responsive Forensic Intelligence UI, four Analyse modes, offline states, tests, Git/Vercel frontend readiness and Windows launchers. |
-| Task 2 Core Platform | ✅ COMPLETE | PostgreSQL/Alembic, Message/URL validation and persistence, history/detail, real dashboard counts, Help/404, private development boundary. Merged to main. |
-| Task 3 dataset and model | ✅ COMPLETE | Reviewed CC BY 4.0 three-class source, immutable checksums, leakage-controlled splits, three candidate comparisons and genuine untouched-test evaluation. |
-| Local Message classification | ✅ COMPLETE | JSON TF-IDF Logistic Regression artifact predicts distinct LEGITIMATE/SPAM/SCAM probabilities; checksum and dimensions verified without pickle loading. |
-| Deterministic Message evidence | ✅ COMPLETE | Twelve maintainable indicator categories, exact snippets, local context suppression and bounded combination logic. |
-| Message fusion/explainability | ✅ COMPLETE | Separate risk and confidence, insufficient-evidence outcome, summaries, evidence, actions, component versions/status and limitations. |
-| Optional external AI review | ✅ COMPLETE | Backend-only provider abstraction and OpenAI Responses API structured adapter; disabled by default, redacted, grounded, zero retry, fail-safe. No paid call was made. |
-| Message persistence/API/UI | ✅ COMPLETE | POST MESSAGE persists intake, runs synchronously, stores and returns completed result; history/detail and dashboard use real stored outcomes. |
-| Final Task 3 verification/publication | ✅ COMPLETE | Full source, build, real-PostgreSQL, migration, browser, responsive screenshot and manual scenario gates passed. Logical feature commits are `73d9de2` and `417bc5d`; the branch was published and accepted for the final no-fast-forward merge. |
-| URL intelligence | ⚪ NOT STARTED | URL still validates and persists as inert SUBMITTED text. It is never fetched or assessed. |
-| Phone intelligence | ⚪ NOT STARTED | Phone UI only; no normalization, reputation or analysis. |
-| QR/Screenshot intelligence | ⚪ NOT STARTED | QR local metadata UI only; no byte read/upload/decoding/OCR/camera/payment routing. |
-| Auth/community/adaptive/campaign/Model Lab | ⚪ NOT STARTED | No implementation. |
-| Security & Privacy | 🟡 IN PROGRESS | Safe errors/limits/CORS/ORM/redaction exist. Authentication/ownership, consent, retention/deletion, encryption guarantees, rate limits and public hosting remain unresolved. |
+| Task 1 Foundation | COMPLETE | Forensic Intelligence UI, responsiveness, keyboard/reduced-motion access, offline resilience and development launchers. |
+| Task 2 Core Platform | COMPLETE | Real PostgreSQL intake/history/dashboard, safe API validation/errors and private shared-workspace boundary. |
+| Task 3 Message Intelligence | COMPLETE | Existing local three-class model, evidence, conservative fusion, optional disabled contextual AI and persisted explainable results. Message domain and artifact unchanged. |
+| Task 4 URL Intelligence | COMPLETE | Strict HTTP(S)/IDNA/offline PSL parsing, trained local forest, explainable evidence, deterministic conservative fusion and persisted results without accessing destinations. |
+| URL dataset and evaluation | COMPLETE | UCI PhiUSIIL CC BY 4.0, checked source, normalization/dedup/conflict handling before domain grouping, fixed splits, three candidate comparisons, export reproduction and genuine held-out metrics. |
+| Optional URL reputation architecture | COMPLETE | Validated injectable protocol and mocks. Disabled by default, no real adapter/key/provider request. |
+| URL UI and Help | COMPLETE | Evidence/actions/risk/status/details/history, truthful no-fetch and HTTPS guidance, loading/failure handling and 320px browser coverage. |
+| Phone Intelligence (Task 5) | NOT STARTED | Draft-only unavailable state retained. |
+| QR/Screenshot Intelligence | NOT STARTED | Local file metadata only; no decode/upload/camera/content analysis. |
+| Auth/community/adaptive/campaign/extensions | NOT STARTED | No new implementation. |
+| Production/public backend | NOT READY | The unauthenticated shared backend must remain private; developer launchers are not production hosting. |
 
-## Functional API state
+## Verified checks
 
-- `/api/v1/health` remains liveness; `/ready` checks PostgreSQL and the migrated analyses table.
-- `/capabilities` separates submission from analysis. With private persistence ready, MESSAGE and
-  URL can be submitted, but only MESSAGE is in `supported_inputs` for intelligence.
-- `POST /analyses` with MESSAGE returns a persisted `COMPLETED` assessment or a persisted safe
-  `FAILED` state. URL returns `SUBMITTED` with no assessment.
-- List/detail expose status and optional real risk. Dashboard flagged count is the database count of
-  completed `ELEVATED` or `HIGH` messages. Unconfigured data remains null, never synthetic zero.
-
-## Latest actually verified checks
-
-| Check | Actual result |
+| Check | Observed result |
 | --- | --- |
-| Required Task 2 pre-merge gates | Frontend typecheck/lint/50 Vitest/build/18 Playwright/6 preview/2 persistence and backend Ruff/55 Pytest/Alembic all passed. |
-| Task 3 reproducible training | PASS; regenerated exact artifact SHA-256 `818d99f7…3dd3`. Logistic Regression validation macro F1 0.8861; untouched-test macro F1 0.8952 / weighted F1 0.9690. |
-| Backend Ruff | PASS; 36 files formatted and lint-clean. `pip check` found no broken requirements. |
-| Backend full Pytest with real PostgreSQL | PASS; 78 passed, 1 deliberately skipped live-AI test, 2 dependency deprecation warnings. Includes Alembic upgrade/check/downgrade/re-upgrade and fresh-app retrieval. |
-| Alembic development schema | PASS; `current` and `heads` both `0002_message_intelligence`; `check` found no new operations. |
 | Frontend TypeScript / ESLint | PASS / PASS, zero lint warnings. |
-| Frontend Vitest | PASS; 51 tests in 3 files. Host access was required because sandboxed esbuild could not read parent filesystem metadata. |
-| Frontend production build | PASS; Vite 7.3.6, 1,750 modules; JS 419.55 kB (126.60 kB gzip), CSS 34.55 kB (7.12 kB gzip). Third-party Zod annotation warnings only. |
-| Playwright | PASS; 18 foundation/motion/visual, 6 built offline-preview, and 2 real PostgreSQL desktop/mobile tests. Chrome color-environment warnings only. |
-| Manual scenarios | PASS; suspicious→HIGH, safety guidance→LOW with suppressed indicators, ambiguous grounded review→CAUTION, prompt injection remained data, provider timeout→local CAUTION with AI ERROR, and result survived a fresh app instance. |
+| Vitest | PASS: 57 tests, four files. |
+| Production frontend build | PASS: 1,751 modules; JS 425.48 kB (127.71 kB gzip), CSS 34.55 kB (7.12 kB gzip). |
+| Playwright foundation/motion/visual | PASS: 18 tests. |
+| Built offline preview | PASS: six tests. |
+| Real PostgreSQL browser flows | PASS: four desktop/mobile Message+URL tests, including URL risk cases and responsive/no-destination-request checks. |
+| Ruff | PASS: lint and format checks, 48 Python files. |
+| Full Pytest with real PostgreSQL | PASS: 160 tests; one deliberately skipped opt-in live AI test; two existing dependency deprecation warnings. |
+| Alembic | PASS: upgrade/current/heads/check at 0002_message_intelligence, no drift. Existing downgrade/re-upgrade passed only on disposable *_test DB. No Task 4 migration needed. |
+| Dependency consistency / packaging | PASS: pip check; local wheel includes URL artifact with the exact expected checksum. |
+| URL preparation/inference verification | PASS: 234,674 unique URLs and 197,700 disjoint domain groups; processed hashes checked; deployed JSON test confusion matrix exactly matches sklearn. |
+| URL training reproduction | PASS: --verify recreated exact artifact bytes; confidence parity on 512 validation rows within 1e-12. |
+| Browser-assisted manual cases | PASS: synthetic→HIGH, normal→LOW, IP→CAUTION, brand-like subdomain→ELEVATED, redirect→CAUTION, javascript rejected; no console errors or off-origin requests. |
+| Actual backend restart persistence | PASS: five prior URL assessments unchanged after process restart, with browser history/reload evidence retained. |
 
-No paid external call was made. Existing Starlette httpx/AnyIO dependency deprecation warnings
-remain visible. No test was removed or relaxed to hide a product failure.
+The direct CUA tool could not initialize due a Windows sandbox ACL error; a controlled Playwright browser provided application interaction and screenshots, which were visually inspected. Sandboxed esbuild and PostgreSQL startup required approved host execution. Initial tests exposed the expected new FAQ count and a post-submit field-state defect; both were fixed and the affected suites passed. Existing Zod build annotations, Starlette/AnyIO deprecations and browser color-environment warnings remain, without suppressions.
 
-## Known limitations and handoff
+## Model evidence and limitations
 
-The model is mainly English, historical SMS data with minority-class and collection/OCR bias. Its
-probabilities are not universally calibrated. Rules cannot understand every context. AI redaction is
-best-effort and optional; no real provider call was made. Results do not verify sender identity,
-phone, URL, payment destination or external facts. Synchronous processing is suitable for current
-development scale only.
+URL model `url_ml_v1` selected a 120-tree depth-12 random forest. Test phishing precision 0.994633, recall 0.972239, F1 0.983308; macro F1 0.984698, weighted F1 0.984810. Confusion matrix in LEGITIMATE/PHISHING order: `[[19846,89],[471,16495]]`. These are source-held-out binary classification metrics, not five-level fusion accuracy or a scam probability.
 
-The backend remains a private shared development service with raw submitted Message/URL content and
-no user ownership. Do not host it publicly. The main Vercel URL remains a frontend-only preview;
-merging Task 3 changes its UI bundle but does not deploy or enable the private backend.
+**Severe collection bias:** all legitimate training URLs are HTTPS homepages with no query. Deep-link false positives and cross-domain campaign overlap remain limitations. ML alone and all weak indicators are capped at Caution; High requires meaningful corroboration or a validated reputation signal. There is no live reputation verification, external current-data validation, general secret anonymization, webpage scanning, public authentication or safety guarantee.
 
-## Exact next step
+The original Message model remains mainly English historical SMS with the documented class imbalance and calibration limitations. No paid external request was made and no private submission was used for training.
 
-Task 3 is closed. The recommended next implementation task is **Task 4 URL Intelligence:
-non-fetching URL parsing
-and lexical evidence first, with no
-automatic browsing and a separate security design for any future retrieval.** Do not start it
-automatically.
+## Accepted closure
 
-Historical detailed Task 1 and Task 2 audits remain in `docs/TASK_1.md`, `docs/TASK_2.md` and
-`docs/TASK_2_AUDIT.md`; Git history retains prior handoff versions of this file.
+Read [Task 4 report](docs/TASK_4_REPORT.md), [URL methodology](docs/URL_INTELLIGENCE.md), [dataset provenance](docs/URL_DATASETS.md), [model evaluation](docs/URL_MODEL_EVALUATION.md), and [testing](docs/TESTING.md). Manual acceptance is complete. Closure changes documentation only, so the recorded Task 4 tests are not rerun. Stop after the authorized merge, push and Git verification; do not begin Phone Intelligence, expose the backend publicly or provision cloud services. A main push alone is not evidence of a successful Vercel deployment.

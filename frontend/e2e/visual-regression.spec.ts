@@ -94,7 +94,7 @@ test('Forensic Intelligence screens retain navigation and keyboard access', asyn
 
   await nav.getByRole('link', { name: 'Help & Support' }).click()
   await expect(page.getByRole('heading', { name: 'Help & Support' })).toBeFocused()
-  await expect(page.getByRole('group')).toHaveCount(14)
+  await expect(page.getByRole('group')).toHaveCount(15)
   await capture(page, testInfo, 'help')
   expect(failures).toEqual([])
 })

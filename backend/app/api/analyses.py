@@ -23,7 +23,9 @@ Database = Annotated[Session, Depends(get_session)]
 
 @router.post("", response_model=AnalysisDetail, status_code=201)
 def create_analysis(data: AnalysisCreate, request: Request, session: Database) -> AnalysisDetail:
-    return record_submission(session, data, request.app.state.message_engine)
+    return record_submission(
+        session, data, request.app.state.message_engine, request.app.state.url_engine
+    )
 
 
 @router.get("", response_model=AnalysisList)

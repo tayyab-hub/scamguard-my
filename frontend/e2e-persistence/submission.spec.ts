@@ -31,7 +31,7 @@ async function capture(page: Page, info: TestInfo, name: string) {
   }
 }
 
-test('real PostgreSQL: Message result and URL intake persist through navigation and refresh', async ({
+test('real PostgreSQL: Message and URL results persist through navigation and refresh', async ({
   page,
   request,
 }, testInfo) => {
@@ -84,7 +84,8 @@ test('real PostgreSQL: Message result and URL intake persist through navigation 
   await page.getByRole('tab', { name: 'URL', exact: true }).click()
   await page.getByLabel('Website URL').fill('https://example.com/task-2-browser-fixture')
   await page.getByRole('button', { name: 'Analyse content' }).click()
-  await expect(page.getByText('Submission recorded.')).toBeVisible()
+  await expect(page.getByText('Analysis completed.')).toBeVisible()
+  await expect(page.getByLabel('URL assessment')).toBeVisible()
   await page.getByRole('tab', { name: 'Phone Number' }).click()
   await expect(page.getByRole('button', { name: 'Analyse phone number' })).toBeDisabled()
   await page.getByRole('tab', { name: 'QR Code' }).click()

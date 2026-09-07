@@ -26,6 +26,7 @@ class Settings(BaseSettings):
     max_request_bytes: int = Field(default=65_536, ge=32_768, le=1_048_576)
     port: int = Field(default=8000, ge=1, le=65535)
     message_model_path: str = "backend/app/ml/artifacts/message_tfidf_v1.json"
+    url_model_path: str | None = None
     ai_review_enabled: bool = False
     openai_api_key: SecretStr | None = Field(default=None, repr=False)
     openai_model: str = "gpt-5-mini-2025-08-07"

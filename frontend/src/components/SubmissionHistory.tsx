@@ -2,7 +2,7 @@ import { useId, useState } from 'react'
 import type { AnalysisSummary } from '../lib/api'
 import { useAnalysisDetail, useHistory } from '../lib/queries'
 import { ErrorState, LoadingState } from './States'
-import { MessageResult } from './analysis/MessageResult'
+import { AssessmentResult } from './analysis/URLResult'
 
 export function SubmissionRows({ items }: { items: AnalysisSummary[] }) {
   const prefix = useId()
@@ -58,12 +58,12 @@ export function SubmissionRows({ items }: { items: AnalysisSummary[] }) {
                   </p>
                   {detail.data.assessment && (
                     <div className="mt-4 overflow-hidden rounded-lg border border-line bg-surface">
-                      <MessageResult assessment={detail.data.assessment} />
+                      <AssessmentResult assessment={detail.data.assessment} />
                     </div>
                   )}
                   {detail.data.failure_code && (
                     <p role="alert" className="mt-4 text-xs text-warning">
-                      The saved message could not be assessed. Reference: {detail.data.failure_code}
+                      The saved submission could not be assessed. Reference: {detail.data.failure_code}
                     </p>
                   )}
                 </div>

@@ -3,7 +3,7 @@
 SCAMGUARD is a general **Multi-Modal Scam Detection & Reporting Web Application**. Its approved
 visual identity is **Forensic Intelligence**: warm light ivory, charcoal, terracotta and olive with
 restrained editorial motion. The repository has completed Task 1 Foundation, Task 2 Core Platform
-and Task 3 Message Intelligence. Never infer functionality from
+and Task 3 Message Intelligence; Task 4 URL Intelligence is COMPLETE and manually accepted for main. Never infer functionality from
 a planned UI control, roadmap line, screenshot or old conversation.
 
 ## Required reading order
@@ -31,9 +31,7 @@ Current source is authoritative when historical wording conflicts.
   intentional contract change across backend schemas, frontend validation, tests and `docs/API.md`.
 - Liveness, database readiness, submission availability and intelligence capability are different.
   Never combine them into a misleading healthy, safe or supported claim.
-- MESSAGE intelligence is implemented. URL is inert validated persistence only. PHONE and QR are
-  local UI only. No phone, URL, image, QR, payment, authentication, community, campaign or adaptive
-  learning feature may be claimed from scaffolding.
+- MESSAGE and URL intelligence are implemented. URL uses its separate offline parser/model/rules/fusion, never destination requests. PHONE and QR remain local UI only. No phone, image, QR, payment, authentication, community, campaign or adaptive learning feature may be claimed from scaffolding.
 - Keep the frontend useful with approved loading/error/empty/unavailable states. Never replace a
   failed API response with production mock data.
 - Use Alembic only; no startup `create_all`, implicit commits, destructive reset, SQLite substitute
@@ -89,8 +87,7 @@ Current source is authoritative when historical wording conflicts.
   commits, discard user work, expose ignored secrets, or alter the configured remote casually.
 - Keep `node_modules`, `.venv`, `dist`, caches, coverage, logs, `.local`, test output and secrets
   ignored. Dataset source and reviewed model artifacts are intentional versioned research assets.
-- Task 2 and Task 3 are merged to `main`. Retain their feature branches and published history; do
-  not rewrite them. Do not create a Task 4 branch or start Task 4 without explicit authorization.
+- Task 2 and Task 3 are merged to `main`. Task 4 is COMPLETE and manually accepted; its closure, no-fast-forward merge into `main` and main push are explicitly authorized on 2026-09-07. Retain `task-4-url-intelligence` and prior branches/history. Task 5 is not started and is not authorized.
 
 ## Definition of done and completion procedure
 

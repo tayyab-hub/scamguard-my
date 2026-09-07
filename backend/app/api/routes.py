@@ -74,6 +74,8 @@ def capabilities(
         submission_available=True,
         submission_inputs=list(InputType),
         analysis_available=True,
-        supported_inputs=[InputType.MESSAGE],
-        reason="Local message intelligence is available. URL intelligence is not enabled.",
+        supported_inputs=list(InputType),
+        reason=(
+            "Local Message and URL intelligence are available; submitted URLs are never fetched."
+        ),
     )
