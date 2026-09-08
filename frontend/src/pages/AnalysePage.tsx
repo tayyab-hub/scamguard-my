@@ -255,8 +255,8 @@ export function AnalysePage() {
                     <LockKeyhole size={14} className="mt-0.5 shrink-0" aria-hidden="true" />
                     {available
                       ? inputType === 'MESSAGE' && canAnalyseMessage
-                        ? 'Shared development workspace: text is stored. Local analysis runs first; if an administrator enables external contextual review, redacted content may be sent to that provider. Use non-sensitive content only.'
-                        : 'Shared development workspace: submitted text is stored and visible to anyone with backend access. Use non-sensitive content only.'
+                        ? 'This analysis is stored in your private account history. Local analysis runs first; optional external contextual review remains disabled by default. Use non-sensitive content only.'
+                        : 'This analysis is stored in your private account history. Other users cannot access it. Use non-sensitive content only.'
                       : 'Nothing is submitted while analysis is unavailable.'}
                   </p>
                   <button

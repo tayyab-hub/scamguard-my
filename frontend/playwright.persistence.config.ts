@@ -41,6 +41,7 @@ export default defineConfig({
         DATABASE_URL: database,
         PERSISTENCE_ENABLED: 'true',
         CORS_ORIGINS: '["http://127.0.0.1:5175"]',
+        SIGNUP_RATE_LIMIT: '100',
       },
     },
     {

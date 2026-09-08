@@ -1,6 +1,7 @@
 import { useId, useState } from 'react'
 import type { AnalysisSummary } from '../lib/api'
-import { useAnalysisDetail, useHistory } from '../lib/queries'
+import { Trash2 } from 'lucide-react'
+import { useAnalysisDetail, useDeleteAnalysis, useHistory } from '../lib/queries'
 import { ErrorState, LoadingState } from './States'
 import { AssessmentResult } from './analysis/URLResult'
 import { riskCopy } from '../lib/resultPresentation'
@@ -8,7 +9,9 @@ import { riskCopy } from '../lib/resultPresentation'
 export function SubmissionRows({ items }: { items: AnalysisSummary[] }) {
   const prefix = useId()
   const [selected, setSelected] = useState<string | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<string | null>(null)
   const detail = useAnalysisDetail(selected)
+  const deletion = useDeleteAnalysis()
   return (
     <ul className="divide-y divide-line">
       {items.map((item) => (
@@ -74,11 +77,78 @@ export function SubmissionRows({ items }: { items: AnalysisSummary[] }) {
                       {detail.data.failure_code}
                     </p>
                   )}
+                  <div className="mt-5 border-t border-line pt-4">
+                    <button
+                      type="button"
+                      className="button-quiet flex min-h-9 items-center gap-2 rounded px-2 text-xs font-semibold text-danger"
+                      onClick={() => setDeleteTarget(detail.data.id)}
+                    >
+                      <Trash2 size={14} aria-hidden="true" /> Delete this analysis
+                    </button>
+                  </div>
                 </div>
               ))}
           </div>
         </li>
       ))}
+      {deleteTarget && (
+        <li className="dialog-backdrop" role="presentation">
+          <section
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="delete-analysis-heading"
+            className="dialog-panel"
+            onKeyDown={(event) => {
+              if (event.key === 'Escape' && !deletion.isPending) {
+                deletion.reset()
+                setDeleteTarget(null)
+              }
+            }}
+          >
+            <h2 id="delete-analysis-heading" className="text-lg font-semibold">
+              Delete this analysis?
+            </h2>
+            <p className="mt-3 text-sm leading-6 text-muted">
+              Its submitted content and assessment will be permanently removed from your history.
+            </p>
+            {deletion.isError && (
+              <p role="alert" className="mt-3 text-xs text-danger">
+                {deletion.error.message}
+              </p>
+            )}
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                type="button"
+                autoFocus
+                className="button-secondary"
+                disabled={deletion.isPending}
+                onClick={() => {
+                  deletion.reset()
+                  setDeleteTarget(null)
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="button-primary bg-danger"
+                disabled={deletion.isPending}
+                onClick={() =>
+                  void deletion
+                    .mutateAsync(deleteTarget)
+                    .then(() => {
+                      setSelected(null)
+                      setDeleteTarget(null)
+                    })
+                    .catch(() => undefined)
+                }
+              >
+                {deletion.isPending ? 'Deleting…' : 'Delete analysis'}
+              </button>
+            </div>
+          </section>
+        </li>
+      )}
     </ul>
   )
 }

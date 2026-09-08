@@ -1,10 +1,12 @@
-export function parseApiBaseUrl(value: string): string {
+export function parseApiBaseUrl(value: string, production = false): string {
   const normalized = value.replace(/\/+$/, '')
-  if (/^\/(?!\/)[\w/-]+$/.test(normalized)) return normalized
+  if (!production && /^\/(?!\/)[\w/-]+$/.test(normalized)) return normalized
   try {
     const url = new URL(normalized)
     if (
       ['http:', 'https:'].includes(url.protocol) &&
+      (!production || url.protocol === 'https:') &&
+      (!production || !['localhost', '127.0.0.1', '::1'].includes(url.hostname)) &&
       !url.username &&
       !url.password &&
       !url.search &&
@@ -15,11 +17,16 @@ export function parseApiBaseUrl(value: string): string {
   } catch {
     /* Report one actionable configuration error below. */
   }
-  throw new Error('VITE_API_BASE_URL must be an HTTP(S) URL or an absolute path such as /api/v1.')
+  throw new Error(
+    production
+      ? 'Production VITE_API_BASE_URL must be a non-local HTTPS API URL.'
+      : 'VITE_API_BASE_URL must be an HTTP(S) URL or an absolute path such as /api/v1.',
+  )
 }
 
 export function getApiBaseUrl(): string {
-  return parseApiBaseUrl(import.meta.env.VITE_API_BASE_URL || '/api/v1')
+  const configured = import.meta.env.VITE_API_BASE_URL || (import.meta.env.PROD ? '' : '/api/v1')
+  return parseApiBaseUrl(configured, import.meta.env.PROD)
 }
 
 export function parseSupportEmail(value: string): string | null {

@@ -1,4 +1,7 @@
 import { expect, test, type Page } from '@playwright/test'
+import { mockAuthenticatedWorkspace } from './auth-fixture'
+
+test.beforeEach(async ({ page }) => mockAuthenticatedWorkspace(page))
 
 async function settled(page: Page) {
   await expect
@@ -27,7 +30,7 @@ for (const connected of [true, false]) {
       if (pathname.endsWith('/health') || pathname.endsWith('/dashboard')) await pending
       if (!connected && pathname.endsWith('/health')) {
         await route.fulfill({ status: 503, contentType: 'application/json', body: '{}' })
-      } else await route.continue()
+      } else await route.fallback()
     })
     await page.emulateMedia({ reducedMotion: 'no-preference' })
     await page.goto('/')
