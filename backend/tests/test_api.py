@@ -19,16 +19,10 @@ def test_health_is_liveness_and_does_not_need_a_database(client):
     assert response.headers["x-content-type-options"] == "nosniff"
 
 
-def test_dashboard_is_unconfigured_not_fabricated_statistics(client):
+def test_dashboard_requires_authentication(client):
     response = client.get("/api/v1/dashboard")
-    assert response.status_code == 200
-    assert response.json() == {
-        "status": "not_configured",
-        "total_analyses": None,
-        "flagged_analyses": None,
-        "last_analysis_at": None,
-        "recent_analyses": [],
-    }
+    assert response.status_code == 401
+    assert response.json()["error"]["code"] == "AUTHENTICATION_REQUIRED"
 
 
 def test_capabilities_do_not_enable_analysis(client):
@@ -48,7 +42,12 @@ def test_readiness_probes_database(app, client):
     app.dependency_overrides[get_session] = lambda: session
     response = client.get("/api/v1/ready")
     assert response.status_code == 200
-    assert response.json() == {"status": "ready", "database": "connected"}
+    assert response.json() == {
+        "status": "ready",
+        "database": "connected",
+        "message_intelligence": "ready",
+        "url_intelligence": "ready",
+    }
     assert str(session.execute.call_args.args[0]) == "SELECT 1"
 
 
@@ -61,6 +60,13 @@ def test_readiness_returns_safe_503_when_database_fails(app, client):
     assert response.json()["error"]["code"] == "DATABASE_UNAVAILABLE"
     assert "secret-connection" not in response.text
     assert response.json()["error"]["request_id"] == response.headers["x-request-id"]
+
+
+def test_readiness_rejects_a_missing_required_model(app, client):
+    app.state.url_engine.classifier = None
+    response = client.get("/api/v1/ready")
+    assert response.status_code == 503
+    assert response.json()["error"]["code"] == "INTELLIGENCE_UNAVAILABLE"
 
 
 def test_missing_route_and_method_use_error_envelope(client):
@@ -76,6 +82,7 @@ def test_missing_route_and_method_use_error_envelope(client):
 def test_cors_only_allows_configured_origins(client):
     accepted = client.get("/api/v1/health", headers={"Origin": "http://localhost:5173"})
     assert accepted.headers["access-control-allow-origin"] == "http://localhost:5173"
+    assert accepted.headers["access-control-allow-credentials"] == "true"
     assert "X-Request-ID" in accepted.headers["access-control-expose-headers"]
     rejected = client.get("/api/v1/health", headers={"Origin": "https://untrusted.example"})
     assert "access-control-allow-origin" not in rejected.headers
@@ -142,14 +149,16 @@ def test_persistence_unavailable_keeps_safe_contracts(app, client):
     session.scalar.side_effect = session.execute.side_effect
     session.commit.side_effect = session.execute.side_effect
     app.dependency_overrides[get_session] = lambda: session
-    for path in ["/api/v1/ready", "/api/v1/dashboard", "/api/v1/analyses"]:
+    response = client.get("/api/v1/ready")
+    assert response.status_code == 503
+    assert "private" not in response.text
+    for path in ["/api/v1/dashboard", "/api/v1/analyses"]:
         response = client.get(path)
-        assert response.status_code == 503
-        assert "private" not in response.text
+        assert response.status_code == 401
     response = client.post(
         "/api/v1/analyses", json={"input_type": "MESSAGE", "content": "private-content"}
     )
-    assert response.status_code == 503
+    assert response.status_code == 401
     assert "private" not in response.text
     caps = client.get("/api/v1/capabilities").json()
     assert caps["submission_available"] is False

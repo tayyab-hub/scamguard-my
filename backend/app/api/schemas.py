@@ -16,6 +16,8 @@ class HealthResponse(BaseModel):
 class ReadinessResponse(BaseModel):
     status: Literal["ready"] = "ready"
     database: Literal["connected"] = "connected"
+    message_intelligence: Literal["ready"] = "ready"
+    url_intelligence: Literal["ready"] = "ready"
 
 
 class DashboardResponse(BaseModel):

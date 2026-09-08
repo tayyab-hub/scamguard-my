@@ -151,8 +151,12 @@ class MessageIntelligenceEngine:
 
 
 def build_message_engine(settings: Settings) -> MessageIntelligenceEngine:
-    artifact_path = Path(settings.message_model_path)
-    if not artifact_path.is_absolute():
+    artifact_path = (
+        Path(settings.message_model_path)
+        if settings.message_model_path
+        else Path(__file__).resolve().parent / "artifacts/message_tfidf_v1.json"
+    )
+    if settings.message_model_path and not artifact_path.is_absolute():
         artifact_path = Path(__file__).resolve().parents[3] / artifact_path
     classifier = MessageClassifier(artifact_path)
     provider = None

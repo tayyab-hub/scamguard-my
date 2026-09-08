@@ -8,18 +8,31 @@ from uuid import uuid4
 
 import pytest
 from fastapi.testclient import TestClient
-from sqlalchemy import event, inspect, text
+from sqlalchemy import event, inspect, select, text
 from sqlalchemy.engine import make_url
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
+from app.core.auth import hash_password
 from app.core.config import Settings
-from app.db.models import Analysis, InputType
+from app.db.models import Analysis, InputType, User
 from app.db.session import build_engine
 from app.main import create_app
 from app.services.analyses import list_submissions
 
 pytestmark = pytest.mark.integration
+ORIGIN = "http://localhost:5173"
+PASSWORD = "correct horse battery staple"
+
+
+def sign_in(client: TestClient, email: str = "owner@example.com") -> None:
+    response = client.post(
+        "/api/v1/auth/login",
+        json={"email": email, "password": PASSWORD},
+        headers={"Origin": ORIGIN},
+    )
+    assert response.status_code == 200
+    client.headers.update({"Origin": ORIGIN, "X-CSRF-Token": response.json()["csrf_token"]})
 
 
 @pytest.fixture(scope="module")
@@ -39,7 +52,9 @@ def database():
         )
 
     migrate("head")
-    assert "analyses" in inspect(engine).get_table_names()
+    assert {"analyses", "users", "auth_sessions", "auth_rate_limits"}.issubset(
+        inspect(engine).get_table_names()
+    )
     subprocess.run([sys.executable, "-m", "alembic", "check"], cwd=root, env=env, check=True)
     migrate("base", "downgrade")
     assert "analyses" not in inspect(engine).get_table_names()
@@ -53,11 +68,18 @@ def database():
 def persistent(database):
     config, engine = database
     with engine.begin() as connection:
-        connection.execute(text("TRUNCATE TABLE analyses"))
+        connection.execute(text("TRUNCATE TABLE analyses, auth_sessions, users, auth_rate_limits"))
     with TestClient(create_app(config)) as client:
+        response = client.post(
+            "/api/v1/auth/signup",
+            json={"email": "owner@example.com", "password": PASSWORD},
+            headers={"Origin": ORIGIN},
+        )
+        assert response.status_code == 201
+        client.headers.update({"Origin": ORIGIN, "X-CSRF-Token": response.json()["csrf_token"]})
         yield client
     with engine.begin() as connection:
-        connection.execute(text("TRUNCATE TABLE analyses"))
+        connection.execute(text("TRUNCATE TABLE analyses, auth_sessions, users, auth_rate_limits"))
 
 
 @pytest.mark.parametrize(
@@ -95,6 +117,7 @@ def test_create_read_and_restart(persistent, database, mode, content):
     assert persistent.get(f"/api/v1/analyses/{record['id']}").json() == record
     # A fresh application/engine reads the committed row, not in-memory state.
     with TestClient(create_app(database[0])) as restarted:
+        sign_in(restarted)
         assert restarted.get(f"/api/v1/analyses/{record['id']}").json() == record
 
 
@@ -167,6 +190,11 @@ def test_real_dashboard_order_pagination_and_safe_previews(persistent):
 def test_list_count_and_rows_use_one_database_snapshot(database):
     _, engine = database
     inserted = False
+    with Session(engine) as session:
+        user = User(email="snapshot@example.com", password_hash=hash_password("test password only"))
+        session.add(user)
+        session.commit()
+        user_id = user.id
 
     def insert_after_count(_connection, _cursor, statement, _parameters, _context, _many):
         nonlocal inserted
@@ -176,10 +204,11 @@ def test_list_count_and_rows_use_one_database_snapshot(database):
         with engine.begin() as writer:
             writer.execute(
                 text(
-                    "INSERT INTO analyses (id, input_type, status, content) "
-                    "VALUES (:id, 'MESSAGE', 'SUBMITTED', 'Concurrent test submission')"
+                    "INSERT INTO analyses (id, user_id, input_type, status, content) "
+                    "VALUES (:id, :user_id, 'MESSAGE', 'SUBMITTED', "
+                    "'Concurrent test submission')"
                 ),
-                {"id": uuid4()},
+                {"id": uuid4(), "user_id": user_id},
             )
 
     with engine.begin() as connection:
@@ -187,7 +216,7 @@ def test_list_count_and_rows_use_one_database_snapshot(database):
     event.listen(engine, "after_cursor_execute", insert_after_count)
     try:
         with Session(engine) as session:
-            result = list_submissions(session, page=1, page_size=10)
+            result = list_submissions(session, page=1, page_size=10, user_id=user_id)
     finally:
         event.remove(engine, "after_cursor_execute", insert_after_count)
 
@@ -195,7 +224,7 @@ def test_list_count_and_rows_use_one_database_snapshot(database):
     assert result.total == 0
     assert result.items == []
     with Session(engine) as session:
-        assert list_submissions(session, page=1, page_size=10).total == 1
+        assert list_submissions(session, page=1, page_size=10, user_id=user_id).total == 1
 
 
 @pytest.mark.parametrize(
@@ -223,11 +252,14 @@ def test_ready_and_capability_distinguish_message_from_url_intelligence(persiste
 
 def test_database_constraints_and_rollback(database, persistent):
     with Session(database[1]) as session:
-        session.add(Analysis(input_type=InputType.MESSAGE, content=""))
+        user_id = session.scalar(select(User.id).where(User.email == "owner@example.com"))
+        session.add(Analysis(input_type=InputType.MESSAGE, content="", user_id=user_id))
         with pytest.raises(IntegrityError):
             session.commit()
         session.rollback()
-        session.add(Analysis(input_type=InputType.MESSAGE, content="Valid after rollback"))
+        session.add(
+            Analysis(input_type=InputType.MESSAGE, content="Valid after rollback", user_id=user_id)
+        )
         session.commit()
     assert persistent.get("/api/v1/analyses").json()["total"] == 1
 
@@ -289,6 +321,7 @@ def test_url_credentials_removed_and_history_never_reanalyses(persistent, databa
     monkeypatch.setattr(URLIntelligenceEngine, "analyse", forbidden)
     assert persistent.get(f"/api/v1/analyses/{result['id']}").json() == result
     with TestClient(create_app(database[0])) as restarted:
+        sign_in(restarted)
         assert restarted.get(f"/api/v1/analyses/{result['id']}").json() == result
     assert provider.calls == 1
 
@@ -313,5 +346,6 @@ def test_historical_message_and_url_intake_still_read(persistent, database):
         session.commit()
         ids = [str(message.id), str(url.id)]
     for identity in ids:
-        result = persistent.get(f"/api/v1/analyses/{identity}").json()
-        assert result["status"] == "SUBMITTED" and result["assessment"] is None
+        assert persistent.get(f"/api/v1/analyses/{identity}").status_code == 404
+    with Session(database[1]) as session:
+        assert session.query(Analysis).filter(Analysis.id.in_(ids)).count() == 2

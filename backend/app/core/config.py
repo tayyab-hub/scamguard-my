@@ -1,7 +1,7 @@
 from functools import lru_cache
 from pathlib import Path
 from typing import Literal
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
 
 from pydantic import Field, PostgresDsn, SecretStr, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -25,12 +25,29 @@ class Settings(BaseSettings):
     persistence_enabled: bool = False
     max_request_bytes: int = Field(default=65_536, ge=32_768, le=1_048_576)
     port: int = Field(default=8000, ge=1, le=65535)
-    message_model_path: str = "backend/app/ml/artifacts/message_tfidf_v1.json"
+    message_model_path: str | None = None
     url_model_path: str | None = None
     ai_review_enabled: bool = False
     openai_api_key: SecretStr | None = Field(default=None, repr=False)
     openai_model: str = "gpt-5-mini-2025-08-07"
     ai_timeout_seconds: float = Field(default=8.0, ge=1.0, le=30.0)
+    auth_token_pepper: SecretStr = Field(
+        default=SecretStr("local-development-only-change-me"), repr=False
+    )
+    session_cookie_name: str = "scamguard_session"
+    session_ttl_hours: int = Field(default=168, ge=1, le=720)
+    cookie_secure: bool = False
+    cookie_samesite: Literal["lax", "strict", "none"] = "lax"
+    login_rate_limit: int = Field(default=10, ge=1, le=100)
+    signup_rate_limit: int = Field(default=5, ge=1, le=100)
+    analysis_rate_limit: int = Field(default=30, ge=1, le=1000)
+
+    @field_validator("database_url", mode="before")
+    @classmethod
+    def normalize_postgres_driver(cls, value: object) -> object:
+        if isinstance(value, str) and value.startswith("postgresql://"):
+            return value.replace("postgresql://", "postgresql+psycopg://", 1)
+        return value
 
     @field_validator("database_url")
     @classmethod
@@ -65,6 +82,20 @@ class Settings(BaseSettings):
                 raise ValueError("Production requires an explicit, non-default database password")
             if any(not origin.startswith("https://") for origin in self.cors_origins):
                 raise ValueError("Production CORS origins must use HTTPS (or an empty list)")
+            if not self.persistence_enabled:
+                raise ValueError("Production requires persistence")
+            if not self.cors_origins:
+                raise ValueError("Production requires at least one exact HTTPS frontend origin")
+            if not self.cookie_secure or self.cookie_samesite != "none":
+                raise ValueError(
+                    "Cross-origin production authentication requires Secure SameSite=None cookies"
+                )
+            pepper = self.auth_token_pepper.get_secret_value()
+            if pepper == "local-development-only-change-me" or len(pepper) < 32:
+                raise ValueError("Production AUTH_TOKEN_PEPPER must be at least 32 characters")
+            query = parse_qs(urlparse(str(self.database_url)).query)
+            if query.get("sslmode", [""])[0] not in {"require", "verify-ca", "verify-full"}:
+                raise ValueError("Production DATABASE_URL must require PostgreSQL TLS")
         return self
 
 
