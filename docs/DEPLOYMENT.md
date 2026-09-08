@@ -1,5 +1,14 @@
 # Task 1 — GitHub and Vercel frontend preview
 
+## Current Task 5 production path (2026-09-08)
+
+The authoritative current plan is [Task 5 production deployment](PRODUCTION_DEPLOYMENT.md): Vercel
+frontend → Render FastAPI → Neon managed PostgreSQL. Authentication, ownership, privacy controls,
+production validation, the Render Blueprint and packaged Message/URL models are implemented on
+`task-5-auth-production`. Provider setup and external acceptance have not been performed, so the
+existing Vercel site remains an unverified frontend-only deployment. The older Task 1/2/4 sections
+below are retained as historical deployment decisions and do not override the Task 5 plan.
+
 > Current-state note (2026-09-05): Task 2 and Task 3 have been verified and accepted into `main`. The established Vercel site remains a frontend-only preview; neither PostgreSQL nor FastAPI is hosted there. Historical Task 1/Task 2 branch instructions below are retained as deployment history.
 
 This workflow publishes the existing **SCAMGUARD Forensic Intelligence frontend development preview**. It does not deploy FastAPI, create a database, enable submissions, or add detection. Task 2 implements PostgreSQL persistence locally; scam detection and live backend hosting remain later work. Task 2 Core Platform & Persistence is active on `task-2-core-platform`; do not merge automatically.

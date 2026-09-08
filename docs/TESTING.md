@@ -1,6 +1,60 @@
 # Testing and verification
 
-Exact commands for the current repository, audited 2026-09-05. Actual results belong in [PROGRESS](../PROGRESS.md), not inferred from scripts/CI. Existing dependencies were used: Node 24.18.0, Python 3.12.13, PostgreSQL 17.11 and installed Chrome. A fresh install, security audit, remote CI and other browser engines are separate checks.
+## Task 5 authentication/production checks (2026-09-08)
+
+Task 5 adds auth UI/unit cases, environment validation, real PostgreSQL session/ownership/rate-limit
+tests and a real-browser account lifecycle. The normal backend suite must run with a private
+`TEST_DATABASE_URL` ending in `_test`; the browser persistence suite must use a separate URL ending in
+`_e2e`. Never print either value.
+
+The full frontend gates remain:
+
+```powershell
+cd frontend
+npm.cmd run typecheck
+npm.cmd run lint
+npm.cmd test
+npm.cmd run build
+$env:PLAYWRIGHT_CHANNEL = 'chrome'
+npm.cmd run test:e2e -- --workers=2
+npm.cmd run test:preview -- --workers=2
+$env:E2E_DATABASE_URL = '<private postgresql+psycopg URL ending in _e2e>'
+npm.cmd run test:persistence
+```
+
+The persistence browser suite creates isolated test accounts and covers signup, refresh restoration,
+Message/URL results, logout, protected-route redirect, login, private history, analysis deletion,
+account deletion, mobile layout, keyboard operation and reduced motion. Backend A/B tests separately
+prove that another user cannot list/fetch/delete a record or infer it through dashboard totals.
+
+Backend and schema gates:
+
+```powershell
+cd backend
+$env:TEST_DATABASE_URL = '<private postgresql+psycopg URL ending in _test>'
+.\.venv\Scripts\python.exe -m ruff check app tests migrations scripts
+.\.venv\Scripts\python.exe -m ruff format --check app tests migrations scripts
+.\.venv\Scripts\python.exe -m pytest -q
+.\.venv\Scripts\python.exe -m pip check
+.\.venv\Scripts\python.exe -m alembic current
+.\.venv\Scripts\python.exe -m alembic heads
+.\.venv\Scripts\python.exe -m alembic check
+```
+
+The isolated migration exercise upgrades to `0003_auth_ownership`, checks current/head/drift,
+downgrades only that disposable database to `0002_message_intelligence`, then upgrades/checks again.
+It verifies legacy null ownership, foreign keys/cascades and normalized unique emails. Do not run a
+downgrade on development or production.
+
+Build a wheel in an ignored temporary directory and inspect it to confirm both
+`app/ml/artifacts/message_tfidf_v1.json` and `app/url_intelligence/artifacts/url_model_v1.json` are
+present. Production configuration is locally testable, but only the external acceptance sequence in
+[PRODUCTION_DEPLOYMENT.md](PRODUCTION_DEPLOYMENT.md) can establish an online deployment.
+
+Exact commands for the current repository, audited 2026-09-08. Actual results belong in
+[PROGRESS](../PROGRESS.md), not inferred from scripts/CI. Existing dependencies were used: Node
+24.18.0, Python 3.12.13, PostgreSQL 17.11 and installed Chrome. A fresh install, remote CI and other
+browser engines are separate checks.
 
 ## Frontend (from frontend/)
 

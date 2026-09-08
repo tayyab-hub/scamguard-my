@@ -6,17 +6,17 @@ Recorded: 2026-09-03, Asia/Kuala_Lumpur. These decisions come from the current i
 | --- | --- | --- |
 | D01 | FastAPI backend | Implemented with an application factory, Pydantic schemas/settings and versioned routes. Keep a clear HTTP boundary and centralized safe errors. |
 | D02 | React + TypeScript frontend | Implemented with strict compiler settings, React Router, TanStack Query, and Zod. Preserve typed presentation and runtime validation at the network boundary. |
-| D03 | PostgreSQL with SQLAlchemy/Psycopg and Alembic | Task 2 implements and verifies the `analyses` table through revision `0001_analysis_intake`, real readiness, explicit transactions and isolated PostgreSQL integration tests. Do not substitute an in-memory database for persistence evidence. |
+| D03 | PostgreSQL with SQLAlchemy/Psycopg and Alembic | Implemented through additive revision `0003_auth_ownership`, with real readiness, explicit transactions and isolated PostgreSQL integration/migration tests. Do not substitute an in-memory database for persistence evidence. |
 | D04 | Forensic Intelligence identity | Implemented warm light ivory/charcoal/terracotta/olive theme. Tokens, branding, footer, documentation and screenshot assets agree. Preserve accessibility and professional workspace layout. |
-| D05 | Real database-derived analytics only | Task 2 dashboard totals/latest/recent and history query persisted submissions. No production fake data or synthetic fallback. Unavailable is distinct from measured zero; risk-derived analytics remain unimplemented. |
+| D05 | Real database-derived analytics only | Dashboard totals/latest/recent and flagged counts query only the authenticated user's persisted submissions. No production fake data or synthetic fallback. Unavailable is distinct from measured zero. |
 | D06 | Controlled adaptive learning | Planned only. Feedback must be validated/moderated, datasets and models versioned, evaluation reproducible, and promotion explicit with rollback. Unreviewed community input must never trigger automatic training or deployment. |
-| D07 | No automatic suspicious URL browsing | Task 2 may store a submitted URL as inert text but never navigates to, fetches or executes it. Any separately authorized retrieval system requires a reviewed network/SSRF safety design. |
+| D07 | No automatic suspicious URL browsing | Task 4 analyses submitted URLs locally as inert strings and never navigates to, fetches or executes them. Any separately authorized retrieval system requires a reviewed network/SSRF safety design. |
 | D08 | Genuine ML metrics only | No models, training code, dataset, predictions or evaluation metrics exist. Future metrics must come from documented reproducible experiments, with provenance and leakage-resistant splits. Heuristics and demonstrations must be labelled accurately. |
 | D09 | Separate risk from confidence | Planned result-contract rule. Risk and strength of supporting evidence are different quantities; neither may be fabricated or substituted for the other. No current API field or UI score implements this decision. |
 | D10 | Insufficient-information outcome | Planned explicit domain state for missing, unsupported or inconclusive evidence. It must not imply “safe.” It differs from current analysis-unavailable and network-error states; no assessment outcome exists yet. |
-| D11 | Distinct liveness, readiness and capabilities | Implemented: health checks process liveness; readiness probes PostgreSQL; capabilities disables analysis. “API connected” is not proof of database readiness or a functioning detector. |
-| D12 | Minimal navigation and honest unavailable behavior | Implemented routes `/`, `/analyse` and `/help`, plus catch-all not-found handling. Keep only Overview, Analyse and the functional Help & Support route in navigation until more routes work. Drafting does not submit; no assessment has been made. |
-| D13 | Privacy before content collection | Task 2 permits non-sensitive Message/URL storage only in a disclosed private shared development dataset. Phone/QR drafts remain local. Public or sensitive collection still requires ownership/access, purpose, minimization, retention/deletion, consent/permitted use and abuse decisions. Full privacy controls are not implemented. |
+| D11 | Distinct liveness, readiness and capabilities | Implemented: health is process liveness; readiness verifies database/tables and Message/URL artifacts; capabilities reports supported modes. “API connected” alone is not proof of readiness. |
+| D12 | Minimal navigation and honest unavailable behavior | Implemented public Sign In, Sign Up and Help plus protected Overview, Analyse and Account routes. Phone/QR remain unavailable drafts; no fixture replaces a failed API/account/result. |
+| D13 | Privacy before content collection | Task 5 adds real accounts, ownership, private history, individual/account deletion and basic abuse controls. Phone/QR drafts remain local. Formal retention/backups, legal notices, incident response and broad-public operational controls still require owner review. See D41–D44. |
 | D14 | Preserve contracts during redesigns | Implemented visual migration retained backend and API/client behavior. Future functional contract evolution must be explicitly scoped and coordinated across schemas, tests, and docs. Never enable capabilities based solely on a frontend control. |
 | D15 | Explicit task boundaries and honest evidence | Task 1 and its visual migration were delivered; the memory-handoff task added documentation only. No automatic Task 2 continuation. Preserve tests and historical evidence; record skips, unrun CI, environment limits and actual completion status. See D16 for the later deployment-preparation scope. |
 
@@ -167,3 +167,42 @@ The user authorized a frontend refinement on `codex/ui-ux-result-refinement`, lo
 ## D40 — UI refinement closure and Task 5 authorization (2026-09-07)
 
 The authoritative Task 5 handoff accepts the completed post-Task 4 UI/UX refinement for closure after re-verification and authorizes its no-fast-forward merge into `main`, superseding D39's earlier review-only boundary. After updating and pushing `main`, create `task-5-auth-production` and keep all authentication, ownership, privacy and production-preparation work there. Do not merge Task 5 automatically. Phone Intelligence, QR Intelligence, community reporting and adaptive learning remain explicitly out of scope.
+
+## D41 — Argon2id with opaque server-side sessions and synchronizer CSRF (2026-09-08)
+
+Task 5 uses normalized email/password accounts, Argon2id password hashes and random opaque session
+tokens. The raw session token exists only in one HttpOnly cookie; PostgreSQL stores an HMAC-SHA-256
+digest using an environment-only pepper. Sessions expire and revoke on logout. Login always creates a
+new token. Production cross-origin cookies are `Secure; SameSite=None`, while every state mutation also
+requires an exact allowlisted Origin and an in-memory synchronizer token returned by auth endpoints.
+No auth secret is kept in localStorage. Unknown-account and incorrect-password login errors are
+identical, with dummy Argon2 work for the unknown-account path.
+
+## D42 — Nullable legacy ownership with backend-enforced privacy (2026-09-08)
+
+Additive Alembic `0003_auth_ownership` creates users, sessions and rate buckets and adds nullable
+`analyses.user_id`. Pre-authentication records stay null: they are preserved, never guessed or assigned,
+and are invisible to ordinary users. Every new analysis derives ownership exclusively from the
+validated session. List, detail, delete and dashboard queries filter by that user ID; foreign/missing/
+legacy details share the same 404. User deletion cascades owned analyses and sessions. Schema
+nullability is retained only for legacy compatibility, while the application guarantees new ownership.
+
+## D43 — Neon, Render and Vercel production boundary (2026-09-08)
+
+The simplest reviewed capstone architecture is Vercel Vite frontend → Render FastAPI web service →
+Neon managed PostgreSQL over TLS. Render can execute the full Python package and bundled local model
+artifacts; operational data never relies on its ephemeral filesystem. The free single-instance service
+uses a start wrapper that applies Alembic before Uvicorn because Render pre-deploy commands are paid.
+If scaling is approved later, migrate through the paid pre-deploy stage instead. Vite receives only a
+public HTTPS API base at build time; database/auth/provider secrets remain on Render. Provider setup and
+production browser evidence require the owner's accounts and are not claimed complete by repository
+configuration.
+
+## D44 — PostgreSQL-backed basic rate limits and model-aware readiness (2026-09-08)
+
+Signup is limited per client IP, login per client IP plus normalized email, and analysis per user using
+fixed PostgreSQL buckets protected by transaction advisory locks. This works across application workers
+without an in-memory-only boundary but is not enterprise DDoS/bot protection. Readiness checks database
+connectivity and required analyses/users/sessions tables; Message engine initialization and URL artifact
+availability are required. Optional external AI is deliberately excluded because local intelligence
+must remain operational without a provider.

@@ -1,20 +1,23 @@
 # SCAMGUARD architecture
 
-Audited 2026-09-07. Read `PROGRESS.md` for executed verification and `DECISIONS.md` for constraints. The product uses the warm-light Forensic Intelligence identity and a general international scope.
+Audited 2026-09-08. Read `PROGRESS.md` for executed verification and `DECISIONS.md` for constraints. The product uses the warm-light Forensic Intelligence identity and a general international scope.
 
 ## CURRENTLY IMPLEMENTED
 
 ```text
-React Router → AppShell → Overview / Analyse / Help / NotFound
-  TanStack Query + Zod transport
+React Router → AuthProvider → public Sign In / Sign Up / Help
+                            → protected AppShell / Overview / Analyse / Account
+  TanStack Query + Zod credentialed transport + in-memory CSRF token
     /api/v1
       FastAPI → safe request/error middleware → typed routes
-        analysis service → local Message intelligence engine
+        auth service → Argon2id + opaque PostgreSQL sessions + DB rate limits
+        owned analysis service → local Message intelligence engine
           checksum-verified TF-IDF Logistic Regression artifact
           deterministic contextual indicators
           optional backend-only grounded external contextual review
           conservative Message-specific fusion
-        SQLAlchemy/Psycopg → PostgreSQL → Alembic 0001 + 0002
+                                  → local offline URL intelligence engine/artifact
+        SQLAlchemy/Psycopg → PostgreSQL → Alembic 0001 + 0002 + 0003
 ```
 
 ### Frontend
@@ -23,11 +26,19 @@ React 18, TypeScript, Vite and Tailwind provide the responsive application. `App
 
 The four typed Analyse modes are Message, URL, Phone and QR. Message submits only when both storage and Message intelligence are advertised. It displays real risk, separate confidence, evidence, actions, components, versions and limitations returned by the API. URL validates, runs a separate offline URL classifier/evidence/fusion pipeline, and persists an assessment without destination access. Phone is a local text draft. QR keeps local file metadata only for one PNG/JPEG/WEBP up to 5 MiB; no bytes are read, decoded, uploaded or persisted. Phone/QR controls remain disabled for analysis.
 
-Overview uses real database totals, flagged counts, latest time and recent records. A flagged record has stored `ELEVATED` or `HIGH` risk. Loading, unavailable, failure and genuine-empty states never fall back to fixtures. History retrieves persisted detail on demand and renders submitted URLs as inert text. Help and support preparation remain browser-local.
+Overview uses only the authenticated user's database totals, flagged counts, latest time and recent
+records. A flagged record has stored `ELEVATED` or `HIGH` risk. Loading, unavailable, failure and
+genuine-empty states never fall back to fixtures. History retrieves owned persisted detail on demand,
+allows confirmed deletion and renders submitted URLs as inert text. Help and privacy remain public.
 
 ### Backend and local Message intelligence
 
-FastAPI owns the `/api/v1` contract, request IDs, no-store/nosniff headers, exact-origin CORS, safe error envelopes and bounded bodies. SQLAlchemy sessions use explicit commits and rollback/close handling. PostgreSQL readiness checks both connectivity and the domain table when enabled.
+FastAPI owns the `/api/v1` contract, request IDs, no-store/nosniff headers, credentialed exact-origin
+CORS, safe error envelopes and bounded bodies. Argon2id protects passwords. Opaque session/CSRF
+secrets are HMAC-digested in PostgreSQL, sessions expire/revoke, and Origin plus synchronizer-token
+checks protect state changes. SQLAlchemy sessions use explicit commits and rollback/close handling.
+PostgreSQL readiness checks connectivity and required domain/identity tables; startup verifies both
+model artifacts.
 
 Message processing is synchronous after durable intake. The checksum-verified JSON artifact contains a three-class word-ngram TF-IDF Logistic Regression model (`LEGITIMATE`, `SPAM`, `SCAM`); no pickle is loaded. Deterministic indicators cover urgency, threat, credentials, financial requests, impersonation, prizes, investments, job/tasks, delivery/account themes, secrecy, redirection and suspicious actions. Context rules suppress safety, education and negated examples.
 
@@ -37,15 +48,30 @@ Optional OpenAI contextual review is backend-only and disabled by default. When 
 
 ### Database and migrations
 
-Alembic `0001_analysis_intake` creates the analyses table and constraints. Additive `0002_message_intelligence` preserves all Task 2 rows while adding nullable risk/confidence, summary, evidence/actions/components/limitations, component versions, AI metadata/status/contribution, completion time and safe failure code. Historical intake-only Message and URL rows remain valid with null results.
+Alembic `0001_analysis_intake` creates the analyses table and constraints. Additive
+`0002_message_intelligence` preserves all Task 2 rows while adding neutral result fields. Additive
+`0003_auth_ownership` adds normalized users, hashed server-side sessions, hashed PostgreSQL rate
+buckets and nullable `analyses.user_id`. Historical rows remain null and invisible; new application
+writes always receive the authenticated user ID. User deletion cascades sessions and owned analyses.
 
-`AnalysisStatus` is `SUBMITTED`, `PROCESSING`, `COMPLETED`, or `FAILED`. Message and URL records normally complete. Historical intake-only records remain submitted. The composite newest-first index supports history. Dashboard flagged counts derive only from stored elevated/high risk values.
+`AnalysisStatus` is `SUBMITTED`, `PROCESSING`, `COMPLETED`, or `FAILED`. Message and URL records
+normally complete. Historical intake-only records remain submitted. The `(user_id, created_at DESC,
+id DESC)` index supports private history. Dashboard totals and flagged counts are scoped by user.
 
 ### Configuration, deployment and privacy
 
-Backend settings load from `backend/.env` with process variables taking precedence. Persistence defaults off. `DATABASE_URL` requires `postgresql+psycopg`; production rejects missing/default passwords and non-HTTPS CORS. The model artifact path and optional AI settings are environment controlled; secrets use Pydantic `SecretStr` and are never returned.
+Backend settings load from `backend/.env` with process variables taking precedence. Persistence
+defaults off locally. Production requires PostgreSQL TLS, a non-default database password, a strong
+auth pepper, at least one exact HTTPS CORS origin, persistence, and `Secure; SameSite=None` cookies.
+Model paths and optional AI settings are environment controlled; secrets use `SecretStr` and are
+never returned.
 
-Vercel serves only the frontend and remains safe without an API. The current unauthenticated backend is a private shared-development service with no ownership boundary. It must not be publicly hosted until authentication/authorization, purpose and consent, rate limiting, retention/deletion, encryption, abuse controls, and deployment logging are resolved. External redaction is best-effort and does not make sensitive data safe to submit.
+The production target is Vercel Vite → Render FastAPI → Neon PostgreSQL. Render receives secrets;
+Vercel receives only the public HTTPS API base. `render.yaml` builds the backend and the single-instance
+free-tier start script applies Alembic before Uvicorn. Message and URL artifacts are packaged JSON,
+checksum-verified and never runtime-downloaded. This architecture is configured, but hosted services
+and external acceptance are not yet verified. See [PRODUCTION_DEPLOYMENT.md](PRODUCTION_DEPLOYMENT.md),
+[AUTHENTICATION.md](AUTHENTICATION.md), and [PRIVACY_MODEL.md](PRIVACY_MODEL.md).
 
 ## PLANNED ARCHITECTURE
 

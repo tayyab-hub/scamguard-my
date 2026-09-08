@@ -3,7 +3,10 @@
 SCAMGUARD is a general **Multi-Modal Scam Detection & Reporting Web Application**. Its approved
 visual identity is **Forensic Intelligence**: warm light ivory, charcoal, terracotta and olive with
 restrained editorial motion. The repository has completed Task 1 Foundation, Task 2 Core Platform
-and Task 3 Message Intelligence; Task 4 URL Intelligence is COMPLETE and merged to main at `386e4b7`. The completed post-Task 4 UI/UX refinement is on `codex/ui-ux-result-refinement` for its authorized closure merge. Never infer functionality from
+and Task 3 Message Intelligence; Task 4 URL Intelligence is COMPLETE and merged to main at `386e4b7`,
+with its accepted UI closure merged at `080e800`. Task 5 Authentication, Ownership, Privacy and
+Production is IN PROGRESS only on `task-5-auth-production`; hosted acceptance is still pending.
+Never infer functionality from
 a planned UI control, roadmap line, screenshot or old conversation.
 
 ## Required reading order
@@ -31,7 +34,7 @@ Current source is authoritative when historical wording conflicts.
   intentional contract change across backend schemas, frontend validation, tests and `docs/API.md`.
 - Liveness, database readiness, submission availability and intelligence capability are different.
   Never combine them into a misleading healthy, safe or supported claim.
-- MESSAGE and URL intelligence are implemented. URL uses its separate offline parser/model/rules/fusion, never destination requests. PHONE and QR remain local UI only. No phone, image, QR, payment, authentication, community, campaign or adaptive learning feature may be claimed from scaffolding.
+- MESSAGE and URL intelligence are implemented. URL uses its separate offline parser/model/rules/fusion, never destination requests. Real Task 5 accounts, server-side sessions, ownership and privacy controls now exist on the Task 5 branch. PHONE and QR remain local UI only. No phone, image, QR, payment, community, campaign or adaptive learning feature may be claimed from scaffolding.
 - Keep the frontend useful with approved loading/error/empty/unavailable states. Never replace a
   failed API response with production mock data.
 - Use Alembic only; no startup `create_all`, implicit commits, destructive reset, SQLite substitute
@@ -73,9 +76,10 @@ Current source is authoritative when historical wording conflicts.
   chain-of-thought/provider debug payloads.
 - Never automatically browse/open suspicious URLs. A future fetcher needs separate approval and
   network isolation, SSRF, DNS/redirect/scheme/address/resource controls.
-- The backend is a private shared development service. Do not host it publicly before authentication,
-  ownership/authorization, consent, minimization, retention/deletion including backups, encryption
-  guarantees, abuse/rate limits and threat modeling are approved.
+- Authentication/ownership is enforced by the API, not by frontend visibility or UUID secrecy.
+  Preserve the Argon2id/opaque-session/CSRF design, exact production origins, per-user queries,
+  legacy-row isolation, database rate limits and deletion behavior in `docs/AUTHENTICATION.md`.
+  Hosted setup is not verified until the external acceptance in `docs/PRODUCTION_DEPLOYMENT.md` passes.
 - Optional external AI is backend-only, disabled by default, uses best-effort redaction and strict
   grounded structured output. No key in `VITE_*`, source, tests or logs. Provider failure must not
   erase local evidence or prevent a local result.
@@ -88,7 +92,10 @@ Current source is authoritative when historical wording conflicts.
   commits, discard user work, expose ignored secrets, or alter the configured remote casually.
 - Keep `node_modules`, `.venv`, `dist`, caches, coverage, logs, `.local`, test output and secrets
   ignored. Dataset source and reviewed model artifacts are intentional versioned research assets.
-- Tasks 2, 3 and 4 are merged to `main` (Task 4 merge `386e4b7`). The completed frontend UI/UX refinement is authorized for a no-fast-forward merge after verification. Then create and push `task-5-auth-production` from updated `main`; keep all Task 5 work there and do not merge Task 5 automatically. Retain prior branches/history. Phone/QR intelligence, community reporting and adaptive learning remain out of scope.
+- Tasks 2, 3 and 4 plus the accepted UI closure are merged to `main` (`386e4b7`, `080e800`). Keep all
+  Task 5 work on `task-5-auth-production`, push that branch only and do not merge it automatically.
+  Retain prior branches/history. Phone/QR intelligence, community reporting and adaptive learning
+  remain out of scope.
 
 ## Definition of done and completion procedure
 
