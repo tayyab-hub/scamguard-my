@@ -1,6 +1,8 @@
 # Task 5 authentication and authorization
 
-Status: **implemented and locally verified on `task-5-auth-production`; production verification is pending provider setup** (2026-09-08).
+Status (2026-09-09): **implemented and locally verified; Neon/Render infrastructure readiness is
+user-verified.** Vercel production signup/login/session/private-history acceptance remains pending the
+Task 5 main deployment and same-origin proxy verification.
 
 ## Architecture
 

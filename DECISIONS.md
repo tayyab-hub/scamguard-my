@@ -206,3 +206,14 @@ without an in-memory-only boundary but is not enterprise DDoS/bot protection. Re
 connectivity and required analyses/users/sessions tables; Message engine initialization and URL artifact
 availability are required. Optional external AI is deliberately excluded because local intelligence
 must remain operational without a provider.
+
+## D45 — Task 5 production checkpoint and main-merge authorization (2026-09-09)
+
+The user reports that the production Neon PostgreSQL database is deployed/connected and the Render
+FastAPI service is live. Production Alembic completed; `/api/v1/health` returned 200; readiness reported
+the database, Message Intelligence and URL Intelligence ready. This verifies the hosted backend
+infrastructure without exposing provider URLs or secrets. The Task 5 Vercel frontend still requires the
+authorized main merge/redeployment, and its same-origin API proxy plus signup/login/private-history
+flow remain unverified. The user authorizes a documentation-only checkpoint commit, feature-branch
+push, no-fast-forward Task 5 merge into `main`, and main push. Do not infer Vercel success from the Git
+push; stop without beginning Task 6.

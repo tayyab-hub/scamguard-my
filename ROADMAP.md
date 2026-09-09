@@ -1,6 +1,6 @@
 # SCAMGUARD roadmap
 
-Audited 2026-09-08. Status reflects evidence, not permission to continue automatically.
+Audited 2026-09-09. Status reflects evidence and the current closure boundary.
 
 | Order | Milestone | Status | Real state / exit criteria |
 | --- | --- | --- | --- |
@@ -8,7 +8,7 @@ Audited 2026-09-08. Status reflects evidence, not permission to continue automat
 | 2 | Core Platform | ✅ COMPLETE | PostgreSQL/Alembic, intake, detail/history and database-derived analytics. |
 | 3 | Message Intelligence | ✅ COMPLETE | Three-class local model, provenance/evaluation, rules/fusion, optional fail-safe AI and explainability. |
 | 4 | URL Intelligence | ✅ COMPLETE | Offline parser, licensed local ML, explainable rules/fusion and persisted results; no destination fetch. |
-| 5 | Authentication, Ownership, Privacy & Production (Task 5) | 🟡 IN PROGRESS | Local implementation/database verification complete; final regressions, branch push and user-owned cloud deployment/acceptance remain. |
+| 5 | Authentication, Ownership, Privacy & Production (Task 5) | 🟡 IN PROGRESS | Code and local verification complete; Neon/Render readiness user-verified. Vercel Task 5 frontend, proxy and production auth/private-history acceptance remain. |
 | 6 | Phone Intelligence | ⚪ NOT STARTED | UI complete only; normalization, report/reputation data and evidence are absent. |
 | 7 | Screenshot Intelligence | ⚪ NOT STARTED | No upload, OCR or image processing. |
 | 8 | QR Intelligence | ⚪ NOT STARTED | UI/local metadata only; no decode, URL/payment routing or camera. |
@@ -22,7 +22,6 @@ Audited 2026-09-08. Status reflects evidence, not permission to continue automat
 
 ## Current boundary
 
-Task 4 and its presentation closure are merged to `main`. Task 5 stays on
-`task-5-auth-production` until review and production setup; do not merge it automatically. The next
-implementation milestone is not authorized by this record. Phone/QR, community reporting and adaptive
-learning remain explicitly out of scope.
+Task 4 and its presentation closure are merged to `main`. Task 5 on `task-5-auth-production` is
+authorized for a safe no-fast-forward merge and main push after this deployment checkpoint is recorded.
+Stop there. Phone/QR, community reporting and adaptive learning remain explicitly out of scope.

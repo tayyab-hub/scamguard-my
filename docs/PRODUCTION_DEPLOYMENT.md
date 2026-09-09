@@ -1,9 +1,21 @@
 # Task 5 production deployment
 
-Status: **application configuration is implemented and locally verified; no hosted backend or managed
-database has been provisioned or externally verified by this task** (2026-09-08). The existing
-https://scamguard-my.vercel.app/ is still a frontend deployment until its production build is connected
-to a verified API. Do not interpret a Git push or provider build badge as acceptance evidence.
+Status (2026-09-09): **the user has manually verified the Neon production database and live Render
+FastAPI backend.** Alembic completed, `/api/v1/health` returned 200, and `/api/v1/ready` reported the
+database plus Message and URL Intelligence ready. The Task 5 Vercel frontend still awaits the main
+merge/redeployment; its same-origin API proxy and production authentication/private-history flow have
+not yet been verified. Do not interpret a Git push or provider build badge as acceptance evidence.
+
+| Production checkpoint | Status |
+| --- | --- |
+| Neon PostgreSQL | DEPLOYED / CONNECTED (user-verified) |
+| Render FastAPI | DEPLOYED / LIVE (user-verified) |
+| Alembic production migration | PASS (user-verified) |
+| `/api/v1/health` | PASS — 200 (user-verified) |
+| `/api/v1/ready` | PASS — database, Message and URL ready (user-verified) |
+| Vercel Task 5 frontend | PENDING main merge / redeployment |
+| Vercel same-origin API proxy | Being finalized / verified |
+| Production signup, login and private history | NOT YET VERIFIED through Vercel |
 
 ## Selected architecture
 
@@ -35,20 +47,17 @@ analysis is sufficient.
 
 ## Exact owner setup
 
-1. Review this branch. Do not merge it until its scope and evidence are accepted.
-2. In Neon, create a **separate production project/database** in a region near the chosen Render
-   region. Copy its TLS-required connection string. Never put it in Git, Vercel, screenshots or chat.
-3. In Render, create a Blueprint from this repository and `render.yaml`, using this branch for a review
-   deployment or reviewed `main` later. Supply `DATABASE_URL` with the Neon connection string and
-   `CORS_ORIGINS` as JSON containing exact HTTPS frontend origins, for example
-   `["https://scamguard-my.vercel.app"]`. Do not use `*`.
-4. Deploy and inspect logs. Confirm `GET https://<render-host>/api/v1/health` returns 200 and `GET
-   https://<render-host>/api/v1/ready` returns 200 with database, Message and URL readiness.
-5. In the existing Vercel frontend project (Root Directory `frontend`), set
+1. Completed: Task 5 branch reviewed and authorized for closure merge.
+2. Completed by the user: separate Neon production PostgreSQL created and connected over TLS.
+3. Completed by the user: Render FastAPI deployed with environment-only database/auth settings.
+4. Completed by the user: Alembic, health and database/Message/URL readiness verified.
+5. Pending: in the existing Vercel frontend project (Root Directory `frontend`), finalize the
+   same-origin API proxy/public API routing and deploy the Task 5 main commit. If direct API build
+   configuration is retained, set
    `VITE_API_BASE_URL=https://<render-host>/api/v1`; optionally set `VITE_SUPPORT_EMAIL`. Redeploy,
    because Vite embeds `VITE_*` values at build time. Do not set `DATABASE_URL`, auth secrets or AI keys
    in Vercel.
-6. Run the external acceptance sequence below in a normal target browser. If the browser blocks the
+6. Pending: run the external acceptance sequence below in a normal target browser. If the browser blocks the
    cross-site session cookie, stop rather than weaken cookie/CORS/CSRF controls; use reviewed same-site
    custom domains or a same-origin proxy design.
 
@@ -81,8 +90,9 @@ confirm A's records/totals cannot be listed, fetched or deleted and B's dashboar
 the test accounts, then recheck `/health`, `/ready`, browser console, network destinations, mobile layout
 and keyboard flow. Confirm no request targets localhost.
 
-Until that sequence passes, deployed signup/login, Message/URL analysis, persistence, multi-user
-isolation and laptop-independent online operation are **not verified**.
+The Render/Neon backend is verified independent of the laptop. Until the Vercel sequence passes,
+deployed signup/login, Message/URL analysis through the frontend, persistence and multi-user isolation
+are **not verified end to end**.
 
 Official references: [Render web services](https://render.com/docs/web-services), [Render free
 limits](https://render.com/docs/free), [Render deploys and pre-deploy commands](https://render.com/docs/deploys),

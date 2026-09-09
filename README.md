@@ -13,8 +13,9 @@ an explainable result. Optional backend contextual AI is disabled by default. **
 **Task 5 Authentication, User Ownership, Privacy Controls and Production Deployment is IN PROGRESS
 on `task-5-auth-production`.** Real accounts, opaque cookie sessions, CSRF protection, private
 analysis ownership/deletion, account deletion and production configuration are implemented and
-locally verified. The existing frontend at https://scamguard-my.vercel.app/ is not yet connected to
-a verified hosted API; Neon/Render/Vercel owner setup and external acceptance remain. See
+locally verified. The user has now verified the Neon production database, Render deployment,
+Alembic migration, health and full database/Message/URL readiness. The existing frontend at
+https://scamguard-my.vercel.app/ still awaits the Task 5 main deployment and proxy verification. See
 [Authentication](docs/AUTHENTICATION.md), [Privacy](docs/PRIVACY_MODEL.md), and
 [Production deployment](docs/PRODUCTION_DEPLOYMENT.md).
 
@@ -137,8 +138,8 @@ retrying; idempotency keys are not implemented.
 
 ## GitHub and Vercel
 
-Keep the existing origin and domain. Task 4 plus its UI closure are on `main`; Task 5 stays on its
-review branch:
+Keep the existing origin and domain. Task 4 plus its UI closure are on `main`; Task 5 is authorized
+for closure merge from its review branch:
 
 ```sh
 git status
@@ -155,9 +156,10 @@ managed PostgreSQL for Neon. See [Production deployment](docs/PRODUCTION_DEPLOYM
 
 [TESTING](docs/TESTING.md) contains exact frontend/backend/real PostgreSQL/browser commands. [PROGRESS](PROGRESS.md) records actual results and limitations. Generated dependencies, builds, local PostgreSQL data, `.env` and test outputs are ignored; lockfiles, source, migrations, tests and intentional documentation screenshots stay tracked.
 
-Task 4 is COMPLETE, verified and merged, including the accepted UI closure. Task 5 is IN PROGRESS on
-`task-5-auth-production`; do not merge it automatically. Phone/QR intelligence, community reporting
-and adaptive learning have not started.
+Task 4 is COMPLETE, verified and merged, including the accepted UI closure. Task 5 is authorized for
+its safe no-fast-forward main merge after recording the verified Neon/Render checkpoint. Production
+Vercel authentication acceptance remains pending. Phone/QR intelligence, community reporting and
+adaptive learning have not started.
 
 ## Post-Task 4 UI/UX refinement
 

@@ -26,9 +26,11 @@ backend may send best-effort-redacted Message text to the configured provider, w
 continues to work if that provider fails. URL analysis has no live reputation provider and performs no
 network retrieval.
 
-Production infrastructure is planned as Vercel (public frontend), Render (FastAPI) and Neon (managed
-PostgreSQL). Only Render receives the database connection and auth secret; Vercel receives the public
-API base URL. Provider account terms, database backups, deletion propagation into provider backups,
+Production infrastructure uses Vercel (public frontend), Render (FastAPI) and Neon (managed
+PostgreSQL). The user has verified Neon connectivity and Render health/readiness; the Task 5 Vercel
+frontend and private-history acceptance remain pending. Only Render receives the database connection
+and auth secret; Vercel receives public API routing only. Provider account terms, database backups,
+deletion propagation into provider backups,
 formal retention periods, legal notices, incident response, encryption guarantees beyond HTTPS/TLS,
 and organizational access procedures still require owner review before broader public or sensitive use.
 Basic database rate limits are not enterprise DDoS protection.

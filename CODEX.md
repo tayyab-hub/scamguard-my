@@ -5,7 +5,8 @@ visual identity is **Forensic Intelligence**: warm light ivory, charcoal, terrac
 restrained editorial motion. The repository has completed Task 1 Foundation, Task 2 Core Platform
 and Task 3 Message Intelligence; Task 4 URL Intelligence is COMPLETE and merged to main at `386e4b7`,
 with its accepted UI closure merged at `080e800`. Task 5 Authentication, Ownership, Privacy and
-Production is IN PROGRESS only on `task-5-auth-production`; hosted acceptance is still pending.
+Production is ready for its authorized main merge from `task-5-auth-production`: Neon and Render
+readiness are user-verified, while Vercel Task 5 auth/private-history acceptance remains pending.
 Never infer functionality from
 a planned UI control, roadmap line, screenshot or old conversation.
 
@@ -92,10 +93,10 @@ Current source is authoritative when historical wording conflicts.
   commits, discard user work, expose ignored secrets, or alter the configured remote casually.
 - Keep `node_modules`, `.venv`, `dist`, caches, coverage, logs, `.local`, test output and secrets
   ignored. Dataset source and reviewed model artifacts are intentional versioned research assets.
-- Tasks 2, 3 and 4 plus the accepted UI closure are merged to `main` (`386e4b7`, `080e800`). Keep all
-  Task 5 work on `task-5-auth-production`, push that branch only and do not merge it automatically.
-  Retain prior branches/history. Phone/QR intelligence, community reporting and adaptive learning
-  remain out of scope.
+- Tasks 2, 3 and 4 plus the accepted UI closure are merged to `main` (`386e4b7`, `080e800`). Task 5
+  is explicitly authorized for a safe no-fast-forward main merge after recording its production
+  checkpoint. Retain prior branches/history. Stop after the main push; Phone/QR intelligence,
+  community reporting and adaptive learning remain out of scope.
 
 ## Definition of done and completion procedure
 
