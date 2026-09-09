@@ -6,6 +6,7 @@ export class ApiError extends Error {
     message: string,
     public status?: number,
     public requestId?: string,
+    public code?: string,
   ) {
     super(message)
     this.name = 'ApiError'
@@ -139,6 +140,13 @@ export const analysisListSchema = z.object({
 export type AnalysisSummary = z.infer<typeof analysisSummarySchema>
 export type MessageAssessment = z.infer<typeof messageAssessmentSchema>
 export type SubmissionInput = { input_type: 'MESSAGE' | 'URL'; content: string }
+export const userSchema = z.object({
+  id: z.uuid(),
+  email: z.email(),
+  created_at: z.iso.datetime({ offset: true }),
+})
+export const authResponseSchema = z.object({ user: userSchema, csrf_token: z.string().min(32) })
+export type User = z.infer<typeof userSchema>
 export const dashboardSchema = z.discriminatedUnion('status', [
   z.object({
     status: z.literal('not_configured'),
@@ -169,55 +177,88 @@ export async function getApi<T>(
   schema: z.ZodType<T>,
   signal?: AbortSignal,
 ): Promise<T> {
-  return requestApi(path, schema, signal)
+  return requestApi(path, schema, { signal })
 }
 
 export async function postSubmission(input: SubmissionInput) {
-  return requestApi('/analyses', analysisDetailSchema, undefined, input)
+  return requestApi('/analyses', analysisDetailSchema, { method: 'POST', body: input })
 }
 
-async function requestApi<T>(
+let csrfToken: string | null = null
+
+export function setCsrfToken(value: string | null) {
+  csrfToken = value
+}
+
+type RequestOptions = {
+  signal?: AbortSignal
+  method?: 'GET' | 'POST' | 'DELETE'
+  body?: unknown
+}
+
+const apiErrorSchema = z.object({
+  error: z.object({
+    code: z.string(),
+    message: z.string(),
+    request_id: z.string().optional(),
+  }),
+})
+
+export async function requestApi<T>(
   path: string,
   schema: z.ZodType<T>,
-  signal?: AbortSignal,
-  input?: SubmissionInput,
+  options: RequestOptions = {},
 ): Promise<T> {
   // Validate inside the query so a bad deployment setting renders a recoverable view,
   // rather than throwing during module initialization and leaving a blank application.
   const apiBaseUrl = getApiBaseUrl()
   const controller = new AbortController()
   const abort = () => controller.abort()
-  if (signal?.aborted) controller.abort()
-  signal?.addEventListener('abort', abort, { once: true })
+  if (options.signal?.aborted) controller.abort()
+  options.signal?.addEventListener('abort', abort, { once: true })
   const timeout = setTimeout(() => controller.abort(), 8_000)
   try {
+    const method = options.method || 'GET'
     const response = await fetch(`${apiBaseUrl}${path}`, {
-      ...(input ? { method: 'POST', body: JSON.stringify(input) } : {}),
+      ...(method === 'GET' ? {} : { method }),
+      ...(options.body !== undefined ? { body: JSON.stringify(options.body) } : {}),
       headers: {
         Accept: 'application/json',
-        ...(input ? { 'Content-Type': 'application/json' } : {}),
+        ...(options.body !== undefined ? { 'Content-Type': 'application/json' } : {}),
+        ...(method !== 'GET' && csrfToken ? { 'X-CSRF-Token': csrfToken } : {}),
       },
       signal: controller.signal,
-      credentials: 'omit',
+      credentials: 'include',
       cache: 'no-store',
     })
     if (!response.ok) {
-      throw new ApiError(
-        response.status === 422
+      const parsed = apiErrorSchema.safeParse(await response.json().catch(() => null))
+      const message = parsed.success
+        ? parsed.data.error.message
+        : response.status === 422
           ? 'Check the highlighted fields and try again.'
           : response.status >= 500
             ? 'The service is temporarily unavailable.'
-            : 'The request could not be completed.',
+            : 'The request could not be completed.'
+      const error = new ApiError(
+        message,
         response.status,
-        response.headers.get('X-Request-ID') || undefined,
+        parsed.success
+          ? parsed.data.error.request_id
+          : response.headers.get('X-Request-ID') || undefined,
+        parsed.success ? parsed.data.error.code : undefined,
       )
+      if (response.status === 401 && !path.startsWith('/auth/')) {
+        window.dispatchEvent(new Event('scamguard:unauthorized'))
+      }
+      throw error
     }
-    const result = schema.safeParse(await response.json())
+    const result = schema.safeParse(response.status === 204 ? undefined : await response.json())
     if (!result.success) throw new ApiError('The service returned an unexpected response.')
     return result.data
   } catch (error) {
     if (error instanceof ApiError) throw error
-    if (signal?.aborted) throw error
+    if (options.signal?.aborted) throw error
     if (controller.signal.aborted)
       throw new ApiError('The service took too long to respond. Please try again.')
     if (error instanceof SyntaxError)
@@ -225,6 +266,36 @@ async function requestApi<T>(
     throw new ApiError('We could not reach the service. Check your connection and try again.')
   } finally {
     clearTimeout(timeout)
-    signal?.removeEventListener('abort', abort)
+    options.signal?.removeEventListener('abort', abort)
   }
+}
+
+export async function signup(email: string, password: string) {
+  return requestApi('/auth/signup', authResponseSchema, {
+    method: 'POST',
+    body: { email, password },
+  })
+}
+
+export async function login(email: string, password: string) {
+  return requestApi('/auth/login', authResponseSchema, {
+    method: 'POST',
+    body: { email, password },
+  })
+}
+
+export async function currentUser(signal?: AbortSignal) {
+  return requestApi('/auth/me', authResponseSchema, { signal })
+}
+
+export async function logout() {
+  return requestApi('/auth/logout', z.unknown(), { method: 'POST' })
+}
+
+export async function deleteAccount(password: string) {
+  return requestApi('/auth/account', z.unknown(), { method: 'DELETE', body: { password } })
+}
+
+export async function deleteAnalysis(id: string) {
+  return requestApi(`/analyses/${id}`, z.unknown(), { method: 'DELETE' })
 }

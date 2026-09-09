@@ -4,6 +4,7 @@ import {
   analysisListSchema,
   capabilitiesSchema,
   dashboardSchema,
+  deleteAnalysis,
   getApi,
   healthSchema,
   postSubmission,
@@ -15,6 +16,19 @@ export function useSubmitAnalysis() {
     mutationFn: postSubmission,
     retry: false,
     onSuccess: () => {
+      void client.invalidateQueries({ queryKey: ['dashboard'] })
+      void client.invalidateQueries({ queryKey: ['analyses'] })
+    },
+  })
+}
+
+export function useDeleteAnalysis() {
+  const client = useQueryClient()
+  return useMutation({
+    mutationFn: deleteAnalysis,
+    retry: false,
+    onSuccess: (_data, id) => {
+      client.removeQueries({ queryKey: ['analysis', id] })
       void client.invalidateQueries({ queryKey: ['dashboard'] })
       void client.invalidateQueries({ queryKey: ['analyses'] })
     },

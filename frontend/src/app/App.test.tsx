@@ -350,7 +350,7 @@ describe('application routes and API states', () => {
     const user = userEvent.setup()
     renderApp('/help')
     expect(await screen.findByRole('heading', { name: 'Help & Support' })).toBeInTheDocument()
-    expect(screen.getAllByRole('group')).toHaveLength(17)
+    expect(screen.getAllByRole('group')).toHaveLength(20)
     await user.type(screen.getByLabelText('Search help'), 'QR')
     expect(screen.getByText('2 answers available')).toBeInTheDocument()
     await user.clear(screen.getByLabelText('Search help'))

@@ -1,0 +1,84 @@
+# Task 5 authentication and authorization
+
+Status (2026-09-09): **implemented and locally verified; Neon/Render infrastructure readiness is
+user-verified.** Vercel production signup/login/session/private-history acceptance remains pending the
+Task 5 main deployment and same-origin proxy verification.
+
+## Architecture
+
+SCAMGUARD uses email/password accounts and opaque server-side sessions. Passwords are hashed with
+Argon2id (`argon2-cffi`) using the application's explicit time, memory and parallelism settings.
+Passwords, raw session tokens and raw CSRF tokens are never stored. A cryptographically random
+session token exists only in an HttpOnly cookie; the database stores an HMAC-SHA-256 digest made
+with the environment-only `AUTH_TOKEN_PEPPER`. Sessions expire, can be revoked, and are shared
+through PostgreSQL rather than process memory.
+
+Production uses one `Secure; HttpOnly; SameSite=None; Path=/` session cookie because the Vercel and
+Render origins are different sites. Local development uses `Secure=false; SameSite=Lax`. The
+frontend always sends credentialed requests, keeps the synchronizer CSRF token only in memory, and
+obtains a fresh CSRF token from `GET /api/v1/auth/me` after a page refresh. It does not place auth
+secrets in localStorage.
+
+State-changing requests require all three of:
+
+1. a current server-side session;
+2. an exact allowed `Origin` header; and
+3. the matching `X-CSRF-Token` synchronizer token.
+
+This protects logout, analysis creation/deletion and account deletion. Signup and login require an
+exact allowed origin and have PostgreSQL-backed rate limits. Login errors deliberately use the same
+`Invalid email or password.` response for an unknown account and a wrong password; a dummy Argon2
+verification reduces user-enumeration timing differences. Email is validated, normalized to lower
+case, unique in PostgreSQL, and duplicate races return a safe conflict response. Passwords are 12–128
+characters without obsolete composition rules.
+
+## Endpoints
+
+| Method and path | Behavior |
+| --- | --- |
+| `POST /api/v1/auth/signup` | Creates a normalized account and session; returns minimal user data plus the in-memory CSRF token. |
+| `POST /api/v1/auth/login` | Verifies credentials with a generic failure response and creates a new session token, preventing fixation. |
+| `GET /api/v1/auth/me` | Validates the cookie and returns only `id`, `email`, `created_at`, plus a rotated CSRF token. |
+| `POST /api/v1/auth/logout` | Requires CSRF, revokes the database session and clears the cookie. |
+| `DELETE /api/v1/auth/account` | Requires CSRF and the current password; deletes the user transactionally. Foreign-key cascades delete sessions and owned analyses. |
+
+Analysis submission, history, detail, deletion and dashboard API operations require authentication.
+Health, readiness and the non-user-specific capabilities probe remain public. The frontend protects
+Overview, Analyse and Account routes, preserves only safe in-app intended destinations, and returns
+to Sign In on a 401 without an open redirect.
+
+## Ownership and access control
+
+`0003_auth_ownership` adds `users`, `auth_sessions`, `auth_rate_limits`, and nullable
+`analyses.user_id`. New submissions ignore any client ownership claim and set `user_id` from the
+validated session. Every list, detail, deletion and dashboard query includes the authenticated user
+ID. A record that is missing, belongs to somebody else, or is a legacy unowned record produces the
+same 404 detail behavior, avoiding an IDOR/existence oracle.
+
+Pre-authentication rows remain `user_id = NULL`. They are preserved for migration compatibility but
+are invisible to normal accounts and excluded from their dashboard totals. They are not assigned to
+the first or any later user. Schema nullability exists only for those records; the application always
+sets ownership for new writes.
+
+PostgreSQL-backed fixed-window rate buckets cover signup by client IP, login by IP plus normalized
+email, and analysis submission by user. Transaction-scoped PostgreSQL advisory locks serialize each
+bucket, so limits are shared across workers. This is basic application abuse protection, not a DDoS
+service or enterprise bot defense.
+
+## Security review boundary
+
+- SQLAlchemy parameters prevent user text from becoming SQL; React renders submitted text as text,
+  not executable markup.
+- Session tokens are random, rotated on every login, stored hashed, expired and revocable. HTTPS and
+  the HttpOnly flag reduce—but cannot eliminate—token theft risk.
+- Exact CORS origins are required in production. Wildcards and credentialed `*` are rejected.
+- Authorization is enforced in backend queries, not only through hidden frontend navigation.
+- Safe error envelopes do not expose hashes, tokens, database details, tracebacks or raw content.
+- The raw CSRF token is necessarily present in the authenticated JSON response and frontend memory;
+  XSS would still be serious. The existing no-HTML rendering boundary and dependency hygiene remain
+  important.
+- Cross-site cookies may be blocked by restrictive browser privacy settings. Verify the actual
+  Vercel/Render pair in target browsers; same-site custom domains or a reviewed same-origin proxy are
+  future mitigations if this occurs.
+
+See [Privacy model](PRIVACY_MODEL.md), [API](API.md), and [Production deployment](PRODUCTION_DEPLOYMENT.md).

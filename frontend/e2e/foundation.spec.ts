@@ -1,4 +1,7 @@
 import { expect, test } from '@playwright/test'
+import { mockAuthenticatedWorkspace } from './auth-fixture'
+
+test.beforeEach(async ({ page }) => mockAuthenticatedWorkspace(page))
 
 test('live API: responsive navigation, honest states, direct routes and no console errors', async ({
   page,
@@ -56,7 +59,7 @@ test('explicit failure fixture: visible error and successful retry', async ({ pa
         contentType: 'application/json',
         body: '{"error":{"code":"TEST_UNAVAILABLE"}}',
       })
-    else await route.continue()
+    else await route.fallback()
   })
   await page.goto('/')
   await expect(page.getByRole('alert')).toContainText('temporarily unavailable')

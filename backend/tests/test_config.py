@@ -11,10 +11,14 @@ def test_environment_is_read(monkeypatch):
     assert Settings(_env_file=None).log_level == "WARNING"
 
 
-@pytest.mark.parametrize("url", ["sqlite:///test.db", "postgresql://user:pass@localhost/db"])
-def test_requires_postgresql_and_psycopg(url):
+def test_requires_postgresql():
     with pytest.raises(ValidationError):
-        Settings(_env_file=None, database_url=url)
+        Settings(_env_file=None, database_url="sqlite:///test.db")
+
+
+def test_standard_postgresql_url_is_normalized_for_psycopg():
+    settings = Settings(_env_file=None, database_url="postgresql://user:pass@localhost/db")
+    assert str(settings.database_url).startswith("postgresql+psycopg://")
 
 
 @pytest.mark.parametrize(
@@ -51,8 +55,14 @@ def test_production_disables_documentation():
     settings = Settings(
         _env_file=None,
         app_env="production",
-        database_url="postgresql+psycopg://app:example-test-password@db/scamguard",
-        cors_origins=[],
+        database_url=(
+            "postgresql+psycopg://app:example-test-password@db/scamguard?sslmode=require"
+        ),
+        cors_origins=["https://scamguard.example"],
+        persistence_enabled=True,
+        cookie_secure=True,
+        cookie_samesite="none",
+        auth_token_pepper="a-production-only-pepper-over-32-characters",
     )
     with TestClient(create_app(settings)) as client:
         assert client.get("/docs").status_code == 404

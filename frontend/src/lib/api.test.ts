@@ -11,13 +11,13 @@ describe('API transport', () => {
     await expect(getApi('/health', healthSchema)).rejects.toThrow('VITE_API_BASE_URL')
     expect(fetchMock).not.toHaveBeenCalled()
   })
-  it('parses the API contract and omits browser credentials', async () => {
+  it('parses the API contract and includes browser credentials', async () => {
     const fetchMock = vi.fn().mockResolvedValue(Response.json(healthFixture))
     vi.stubGlobal('fetch', fetchMock)
     expect(await getApi('/health', healthSchema)).toEqual(healthFixture)
     expect(fetchMock).toHaveBeenCalledWith(
       '/api/v1/health',
-      expect.objectContaining({ credentials: 'omit', cache: 'no-store' }),
+      expect.objectContaining({ credentials: 'include', cache: 'no-store' }),
     )
   })
 

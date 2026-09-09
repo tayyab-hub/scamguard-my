@@ -162,7 +162,7 @@ describe('persistent submission UI', () => {
     fireEvent.change(input, { target: { value: '  ' } })
     expect(button).toBeDisabled()
     fireEvent.change(input, { target: { value: '  Test-only message  ' } })
-    expect(screen.getByText(/Shared development workspace: submitted text/)).toBeInTheDocument()
+    expect(screen.getByText(/stored in your private account history/)).toBeInTheDocument()
     await userEvent.click(button)
     expect(await screen.findByText('Recording your submission…')).toBeInTheDocument()
     expect(input).toHaveValue('  Test-only message  ')
@@ -178,7 +178,7 @@ describe('persistent submission UI', () => {
       content: 'Test-only message',
     })
     expect(posts[0]![1]).toMatchObject({
-      credentials: 'omit',
+      credentials: 'include',
       cache: 'no-store',
       headers: { 'Content-Type': 'application/json' },
     })

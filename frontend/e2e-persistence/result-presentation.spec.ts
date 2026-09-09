@@ -1,4 +1,7 @@
 import { expect, test } from '@playwright/test'
+import { createAuthenticatedAccount } from './auth-fixture'
+
+test.beforeEach(async ({ page }, info) => createAuthenticatedAccount(page.request, info))
 
 test('result presentation: real scores, keyboard metadata, pending and live reduced motion', async ({
   page,

@@ -2,6 +2,9 @@ import { expect, test } from '@playwright/test'
 import type { Page, TestInfo } from '@playwright/test'
 import { mkdir, writeFile } from 'node:fs/promises'
 import path from 'node:path'
+import { createAuthenticatedAccount } from './auth-fixture'
+
+test.beforeEach(async ({ page }, info) => createAuthenticatedAccount(page.request, info))
 
 async function capture(page: Page, info: TestInfo, name: string) {
   await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }))
@@ -34,7 +37,6 @@ async function capture(page: Page, info: TestInfo, name: string) {
 
 test('real PostgreSQL: Message and URL results persist through navigation and refresh', async ({
   page,
-  request,
 }, testInfo) => {
   const errors: string[] = []
   const unexpected: string[] = []
@@ -45,7 +47,7 @@ test('real PostgreSQL: Message and URL results persist through navigation and re
   page.on('request', (req) => {
     if (!req.url().startsWith('http://127.0.0.1:5175')) unexpected.push(req.url())
   })
-  const before = await (await request.get('/api/v1/dashboard')).json()
+  const before = await (await page.request.get('/api/v1/dashboard')).json()
   const message = `URGENT: Your bank account will be suspended. Click the link and provide your OTP now. Browser fixture ${testInfo.project.name} ${Date.now()}`
   await page.goto('/analyse')
   await page.getByLabel('Message content').fill(message)
@@ -93,7 +95,7 @@ test('real PostgreSQL: Message and URL results persist through navigation and re
   await expect(page.getByRole('button', { name: 'Analyse phone number' })).toBeDisabled()
   await page.getByRole('tab', { name: 'QR Code' }).click()
   await expect(page.getByRole('button', { name: 'Analyse QR' })).toBeDisabled()
-  const after = await (await request.get('/api/v1/dashboard')).json()
+  const after = await (await page.request.get('/api/v1/dashboard')).json()
   expect(after.total_analyses).toBe(before.total_analyses + 2)
   expect(after.flagged_analyses).toBe(before.flagged_analyses + 1)
   expect(after.recent_analyses[0].input_type).toBe('URL')

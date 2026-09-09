@@ -2,6 +2,9 @@ import { mkdir, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { expect, test } from '@playwright/test'
 import type { Page, TestInfo } from '@playwright/test'
+import { mockAuthenticatedWorkspace } from './auth-fixture'
+
+test.beforeEach(async ({ page }) => mockAuthenticatedWorkspace(page))
 
 async function capture(page: Page, testInfo: TestInfo, name: string) {
   await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }))
@@ -94,7 +97,7 @@ test('Forensic Intelligence screens retain navigation and keyboard access', asyn
 
   await nav.getByRole('link', { name: 'Help & Support' }).click()
   await expect(page.getByRole('heading', { name: 'Help & Support' })).toBeFocused()
-  await expect(page.getByRole('group')).toHaveCount(17)
+  await expect(page.getByRole('group')).toHaveCount(20)
   await capture(page, testInfo, 'help')
   expect(failures).toEqual([])
 })
@@ -284,7 +287,7 @@ test('planned phone and QR modes preserve local privacy, file focus and reduced 
     expect(await page.evaluate(() => document.getAnimations().length)).toBe(0)
   }
   for (const request of apiRequests) {
-    expect(new URL(request.url).pathname).toMatch(/^\/api\/v1\/(health|capabilities)$/)
+    expect(new URL(request.url).pathname).toMatch(/^\/api\/v1\/(health|capabilities|auth\/me)$/)
     expect(request.method).toBe('GET')
     expect(request.body).toBeNull()
   }

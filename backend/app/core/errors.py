@@ -11,10 +11,13 @@ logger = logging.getLogger("scamguard.api")
 
 
 class ApiError(Exception):
-    def __init__(self, status_code: int, code: str, message: str):
+    def __init__(
+        self, status_code: int, code: str, message: str, headers: dict[str, str] | None = None
+    ):
         self.status_code = status_code
         self.code = code
         self.message = message
+        self.headers = headers
 
 
 def safe_validation_field(error: dict) -> str:
@@ -60,7 +63,7 @@ def install_error_handlers(app: FastAPI) -> None:
 
     @app.exception_handler(ApiError)
     async def handle_api_error(request: Request, exc: ApiError) -> JSONResponse:
-        return error_response(request, exc.status_code, exc.code, exc.message)
+        return error_response(request, exc.status_code, exc.code, exc.message, headers=exc.headers)
 
     @app.exception_handler(HTTPException)
     async def handle_http_error(request: Request, exc: HTTPException) -> JSONResponse:

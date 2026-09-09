@@ -1,4 +1,7 @@
 import { expect, test } from '@playwright/test'
+import { createAuthenticatedAccount } from './auth-fixture'
+
+test.beforeEach(async ({ page }, info) => createAuthenticatedAccount(page.request, info))
 
 const scenarios = [
   ['https://paypal.example.net/%252f/file.exe', 'High risk', 'Encoded URL structure'],

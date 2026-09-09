@@ -5,12 +5,16 @@ import {
   CircleHelp,
   Globe2,
   LayoutDashboard,
+  LogIn,
+  LogOut,
   ScanLine,
   Shield,
+  UserRound,
 } from 'lucide-react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { ApiStatus } from '../components/ApiStatus'
 import { Brand } from '../components/Brand'
+import { useAuth } from '../auth/AuthContext'
 
 const navigation = [
   { to: '/', label: 'Overview', icon: LayoutDashboard },
@@ -19,6 +23,7 @@ const navigation = [
 ]
 
 export function AppShell() {
+  const auth = useAuth()
   const { pathname } = useLocation()
   const current = navigation.find((item) => item.to === pathname)?.label || 'Page not found'
   useEffect(() => {
@@ -86,8 +91,53 @@ export function AppShell() {
               {current}
             </span>
           </div>
-          <div className="hidden sm:block">
-            <ApiStatus />
+          <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+            <div className="hidden xl:block">
+              <ApiStatus />
+            </div>
+            {auth.user ? (
+              <div className="flex min-w-0 items-center gap-1 rounded-lg border border-line bg-surface-raised p-1">
+                <span className="hidden max-w-52 truncate px-2 text-xs text-muted md:block" title={auth.user.email}>
+                  {auth.user.email}
+                </span>
+                <Link
+                  to="/account"
+                  aria-label="Account"
+                  className="button-quiet flex min-h-9 items-center gap-2 rounded px-2 text-xs font-semibold"
+                >
+                  <UserRound size={15} aria-hidden="true" />
+                  <span className="hidden sm:inline">Account</span>
+                </Link>
+                <button
+                  type="button"
+                  aria-label="Logout"
+                  className="button-quiet flex min-h-9 items-center gap-2 rounded px-2 text-xs font-semibold"
+                  onClick={() => void auth.signOut()}
+                >
+                  <LogOut size={15} aria-hidden="true" />
+                  <span className="hidden sm:inline">Logout</span>
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-1">
+                <Link
+                  to="/login"
+                  aria-label="Sign in"
+                  className="button-quiet flex min-h-9 items-center gap-2 rounded px-2 text-xs font-semibold"
+                >
+                  <LogIn size={15} aria-hidden="true" />
+                  <span className="hidden sm:inline">Sign in</span>
+                </Link>
+                <Link
+                  to="/signup"
+                  aria-label="Create account"
+                  className="button-primary min-h-9 whitespace-nowrap px-3 py-2 text-xs"
+                >
+                  <span className="sm:hidden">Join</span>
+                  <span className="hidden sm:inline">Create account</span>
+                </Link>
+              </div>
+            )}
           </div>
         </header>
         <div className="flex items-center justify-between gap-2 border-b border-line bg-surface/70 px-5 py-3 sm:hidden">

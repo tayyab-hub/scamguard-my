@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: scamguard-capstone-api
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install --upgrade pip && pip install -c requirements.lock .
+    startCommand: python scripts/start_production.py
+    healthCheckPath: /api/v1/ready
+    autoDeployTrigger: commit
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: PERSISTENCE_ENABLED
+        value: "true"
+      - key: DATABASE_URL
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false
+      - key: AUTH_TOKEN_PEPPER
+        generateValue: true
+      - key: COOKIE_SECURE
+        value: "true"
+      - key: COOKIE_SAMESITE
+        value: none
+      - key: AI_REVIEW_ENABLED
+        value: "false"

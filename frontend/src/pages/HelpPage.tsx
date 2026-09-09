@@ -51,7 +51,19 @@ const faqs = [
   ],
   [
     'Who can see stored submissions?',
-    'This development workspace has no user accounts. Anyone with access to the backend may be able to view stored submissions.',
+    'Each submitted Message or URL analysis belongs to the signed-in account. Other normal users cannot list, open or delete it. Pre-account development records remain unowned and are hidden from every user.',
+  ],
+  [
+    'What account information is stored?',
+    'SCAMGUARD stores your normalized email address, a one-way Argon2id password hash, server-side session records and the analyses linked to your account. It never stores your plaintext password.',
+  ],
+  [
+    'Can I remove my data?',
+    'You can delete an individual analysis from Overview. Account settings can permanently delete the account, its active sessions and all analyses linked to it after password confirmation.',
+  ],
+  [
+    'Is submitted content sent to an external AI service?',
+    'No external AI is required. Contextual external review remains optional and disabled by default. If an administrator enables it later, that deployment must disclose the configured provider; local Message and URL intelligence continues without it.',
   ],
   [
     'Why are dashboard values unavailable?',
@@ -139,6 +151,19 @@ export function HelpPage() {
             <p className="mt-2 text-xs leading-6 text-muted">{copy}</p>
           </article>
         ))}
+      </section>
+
+      <section className="panel mt-6 p-5 sm:p-6" aria-labelledby="privacy-heading">
+        <h2 id="privacy-heading" className="text-sm font-semibold">
+          Privacy in this academic prototype
+        </h2>
+        <p className="mt-3 max-w-4xl text-xs leading-6 text-muted">
+          An account stores an email address and links submitted analyses to that account so its
+          history remains private from other users. Do not submit passwords, one-time codes,
+          payment credentials, recovery phrases, identity documents or highly sensitive personal
+          information. Message and URL results are limited decision support, not proof of safety or
+          fraud. External AI review is disabled by default and is not required for local analysis.
+        </p>
       </section>
 
       <div className="mt-6 grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">

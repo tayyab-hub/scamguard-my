@@ -170,7 +170,7 @@ export function DashboardPage() {
                 <div className="flex items-start gap-2.5 border-t border-line bg-surface-raised/40 px-5 py-3.5 text-[11px] leading-5 text-muted sm:px-6">
                   <Info size={14} className="mt-0.5 shrink-0" aria-hidden="true" />
                   {data
-                    ? 'Shared development workspace. Message and URL results are decision support, not proof of fraud or safety.'
+                    ? 'Private account history. Message and URL results are decision support, not proof of fraud or safety.'
                     : 'No live statistics are being collected or displayed.'}
                 </div>
               </section>

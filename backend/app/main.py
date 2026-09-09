@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import sessionmaker
 
 from app.api.analyses import router as analyses_router
+from app.api.auth import router as auth_router
 from app.api.routes import router
 from app.core.body_limit import BodyLimitMiddleware
 from app.core.config import Settings, get_settings
@@ -66,13 +67,14 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     application.add_middleware(
         CORSMiddleware,
         allow_origins=config.cors_origins,
-        allow_credentials=False,
-        allow_methods=["GET", "POST"],
-        allow_headers=["Accept", "Content-Type"],
+        allow_credentials=True,
+        allow_methods=["GET", "POST", "DELETE"],
+        allow_headers=["Accept", "Content-Type", "X-CSRF-Token"],
         expose_headers=["X-Request-ID"],
     )
     install_error_handlers(application)
     application.include_router(router)
+    application.include_router(auth_router)
     application.include_router(analyses_router)
     return application
 
