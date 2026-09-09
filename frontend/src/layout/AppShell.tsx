@@ -22,10 +22,24 @@ const navigation = [
   { to: '/help', label: 'Help & Support', icon: CircleHelp },
 ]
 
+const routeLabels: Record<string, string> = {
+  '/': 'Overview',
+  '/analyse': 'Analyse',
+  '/help': 'Help & Support',
+  '/login': 'Sign in',
+  '/signup': 'Create account',
+  '/account': 'Account',
+}
+
+function routeLabel(pathname: string) {
+  const normalized = pathname === '/' ? pathname : pathname.replace(/\/+$/, '')
+  return routeLabels[normalized] || 'Page not found'
+}
+
 export function AppShell() {
   const auth = useAuth()
   const { pathname } = useLocation()
-  const current = navigation.find((item) => item.to === pathname)?.label || 'Page not found'
+  const current = routeLabel(pathname)
   useEffect(() => {
     document.title = `${current} · SCAMGUARD`
     document.getElementById('page-heading')?.focus()
@@ -87,7 +101,11 @@ export function AppShell() {
           <div className="hidden items-center gap-3 text-xs lg:flex">
             <span className="text-muted">Workspace</span>
             <ChevronRight size={13} className="text-muted" aria-hidden="true" />
-            <span key={pathname} className="motion-fade font-medium text-ink">
+            <span
+              key={pathname}
+              aria-label="Current page"
+              className="motion-fade font-medium text-ink"
+            >
               {current}
             </span>
           </div>

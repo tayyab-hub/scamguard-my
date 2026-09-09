@@ -118,6 +118,35 @@ describe('authenticated application experience', () => {
     expect(screen.getByRole('button', { name: 'Create account' })).toBeEnabled()
   })
 
+  it('keeps signup available and sends it through the same-origin API when health is unavailable', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn((url: string, options?: RequestInit) => {
+        if (url.endsWith('/health')) return Promise.reject(new TypeError('offline health probe'))
+        if (url.endsWith('/auth/signup') && options?.method === 'POST')
+          return Promise.resolve(Response.json(authResponse, { status: 201 }))
+        return applicationFetch(url, options)
+      }),
+    )
+    const userEventApi = userEvent.setup()
+    renderAuthenticatedApp('/signup')
+    expect(await screen.findByRole('heading', { name: 'Create your account' })).toBeInTheDocument()
+    expect(await screen.findAllByText('API unavailable')).not.toHaveLength(0)
+    await userEventApi.type(screen.getByLabelText('Email address'), 'person@example.com')
+    await userEventApi.type(screen.getByLabelText('Password'), 'correct horse battery staple')
+    await userEventApi.type(
+      screen.getByLabelText('Confirm password'),
+      'correct horse battery staple',
+    )
+    await userEventApi.click(screen.getByRole('button', { name: 'Create account' }))
+    expect(await screen.findByRole('heading', { name: 'Security overview' })).toBeInTheDocument()
+    const signupCall = vi
+      .mocked(fetch)
+      .mock.calls.find(([url]) => String(url).endsWith('/auth/signup'))
+    expect(signupCall?.[0]).toBe('/api/v1/auth/signup')
+    expect(signupCall?.[1]).toMatchObject({ method: 'POST', credentials: 'include' })
+  })
+
   it('restores a session, exposes the account menu, and logs out cleanly', async () => {
     vi.stubGlobal(
       'fetch',

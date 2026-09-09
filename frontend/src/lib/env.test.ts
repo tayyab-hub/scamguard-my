@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { parseApiBaseUrl } from './env'
+import { getApiBaseUrl, parseApiBaseUrl } from './env'
 
 describe('API deployment configuration', () => {
   it('supports the local same-origin proxy outside production', () => {
@@ -9,15 +9,23 @@ describe('API deployment configuration', () => {
     )
   })
 
+  it('uses the same-origin proxy when production configuration is blank', () => {
+    expect(getApiBaseUrl()).toBe('/api/v1')
+  })
+
+  it('accepts the production same-origin API proxy', () => {
+    expect(parseApiBaseUrl('/api/v1/', true)).toBe('/api/v1')
+  })
+
   it.each([
     '',
-    '/api/v1',
+    'api/v1',
     'http://api.example.com/api/v1',
     'https://localhost:8000/api/v1',
     'https://127.0.0.1:8000/api/v1',
   ])('rejects unsafe production API configuration %j', (value) => {
     expect(() => parseApiBaseUrl(value, true)).toThrow(
-      'Production VITE_API_BASE_URL must be a non-local HTTPS API URL.',
+      'Production VITE_API_BASE_URL must be a same-origin absolute path or non-local HTTPS URL.',
     )
   })
 

@@ -104,6 +104,23 @@ describe('application routes and API states', () => {
     expect(document.title).toBe('Analyse · SCAMGUARD')
   })
 
+  it.each([
+    ['/login', 'Sign in', 'Welcome back'],
+    ['/signup', 'Create account', 'Create your account'],
+  ])('recognizes the public auth route %s in page metadata', async (path, label, heading) => {
+    renderApp(path, { user: null })
+    expect(await screen.findByRole('heading', { name: heading })).toBeInTheDocument()
+    expect(screen.getByLabelText('Current page')).toHaveTextContent(label)
+    await waitFor(() => expect(document.title).toBe(`${label} · SCAMGUARD`))
+  })
+
+  it('recognizes the protected account route in page metadata', async () => {
+    renderApp('/account')
+    expect(await screen.findByRole('heading', { name: 'Account controls' })).toBeInTheDocument()
+    expect(screen.getByLabelText('Current page')).toHaveTextContent('Account')
+    await waitFor(() => expect(document.title).toBe('Account · SCAMGUARD'))
+  })
+
   it('allows local drafting, content switching and clearing without submitting anything', async () => {
     const user = userEvent.setup()
     renderApp('/analyse')
@@ -338,6 +355,8 @@ describe('application routes and API states', () => {
   it('shows a real not-found route with working Overview and Analyse actions', async () => {
     renderApp('/missing')
     expect(screen.getByRole('heading', { name: 'Page not found' })).toBeInTheDocument()
+    expect(screen.getByLabelText('Current page')).toHaveTextContent('Page not found')
+    await waitFor(() => expect(document.title).toBe('Page not found · SCAMGUARD'))
     expect(screen.getByRole('link', { name: 'Open Analyse' })).toHaveAttribute('href', '/analyse')
     await userEvent.click(screen.getByRole('link', { name: 'Return to Overview' }))
     await waitFor(() =>

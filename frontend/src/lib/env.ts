@@ -1,6 +1,7 @@
 export function parseApiBaseUrl(value: string, production = false): string {
   const normalized = value.replace(/\/+$/, '')
-  if (!production && /^\/(?!\/)[\w/-]+$/.test(normalized)) return normalized
+  // A root-relative base is the preferred production path when the host proxies /api to FastAPI.
+  if (/^\/(?!\/)[\w/-]+$/.test(normalized)) return normalized
   try {
     const url = new URL(normalized)
     if (
@@ -19,13 +20,13 @@ export function parseApiBaseUrl(value: string, production = false): string {
   }
   throw new Error(
     production
-      ? 'Production VITE_API_BASE_URL must be a non-local HTTPS API URL.'
+      ? 'Production VITE_API_BASE_URL must be a same-origin absolute path or non-local HTTPS URL.'
       : 'VITE_API_BASE_URL must be an HTTP(S) URL or an absolute path such as /api/v1.',
   )
 }
 
 export function getApiBaseUrl(): string {
-  const configured = import.meta.env.VITE_API_BASE_URL || (import.meta.env.PROD ? '' : '/api/v1')
+  const configured = import.meta.env.VITE_API_BASE_URL || '/api/v1'
   return parseApiBaseUrl(configured, import.meta.env.PROD)
 }
 

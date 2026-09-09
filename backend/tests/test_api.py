@@ -185,4 +185,5 @@ def test_readiness_detects_missing_migration(app, client):
     app.dependency_overrides[get_session] = lambda: session
     response = client.get("/api/v1/ready")
     assert response.status_code == 503
+    assert response.json()["error"]["code"] == "DATABASE_UNAVAILABLE"
     assert "missing-table" not in response.text
