@@ -20,6 +20,7 @@ from app.core.auth import (
     require_authenticated_session,
     require_csrf,
     secret_hash,
+    session_csrf_token,
     verify_dummy_password,
     verify_password,
 )
@@ -171,7 +172,7 @@ def client_discriminator(request: Request) -> str:
 def set_auth_cookie(request: Request, response: Response, user: User, session: Session) -> str:
     settings = request.app.state.settings
     raw_session = new_secret()
-    raw_csrf = new_secret()
+    raw_csrf = session_csrf_token(request, raw_session)
     expires_at = datetime.now(UTC) + timedelta(hours=settings.session_ttl_hours)
     session.add(
         AuthSession(
@@ -297,12 +298,17 @@ def me(
     session: Database,
     authenticated: Annotated[AuthenticatedSession, Depends(require_authenticated_session)],
 ) -> AuthResponse:
-    csrf_token = new_secret()
+    csrf_token = session_csrf_token(
+        request, request.cookies[request.app.state.settings.session_cookie_name]
+    )
     current_session = session.get(AuthSession, authenticated.session.id)
     if current_session is None:
         raise ApiError(401, "INVALID_SESSION", "Your session is no longer valid. Sign in again.")
-    current_session.csrf_token_hash = secret_hash(request, csrf_token)
-    session.commit()
+    token_hash = secret_hash(request, csrf_token)
+    if current_session.csrf_token_hash != token_hash:
+        # One-time compatibility upgrade for pre-Task-8 sessions, without schema changes.
+        current_session.csrf_token_hash = token_hash
+        session.commit()
     return AuthResponse(user=public_user(authenticated.user), csrf_token=csrf_token)
 
 

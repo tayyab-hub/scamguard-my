@@ -58,9 +58,11 @@ export function QrResult({
             <dd>{qr.routed_engine ? `${qr.routed_engine.toLowerCase()} intelligence` : 'none'}</dd>
           </div>
           <div>
-            <dt>Image</dt>
+            <dt>Input source</dt>
             <dd>
-              {qr.image_format} · {qr.image_width} × {qr.image_height}px
+              {qr.source === 'CAMERA'
+                ? 'Camera · decoded on device'
+                : `${qr.image_format} · ${qr.image_width} × ${qr.image_height}px`}
             </dd>
           </div>
           <div>
@@ -85,7 +87,7 @@ export function QrResult({
             </pre>
           )}
           <p className="mt-3 text-[10px] leading-5 text-muted">
-            Displayed as escaped text. It is not a link and is never opened automatically.
+            Untrusted content, shown as text. ScamGuard never opens it automatically.
           </p>
         </div>
       </section>
@@ -143,10 +145,12 @@ export function QrResult({
           <dt>Risk fusion</dt>
           <dd>{qr.fusion_version}</dd>
         </div>
-        <div>
-          <dt>Image fingerprint</dt>
-          <dd className="break-all font-mono">SHA-256 {qr.file_sha256}</dd>
-        </div>
+        {qr.file_sha256 && (
+          <div>
+            <dt>Image fingerprint</dt>
+            <dd className="break-all font-mono">SHA-256 {qr.file_sha256}</dd>
+          </div>
+        )}
       </AnalysisMetaPanel>
     </div>
   )

@@ -8,7 +8,10 @@ import {
   getApi,
   healthSchema,
   postSubmission,
+  requestApi,
+  type HistoryFilters,
 } from './api'
+import { useAuth } from '../auth/AuthContext'
 
 export function useSubmitAnalysis() {
   const client = useQueryClient()
@@ -35,17 +38,25 @@ export function useDeleteAnalysis() {
   })
 }
 
-export function useHistory(page: number) {
+export function useHistory(page: number, filters?: HistoryFilters) {
+  const { user } = useAuth()
   return useQuery({
-    queryKey: ['analyses', page],
+    queryKey: ['analyses', user?.id, page, filters],
     queryFn: ({ signal }) =>
-      getApi(`/analyses?page=${page}&page_size=10`, analysisListSchema, signal),
+      filters
+        ? requestApi('/analyses/search', analysisListSchema, {
+            method: 'POST',
+            body: { ...filters, page, page_size: 10 },
+            signal,
+          })
+        : getApi(`/analyses?page=${page}&page_size=10`, analysisListSchema, signal),
   })
 }
 
 export function useAnalysisDetail(id: string | null) {
+  const { user } = useAuth()
   return useQuery({
-    queryKey: ['analysis', id],
+    queryKey: ['analysis', id, user?.id],
     enabled: id !== null,
     queryFn: ({ signal }) => getApi(`/analyses/${id}`, analysisDetailSchema, signal),
   })
@@ -60,8 +71,9 @@ export function useHealth() {
 }
 
 export function useDashboard() {
+  const { user } = useAuth()
   return useQuery({
-    queryKey: ['dashboard'],
+    queryKey: ['dashboard', user?.id],
     queryFn: ({ signal }) => getApi('/dashboard', dashboardSchema, signal),
   })
 }

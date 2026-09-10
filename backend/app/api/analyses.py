@@ -5,7 +5,13 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, File, Query, Request, UploadFile
 from sqlalchemy.orm import Session
 
-from app.api.analysis_schemas import AnalysisCreate, AnalysisDetail, AnalysisList
+from app.api.analysis_schemas import (
+    AnalysisCreate,
+    AnalysisDetail,
+    AnalysisList,
+    CameraQRCreate,
+    HistorySearch,
+)
 from app.core.auth import (
     AuthenticatedSession,
     enforce_rate_limit,
@@ -14,7 +20,12 @@ from app.core.auth import (
 )
 from app.core.errors import ApiError
 from app.db.session import get_session
-from app.qr_intelligence.decoder import QRImageError, decode_qr_image
+from app.qr_intelligence.decoder import (
+    DecodedQR,
+    QRImageError,
+    decode_qr_image,
+    validate_payload_bytes,
+)
 from app.services.analyses import (
     delete_submission,
     get_submission,
@@ -112,6 +123,53 @@ def analyses(
     page_size: Annotated[int, Query(ge=1, le=100)] = 10,
 ) -> AnalysisList:
     return list_submissions(session, page, page_size, authenticated.user.id)
+
+
+@router.post("/search", response_model=AnalysisList)
+def search_analyses(
+    data: HistorySearch,
+    session: Database,
+    authenticated: Annotated[AuthenticatedSession, Depends(require_csrf)],
+) -> AnalysisList:
+    # Search text belongs in the body, not in access-log URLs or browser history.
+    return list_submissions(session, data.page, data.page_size, authenticated.user.id, filters=data)
+
+
+@router.post("/qr/payload", response_model=AnalysisDetail, status_code=201)
+def create_camera_qr_analysis(
+    data: CameraQRCreate,
+    request: Request,
+    session: Database,
+    authenticated: Annotated[AuthenticatedSession, Depends(require_csrf)],
+) -> AnalysisDetail:
+    enforce_rate_limit(
+        request,
+        session,
+        scope="analysis",
+        discriminator=str(authenticated.user.id),
+        limit=request.app.state.settings.analysis_rate_limit,
+        window=timedelta(minutes=1),
+    )
+    try:
+        validate_payload_bytes(
+            data.payload.encode("utf-8"), request.app.state.settings.qr_max_payload_bytes
+        )
+    except QRImageError as exc:
+        raise ApiError(422, exc.code, exc.message) from exc
+    decoded = DecodedQR(
+        payload=data.payload,
+        payload_bytes=len(data.payload.encode("utf-8")),
+        file_sha256=None,
+        image_format=None,
+        width=None,
+        height=None,
+        decoder_library=data.decoder,
+        decoder_version="client-reported",
+        source="CAMERA",
+    )
+    return record_qr_submission(
+        session, decoded, request.app.state.qr_engine, authenticated.user.id
+    )
 
 
 @router.get("/{analysis_id}", response_model=AnalysisDetail)

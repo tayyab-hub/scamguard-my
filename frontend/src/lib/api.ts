@@ -178,7 +178,8 @@ export const qrAssessmentSchema = z.object({
     .object({
       qr: z.object({
         engine_version: z.string(),
-        decoder_library: z.literal('zxing-cpp'),
+        source: z.enum(['UPLOAD', 'CAMERA']).default('UPLOAD'),
+        decoder_library: z.enum(['zxing-cpp', 'BarcodeDetector', 'zxing-wasm']),
         decoder_version: z.string(),
         classifier_version: z.string(),
         fusion_version: z.string(),
@@ -195,10 +196,13 @@ export const qrAssessmentSchema = z.object({
         ]),
         routed_engine: z.enum(['MESSAGE', 'URL', 'PHONE']).nullable(),
         payload_bytes: z.number().int().positive(),
-        image_format: z.enum(['PNG', 'JPEG', 'WEBP']),
-        image_width: z.number().int().positive(),
-        image_height: z.number().int().positive(),
-        file_sha256: z.string().regex(/^[0-9a-f]{64}$/),
+        image_format: z.enum(['PNG', 'JPEG', 'WEBP']).nullable(),
+        image_width: z.number().int().positive().nullable(),
+        image_height: z.number().int().positive().nullable(),
+        file_sha256: z
+          .string()
+          .regex(/^[0-9a-f]{64}$/)
+          .nullable(),
         original_image_retained: z.literal(false),
       }),
       payment: z.record(z.string(), z.unknown()).optional(),
@@ -243,7 +247,9 @@ export const analysisListSchema = z.object({
 export type AnalysisSummary = z.infer<typeof analysisSummarySchema>
 export type MessageAssessment = z.infer<typeof messageAssessmentSchema>
 export type SubmissionInput = { input_type: 'MESSAGE' | 'URL' | 'PHONE'; content: string }
-export type QRSubmissionInput = { input_type: 'QR'; file: File }
+export type QRSubmissionInput =
+  | { input_type: 'QR'; file: File }
+  | { input_type: 'QR'; payload: string; decoder: 'BarcodeDetector' | 'zxing-wasm' }
 export type SubmissionRequest = SubmissionInput | QRSubmissionInput
 export const userSchema = z.object({
   id: z.uuid(),
@@ -254,6 +260,13 @@ export const userSchema = z.object({
 })
 export const authResponseSchema = z.object({ user: userSchema, csrf_token: z.string().min(32) })
 export type User = z.infer<typeof userSchema>
+export type RiskLevel = NonNullable<AnalysisSummary['risk_level']>
+export type HistoryFilters = {
+  query: string
+  input_type: AnalysisSummary['input_type'] | null
+  risk_level: RiskLevel | null
+  sort: 'newest' | 'oldest' | 'risk'
+}
 export const dashboardSchema = z.discriminatedUnion('status', [
   z.object({
     status: z.literal('not_configured'),
@@ -268,6 +281,26 @@ export const dashboardSchema = z.discriminatedUnion('status', [
     flagged_analyses: z.number().int().nonnegative().nullable(),
     last_analysis_at: z.iso.datetime({ offset: true }).nullable(),
     recent_analyses: z.array(analysisSummarySchema).max(5),
+    type_counts: z
+      .object({
+        MESSAGE: z.number().int().nonnegative(),
+        URL: z.number().int().nonnegative(),
+        PHONE: z.number().int().nonnegative(),
+        QR: z.number().int().nonnegative(),
+      })
+      .nullable()
+      .default(null),
+    risk_counts: z
+      .object({
+        LOW: z.number().int().nonnegative(),
+        CAUTION: z.number().int().nonnegative(),
+        ELEVATED: z.number().int().nonnegative(),
+        HIGH: z.number().int().nonnegative(),
+        INSUFFICIENT_EVIDENCE: z.number().int().nonnegative(),
+      })
+      .nullable()
+      .default(null),
+    unassessed_analyses: z.number().int().nonnegative().nullable().default(null),
   }),
 ])
 export const capabilitiesSchema = z.object({
@@ -289,6 +322,11 @@ export async function getApi<T>(
 
 export async function postSubmission(input: SubmissionRequest) {
   if (input.input_type === 'QR') {
+    if ('payload' in input)
+      return requestApi('/analyses/qr/payload', analysisDetailSchema, {
+        method: 'POST',
+        body: { payload: input.payload, decoder: input.decoder },
+      })
     const body = new FormData()
     body.append('file', input.file, input.file.name)
     return requestApi('/analyses/qr', analysisDetailSchema, { method: 'POST', body })
@@ -304,6 +342,7 @@ export function setCsrfToken(value: string | null) {
 
 type RequestOptions = {
   signal?: AbortSignal
+  handlesSessionExpiry?: boolean
   method?: 'GET' | 'POST' | 'PATCH' | 'DELETE'
   body?: unknown
 }
@@ -367,7 +406,12 @@ export async function requestApi<T>(
           : response.headers.get('X-Request-ID') || undefined,
         parsed.success ? parsed.data.error.code : undefined,
       )
-      if (response.status === 401 && !path.startsWith('/auth/')) {
+      if (
+        response.status === 401 &&
+        !options.handlesSessionExpiry &&
+        (!path.startsWith('/auth/') ||
+          ['INVALID_SESSION', 'AUTHENTICATION_REQUIRED'].includes(error.code ?? ''))
+      ) {
         window.dispatchEvent(new Event('scamguard:unauthorized'))
       }
       throw error
@@ -404,7 +448,8 @@ export async function login(identifier: string, password: string) {
 }
 
 export async function currentUser(signal?: AbortSignal) {
-  return requestApi('/auth/me', authResponseSchema, { signal })
+  // The provider guards this restoration response against later identity changes.
+  return requestApi('/auth/me', authResponseSchema, { signal, handlesSessionExpiry: true })
 }
 
 export async function logout() {

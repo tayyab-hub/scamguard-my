@@ -1,6 +1,6 @@
 # SCAMGUARD roadmap
 
-Audited 2026-09-10. Status reflects the completed Task 6.1 merge and Task 7 review boundary.
+Updated 2026-09-10. The user confirmed Task 7 acceptance, merge and successful production deployment.
 
 | Order | Milestone | Status | Real state / exit criteria |
 | --- | --- | --- | --- |
@@ -11,16 +11,17 @@ Audited 2026-09-10. Status reflects the completed Task 6.1 merge and Task 7 revi
 | 5 | Authentication, Ownership, Privacy & Production | ✅ COMPLETE | User-verified Vercel → Render → Neon architecture with private authenticated analyses. |
 | 6 | Phone Intelligence | ✅ COMPLETE | Manually accepted and merged. |
 | 6.1 | Authentication/profile polish | ✅ COMPLETE | Manually accepted and merged at `546447fa`; profile, reset and Analyse again shipped. |
-| 7 | QR Intelligence | 🟡 IN REVIEW | Implementation and full local verification complete on feature branch; manual acceptance and merge pending. |
-| 8 | Final integration/reporting | ⚪ NOT STARTED | Final cross-task integration, evaluation and capstone report work has not begun. |
+| 7 | QR Intelligence | ✅ COMPLETE | Accepted, merged and deployed; readiness/capabilities for all four modes confirmed by the user. |
+| 8 | Peak Enhancement, UX Innovation & Product Polish | 🟡 MANUAL REVIEW | Implemented on feature branch: live camera, searchable history, measured dashboard, session reliability and UX polish. No merge/deploy. |
+| 9 | Final Integration, Evaluation & Capstone Closure | ⚪ NOT STARTED | Final merge, deployment verification, evaluation, report, presentation and closure require later instructions. |
 
 ## Current boundary
 
-Task 7 adds a bounded authenticated QR image upload, local in-memory decoding, conservative payload
-classification/routing, private persistence and accessible frontend without changing production
-configuration or the Vercel CDN rewrite. It must remain on `task-7-qr-intelligence` until the user
-manually accepts it. Do not merge, deploy or begin Task 8 automatically.
+Task 8 began from clean main/origin-main at `42a9db1e1d29ef0c05c248a416f6b90ac341d256`.
+Keep `task-8-peak-enhancement` separate until the user manually accepts it. Commit/push is authorized;
+merge, deployment and provider/secret configuration changes are not. Task 9 is NOT STARTED.
+Local screenshot inspection is Task 8 product QA, not a final report or presentation evidence pack.
 
 Windows development continues to use the existing repository-relative PowerShell launcher, real
 PostgreSQL, explicit Alembic migrations and isolated `_test`/`_e2e` databases. See
-`docs/QR_INTELLIGENCE.md`, `PROGRESS.md` and `docs/TESTING.md` for the exact behavior and evidence.
+`docs/TASK_8_PEAK_ENHANCEMENT.md`, `PROGRESS.md` and `docs/TESTING.md` for behavior and evidence.

@@ -48,12 +48,20 @@ logs the reset URL.
 | --- | --- |
 | `POST /api/v1/auth/signup` | Creates a validated profile and session; returns minimal user data plus the in-memory CSRF token. |
 | `POST /api/v1/auth/login` | Verifies a username/email identifier with a generic failure and creates a new session token. |
-| `GET /api/v1/auth/me` | Validates the cookie and returns the current profile plus a rotated CSRF token. |
+| `GET /api/v1/auth/me` | Validates the cookie and returns the current profile plus a stable per-session CSRF token. |
 | `PATCH /api/v1/auth/profile` | Changes only the authenticated user's full name and username; requires Origin and CSRF. |
 | `POST /api/v1/auth/password-reset/request` | Gives a generic response and delivers a short-lived one-time link where applicable. |
 | `POST /api/v1/auth/password-reset/confirm` | Consumes the link, replaces the password hash and revokes all sessions. |
 | `POST /api/v1/auth/logout` | Requires CSRF, revokes the database session and clears the cookie. |
 | `DELETE /api/v1/auth/account` | Requires CSRF and the current password; deletes the user transactionally. Foreign-key cascades delete sessions and owned analyses. |
+
+Task 8 derives that CSRF token through a domain-separated HMAC of the opaque session using the
+existing pepper, storing only its digest. New sessions have distinct tokens; a legacy session digest
+transitions once on restoration. Ordinary `/me` calls no longer break another tab's valid CSRF.
+The frontend clears private caches on identity changes, scopes queries to user identity and sends
+only identity-change notifications between tabs. Late restoration/profile responses cannot revive a
+cleared identity. Failed logout reports failure and keeps the session visible until revocation is
+confirmed. The server remains authoritative for session validity, ownership and revocation.
 
 Analysis submission, history, detail, deletion and dashboard API operations require authentication.
 Health, readiness and the non-user-specific capabilities probe remain public. The frontend protects

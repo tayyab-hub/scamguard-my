@@ -145,7 +145,7 @@ describe('Phone Intelligence', () => {
         'Verify unexpected callers using an official number obtained independently.',
       ),
     ).toBeInTheDocument()
-    await userEvent.click(screen.getByText('Components and limitations'))
+    await userEvent.click(screen.getByText('Technical details'))
     expect(
       screen.getByText(/cannot by itself establish whether the caller is fraudulent/),
     ).toBeInTheDocument()

@@ -1,85 +1,89 @@
 # SCAMGUARD — current project state
 
-Updated **2026-09-10, Asia/Kuala_Lumpur** for Task 7 implementation verification.
+Updated **2026-09-10, Asia/Kuala_Lumpur** for Task 8 implementation and review.
 
 ## Current milestone
 
-Tasks 1–6.1 are complete. Task 6.1 was merged normally into `main` and pushed at
-`546447fa02072f0a87a5fae90c9f8f8f57aafa07`; its branch remains preserved. The user-verified
-production architecture remains Vercel → same-origin `/api/v1` rewrite → Render → Neon PostgreSQL.
+Tasks 1–7, including Task 6.1, are complete, accepted, merged and deployed as confirmed by the user.
+The stable production architecture is Vercel → same-origin `/api/v1` rewrite → Render → Neon.
+The user also confirmed Render's old backend branch was corrected and reset-mail configuration
+completed. Task 8 changes no provider configuration or secrets.
 
-**Task 7 QR Intelligence is implemented and fully locally verified on
-`task-7-qr-intelligence`, awaiting manual acceptance before merge or deployment.** Task 8 final
-integration/reporting has not started.
+**Task 8 Peak Enhancement is implemented and locally verified on `task-8-peak-enhancement`, for
+manual review before merge or deployment. Task 9 Final Integration is NOT STARTED.**
 
-| Area | Status | Current behavior |
-| --- | --- | --- |
-| Tasks 1–5 | COMPLETE | Foundation, persistence/intelligence, authentication, ownership and production architecture. |
-| Task 6 Phone Intelligence | COMPLETE | Accepted, merged and preserved. |
-| Task 6.1 Auth/profile polish | COMPLETE | Accepted and merged; profiles, username login, password reset and immutable Analyse again. |
-| Task 7 QR Intelligence | IN REVIEW | Bounded upload/decoding, payload routing, private persistence and full local verification complete. |
-| Task 8 final integration/reporting | NOT STARTED | No implementation or reporting work begun. |
+Starting main/origin-main: `42a9db1e1d29ef0c05c248a416f6b90ac341d256`, clean after fetch.
+The completion commit/push belongs only to the Task 8 feature branch.
 
-## Task 7 implementation
+| Task | Status |
+| --- | --- |
+| 1 Foundation | COMPLETE |
+| 2 Core Platform | COMPLETE |
+| 3 Message Intelligence | COMPLETE |
+| 4 URL Intelligence | COMPLETE |
+| 5 Authentication / Production | COMPLETE |
+| 6 Phone Intelligence | COMPLETE |
+| 6.1 Authentication / Profile | COMPLETE |
+| 7 QR Intelligence | COMPLETE |
+| 8 Peak Enhancement | IMPLEMENTED / MANUAL REVIEW |
+| 9 Final Integration / Evaluation / Closure | NOT STARTED |
 
-- `POST /api/v1/analyses/qr` accepts exactly one authenticated PNG/JPEG/WebP multipart upload while
-  retaining opaque server sessions, exact Origin + CSRF, PostgreSQL analysis rate limiting and
-  backend-derived ownership. The generic JSON analysis route remains unchanged for Message/URL/Phone.
-- Pinned `zxing-cpp==3.1.1`, `Pillow==12.3.0` and `python-multipart==0.0.32` provide local decoding,
-  bounded raster validation and multipart parsing. No decoder API, OS package, OCR or network access
-  is used.
-- Backend limits are 5 MiB, 4096 pixels per axis, 16 million decoded pixels, one still image, one QR
-  symbol and 5,000 UTF-8 payload bytes. SVG, MIME/content mismatch, corrupt/disguised/animated files,
-  bombs, empty/no/multiple QR and unsupported controls fail safely before persistence.
-- Payloads classify as URL, PHONE, TEXT, EMAIL, SMS, WIFI, GEO, PAYMENT or OTHER. Supported HTTP(S),
-  phone and suitable text reuse the unchanged intelligence engines and inherit their exact risk,
-  score, confidence, evidence and actions. QR contributes no independent severity.
-- EMV-style payment TLV/CRC validation is bounded and conservative. A valid structure remains
-  insufficient evidence; invalid structure/CRC is at most caution. Formatting never verifies the
-  merchant, recipient, ownership, legitimacy or transaction safety.
-- The image is decoded in memory and discarded. Private history retains decoded content and derived
-  assessment/audit metadata, not the image. URL credentials and Wi-Fi passwords are redacted before
-  storage; phones use E.164. QR history requires a new upload rather than Analyse again.
-- The responsive frontend now supports click/drag/drop, mobile capture hint, preview/remove/replace,
-  decode progress/errors, escaped inert decoded content, payment limitations, subtype history and
-  dashboard counts without redesigning the approved Forensic Intelligence UI.
-- Readiness verifies QR decoder initialization, capabilities advertises QR, and Alembic
-  `0006_qr_intelligence` extends only analysis constraints while preserving Task 6.1 data.
+## Task 8 implementation
 
-See [QR Intelligence](docs/QR_INTELLIGENCE.md) for the method, privacy boundary and limitations.
+- Explicit live QR camera: Start → native QR detector or locally packaged WASM worker → capture
+  stops → inert decoded text preview → explicit Analyse. Cancel, navigation, hiding, unmount,
+  timeout and delayed permission/decoder races release tracks/worker/timers. Upload remains.
+- Authenticated `POST /analyses/qr/payload` validates bounded text and reuses unchanged QR
+  classification/routing/redaction/ownership/rate controls. CAMERA provenance is client-reported;
+  image metadata is null. No image, recording, decoded URL fetch or external QR service.
+- First-class History with private server-side content/summary search, type/risk filters,
+  newest/oldest/risk sort and 10-record pages. SQL selects summaries only; count/page reads stay
+  consistent. Dashboard uses real scoped type/risk counts and labelled filter links.
+- Stable per-session CSRF prevents tab restoration breaking existing forms. Private queries are
+  user-scoped, caches clear on identity changes, tab messages carry no content, late identity
+  responses are ignored, and failed logout reports unconfirmed revocation.
+- Native confirmation dialogs with inert background, explicit Tab wrapping, safe initial focus,
+  Escape/pending behavior and focus return. Mode examples, repeat-analysis action, visible risk
+  guidance/limitations, focused form errors, profile dirty feedback and recovery actions improve UX.
+- Existing Forensic Intelligence identity and restrained CSS motion retained; scanner/dialog/detected
+  states added with live reduced-motion support. Mobile inputs avoid focus zoom. Lazy route chunks
+  keep initial JS below the previous raw size despite new features.
 
 ## Verification evidence
 
 | Check | Observed result |
 | --- | --- |
-| Backend Pytest with real PostgreSQL | PASS: 283 passed; 1 explicitly opt-in live-AI test skipped; 2 existing dependency deprecation warnings. |
-| QR unit/API/security/persistence | PASS: raster and payload validation, classifications/routes, EMV/CRC, no severity inflation, no-network behavior, auth/CSRF, owner isolation, redaction, deletion and invalid-upload non-persistence. |
-| Ruff / dependency check | PASS: lint, format check and `pip check`; 67 Python files formatted. |
-| TypeScript / ESLint | PASS / PASS with zero ESLint warnings. |
-| Vitest | PASS: 133 tests in 9 files. |
-| Production frontend build | PASS: 1,762 modules; JS 478.38 kB (142.17 kB gzip), CSS 43.86 kB (8.93 kB gzip). Existing Zod/Rollup annotation warnings only. |
-| Foundation/motion/visual Playwright | PASS: 18 desktop/mobile tests. |
-| Built offline preview | PASS: 6 desktop/mobile tests. |
-| Real PostgreSQL Playwright | PASS: 12 desktop/mobile tests, including upload → URL route → history/dashboard → refresh and no off-origin request. |
-| Alembic | PASS: `0006_qr_intelligence` single head/current/check and isolated `0006 → 0005 → 0006`; full fixture preserves a Task 6.1 user/analysis. |
-| Packaging | PASS: wheel contains all QR modules and exact Pillow/python-multipart/zxing-cpp runtime metadata. |
-| Secret/diff review | PASS: no private key or credential pattern found; generated/runtime folders remain ignored; `git diff --check` is clean. |
+| TypeScript / ESLint | PASS / PASS, zero ESLint warnings |
+| Vitest | PASS: 159 tests across 11 files |
+| Backend Pytest, isolated real PostgreSQL | PASS: 300 passed, 1 opt-in live-provider test skipped; 2 existing dependency deprecation warnings |
+| Ruff / format / pip check | PASS; 68 Python files formatted; no broken requirements |
+| Alembic | PASS: current and single head `0006_qr_intelligence`; no new upgrade operations. Existing disposable migration regression also passes. No Task 8 migration |
+| Foundation/keyboard/motion/contrast/responsive Playwright | PASS: 18 desktop/mobile tests |
+| Built offline-preview Playwright | PASS: 8 desktop/mobile tests, including real packaged worker/WASM loading |
+| Real PostgreSQL Playwright | PASS: full 20 desktop/mobile scenarios; 14 relevant scenarios repeated successfully for final visual captures |
+| Production build | PASS: 1,769 modules; initial JS 476.16 kB / 143.08 kB gzip; CSS 46.96 / 9.52 kB gzip. No chunk-size warning; decoder license notices included |
+| Deferred camera assets | Worker 36.25 kB; WASM 1,093.29 kB / 460.98 kB gzip; neither loaded before fallback is needed |
+| npm runtime audit | PASS: zero reported vulnerabilities |
+| Secret/diff review | Changed/new files checked for private local environment values and credential patterns without printing values; zero findings. Runtime/test artifacts remain ignored |
 
-## Known limitations
+Build warnings are the existing Zod/Rollup pure-annotation notices. Browser runners emit the existing
+NO_COLOR/FORCE_COLOR warning. Initial outdated copy/navigation assertions were reconciled with
+intentional behavior; a real modal Tab-wrap issue was fixed and verified. Foundation output now has
+its own folder, preventing it from deleting other suites' review artifacts.
 
-- QR decoding cannot establish who created/distributed a code or whether its content is legitimate.
-- Stylized, damaged, obscured, multi-code, animated, non-raster, non-UTF-8 and oversized inputs are
-  intentionally unsupported; no general OCR or screenshot intelligence exists.
-- Payment structure and CRC are integrity checks, not bank/account/merchant/reputation validation.
-- No decoded link is opened or fetched; no number is contacted; no Wi-Fi or payment action executes.
-- Existing Message, URL, Phone, dataset/score and infrastructure limitations remain. Basic database
-  rate limiting is not enterprise DDoS protection.
-- Provider backup retention/deletion, legal privacy language, incident response and broad-public
-  controls remain owner responsibilities.
+See [Task 8 audit, decisions and full acceptance instructions](docs/TASK_8_PEAK_ENHANCEMENT.md),
+[Testing](docs/TESTING.md), [API](docs/API.md), and [Privacy](docs/PRIVACY_MODEL.md).
 
-## Review boundary
+## Review boundary and limitations
 
-Do not merge or deploy Task 7 until the user completes manual acceptance. No Vercel, Render, Neon or
-Resend setting was changed. A later approved merge requires ordinary Render dependency install +
-Alembic/redeployment and a Vercel rebuild; the existing CDN rewrite must remain unchanged. Do not
-begin Task 8.
+Physical iPhone Safari, Android Chrome and Edge camera acceptance remains required; Chromium
+emulation and synthetic MediaStreams do not establish hardware/browser compatibility. Hosted Task 8
+frontend/API pairing and production verification have not been performed. QR provenance does not
+verify who created a code, payment CRC does not verify a recipient, and the intelligence engines
+retain their original dataset, calibration and offline-evidence limitations.
+
+Long result/history pages, small secondary metadata, capstone-scale substring/offset queries, basic
+rate limiting, provider backup retention and formal privacy/security/accessibility review remain
+limitations. A 1.09 MB raw fallback reader can be noticeable on a slow first scan.
+
+**Do not merge, deploy, change provider settings or start Task 9 without further user instructions.**

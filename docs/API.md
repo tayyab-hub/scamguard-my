@@ -1,10 +1,10 @@
 # Current API contract
 
-Base: `/api/v1`. Reconciled with Task 7 source on 2026-09-10.
+Base: `/api/v1`. Reconciled with Task 8 source on 2026-09-10; feature branch, not deployed.
 
 Responses include `X-Request-ID`, `Cache-Control: no-store`, and
 `X-Content-Type-Options: nosniff`. Production CORS uses an exact HTTPS origin list, credentials,
-`GET`/`POST`/`DELETE`, and `X-CSRF-Token`; wildcard origins are prohibited.
+`GET`/`POST`/`PATCH`/`DELETE`, and `X-CSRF-Token`; wildcard origins are prohibited.
 
 ## Operations and authentication
 
@@ -15,7 +15,7 @@ Responses include `X-Request-ID`, `Cache-Control: no-store`, and
 | `GET /capabilities` | Public | Reports database-backed submission and local MESSAGE/URL/PHONE/QR support without exposing user data. |
 | `POST /auth/signup` | Exact Origin | Creates a normalized full-name/username/email account and opaque session. |
 | `POST /auth/login` | Exact Origin | Accepts normalized username or email and returns one generic credentials error for wrong/unknown accounts. |
-| `GET /auth/me` | Session cookie | Returns the current user's profile and rotates the synchronizer CSRF token. |
+| `GET /auth/me` | Session cookie | Returns the current profile and stable per-session synchronizer CSRF token. Opening a tab does not invalidate another tab. |
 | `PATCH /auth/profile` | Session + Origin + CSRF | Updates only the current user's validated full name and username. |
 | `POST /auth/password-reset/request` | Exact Origin | Always returns the same public confirmation; creates and emails a one-time token only for an existing email. |
 | `POST /auth/password-reset/confirm` | Exact Origin | Consumes a valid reset token, updates the Argon2id password hash and revokes all user sessions. |
@@ -23,10 +23,32 @@ Responses include `X-Request-ID`, `Cache-Control: no-store`, and
 | `DELETE /auth/account` | Session + Origin + CSRF + password | Transactionally deletes account, sessions and owned analyses. |
 | `POST /analyses` | Session + Origin + CSRF | Runs and persists an owned Message, URL or Phone assessment. |
 | `POST /analyses/qr` | Session + Origin + CSRF | Validates and decodes one multipart QR image, routes supported content, discards the image and persists the owned result. |
+| `POST /analyses/qr/payload` | Session + Origin + CSRF | Validates camera-reported decoded text and routes/persists through the same QR service. No frame upload. |
+| `POST /analyses/search` | Session + Origin + CSRF | Read-only owned history search/filter/sort with bounded pagination; terms stay in the JSON body. |
 | `GET /analyses?page=1&page_size=10` | Session | Returns only the current user's newest-first summaries. |
 | `GET /analyses/{analysis_id}` | Session + ownership | Returns the current user's full stored record; missing/foreign/legacy all use the same 404. |
 | `DELETE /analyses/{analysis_id}` | Session + Origin + CSRF + ownership | Deletes an owned record or returns the same safe 404. |
-| `GET /dashboard` | Session | Returns totals/latest/recent only for the current user. |
+| `GET /dashboard` | Session | Returns totals/latest/recent plus grouped type/risk counts and an unassessed count for the current user. |
+
+### Task 8 payload and search additions
+
+Camera JSON is `{ "payload": "https://example.com", "decoder": "zxing-wasm" }`.
+Decoder is exactly `BarcodeDetector` or `zxing-wasm`; extra fields, blank/control/invalid Unicode and
+payloads above 5,000 UTF-8 bytes are rejected. The analysis rate bucket is shared with image/text
+submissions. `components.qr` records `source: CAMERA`, `decoder_version: client-reported` and null
+image MIME/width/height/bytes/SHA fields. UPLOAD remains the default for older stored QR records.
+All redaction, ownership, routing, risk and no-activation rules remain authoritative on the server.
+
+Search body fields: `query` (trimmed, maximum 200 characters), `input_type` (MESSAGE/URL/PHONE/QR
+or null), `risk_level` (the five existing categories or null), `sort` (newest/oldest/risk), `page`
+(1–10,000), `page_size` (1–100). Defaults are empty query, no filters, newest, page 1 and size 10.
+Search is case-insensitive literal substring over stored content and result summary; `%` and `_`
+do not become wildcards. Risk sort orders High → Elevated → Caution → Low, followed by unranked
+insufficient/unassessed records; ties use newest timestamp and ID. The existing GET list is unchanged.
+
+Dashboard adds `type_counts`, `risk_counts` and `unassessed_analyses`. Empty ready accounts receive
+zero counts; unavailable data uses null. New clients tolerate missing fields from older API responses
+without fabricating distributions. Counts and recent rows use one consistent database snapshot.
 
 ## Auth payloads
 

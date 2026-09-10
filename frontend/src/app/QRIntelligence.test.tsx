@@ -30,6 +30,7 @@ const assessment: QRAssessment = {
   ],
   components: {
     qr: {
+      source: 'UPLOAD',
       engine_version: 'qr-intelligence-v1',
       decoder_library: 'zxing-cpp',
       decoder_version: '3.1.1',
@@ -172,7 +173,7 @@ describe('QR Intelligence', () => {
     expect(screen.getByText(hostileContent)).toBeInTheDocument()
     expect(document.querySelector('script')).toBeNull()
     expect(screen.queryByRole('link', { name: /javascript/i })).not.toBeInTheDocument()
-    expect(screen.getByText(/not a link and is never opened automatically/)).toBeInTheDocument()
+    expect(screen.getByText(/ScamGuard never opens it automatically/)).toBeInTheDocument()
     const call = fetchMock.mock.calls.find(
       ([url, init]) => url.endsWith('/analyses/qr') && init?.method === 'POST',
     )!
@@ -212,7 +213,7 @@ describe('QR Intelligence', () => {
     await userEvent.click(screen.getByText(hostileContent).closest('button')!)
     expect(await screen.findByLabelText('QR assessment')).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Analyse again' })).not.toBeInTheDocument()
-    expect(screen.getByText(/Upload the QR image again/)).toBeInTheDocument()
+    expect(screen.getByText(/Scan the code or upload its image again/)).toBeInTheDocument()
     expect(
       within(screen.getByLabelText('QR decoding result')).getByText('text'),
     ).toBeInTheDocument()

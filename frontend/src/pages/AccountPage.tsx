@@ -5,6 +5,8 @@ import { useAuth } from '../auth/AuthContext'
 import { ApiError } from '../lib/api'
 import { PageHeading } from '../components/PageHeading'
 import { validateFullName, validateUsername } from '../lib/profileValidation'
+import { ModalDialog } from '../components/ModalDialog'
+import { Link } from 'react-router-dom'
 
 export function AccountPage() {
   const auth = useAuth()
@@ -21,13 +23,20 @@ export function AccountPage() {
   const [profileSaved, setProfileSaved] = useState(false)
   const fullNameError = profileSubmitted ? validateFullName(fullName) : null
   const usernameError = profileSubmitted ? validateUsername(username) : null
+  const profileDirty =
+    fullName !== (auth.user?.full_name || '') || username !== (auth.user?.username || '')
+  const cancelDeletion = () => {
+    setConfirming(false)
+    setPassword('')
+    setError(null)
+  }
 
   return (
     <>
       <PageHeading
         eyebrow="ACCOUNT / PRIVACY"
         title="Account controls"
-        description="Review the minimal account data SCAMGUARD stores and remove it when you choose."
+        description="Manage your private profile, saved analyses and account."
       />
       <div className="mt-7 grid gap-6 lg:grid-cols-2">
         <section className="panel p-6" aria-labelledby="account-details-heading">
@@ -69,7 +78,10 @@ export function AccountPage() {
                 autoComplete="name"
                 maxLength={100}
                 value={fullName}
-                onChange={(event) => setFullName(event.target.value)}
+                onChange={(event) => {
+                  setFullName(event.target.value)
+                  setProfileSaved(false)
+                }}
                 aria-invalid={Boolean(fullNameError) || undefined}
                 aria-describedby={fullNameError ? 'profile-full-name-error' : undefined}
                 disabled={profilePending}
@@ -91,7 +103,10 @@ export function AccountPage() {
                 maxLength={30}
                 spellCheck={false}
                 value={username}
-                onChange={(event) => setUsername(event.target.value)}
+                onChange={(event) => {
+                  setUsername(event.target.value)
+                  setProfileSaved(false)
+                }}
                 aria-invalid={Boolean(usernameError) || undefined}
                 aria-describedby={
                   usernameError ? 'profile-username-error' : 'profile-username-help'
@@ -125,11 +140,15 @@ export function AccountPage() {
               </p>
             )}
             {profileSaved && (
-              <p role="status" className="text-xs font-medium text-accent">
+              <p role="status" className="motion-fade text-xs font-medium text-accent">
                 Profile saved.
               </p>
             )}
-            <button className="button-primary" disabled={profilePending}>
+            <button
+              className="button-primary"
+              disabled={profilePending || !profileDirty}
+              aria-busy={profilePending}
+            >
               <Save size={15} aria-hidden="true" /> {profilePending ? 'Saving…' : 'Save profile'}
             </button>
           </form>
@@ -148,10 +167,19 @@ export function AccountPage() {
             Where your data appears
           </h2>
           <p className="mt-3 text-sm leading-6 text-muted">
-            Your analyses are stored in Neon PostgreSQL through the FastAPI service. The Overview,
-            Analysis History and expanded Analysis Detail views retrieve only records owned by your
-            account.
+            Your saved content and assessments appear only in your account’s Overview and Analysis
+            History. Other users cannot access them. You can delete individual analyses from
+            History.
           </p>
+          <Link to="/history" className="button-secondary mt-5">
+            Manage analysis history
+          </Link>
+          <Link
+            to="/help#privacy-heading"
+            className="action-link ml-3 inline-flex min-h-11 items-center text-xs font-semibold text-accent"
+          >
+            Privacy and retention
+          </Link>
           <p className="mt-3 text-sm leading-6 text-muted">
             Completed results are immutable for forensic integrity. You may delete them or use
             Analyse again to copy the input into a new, editable draft and create a separate record.
@@ -172,68 +200,54 @@ export function AccountPage() {
         </section>
       </div>
       {confirming && (
-        <div className="dialog-backdrop" role="presentation">
-          <section
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="confirm-account-delete"
-            className="dialog-panel"
-            onKeyDown={(event) => {
-              if (event.key === 'Escape' && !pending) setConfirming(false)
-            }}
-          >
-            <h2 id="confirm-account-delete" className="text-lg font-semibold">
-              Permanently delete this account?
-            </h2>
-            <p className="mt-3 text-sm leading-6 text-muted">
-              Enter your current password to confirm. This cannot be undone from the app.
+        <ModalDialog headingId="confirm-account-delete" onCancel={cancelDeletion} busy={pending}>
+          <h2 id="confirm-account-delete" className="text-lg font-semibold">
+            Permanently delete this account?
+          </h2>
+          <p className="mt-3 text-sm leading-6 text-muted">
+            Enter your current password to confirm. This cannot be undone from the app.
+          </p>
+          <label htmlFor="delete-password" className="mb-2 mt-5 block text-xs font-medium">
+            Current password
+          </label>
+          <input
+            id="delete-password"
+            data-dialog-initial
+            type="password"
+            autoComplete="current-password"
+            className="input-field"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            disabled={pending}
+          />
+          {error && (
+            <p role="alert" className="mt-3 text-xs text-danger">
+              {error}
             </p>
-            <label htmlFor="delete-password" className="mb-2 mt-5 block text-xs font-medium">
-              Current password
-            </label>
-            <input
-              id="delete-password"
-              autoFocus
-              type="password"
-              autoComplete="current-password"
-              className="input-field"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              disabled={pending}
-            />
-            {error && (
-              <p role="alert" className="mt-3 text-xs text-danger">
-                {error}
-              </p>
-            )}
-            <div className="mt-6 flex justify-end gap-3">
-              <button
-                className="button-secondary"
-                disabled={pending}
-                onClick={() => setConfirming(false)}
-              >
-                Cancel
-              </button>
-              <button
-                className="button-primary bg-danger"
-                disabled={pending || !password}
-                onClick={() => {
-                  setPending(true)
-                  setError(null)
-                  void auth
-                    .deleteAccount(password)
-                    .then(() => navigate('/login', { replace: true }))
-                    .catch((reason: unknown) =>
-                      setError(reason instanceof ApiError ? reason.message : 'Deletion failed.'),
-                    )
-                    .finally(() => setPending(false))
-                }}
-              >
-                {pending ? 'Deleting…' : 'Delete permanently'}
-              </button>
-            </div>
-          </section>
-        </div>
+          )}
+          <div className="mt-6 flex justify-end gap-3">
+            <button className="button-secondary" disabled={pending} onClick={cancelDeletion}>
+              Cancel
+            </button>
+            <button
+              className="button-primary bg-danger"
+              disabled={pending || !password}
+              onClick={() => {
+                setPending(true)
+                setError(null)
+                void auth
+                  .deleteAccount(password)
+                  .then(() => navigate('/login', { replace: true }))
+                  .catch((reason: unknown) =>
+                    setError(reason instanceof ApiError ? reason.message : 'Deletion failed.'),
+                  )
+                  .finally(() => setPending(false))
+              }}
+            >
+              {pending ? 'Deleting…' : 'Delete permanently'}
+            </button>
+          </div>
+        </ModalDialog>
       )}
     </>
   )

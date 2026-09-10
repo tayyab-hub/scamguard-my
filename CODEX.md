@@ -2,10 +2,10 @@
 
 SCAMGUARD is a general **Multi-Modal Scam Detection & Reporting Web Application**. Its approved
 visual identity is **Forensic Intelligence**: warm light ivory, charcoal, terracotta and olive with
-restrained editorial motion. Tasks 1–6.1 are complete and merged, including user-verified Vercel →
-Render → Neon production. Task 7 QR Intelligence is implemented and fully locally verified on
-`task-7-qr-intelligence`, but awaits manual acceptance and must not be merged or deployed yet.
-Task 8 final integration/reporting has not started. Never infer
+restrained editorial motion. Tasks 1–7 (including Task 6.1) are complete, merged and deployed as
+confirmed by the user. Task 8 Peak Enhancement is implemented on `task-8-peak-enhancement` for
+manual review; it must not be merged or deployed yet. Task 9 Final Integration is NOT STARTED.
+See `docs/TASK_8_PEAK_ENHANCEMENT.md` for the audit, camera boundary and acceptance instructions. Never infer
 functionality from a planned UI control, roadmap line, screenshot or old conversation.
 
 ## Required reading order
@@ -89,7 +89,10 @@ Current source is authoritative when historical wording conflicts.
   erase local evidence or prevent a local result.
 - Phone numbers are persisted only after authenticated submission and are never sent to external
   providers. Never log complete submissions unnecessarily. QR images may be read only by the bounded
-  authenticated Task 7 decoder and must be discarded after in-memory processing; retain only decoded,
+  authenticated upload decoder and must be discarded after in-memory processing; live camera frames
+  remain on-device, are not recorded/uploaded, and every exit must stop tracks and decoder workers.
+  The camera starts only after an explicit action; decoded content requires separate Analyse consent.
+  Camera provenance is client-reported, not server image verification. Retain only decoded,
   credential-redacted content and derived private metadata. Never automatically activate payloads or
   reuse private submissions for model training without explicit permission.
 
@@ -99,9 +102,10 @@ Current source is authoritative when historical wording conflicts.
   commits, discard user work, expose ignored secrets, or alter the configured remote casually.
 - Keep `node_modules`, `.venv`, `dist`, caches, coverage, logs, `.local`, test output and secrets
   ignored. Dataset source and reviewed model artifacts are intentional versioned research assets.
-- Tasks 1–6.1 are merged to `main`. Retain prior branches/history. Task 7 must stay on
-  `task-7-qr-intelligence` until manual acceptance; do not merge or deploy it automatically. Do not
-  begin Task 8 final integration/reporting.
+- Tasks 1–7 are merged to `main`. Retain prior branches/history. Task 8 must stay on
+  `task-8-peak-enhancement` until manual acceptance; do not merge or deploy it automatically.
+  Production Vercel/Render/Neon/Resend configuration is the stable baseline: do not change secrets
+  or provider settings. Task 9 final integration/evaluation/reporting/closure is NOT STARTED.
 
 ## Definition of done and completion procedure
 

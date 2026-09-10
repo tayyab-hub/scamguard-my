@@ -1,7 +1,7 @@
 from datetime import UTC, datetime
 from uuid import UUID
 
-from sqlalchemy import func, select
+from sqlalchemy import Row, case, func, or_, select
 from sqlalchemy.orm import Session
 
 from app.api.analysis_schemas import (
@@ -10,6 +10,7 @@ from app.api.analysis_schemas import (
     AnalysisList,
     AnalysisSummary,
     AssessmentResponse,
+    HistorySearch,
 )
 from app.core.errors import ApiError
 from app.db.models import Analysis, AnalysisStatus, InputType
@@ -22,7 +23,7 @@ from app.url_intelligence.engine import URLIntelligenceEngine
 from app.url_intelligence.parsing import parse_url
 
 
-def summary(record: Analysis) -> AnalysisSummary:
+def summary(record: Analysis | Row) -> AnalysisSummary:
     preview = " ".join(record.content.split())
     if len(preview) > 160:
         preview = preview[:157] + "…"
@@ -34,9 +35,7 @@ def summary(record: Analysis) -> AnalysisSummary:
         updated_at=record.updated_at,
         preview=preview,
         risk_level=record.risk_level,
-        payload_type=(record.component_details or {}).get("qr", {}).get("payload_type")
-        if record.input_type == InputType.QR
-        else None,
+        payload_type=record.payload_type,
     )
 
 
@@ -168,17 +167,55 @@ def record_qr_submission(
     return detail(record)
 
 
-def list_submissions(session: Session, page: int, page_size: int, user_id: UUID) -> AnalysisList:
+def list_submissions(
+    session: Session,
+    page: int,
+    page_size: int,
+    user_id: UUID,
+    *,
+    filters: HistorySearch | None = None,
+) -> AnalysisList:
     # Keep the count and rows consistent if another request commits between them.
     # This is request-scoped: get_session closes and rolls back the read transaction.
     session.connection(execution_options={"isolation_level": "REPEATABLE READ"})
-    total = session.scalar(
-        select(func.count()).select_from(Analysis).where(Analysis.user_id == user_id)
-    )
-    records = session.scalars(
-        select(Analysis)
-        .where(Analysis.user_id == user_id)
-        .order_by(Analysis.created_at.desc(), Analysis.id.desc())
+    conditions = [Analysis.user_id == user_id]
+    order = [Analysis.created_at.desc(), Analysis.id.desc()]
+    if filters:
+        if filters.input_type:
+            conditions.append(Analysis.input_type == filters.input_type)
+        if filters.risk_level:
+            conditions.append(Analysis.risk_level == filters.risk_level)
+        if filters.query:
+            conditions.append(
+                or_(
+                    Analysis.content.icontains(filters.query, autoescape=True),
+                    Analysis.result_summary.icontains(filters.query, autoescape=True),
+                )
+            )
+        if filters.sort == "oldest":
+            order = [Analysis.created_at.asc(), Analysis.id.asc()]
+        elif filters.sort == "risk":
+            # Insufficient evidence is unranked, never treated as a low/safe result.
+            rank = case(
+                {"HIGH": 4, "ELEVATED": 3, "CAUTION": 2, "LOW": 1},
+                value=Analysis.risk_level,
+                else_=0,
+            )
+            order = [rank.desc(), *order]
+    total = session.scalar(select(func.count()).select_from(Analysis).where(*conditions))
+    records = session.execute(
+        select(
+            Analysis.id,
+            Analysis.input_type,
+            Analysis.status,
+            Analysis.created_at,
+            Analysis.updated_at,
+            Analysis.content,
+            Analysis.risk_level,
+            Analysis.component_details["qr"]["payload_type"].as_string().label("payload_type"),
+        )
+        .where(*conditions)
+        .order_by(*order)
         .offset((page - 1) * page_size)
         .limit(page_size)
     ).all()

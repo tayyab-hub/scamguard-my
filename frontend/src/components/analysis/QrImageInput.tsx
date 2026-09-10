@@ -57,8 +57,7 @@ export function QrImageInput({
         <span className="status-chip">Local decoder</span>
       </div>
       <p id="qr-introduction" className="mb-4 text-xs leading-6 text-muted">
-        Upload one QR image. ScamGuard decodes it locally on the backend, classifies its payload,
-        and routes compatible content to existing intelligence without opening it.
+        Choose one clear QR image. Its decoded content is assessed without opening it.
       </p>
       <div
         className="rounded-lg border border-dashed border-control bg-surface-raised/40 p-4 sm:p-5"
@@ -83,7 +82,6 @@ export function QrImageInput({
             ref={input}
             type="file"
             accept={imageTypes.join(',')}
-            capture="environment"
             disabled={disabled}
             aria-describedby={`qr-file-guidance qr-privacy-note qr-selection${error ? ' qr-file-error' : ''}`}
             aria-invalid={Boolean(error)}

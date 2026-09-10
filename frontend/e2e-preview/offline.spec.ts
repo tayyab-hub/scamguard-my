@@ -35,9 +35,7 @@ test('built SPA protects private routes when no API session can be restored', as
 test('built SPA keeps Help and privacy guidance public without a backend', async ({ page }) => {
   await page.goto('/help')
   await expect(page.getByRole('heading', { name: 'Help & Support' })).toBeVisible()
-  await expect(
-    page.getByRole('heading', { name: 'Privacy in this academic prototype' }),
-  ).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Your privacy and data' })).toBeVisible()
   await expect(page.getByText('22 answers available')).toBeVisible()
   await page.getByLabel('Search help').fill('account information')
   await expect(page.getByText('1 answer available')).toBeVisible()
@@ -49,8 +47,17 @@ test('built SPA keeps Help and privacy guidance public without a backend', async
   await expect(page.getByRole('heading', { name: 'Welcome back' })).toBeVisible()
 })
 
-test('reduced motion keeps offline authentication keyboard accessible', async ({ page }) => {
+test('reduced motion keeps offline authentication keyboard accessible', async ({ page }, info) => {
   await page.emulateMedia({ reducedMotion: 'reduce' })
+  for (const route of ['/login', '/signup']) {
+    await page.goto(route)
+    await expect(
+      page.getByRole('heading', {
+        name: route === '/login' ? 'Welcome back' : 'Create your account',
+      }),
+    ).toBeVisible()
+    await page.screenshot({ path: info.outputPath(`${route.slice(1)}.png`), fullPage: true })
+  }
   await page.goto('/signup')
   await expect(page.getByRole('heading', { name: 'Create your account' })).toBeVisible()
   expect(await page.evaluate(() => document.getAnimations().length)).toBe(0)

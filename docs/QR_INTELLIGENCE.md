@@ -1,7 +1,9 @@
 # Task 7 QR Intelligence
 
-Status: implemented and fully locally verified on `task-7-qr-intelligence`; awaiting manual
-acceptance and not merged or deployed.
+Status: Task 7 accepted, merged and deployed as confirmed by the user. Task 8 adds a separate live
+camera input on `task-8-peak-enhancement`, for manual review before merge/deploy. The upload engine,
+classifier and risk methodology described here remain unchanged. See
+[Task 8 camera architecture and acceptance](TASK_8_PEAK_ENHANCEMENT.md).
 
 ## Objective
 
@@ -125,6 +127,6 @@ launch payment apps, validate bank ownership, identify the QR creator or perform
 Task 7 adds no required environment variable, paid service, external API or OS-level decoder package.
 Its conservative defaults can be overridden with `QR_MAX_UPLOAD_BYTES`, `QR_MAX_DIMENSION`,
 `QR_MAX_PIXELS` and `QR_MAX_PAYLOAD_BYTES`; production needs no override. Render
-must install the updated locked Python dependencies and run Alembic `0006_qr_intelligence` after a
-future approved merge; Vercel must rebuild the frontend. The existing relative `/api/v1` Vercel
-rewrite remains unchanged. No production service was modified during Task 7 development.
+installed the updated locked Python dependencies and Alembic `0006_qr_intelligence` for the
+user-confirmed Task 7 deployment; Vercel was rebuilt. The relative `/api/v1` Vercel rewrite remains
+unchanged. Task 8 adds no migration or provider setting and is not deployed.

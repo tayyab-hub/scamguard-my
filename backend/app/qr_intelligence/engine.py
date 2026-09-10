@@ -137,7 +137,12 @@ class QRIntelligenceEngine:
             _qr_evidence(
                 "QR_DECODED",
                 "QR code decoded successfully",
-                "A single QR symbol was decoded locally from the validated raster image.",
+                (
+                    "The browser reported a camera-decoded payload. The server validated its "
+                    "text, but did not receive or independently verify camera frames."
+                    if decoded.source == "CAMERA"
+                    else "A single QR symbol was decoded locally from the validated raster image."
+                ),
                 f"Decoded type: {payload.type}",
             )
         ]
@@ -243,6 +248,7 @@ class QRIntelligenceEngine:
             components={
                 **underlying_components,
                 "qr": {
+                    "source": decoded.source,
                     "engine_version": ENGINE_VERSION,
                     "decoder_library": decoded.decoder_library,
                     "decoder_version": decoded.decoder_version,
@@ -260,6 +266,14 @@ class QRIntelligenceEngine:
                 **({"payment": payment_components} if payment_components else {}),
             },
             limitations=[
+                *(
+                    [
+                        "Camera capture and decoder identity are client-reported, "
+                        "not independently verified."
+                    ]
+                    if decoded.source == "CAMERA"
+                    else []
+                ),
                 "A QR code is a data carrier, not an intrinsic indicator of fraud.",
                 "Decoding does not establish who created or distributed the QR code.",
                 "The decoded content was never opened, executed, contacted or fetched.",

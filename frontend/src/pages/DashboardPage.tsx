@@ -10,9 +10,10 @@ import {
   ShieldAlert,
   ShieldCheck,
 } from 'lucide-react'
-import { Link } from 'react-router-dom'
-import { useState } from 'react'
-import { SubmissionHistory, SubmissionRows } from '../components/SubmissionHistory'
+import { Link, useNavigate } from 'react-router-dom'
+import { SubmissionRows } from '../components/SubmissionHistory'
+import { DashboardDistribution } from '../components/DashboardDistribution'
+import { analysisModes } from '../components/analysis/modes'
 import { EmptyState, LoadingState } from '../components/States'
 import { PreviewNotice } from '../components/PreviewNotice'
 import { PageHeading } from '../components/PageHeading'
@@ -29,7 +30,7 @@ const inputLabels = { MESSAGE: 'Message', URL: 'URL', PHONE: 'Phone', QR: 'QR' }
 export function DashboardPage() {
   const dashboard = useDashboard()
   const capabilities = useCapabilities()
-  const [showHistory, setShowHistory] = useState(false)
+  const navigate = useNavigate()
   const data = !dashboard.isError && dashboard.data?.status === 'ready' ? dashboard.data : null
   const availableModes =
     !capabilities.isError && capabilities.data?.analysis_available
@@ -42,7 +43,7 @@ export function DashboardPage() {
       <PageHeading
         eyebrow="FORENSIC INTELLIGENCE / OVERVIEW"
         title="Security overview"
-        description="A clearer view of your digital safety, all in one place."
+        description="Review your checks, find past evidence and decide what needs a closer look."
         action={
           <Link to="/analyse" className="button-primary">
             <ScanLine size={17} aria-hidden="true" />
@@ -120,6 +121,17 @@ export function DashboardPage() {
               </section>
             ))}
           </div>
+          {data?.type_counts &&
+            data.risk_counts &&
+            data.unassessed_analyses !== null &&
+            data.total_analyses > 0 && (
+              <DashboardDistribution
+                types={data.type_counts}
+                risks={data.risk_counts}
+                unassessed={data.unassessed_analyses}
+                total={data.total_analyses}
+              />
+            )}
           <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_320px]">
             <div className="min-w-0 space-y-6">
               <section
@@ -149,7 +161,7 @@ export function DashboardPage() {
                     }
                   >
                     {data
-                      ? 'No submissions have been recorded. Start with a message, URL, phone number or QR image.'
+                      ? 'You have not analysed anything yet. Check a suspicious message, URL, phone number or QR code to start building your private history.'
                       : 'Analysis history is not enabled yet. Once available, your recorded submissions will appear here.'}
                   </EmptyState>
                 )}
@@ -158,15 +170,12 @@ export function DashboardPage() {
                     <button
                       type="button"
                       className="button-secondary"
-                      aria-expanded={showHistory}
-                      aria-controls="history-browser"
-                      onClick={() => setShowHistory(!showHistory)}
+                      onClick={() => navigate('/history')}
                     >
-                      {showHistory ? 'Close history' : 'Browse history'}
+                      Browse history
                     </button>
                   </div>
                 )}
-                <div id="history-browser">{data && showHistory && <SubmissionHistory />}</div>
                 <div className="flex items-start gap-2.5 border-t border-line bg-surface-raised/40 px-5 py-3.5 text-[11px] leading-5 text-muted sm:px-6">
                   <Info size={14} className="mt-0.5 shrink-0" aria-hidden="true" />
                   {data
@@ -191,6 +200,22 @@ export function DashboardPage() {
               </section>
             </div>
             <aside className="motion-enter motion-delay-4 space-y-5">
+              <section className="panel p-5" aria-label="Quick analysis actions">
+                <h2 className="text-sm font-semibold">What would you like to check?</h2>
+                <div className="mt-4 grid gap-2">
+                  {analysisModes.map(({ type, label, icon: Icon }) => (
+                    <Link
+                      key={type}
+                      to={`/analyse?mode=${type}`}
+                      className="button-secondary justify-start"
+                    >
+                      <Icon size={16} aria-hidden="true" />
+                      {label}
+                      <ArrowRight size={14} className="ml-auto motion-arrow" aria-hidden="true" />
+                    </Link>
+                  ))}
+                </div>
+              </section>
               <section className="relative overflow-hidden rounded-lg border border-accent/25 bg-accent-subtle p-6">
                 <div className="mb-6 flex items-center justify-between">
                   <span className="eyebrow !text-accent">A SAFER NEXT STEP</span>
@@ -239,8 +264,8 @@ export function DashboardPage() {
                     <dd className="text-muted">{data ? 'Connected' : 'Not connected'}</dd>
                   </div>
                   <div className="flex justify-between gap-3">
-                    <dt className="text-muted">Data source</dt>
-                    <dd className="text-body">{data ? 'PostgreSQL' : 'None configured'}</dd>
+                    <dt className="text-muted">History visibility</dt>
+                    <dd className="text-body">Your account only</dd>
                   </div>
                 </dl>
               </section>

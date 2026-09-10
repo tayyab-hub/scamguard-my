@@ -299,6 +299,15 @@ def test_real_dashboard_order_pagination_and_safe_previews(persistent):
         "flagged_analyses": 0,
         "last_analysis_at": None,
         "recent_analyses": [],
+        "type_counts": {"MESSAGE": 0, "URL": 0, "PHONE": 0, "QR": 0},
+        "risk_counts": {
+            "LOW": 0,
+            "CAUTION": 0,
+            "ELEVATED": 0,
+            "HIGH": 0,
+            "INSUFFICIENT_EVIDENCE": 0,
+        },
+        "unassessed_analyses": 0,
     }
     ids = []
     for number in range(7):

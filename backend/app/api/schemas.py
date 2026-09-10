@@ -29,6 +29,9 @@ class DashboardResponse(BaseModel):
     flagged_analyses: int | None = None
     last_analysis_at: datetime | None = None
     recent_analyses: list[AnalysisSummary] = []
+    type_counts: dict[str, int] | None = None
+    risk_counts: dict[str, int] | None = None
+    unassessed_analyses: int | None = None
 
 
 class CapabilitiesResponse(BaseModel):

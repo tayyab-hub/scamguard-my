@@ -53,7 +53,7 @@ test('result presentation: real scores, keyboard metadata, pending and live redu
   ).toBeVisible()
   await page.getByRole('link', { name: 'View assessment' }).click()
   await expect(page.getByRole('heading', { name: 'Analysis result' })).toBeFocused()
-  const metadata = result.getByText('Components and limitations')
+  const metadata = result.getByText('Technical details')
   await metadata.focus()
   await page.keyboard.press('Enter')
   await expect(result.getByText(record.id, { exact: true })).toBeVisible()

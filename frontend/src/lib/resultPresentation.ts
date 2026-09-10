@@ -8,6 +8,15 @@ export const riskCopy = {
   INSUFFICIENT_EVIDENCE: 'Insufficient evidence',
 } as const
 
+export const riskGuidance = {
+  LOW: 'Few meaningful risk indicators were identified. This does not confirm that the content is safe.',
+  CAUTION: 'Some indicators need checking. Verify the request independently before acting.',
+  ELEVATED: 'Meaningful warning signs were identified. Pause and verify through a trusted channel.',
+  HIGH: 'Strong warning signs were identified. Avoid acting on this request until independently verified.',
+  INSUFFICIENT_EVIDENCE:
+    'Available evidence is not sufficient to determine whether this content is trustworthy or malicious. This is not a low-risk or safe result.',
+} as const
+
 export const SCORE_PRESENTATION_VERSION = 'risk-presentation-v1'
 const urlRanks = { LOW: 0, CAUTION: 1, ELEVATED: 2, HIGH: 3 } as const
 

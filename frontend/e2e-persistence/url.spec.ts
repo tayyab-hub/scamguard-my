@@ -43,7 +43,7 @@ test('URL scenarios: persisted real results, no navigation to destinations, keyb
       page.getByRole('region', { name: 'Detected evidence' }).getByText(evidence, { exact: false }),
     ).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Recommended actions' })).toBeVisible()
-    const details = page.getByText('Components and limitations')
+    const details = page.getByText('Technical details')
     await details.focus()
     await page.keyboard.press('Enter')
     await expect(page.getByText('Local URL model', { exact: true })).toBeVisible()

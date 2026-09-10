@@ -15,6 +15,7 @@ const types = {
   '.svg': 'image/svg+xml',
   '.png': 'image/png',
   '.json': 'application/json',
+  '.wasm': 'application/wasm',
 }
 
 async function findFile(pathname) {

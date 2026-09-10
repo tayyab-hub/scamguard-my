@@ -80,7 +80,18 @@ export function AuthPage({ mode }: { mode: 'login' | 'signup' }) {
           onSubmit={(event) => {
             event.preventDefault()
             setSubmitted(true)
-            if (Object.values(errors).some(Boolean)) return
+            if (Object.values(errors).some(Boolean)) {
+              const first = Object.entries(errors).find(([, error]) => error)?.[0]
+              const fieldIds: Record<string, string> = {
+                fullName: 'auth-full-name',
+                username: 'auth-username',
+                email: 'auth-identifier',
+                password: 'auth-password',
+                confirmation: 'auth-confirm',
+              }
+              if (first) document.getElementById(fieldIds[first]!)?.focus()
+              return
+            }
             setPending(true)
             setError(null)
             const request = signup
@@ -165,7 +176,9 @@ export function AuthPage({ mode }: { mode: 'login' | 'signup' }) {
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
                 onBlur={() => markTouched('password')}
-                aria-describedby={signup ? 'password-guidance' : undefined}
+                aria-describedby={
+                  signup || visibleError('password') ? 'password-guidance' : undefined
+                }
                 aria-invalid={Boolean(visibleError('password')) || undefined}
                 disabled={pending}
               />
@@ -174,6 +187,7 @@ export function AuthPage({ mode }: { mode: 'login' | 'signup' }) {
                 className="button-quiet absolute inset-y-1 right-1 flex w-10 items-center justify-center rounded text-muted"
                 onClick={() => setVisible((current) => !current)}
                 aria-label={visible ? 'Hide password' : 'Show password'}
+                aria-pressed={visible}
                 disabled={pending}
               >
                 {visible ? (
@@ -214,7 +228,12 @@ export function AuthPage({ mode }: { mode: 'login' | 'signup' }) {
               {error}
             </p>
           )}
-          <button type="submit" className="button-primary w-full justify-center" disabled={pending}>
+          <button
+            type="submit"
+            className="button-primary w-full justify-center"
+            disabled={pending}
+            aria-busy={pending}
+          >
             <LockKeyhole size={16} aria-hidden="true" />
             {pending
               ? signup
@@ -238,10 +257,10 @@ export function AuthPage({ mode }: { mode: 'login' | 'signup' }) {
       <aside className="panel flex flex-col justify-between bg-surface-raised p-6 sm:p-8">
         <div>
           <ShieldCheck size={30} className="text-accent" aria-hidden="true" />
-          <h2 className="mt-5 text-xl font-semibold">Built around private ownership</h2>
+          <h2 className="mt-5 text-xl font-semibold">Clarity before you act</h2>
           <ul className="mt-5 space-y-3 text-sm leading-6 text-muted">
             <li>
-              Each Message, URL, Phone and QR analysis is assigned by the server to your account.
+              Check suspicious messages, website addresses, phone numbers and QR codes in one place.
             </li>
             <li>Other users cannot list, open, edit, or delete your records.</li>
             <li>Completed results remain unchanged; Analyse again creates a fresh record.</li>
@@ -251,6 +270,12 @@ export function AuthPage({ mode }: { mode: 'login' | 'signup' }) {
           This remains an academic prototype. Never submit passwords, recovery phrases, payment
           credentials, or highly sensitive personal information.
         </p>
+        <Link
+          to="/help#privacy-heading"
+          className="action-link mt-4 inline-flex min-h-11 items-center text-xs font-semibold text-accent"
+        >
+          How your data is handled
+        </Link>
       </aside>
     </div>
   )

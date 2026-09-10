@@ -163,7 +163,7 @@ export function HelpPage() {
 
       <section className="panel mt-6 p-5 sm:p-6" aria-labelledby="privacy-heading">
         <h2 id="privacy-heading" className="text-sm font-semibold">
-          Privacy in this academic prototype
+          Your privacy and data
         </h2>
         <p className="mt-3 max-w-4xl text-xs leading-6 text-muted">
           Secure accounts store a full name, normalized username and email alongside an Argon2id
@@ -178,7 +178,11 @@ export function HelpPage() {
           images are decoded in memory and discarded; their SHA-256 fingerprint, dimensions, decoded
           payload and assessment may remain in private history. QR content is never opened or
           executed, decoded URLs retain the no-fetch guarantee, and payment QR structure cannot
-          prove recipient legitimacy.
+          prove recipient legitimacy. Live camera scanning starts only when you choose Start camera.
+          Frames are decoded on your device without recording or upload; only the decoded payload is
+          sent after you choose Analyse QR. Camera access stops on detection, cancellation,
+          navigation or leaving the tab. Your browser may require HTTPS and camera permission; image
+          upload remains available if scanning cannot run.
         </p>
       </section>
 

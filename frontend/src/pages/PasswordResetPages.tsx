@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ArrowLeft, KeyRound, MailCheck } from 'lucide-react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { ApiError, confirmPasswordReset, requestPasswordReset } from '../lib/api'
@@ -19,13 +19,27 @@ export function ForgotPasswordPage() {
     <ResetPanel
       eyebrow="ACCOUNT RECOVERY"
       title="Reset your password"
-      description="Enter the email connected to your account. We use the same response whether or not an account exists."
+      description="Enter your account email to request a link for choosing a new password."
     >
       {success ? (
         <div role="status" className="rounded-lg border border-accent/25 bg-accent-subtle p-5">
           <MailCheck size={24} className="text-accent" aria-hidden="true" />
           <p className="mt-3 text-sm font-semibold">Check your email</p>
           <p className="mt-2 text-sm leading-6 text-muted">{GENERIC_MESSAGE}</p>
+          <p className="mt-3 text-xs leading-6 text-muted">
+            Check your spam folder and allow a few minutes for delivery. Use the most recent email
+            if you requested more than one link.
+          </p>
+          <button
+            type="button"
+            className="button-secondary mt-4"
+            onClick={() => {
+              setSuccess(false)
+              setError(null)
+            }}
+          >
+            Use another email or retry
+          </button>
         </div>
       ) : (
         <form
@@ -76,7 +90,11 @@ export function ForgotPasswordPage() {
               {error}
             </p>
           )}
-          <button className="button-primary w-full justify-center" disabled={pending}>
+          <button
+            className="button-primary w-full justify-center"
+            disabled={pending}
+            aria-busy={pending}
+          >
             <KeyRound size={16} aria-hidden="true" />
             {pending ? 'Sending instructions…' : 'Send reset instructions'}
           </button>
@@ -88,8 +106,11 @@ export function ForgotPasswordPage() {
 }
 
 export function ResetPasswordPage() {
-  const [params] = useSearchParams()
-  const token = params.get('token') || ''
+  const [params, setParams] = useSearchParams()
+  const [token] = useState(() => params.get('token') || '')
+  useEffect(() => {
+    if (params.has('token')) setParams({}, { replace: true })
+  }, [params, setParams])
   const [password, setPassword] = useState('')
   const [confirmation, setConfirmation] = useState('')
   const [submitted, setSubmitted] = useState(false)
@@ -181,7 +202,17 @@ export function ResetPasswordPage() {
           </button>
         </form>
       )}
-      {!success && <BackToLogin />}
+      {!success && (
+        <div className="mt-5 flex flex-wrap items-center gap-x-5">
+          <Link
+            to="/forgot-password"
+            className="action-link inline-flex min-h-11 items-center text-xs font-semibold text-accent"
+          >
+            Request a new reset link
+          </Link>
+          <BackToLogin />
+        </div>
+      )}
     </ResetPanel>
   )
 }

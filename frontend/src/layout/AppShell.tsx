@@ -1,9 +1,10 @@
-import { useEffect } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import {
   ArrowUpRight,
   ChevronRight,
   CircleHelp,
   Globe2,
+  History,
   LayoutDashboard,
   LogIn,
   LogOut,
@@ -15,16 +16,19 @@ import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { ApiStatus } from '../components/ApiStatus'
 import { Brand } from '../components/Brand'
 import { useAuth } from '../auth/AuthContext'
+import { LoadingState } from '../components/States'
 
 const navigation = [
   { to: '/', label: 'Overview', icon: LayoutDashboard },
   { to: '/analyse', label: 'Analyse', icon: ScanLine },
+  { to: '/history', label: 'History', icon: History },
   { to: '/help', label: 'Help & Support', icon: CircleHelp },
 ]
 
 const routeLabels: Record<string, string> = {
   '/': 'Overview',
   '/analyse': 'Analyse',
+  '/history': 'History',
   '/help': 'Help & Support',
   '/login': 'Sign in',
   '/signup': 'Create account',
@@ -40,6 +44,8 @@ function routeLabel(pathname: string) {
 
 export function AppShell() {
   const auth = useAuth()
+  const [logoutPending, setLogoutPending] = useState(false)
+  const [logoutError, setLogoutError] = useState('')
   const { pathname } = useLocation()
   const current = routeLabel(pathname)
   useEffect(() => {
@@ -135,7 +141,20 @@ export function AppShell() {
                   type="button"
                   aria-label="Logout"
                   className="button-quiet flex min-h-9 items-center gap-2 rounded px-2 text-xs font-semibold"
-                  onClick={() => void auth.signOut()}
+                  disabled={logoutPending}
+                  aria-busy={logoutPending}
+                  onClick={() => {
+                    setLogoutPending(true)
+                    setLogoutError('')
+                    void auth
+                      .signOut()
+                      .catch(() =>
+                        setLogoutError(
+                          'Logout could not be confirmed. Your session may still be active. Check your connection and try Logout again.',
+                        ),
+                      )
+                      .finally(() => setLogoutPending(false))
+                  }}
                 >
                   <LogOut size={15} aria-hidden="true" />
                   <span className="hidden sm:inline">Logout</span>
@@ -163,6 +182,14 @@ export function AppShell() {
             )}
           </div>
         </header>
+        {logoutError && (
+          <p
+            role="alert"
+            className="border-b border-warning/30 bg-warning-subtle px-5 py-4 text-xs leading-6 text-warning"
+          >
+            {logoutError}
+          </p>
+        )}
         {auth.user && (!auth.user.full_name || !auth.user.username) && (
           <div className="border-b border-warning/30 bg-warning-subtle px-5 py-3 text-center text-xs text-warning sm:px-8">
             Your account predates profile fields.{' '}
@@ -183,7 +210,9 @@ export function AppShell() {
           className="mx-auto max-w-[1480px] px-5 pb-32 pt-8 outline-none sm:px-8 sm:pt-10 lg:pb-10 xl:px-10"
         >
           <div key={pathname} className="route-content">
-            <Outlet />
+            <Suspense fallback={<LoadingState label="Loading view" />}>
+              <Outlet />
+            </Suspense>
           </div>
           <footer className="mt-9 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-5 text-[10px] text-muted">
             <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
