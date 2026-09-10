@@ -7,14 +7,16 @@ from app.core.errors import error_response
 class BodyLimitMiddleware:
     """Bound buffered request bytes, including bodies without Content-Length."""
 
-    def __init__(self, app: ASGIApp, max_bytes: int):
+    def __init__(self, app: ASGIApp, max_bytes: int, path_limits: dict[str, int] | None = None):
         self.app = app
         self.max_bytes = max_bytes
+        self.path_limits = path_limits or {}
 
     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
         if scope["type"] != "http":
             await self.app(scope, receive, send)
             return
+        max_bytes = self.path_limits.get(scope.get("path", ""), self.max_bytes)
         chunks = []
         size = 0
         while True:
@@ -22,7 +24,7 @@ class BodyLimitMiddleware:
             if message["type"] == "http.disconnect":
                 return
             size += len(message.get("body", b""))
-            if size > self.max_bytes:
+            if size > max_bytes:
                 response = error_response(
                     Request(scope), 413, "REQUEST_TOO_LARGE", "The request is too large."
                 )

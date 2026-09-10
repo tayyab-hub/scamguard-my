@@ -6,17 +6,17 @@ Recorded: 2026-09-03, Asia/Kuala_Lumpur. These decisions come from the current i
 | --- | --- | --- |
 | D01 | FastAPI backend | Implemented with an application factory, Pydantic schemas/settings and versioned routes. Keep a clear HTTP boundary and centralized safe errors. |
 | D02 | React + TypeScript frontend | Implemented with strict compiler settings, React Router, TanStack Query, and Zod. Preserve typed presentation and runtime validation at the network boundary. |
-| D03 | PostgreSQL with SQLAlchemy/Psycopg and Alembic | Implemented through additive revision `0004_phone_intelligence`, with real readiness, explicit transactions and isolated PostgreSQL integration/migration tests. Do not substitute an in-memory database for persistence evidence. |
+| D03 | PostgreSQL with SQLAlchemy/Psycopg and Alembic | Implemented through additive revision `0006_qr_intelligence`, with real readiness, explicit transactions and isolated PostgreSQL integration/migration tests. Do not substitute an in-memory database for persistence evidence. |
 | D04 | Forensic Intelligence identity | Implemented warm light ivory/charcoal/terracotta/olive theme. Tokens, branding, footer, documentation and screenshot assets agree. Preserve accessibility and professional workspace layout. |
 | D05 | Real database-derived analytics only | Dashboard totals/latest/recent and flagged counts query only the authenticated user's persisted submissions. No production fake data or synthetic fallback. Unavailable is distinct from measured zero. |
 | D06 | Controlled adaptive learning | Planned only. Feedback must be validated/moderated, datasets and models versioned, evaluation reproducible, and promotion explicit with rollback. Unreviewed community input must never trigger automatic training or deployment. |
 | D07 | No automatic suspicious URL browsing | Task 4 analyses submitted URLs locally as inert strings and never navigates to, fetches or executes them. Any separately authorized retrieval system requires a reviewed network/SSRF safety design. |
-| D08 | Genuine ML metrics only | No models, training code, dataset, predictions or evaluation metrics exist. Future metrics must come from documented reproducible experiments, with provenance and leakage-resistant splits. Heuristics and demonstrations must be labelled accurately. |
-| D09 | Separate risk from confidence | Planned result-contract rule. Risk and strength of supporting evidence are different quantities; neither may be fabricated or substituted for the other. No current API field or UI score implements this decision. |
-| D10 | Insufficient-information outcome | Planned explicit domain state for missing, unsupported or inconclusive evidence. It must not imply “safe.” It differs from current analysis-unavailable and network-error states; no assessment outcome exists yet. |
+| D08 | Genuine ML metrics only | Implemented for Message and URL with documented reproducible held-out evaluation. QR adds no learned model or metric. Future metrics require provenance and leakage-resistant splits. |
+| D09 | Separate risk from confidence | Implemented across result contracts. QR-routed content inherits the underlying engine and never fabricates either value. |
+| D10 | Insufficient-information outcome | Implemented for inconclusive Message/URL/Phone/QR evidence and never presented as safe. It remains distinct from operational unavailability. |
 | D11 | Distinct liveness, readiness and capabilities | Implemented: health is process liveness; readiness verifies database/tables and all required local engines; capabilities reports supported modes. “API connected” alone is not proof of readiness. |
-| D12 | Minimal navigation and honest unavailable behavior | Implemented public Sign In, Sign Up and Help plus protected Overview, Analyse and Account routes. Phone is live only when advertised; QR remains an unavailable draft. No fixture replaces a failed API/account/result. |
-| D13 | Privacy before content collection | Task 5 adds real accounts, ownership, private history, individual/account deletion and basic abuse controls. Task 6 persists only normalized, authenticated Phone submissions and uses no external lookup; QR drafts remain local. Formal retention/backups, legal notices, incident response and broad-public operational controls still require owner review. See D41–D44 and D46–D47. |
+| D12 | Minimal navigation and honest unavailable behavior | Implemented public Sign In, Sign Up and Help plus protected Overview, Analyse and Account routes. Every mode is live only when advertised by capabilities. No fixture replaces a failed API/account/result. |
+| D13 | Privacy before content collection | Accounts, ownership, private history/deletion and abuse controls cover Message/URL/Phone/QR. QR images are discarded after bounded decoding; credential-bearing payload fields are redacted before storage. Formal retention/backups, legal notices, incident response and broad-public controls still require owner review. |
 | D14 | Preserve contracts during redesigns | Implemented visual migration retained backend and API/client behavior. Future functional contract evolution must be explicitly scoped and coordinated across schemas, tests, and docs. Never enable capabilities based solely on a frontend control. |
 | D15 | Explicit task boundaries and honest evidence | Task 1 and its visual migration were delivered; the memory-handoff task added documentation only. No automatic Task 2 continuation. Preserve tests and historical evidence; record skips, unrun CI, environment limits and actual completion status. See D16 for the later deployment-preparation scope. |
 
@@ -260,3 +260,25 @@ Completed forensic records have no update endpoint. Owned history/detail views m
 or Phone input into an editable Analyse draft, but submission always creates a new owned record and
 leaves the source unchanged. Foreign detail remains a uniform 404, so another user cannot use this UI
 path to recover protected input. QR remains disabled and outside Task 6.1.
+
+## D51 — Bounded local QR decoding and image minimization (2026-09-10)
+
+Task 7 uses pinned `zxing-cpp==3.1.1`, `Pillow==12.3.0` and
+`python-multipart==0.0.32`. zxing-cpp provides maintained CPython 3.12 Windows/Linux wheels and
+multi-symbol reporting without an unmanaged libzbar dependency or remote API. Exactly one
+authenticated PNG/JPEG/WebP is accepted under explicit byte/dimension/pixel/payload bounds; actual
+format must match MIME. SVG, animation, bombs, corrupt/disguised images and zero/multiple QR symbols
+are rejected before persistence. The original image is decoded only in memory and discarded. Private
+history stores derived audit metadata and decoded content after URL-userinfo/Wi-Fi-password redaction.
+The existing session, Origin/CSRF, rate-limit, ownership and deletion design remains unchanged.
+
+## D52 — Conservative QR routing and payment-integrity boundary (2026-09-10)
+
+The deterministic QR classifier distinguishes URL, PHONE, TEXT, EMAIL, SMS, WIFI, GEO, PAYMENT and
+OTHER. Supported content reuses existing engines and inherits their stored risk, score, confidence,
+evidence and actions exactly; the QR wrapper adds no risk severity. A bounded EMV-style TLV parser
+may verify structure and CRC-16/CCITT, expose present common fields and route an embedded HTTP(S) URL,
+but a valid CRC is never merchant/recipient/account/legitimacy evidence. Valid payment-only payloads
+remain INSUFFICIENT_EVIDENCE and malformed/invalid-CRC payloads are capped at CAUTION. No decoded
+payload is opened, fetched, executed, contacted or sent to an external provider. Task 7 stays on its
+feature branch until manual acceptance; Task 8 remains unstarted.

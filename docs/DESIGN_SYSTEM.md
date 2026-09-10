@@ -87,8 +87,10 @@ Motion is declarative CSS; no animation timers, new manual DOM animation or anim
 See [SCREENSHOTS.md](SCREENSHOTS.md) for historical desktop/mobile captures and [TESTING.md](TESTING.md)
 for current browser checks. The suite captures images and checks behavior/layout; it does not compare
 golden-image pixels. Task 6 preserves the compact Phone field and adds result panels using the shared
-hero/evidence/actions/metadata vocabulary. QR retains its dashed local selection area and disabled
-action; no camera, decoder or assessment is implied. The warm light theme is the only supported theme.
+hero/evidence/actions/metadata vocabulary. Task 7 keeps the QR dashed selection area while adding a
+preview, remove/replace control, honest decode states and the same result hierarchy. No persistent
+camera permission, automatic payload action or unrelated redesign is implied. The warm light theme
+is the only supported theme.
 
 ## Task 2 persistence and Task 3 Message result presentation
 

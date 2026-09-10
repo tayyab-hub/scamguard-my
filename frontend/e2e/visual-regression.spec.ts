@@ -97,7 +97,7 @@ test('Forensic Intelligence screens retain navigation and keyboard access', asyn
 
   await nav.getByRole('link', { name: 'Help & Support' }).click()
   await expect(page.getByRole('heading', { name: 'Help & Support' })).toBeFocused()
-  await expect(page.getByRole('group')).toHaveCount(20)
+  await expect(page.getByRole('group')).toHaveCount(22)
   await capture(page, testInfo, 'help')
   expect(failures).toEqual([])
 })
@@ -239,7 +239,7 @@ test('text, controls, and focus tokens have sufficient contrast in the light the
   expect(contrast('control', 'surface')).toBeGreaterThanOrEqual(3)
 })
 
-test('unavailable Phone and planned QR modes preserve local privacy, file focus and reduced motion', async ({
+test('unavailable Phone and QR modes preserve local privacy, file focus and reduced motion', async ({
   page,
 }, testInfo) => {
   const failures: string[] = []

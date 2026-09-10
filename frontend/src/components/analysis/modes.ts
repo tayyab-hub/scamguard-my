@@ -5,7 +5,7 @@ export const analysisModes = [
   { type: 'MESSAGE', label: 'Message', icon: FileText, planned: false },
   { type: 'URL', label: 'URL', icon: Link2, planned: false },
   { type: 'PHONE', label: 'Phone Number', icon: Phone, planned: false },
-  { type: 'QR', label: 'QR Code', icon: QrCode, planned: true },
+  { type: 'QR', label: 'QR Code', icon: QrCode, planned: false },
 ] as const
 
 export type AnalysisMode = (typeof analysisModes)[number]['type']
@@ -30,6 +30,6 @@ export const analysisActions = {
   },
   QR: {
     label: 'Analyse QR',
-    reason: 'QR decoding and analysis will be available in a later milestone.',
+    reason: 'QR intelligence is not available from the connected service.',
   },
 } satisfies Record<AnalysisMode, { label: string; reason: string }>

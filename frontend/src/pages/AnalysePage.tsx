@@ -17,7 +17,7 @@ import {
 } from '../components/analysis/modes'
 import { useLocation, useNavigate } from 'react-router-dom'
 
-const inputLabels = { MESSAGE: 'Message', URL: 'URL', PHONE: 'Phone' } as const
+const inputLabels = { MESSAGE: 'Message', URL: 'URL', PHONE: 'Phone', QR: 'QR' } as const
 
 function copiedAnalysisDraft(state: unknown) {
   if (!state || typeof state !== 'object' || !('analysisDraft' in state)) return null
@@ -50,6 +50,7 @@ export function AnalysePage() {
     PHONE: copiedDraft?.inputType === 'PHONE' ? copiedDraft.content : '',
   })
   const [qrFile, setQrFile] = useState<File | null>(null)
+  const [qrAttempted, setQrAttempted] = useState(false)
   const [touched, setTouched] = useState<Record<DraftMode, boolean>>({
     MESSAGE: false,
     URL: false,
@@ -68,7 +69,6 @@ export function AnalysePage() {
   const setContent = (value: string) =>
     inputType !== 'QR' && setDrafts((previous) => ({ ...previous, [inputType]: value }))
   const action = analysisActions[inputType]
-  const supportedMode = inputType !== 'QR'
   const canStore = !capabilities.isError && capabilities.data?.submission_available === true
   const canAnalyseMessage =
     !capabilities.isError &&
@@ -82,31 +82,42 @@ export function AnalysePage() {
     !capabilities.isError &&
     capabilities.data?.analysis_available === true &&
     capabilities.data.supported_inputs.includes('PHONE')
+  const canAnalyseQR =
+    !capabilities.isError &&
+    capabilities.data?.analysis_available === true &&
+    capabilities.data.supported_inputs.includes('QR')
   const availableIntelligence = [
     canAnalyseMessage ? 'Message' : null,
     canAnalyseURL ? 'URL' : null,
     canAnalysePhone ? 'Phone' : null,
+    canAnalyseQR ? 'QR' : null,
   ].filter((value): value is string => value !== null)
   const intelligenceLabel = availableIntelligence.join(', ').replace(/, ([^,]*)$/, ' and $1')
-  const available =
-    supportedMode && canStore && capabilities.data?.submission_inputs.includes(inputType)
-  const validation = supportedMode ? submissionError(inputType, content) : null
+  const available = canStore && capabilities.data?.submission_inputs.includes(inputType)
+  const validation =
+    inputType === 'QR'
+      ? qrFile
+        ? null
+        : 'Choose a QR image to analyse.'
+      : submissionError(inputType, content)
   const validationVisible =
-    supportedMode && Boolean(validation) && (touched[inputType] || submitAttempted[inputType])
-  const reason =
-    supportedMode && available
-      ? validationVisible
-        ? 'Correct the highlighted field to enable submission.'
-        : validation
-          ? `Add a valid ${inputType === 'MESSAGE' ? 'message' : inputType === 'URL' ? 'URL' : 'international phone number'} to enable submission.`
-          : inputType === 'MESSAGE' && canAnalyseMessage
-            ? 'Runs local message intelligence and records the result.'
-            : inputType === 'URL' && canAnalyseURL
-              ? 'Runs local URL intelligence without opening the website.'
-              : inputType === 'PHONE' && canAnalysePhone
-                ? 'Runs local phone-number metadata analysis without contacting the number.'
+    Boolean(validation) &&
+    (inputType === 'QR' ? qrAttempted : touched[inputType] || submitAttempted[inputType])
+  const reason = available
+    ? validationVisible
+      ? 'Correct the highlighted field to enable submission.'
+      : validation
+        ? `Add a valid ${inputType === 'MESSAGE' ? 'message' : inputType === 'URL' ? 'URL' : inputType === 'PHONE' ? 'international phone number' : 'QR image'} to enable submission.`
+        : inputType === 'MESSAGE' && canAnalyseMessage
+          ? 'Runs local message intelligence and records the result.'
+          : inputType === 'URL' && canAnalyseURL
+            ? 'Runs local URL intelligence without opening the website.'
+            : inputType === 'PHONE' && canAnalysePhone
+              ? 'Runs local phone-number metadata analysis without contacting the number.'
+              : inputType === 'QR' && canAnalyseQR
+                ? 'Decodes one QR locally and analyses supported content without opening it.'
                 : 'Records the submission only. Intelligence is unavailable.'
-      : action.reason
+    : action.reason
   return (
     <>
       <PageHeading
@@ -149,7 +160,7 @@ export function AnalysePage() {
               </p>
               <p className="mt-1 text-xs leading-5 text-muted">
                 {availableIntelligence.length
-                  ? 'Messages, URLs and phone numbers receive local evidence-based assessments. Websites are never opened and phone numbers are never contacted.'
+                  ? 'Messages, URLs, phone numbers and QR payloads receive local evidence-based assessments. Decoded content is never opened, websites are never fetched and phone numbers are never contacted.'
                   : canStore
                     ? 'Supported submissions can be recorded. No risk assessment is generated.'
                     : 'You can explore this workspace. No content is submitted and no risk assessment is generated.'}
@@ -172,7 +183,21 @@ export function AnalysePage() {
                 noValidate
                 onSubmit={(event) => {
                   event.preventDefault()
-                  if (!supportedMode || !available || submission.isPending) return
+                  if (!available || submission.isPending) return
+                  if (inputType === 'QR') {
+                    setQrAttempted(true)
+                    if (!qrFile) return
+                    submission.mutate(
+                      { input_type: 'QR', file: qrFile },
+                      {
+                        onSuccess: () => {
+                          setQrFile(null)
+                          setQrAttempted(false)
+                        },
+                      },
+                    )
+                    return
+                  }
                   setSubmitAttempted((previous) => ({ ...previous, [inputType]: true }))
                   if (validation) return
                   const mode = inputType
@@ -193,6 +218,7 @@ export function AnalysePage() {
                   disabled={submission.isPending}
                   onChange={(mode) => {
                     setInputType(mode)
+                    setQrAttempted(false)
                     submission.reset()
                   }}
                 />
@@ -204,7 +230,24 @@ export function AnalysePage() {
                   className="analysis-mode-panel motion-enter"
                 >
                   {inputType === 'QR' ? (
-                    <QrImageInput file={qrFile} onChange={setQrFile} />
+                    <>
+                      <QrImageInput
+                        file={qrFile}
+                        disabled={submission.isPending}
+                        onChange={(file) => {
+                          setQrFile(file)
+                          setQrAttempted(false)
+                        }}
+                      />
+                      {validationVisible && (
+                        <p
+                          role="alert"
+                          className="validation-feedback -mt-3 mb-6 text-xs text-danger"
+                        >
+                          {validation}
+                        </p>
+                      )}
+                    </>
                   ) : (
                     field && (
                       <>
@@ -300,11 +343,13 @@ export function AnalysePage() {
                   <p className="flex max-w-[235px] items-start gap-2 text-[11px] leading-5 text-muted">
                     <LockKeyhole size={14} className="mt-0.5 shrink-0" aria-hidden="true" />
                     {available
-                      ? inputType === 'MESSAGE' && canAnalyseMessage
-                        ? 'This analysis is stored in your private account history. Local analysis runs first; optional external contextual review remains disabled by default. Use non-sensitive content only.'
-                        : inputType === 'PHONE'
-                          ? 'The normalized number and assessment are stored in your private history. No external phone or identity lookup is performed.'
-                          : 'This analysis is stored in your private account history. Other users cannot access it. Use non-sensitive content only.'
+                      ? inputType === 'QR'
+                        ? 'The decoded payload and assessment are stored privately. The original image is discarded after in-memory decoding.'
+                        : inputType === 'MESSAGE' && canAnalyseMessage
+                          ? 'This analysis is stored in your private account history. Local analysis runs first; optional external contextual review remains disabled by default. Use non-sensitive content only.'
+                          : inputType === 'PHONE'
+                            ? 'The normalized number and assessment are stored in your private history. No external phone or identity lookup is performed.'
+                            : 'This analysis is stored in your private account history. Other users cannot access it. Use non-sensitive content only.'
                       : 'Nothing is submitted while analysis is unavailable.'}
                   </p>
                   <button
@@ -322,7 +367,9 @@ export function AnalysePage() {
                           ? 'Analysing URL…'
                           : inputType === 'PHONE' && canAnalysePhone
                             ? 'Analysing phone number…'
-                            : 'Recording submission…'
+                            : inputType === 'QR' && canAnalyseQR
+                              ? 'Decoding QR image…'
+                              : 'Recording submission…'
                       : action.label}
                     <ArrowRight size={15} className="motion-arrow" aria-hidden="true" />
                   </button>
@@ -341,7 +388,9 @@ export function AnalysePage() {
                         ? 'Running local URL assessment…'
                         : inputType === 'PHONE' && canAnalysePhone
                           ? 'Running local phone assessment…'
-                          : 'Recording your submission…'}
+                          : inputType === 'QR' && canAnalyseQR
+                            ? 'Validating image, decoding QR and routing its payload…'
+                            : 'Recording your submission…'}
                   </p>
                 )}
                 {submission.data?.assessment && (
@@ -415,12 +464,13 @@ export function AnalysePage() {
                     key={submission.data.id}
                     assessment={submission.data.assessment}
                     analysisId={submission.data.id}
+                    content={submission.data.content}
                   />
                 ) : (
                   <EmptyState icon={ShieldCheck} title="No assessment yet">
                     {submission.isSuccess
                       ? 'The submission was recorded without an assessment.'
-                      : 'Submit a message, URL or phone number when intelligence is available. No safety verdict has been made.'}
+                      : 'Submit a message, URL, phone number or QR image when intelligence is available. No safety verdict has been made.'}
                   </EmptyState>
                 )}
               </section>

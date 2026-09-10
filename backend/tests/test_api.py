@@ -48,6 +48,7 @@ def test_readiness_probes_database(app, client):
         "message_intelligence": "ready",
         "url_intelligence": "ready",
         "phone_intelligence": "ready",
+        "qr_intelligence": "ready",
     }
     assert str(session.execute.call_args.args[0]) == "SELECT 1"
 
@@ -72,6 +73,13 @@ def test_readiness_rejects_a_missing_required_model(app, client):
 
 def test_readiness_rejects_a_missing_phone_engine(app, client):
     app.state.phone_engine = None
+    response = client.get("/api/v1/ready")
+    assert response.status_code == 503
+    assert response.json()["error"]["code"] == "INTELLIGENCE_UNAVAILABLE"
+
+
+def test_readiness_rejects_an_unavailable_qr_decoder(app, client):
+    app.state.qr_engine.operational = False
     response = client.get("/api/v1/ready")
     assert response.status_code == 503
     assert response.json()["error"]["code"] == "INTELLIGENCE_UNAVAILABLE"

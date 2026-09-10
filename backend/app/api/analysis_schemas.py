@@ -39,6 +39,8 @@ class AnalysisCreate(BaseModel):
 
     @model_validator(mode="after")
     def validate_input(self) -> "AnalysisCreate":
+        if self.input_type == InputType.QR:
+            raise ValueError("QR images must use the authenticated QR upload endpoint")
         limit = {
             InputType.MESSAGE: 5000,
             InputType.URL: 2048,
@@ -71,6 +73,7 @@ class AnalysisDetail(AnalysisFields):
 class AnalysisSummary(AnalysisFields):
     preview: str
     risk_level: str | None = None
+    payload_type: str | None = None
 
 
 class AnalysisList(BaseModel):

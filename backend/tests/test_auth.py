@@ -20,6 +20,7 @@ from app.core.config import Settings
 from app.db.models import Analysis, AuthSession, PasswordResetToken, User
 from app.db.session import build_engine
 from app.main import create_app
+from tests.qr_fixtures import qr_image_bytes
 
 pytestmark = pytest.mark.integration
 ORIGIN = "http://localhost:5173"
@@ -100,6 +101,13 @@ def submit_message(client: TestClient, content: str = "Test message"):
 
 def submit_phone(client: TestClient, content: str = "+44 20 7946 0958"):
     return client.post("/api/v1/analyses", json={"input_type": "PHONE", "content": content})
+
+
+def submit_qr(client: TestClient, payload: str = "https://example.com/controlled"):
+    return client.post(
+        "/api/v1/analyses/qr",
+        files={"file": ("controlled.png", qr_image_bytes(payload), "image/png")},
+    )
 
 
 def captured_reset_token(client: TestClient) -> str:
@@ -450,6 +458,35 @@ def test_unauthenticated_phone_submission_is_rejected(auth_client):
     assert response.json()["error"]["code"] == "AUTHENTICATION_REQUIRED"
 
 
+def test_unauthenticated_qr_submission_is_rejected(auth_client):
+    client, _ = auth_client
+    response = client.post(
+        "/api/v1/analyses/qr",
+        files={"file": ("private.png", qr_image_bytes("private payload"), "image/png")},
+        headers={"Origin": ORIGIN},
+    )
+    assert response.status_code == 401
+    assert response.json()["error"]["code"] == "AUTHENTICATION_REQUIRED"
+
+
+def test_qr_submission_requires_csrf_and_server_derives_owner(auth_client):
+    client, engine = auth_client
+    assert signup(client).status_code == 201
+    csrf = client.headers.pop("X-CSRF-Token")
+    assert submit_qr(client).status_code == 403
+    client.headers["X-CSRF-Token"] = csrf
+    response = client.post(
+        "/api/v1/analyses/qr",
+        files={"file": ("owned.png", qr_image_bytes("Owned QR payload"), "image/png")},
+        data={"user_id": str(uuid4())},
+    )
+    assert response.status_code == 201
+    with Session(engine) as session:
+        record = session.get(Analysis, UUID(response.json()["id"]))
+        owner = session.scalar(select(User.id).where(User.email == "owner@example.com"))
+        assert record is not None and record.user_id == owner
+
+
 def test_multi_user_history_detail_delete_and_dashboard_are_isolated(auth_client):
     client_a, engine = auth_client
     assert signup(client_a, "a@example.com").status_code == 201
@@ -526,6 +563,7 @@ def test_account_deletion_is_transactional_and_cascades_private_data(auth_client
     assert signup(client).status_code == 201
     assert submit_message(client).status_code == 201
     assert submit_phone(client).status_code == 201
+    assert submit_qr(client).status_code == 201
     assert (
         client.post(
             "/api/v1/auth/password-reset/request",
@@ -582,6 +620,24 @@ def test_phone_submission_uses_database_backed_analysis_rate_limit(auth_database
         assert blocked.status_code == 429
         assert blocked.json()["error"]["code"] == "RATE_LIMITED"
         assert int(blocked.headers["retry-after"]) > 0
+
+
+def test_qr_submission_uses_database_backed_analysis_rate_limit(auth_database):
+    config, engine = auth_database
+    limited = config.model_copy(update={"analysis_rate_limit": 1})
+    with engine.begin() as connection:
+        connection.execute(
+            text(
+                "TRUNCATE TABLE analyses, auth_sessions, password_reset_tokens, users, "
+                "auth_rate_limits"
+            )
+        )
+    with TestClient(create_app(limited)) as client:
+        assert signup(client, "qr-limit@example.com").status_code == 201
+        assert submit_qr(client, "https://example.com/one").status_code == 201
+        blocked = submit_qr(client, "https://example.com/two")
+        assert blocked.status_code == 429
+        assert blocked.json()["error"]["code"] == "RATE_LIMITED"
 
 
 def test_password_reset_request_and_confirmation_use_database_rate_limits(auth_database):

@@ -19,6 +19,9 @@ dependencies = [
   "phonenumbers==9.0.38",
   "tldextract==5.3.1",
   "idna>=3.10,<4",
+  "Pillow==12.3.0",
+  "python-multipart==0.0.32",
+  "zxing-cpp==3.1.1",
 ]
 
 [project.optional-dependencies]

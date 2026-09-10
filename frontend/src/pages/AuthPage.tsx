@@ -71,7 +71,7 @@ export function AuthPage({ mode }: { mode: 'login' | 'signup' }) {
         </h1>
         <p className="mt-3 max-w-lg text-sm leading-6 text-muted">
           {signup
-            ? 'Create a private identity for your Message, URL and Phone analysis history.'
+            ? 'Create a private identity for your Message, URL, Phone and QR analysis history.'
             : 'Sign in with your username or email to return to your private workspace.'}
         </p>
         <form
@@ -240,7 +240,9 @@ export function AuthPage({ mode }: { mode: 'login' | 'signup' }) {
           <ShieldCheck size={30} className="text-accent" aria-hidden="true" />
           <h2 className="mt-5 text-xl font-semibold">Built around private ownership</h2>
           <ul className="mt-5 space-y-3 text-sm leading-6 text-muted">
-            <li>Each Message, URL and Phone analysis is assigned by the server to your account.</li>
+            <li>
+              Each Message, URL, Phone and QR analysis is assigned by the server to your account.
+            </li>
             <li>Other users cannot list, open, edit, or delete your records.</li>
             <li>Completed results remain unchanged; Analyse again creates a fresh record.</li>
           </ul>

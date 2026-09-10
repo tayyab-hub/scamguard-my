@@ -2,10 +2,10 @@
 
 SCAMGUARD is a general **Multi-Modal Scam Detection & Reporting Web Application**. Its approved
 visual identity is **Forensic Intelligence**: warm light ivory, charcoal, terracotta and olive with
-restrained editorial motion. Tasks 1–5 are complete, including user-verified Vercel → Render → Neon
-production. Task 6 Phone Intelligence is implemented and locally verified on
-`task-6-phone-intelligence`, but awaits manual acceptance and must not be merged or deployed yet.
-Task 7 QR Intelligence and Task 8 final integration/reporting have not started. Never infer
+restrained editorial motion. Tasks 1–6.1 are complete and merged, including user-verified Vercel →
+Render → Neon production. Task 7 QR Intelligence is implemented and fully locally verified on
+`task-7-qr-intelligence`, but awaits manual acceptance and must not be merged or deployed yet.
+Task 8 final integration/reporting has not started. Never infer
 functionality from a planned UI control, roadmap line, screenshot or old conversation.
 
 ## Required reading order
@@ -36,8 +36,9 @@ Current source is authoritative when historical wording conflicts.
 - MESSAGE, URL and PHONE intelligence are implemented. URL never requests destinations. Phone uses
   pinned offline numbering metadata, requires explicit international context, and never identifies or
   contacts a subscriber. Task 5 accounts, server-side sessions, ownership and privacy controls remain
-  mandatory. QR is still local UI only; no QR, image, payment, community, campaign or adaptive
-  learning feature may be claimed from scaffolding.
+  mandatory. QR uses a bounded authenticated multipart route, in-memory local decoding and
+  conservative routing; it never opens/executes decoded content or proves payment legitimacy. No
+  general image/OCR, community, campaign or adaptive-learning feature may be claimed from it.
 - Keep the frontend useful with approved loading/error/empty/unavailable states. Never replace a
   failed API response with production mock data.
 - Use Alembic only; no startup `create_all`, implicit commits, destructive reset, SQLite substitute
@@ -87,9 +88,10 @@ Current source is authoritative when historical wording conflicts.
   grounded structured output. No key in `VITE_*`, source, tests or logs. Provider failure must not
   erase local evidence or prevent a local result.
 - Phone numbers are persisted only after authenticated submission and are never sent to external
-  providers. Never log complete submissions unnecessarily. QR stays local and disabled: never
-  read/upload QR bytes or request camera access. Never reuse private submissions for model training
-  without explicit permission.
+  providers. Never log complete submissions unnecessarily. QR images may be read only by the bounded
+  authenticated Task 7 decoder and must be discarded after in-memory processing; retain only decoded,
+  credential-redacted content and derived private metadata. Never automatically activate payloads or
+  reuse private submissions for model training without explicit permission.
 
 ## Git safety and task boundaries
 
@@ -97,9 +99,9 @@ Current source is authoritative when historical wording conflicts.
   commits, discard user work, expose ignored secrets, or alter the configured remote casually.
 - Keep `node_modules`, `.venv`, `dist`, caches, coverage, logs, `.local`, test output and secrets
   ignored. Dataset source and reviewed model artifacts are intentional versioned research assets.
-- Tasks 1–5 are merged to `main`. Retain prior branches/history. Task 6 must stay on
-  `task-6-phone-intelligence` until manual acceptance; do not merge or deploy it automatically. Do not
-  begin Task 7 QR Intelligence or Task 8 final integration/reporting.
+- Tasks 1–6.1 are merged to `main`. Retain prior branches/history. Task 7 must stay on
+  `task-7-qr-intelligence` until manual acceptance; do not merge or deploy it automatically. Do not
+  begin Task 8 final integration/reporting.
 
 ## Definition of done and completion procedure
 

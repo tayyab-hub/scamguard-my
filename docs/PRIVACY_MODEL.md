@@ -1,11 +1,11 @@
-# Task 5–6 privacy model
+# Task 5–7 privacy model
 
 Status: implemented for the Task 5 application boundary; this is an academic prototype explanation,
 not a legally complete privacy policy.
 
 SCAMGUARD limits account profile data to a full name, normalized username, normalized email address,
-a one-way Argon2id password hash and
-timestamps. It stores submitted Message/URL content, normalized E.164 Phone content, the local assessment, evidence and audit metadata
+a one-way Argon2id password hash and timestamps. It stores submitted Message/URL content,
+normalized E.164 Phone content, decoded QR content, the local assessment, evidence and audit metadata
 under the submitting account so the user can retrieve private history. It does not store plaintext
 passwords, password hints, raw session/CSRF/reset secrets, or security questions. Reset records contain
 only an HMAC digest, expiry/use timestamps and the owning user ID.
@@ -23,12 +23,18 @@ without a verification flow. Completed analysis content and assessments are immu
 copies owned input into a new browser draft, which may be edited and submitted as a separate record;
 the original is not mutated.
 
+For QR, the authenticated backend validates and decodes one bounded raster image in memory. It does
+not persist the original image. Private history stores decoded content and derived audit metadata,
+including a file SHA-256 fingerprint, and marks the original image as not retained. URL credentials
+and Wi-Fi password fields are redacted before storage; routed phones are normalized to E.164. Because
+the image is discarded, QR history cannot reconstruct it and requires a new upload for another run.
+
 Users should not submit passwords, one-time codes, financial credentials, government identifiers or
 other unnecessary sensitive information. URL analysis is string-only and never opens or fetches the
 destination. Message and URL results are decision support, not a guarantee that content is safe or
 fraudulent. The original Message dataset and current URL dataset/model limitations remain documented.
 
-Local Message, URL and Phone intelligence works without a third party. Phone uses only bundled
+Local Message, URL, Phone and QR intelligence works without a third party. Phone uses only bundled
 numbering-plan metadata: it never calls/messages the number, contacts social/messaging services,
 performs subscriber/SIM/reverse-person lookup, or sends the number to an external reputation or AI
 provider. Numbering validity does not establish assignment, caller identity, intent, safety or fraud.
@@ -37,6 +43,11 @@ disabled by default; no production key is configured. If an operator deliberatel
 backend may send best-effort-redacted Message text to the configured provider, while local evidence
 continues to work if that provider fails. URL analysis has no live reputation provider and performs no
 network retrieval.
+
+QR decoding does not open links, execute payloads, contact numbers, join networks or launch payment
+flows. It does not verify the creator, merchant, recipient or ownership of an account. A payment CRC
+is an integrity check only. Identical-image fingerprints can be identifying metadata, so they remain
+inside the same private ownership/deletion boundary as the rest of the analysis.
 
 Production infrastructure uses Vercel (public frontend), Render (FastAPI) and Neon (managed
 PostgreSQL). The user has verified Neon connectivity and Render health/readiness; the Task 5 Vercel

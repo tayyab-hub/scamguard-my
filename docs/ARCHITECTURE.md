@@ -18,7 +18,8 @@ React Router → AuthProvider → public Sign In / Sign Up / Help
           conservative Message-specific fusion
                                   → local offline URL intelligence engine/artifact
                                   → local offline Phone numbering/rules engine
-        SQLAlchemy/Psycopg → PostgreSQL → Alembic 0001 + 0002 + 0003 + 0004
+                                  → bounded QR decoder/classifier → existing engines
+        SQLAlchemy/Psycopg → PostgreSQL → Alembic 0001 … 0006
 ```
 
 ### Frontend
@@ -29,8 +30,10 @@ The four typed Analyse modes are Message, URL, Phone and QR. Message submits onl
 and intelligence are advertised. URL runs a separate offline classifier/evidence/fusion pipeline and
 persists without destination access. Phone requires explicit international context, normalizes through
 the shared API, and displays conservative offline numbering evidence without a numeric fraud score.
-QR keeps local file metadata only for one PNG/JPEG/WEBP up to 5 MiB; no bytes are read, decoded,
-uploaded or persisted, and QR analysis remains disabled.
+QR uploads one bounded PNG/JPEG/WebP to the authenticated backend, shows a local preview, decodes a
+single symbol in memory and discards the original image. HTTP(S), phone and suitable text payloads
+reuse their existing engines. EMV-style payment structure/CRC is parsed conservatively; unsupported
+content remains insufficient evidence and is never executed or opened.
 
 Overview uses only the authenticated user's database totals, flagged counts, latest time and recent
 records. A flagged record has stored `ELEVATED` or `HIGH` risk. Loading, unavailable, failure and
@@ -44,7 +47,7 @@ CORS, safe error envelopes and bounded bodies. Argon2id protects passwords. Opaq
 secrets are HMAC-digested in PostgreSQL, sessions expire/revoke, and Origin plus synchronizer-token
 checks protect state changes. SQLAlchemy sessions use explicit commits and rollback/close handling.
 PostgreSQL readiness checks connectivity and required domain/identity tables; startup verifies
-Message, URL and Phone engine initialization.
+Message, URL, Phone and QR engine/decoder initialization.
 
 Message processing is synchronous after durable intake. The checksum-verified JSON artifact contains a three-class word-ngram TF-IDF Logistic Regression model (`LEGITIMATE`, `SPAM`, `SCAM`); no pickle is loaded. Deterministic indicators cover urgency, threat, credentials, financial requests, impersonation, prizes, investments, job/tasks, delivery/account themes, secrecy, redirection and suspicious actions. Context rules suppress safety, education and negated examples.
 
@@ -61,6 +64,9 @@ buckets and nullable `analyses.user_id`. Historical rows remain null and invisib
 writes always receive the authenticated user ID. User deletion cascades sessions and owned analyses.
 Additive `0004_phone_intelligence` extends the input-type and per-type length checks for PHONE without
 rewriting existing records. Accepted Phone drafts are stored in normalized E.164 form.
+Additive `0005_auth_profile_polish` adds nullable profile fields and digest-only password reset
+records. Additive `0006_qr_intelligence` extends only the analysis constraints for QR; existing rows
+are not rewritten.
 
 `AnalysisStatus` is `SUBMITTED`, `PROCESSING`, `COMPLETED`, or `FAILED`. Message and URL records
 normally complete. Historical intake-only records remain submitted. The `(user_id, created_at DESC,
@@ -78,15 +84,15 @@ The user-verified production target is Vercel Vite → same-origin `/api/v1` CDN
 FastAPI → Neon PostgreSQL. Render receives secrets; Vercel uses public routing only. `render.yaml`
 builds the backend and the single-instance
 free-tier start script applies Alembic before Uvicorn. Message and URL artifacts are packaged JSON,
-checksum-verified and never runtime-downloaded; Phone numbering metadata ships in the pinned Python
-dependency. Task 6 does not change production configuration or deployment. See
+checksum-verified and never runtime-downloaded; Phone numbering metadata and the QR decoder ship in
+pinned Python wheels. Task 7 adds no required environment variable or external service. See
 [PRODUCTION_DEPLOYMENT.md](PRODUCTION_DEPLOYMENT.md),
 [AUTHENTICATION.md](AUTHENTICATION.md), and [PRIVACY_MODEL.md](PRIVACY_MODEL.md).
 
 ## PLANNED ARCHITECTURE
 
 Live URL reputation adapters and remote webpage inspection, Phone reputation/subscriber lookup,
-screenshot/OCR, QR decoding and URL/payment routing, cross-modal unified risk, community moderation,
+general screenshot/OCR, cross-modal unified risk, community moderation,
 controlled adaptive learning, campaign intelligence and Model Lab are not implemented. Suspicious
 URLs must never be automatically browsed. Community reports must not directly retrain or promote a
 model. Genuine metrics and held-out evaluation are required for every learned component.
@@ -108,6 +114,19 @@ Task 3 fusion applies only to Message evidence; it is not the planned cross-moda
 The service routes URL to `app/url_intelligence` and MESSAGE to the unchanged `app/ml` domain. URL parsing uses strict validation and pinned offline tldextract/IDNA; userinfo is removed before durable intake. The JSON random forest consumes 27 freshly derived local features; four detector groups produce explainable evidence. Separate `url_fusion_v1` prevents weak indicators or ML alone from producing High. An optional injectable reputation protocol defaults disabled; no network adapter exists.
 
 Task 3 already added neutral persisted status/risk/summary/evidence/actions/component/version/completion fields, so no Task 4 schema migration is necessary. URL model/rules/fusion versions occupy the current row's audit columns; reputation and minimal analytical metadata use component JSON. No Message rows are rewritten. History reads stored results without re-running models/providers. Refer to URL_INTELLIGENCE.md for the exact parsing, privacy, no-fetch and future SSRF boundary.
+
+## Task 7 QR domain
+
+`POST /api/v1/analyses/qr` is a dedicated multipart route because the generic endpoint remains typed
+JSON. `Pillow` validates actual raster content/dimensions and creates a metadata-free grayscale pixel
+buffer; `zxing-cpp` decodes exactly one QR symbol. The payload classifier routes only supported
+content into the unchanged Message, URL or Phone engine, so QR adds no independent severity. A
+bounded EMV-style TLV/CRC parser reports payment integrity without asserting legitimacy.
+
+The image exists only during request processing. PostgreSQL retains private decoded content and
+derived assessment/audit metadata; URL credentials and Wi-Fi passwords are redacted first. QR rows
+participate in the existing ownership, history, dashboard, deletion, account cascade and database
+rate-limit paths. Read [QR Intelligence](QR_INTELLIGENCE.md) for the exact limits and limitations.
 
 ## Post-Task 4 presentation layer
 

@@ -19,6 +19,7 @@ class ReadinessResponse(BaseModel):
     message_intelligence: Literal["ready"] = "ready"
     url_intelligence: Literal["ready"] = "ready"
     phone_intelligence: Literal["ready"] = "ready"
+    qr_intelligence: Literal["ready"] = "ready"
 
 
 class DashboardResponse(BaseModel):

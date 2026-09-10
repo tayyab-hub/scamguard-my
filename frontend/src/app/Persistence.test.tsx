@@ -160,6 +160,7 @@ describe('persistent submission UI', () => {
   )
 
   it.each([
+    [['MESSAGE', 'URL', 'PHONE', 'QR'], 'Message, URL, Phone and QR enabled'],
     [['MESSAGE', 'URL', 'PHONE'], 'Message, URL and Phone enabled'],
     [['MESSAGE', 'URL'], 'Message and URL enabled'],
     [['MESSAGE'], 'Message enabled'],
@@ -353,7 +354,7 @@ describe('persistent submission UI', () => {
     setup(undefined, true)
     renderApp()
     await screen.findByText(
-      'No submissions have been recorded. Start with a message, URL or phone number.',
+      'No submissions have been recorded. Start with a message, URL, phone number or QR image.',
     )
     expect(
       within(screen.getByRole('region', { name: 'Total analyses' })).getByText('0'),

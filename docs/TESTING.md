@@ -1,5 +1,27 @@
 # Testing and verification
 
+## Task 7 verification (2026-09-10)
+
+- Backend: 283 passed against the real disposable PostgreSQL database; one explicitly opt-in live
+  external-AI test skipped; two existing dependency deprecation warnings.
+- Frontend: TypeScript and ESLint passed; Vitest 133 passed in 9 files; production Vite build passed
+  with 1,762 modules and only the existing Zod/Rollup annotation warnings.
+- Browsers: foundation/motion/visual 18 passed; built offline preview 6 passed; real PostgreSQL
+  desktop/mobile 12 passed. The QR flow covers authenticated upload, URL routing, result, private
+  history/dashboard, refresh, reduced motion, 320/390/768/1440 widths and zero off-origin request.
+- QR tests generate controlled PNG/JPEG/WebP and payment fixtures locally. They cover corrupt,
+  renamed, SVG, MIME mismatch, oversized/dimension-bomb, no/multiple QR, UTF-8/payload limits,
+  conservative categories, EMV/CRC, exact Message/URL/Phone inheritance, auth/CSRF/rate limits,
+  owner isolation, redaction/deletion and invalid-upload non-persistence. No destination is opened.
+- Migration head is `0006_qr_intelligence`. Run `upgrade head`, `current`, `heads`, `check`, and an
+  isolated `0006 → 0005 → 0006` cycle only against a cleared disposable `*_test` database. The
+  persistence fixture proves a Task 6.1 user and owned Message row survive `0005 → 0006`.
+- Packaging passed: the wheel contains `app/qr_intelligence` and declares exact Pillow,
+  python-multipart and zxing-cpp runtime requirements. No OS decoder package or network download is
+  permitted at runtime.
+
+Task 7 extends the normal commands below; it does not replace any earlier regression gate.
+
 ## Task 6.1 verification (2026-09-10)
 
 - Backend: 236 passed against real PostgreSQL; one explicitly opt-in live external-AI test skipped.
@@ -87,14 +109,14 @@ $env:TEST_DATABASE_URL = '<private postgresql+psycopg URL ending in _test>'
 .\.venv\Scripts\python.exe -m alembic check
 ```
 
-The isolated migration exercise upgrades to `0004_phone_intelligence`, checks current/head/drift,
+The isolated migration exercise upgrades to `0006_qr_intelligence`, checks current/head/drift,
 downgrades only the cleared disposable database to base, then upgrades/checks again.
 It verifies legacy null ownership, foreign keys/cascades and normalized unique emails. Do not run a
 downgrade on development or production.
 
 Build a wheel in an ignored temporary directory and inspect it to confirm both
 `app/ml/artifacts/message_tfidf_v1.json` and `app/url_intelligence/artifacts/url_model_v1.json` are
-present. Production configuration is locally testable, but only the external acceptance sequence in
+present, plus `app/qr_intelligence` and its three exact runtime requirements. Production configuration is locally testable, but only the external acceptance sequence in
 [PRODUCTION_DEPLOYMENT.md](PRODUCTION_DEPLOYMENT.md) can establish an online deployment.
 
 Exact commands for the current repository, audited 2026-09-08. Actual results belong in
@@ -214,10 +236,11 @@ npm.cmd run test:persistence
 The config refuses a DB not ending in `_e2e`. `backend/scripts/prepare_e2e.py` applies real Alembic
 migrations, without seeding. Isolated FastAPI/Vite servers use 8002/5175. One worker prevents
 concurrent test-count interference. Desktop/mobile cases submit controlled non-sensitive test
-messages, example.com URLs and reserved example Phone values. They verify real Message/URL/Phone
+messages, example.com URLs, reserved example Phone values and generated QR fixtures. They verify real
+Message/URL/Phone/QR
 results, evidence/actions, totals, private history/detail, login, navigation/reload persistence,
-keyboard/reduced-motion behavior and responsive layout. QR remains disabled. External review stays
-disabled. Test submissions remain only in the disposable E2E database; every run measures its
+keyboard/reduced-motion behavior and responsive layout. External review stays disabled. Test
+submissions remain only in the disposable E2E database; every run measures its
 baseline count. Never target a public/development database.
 
 ## Screenshots and manual review

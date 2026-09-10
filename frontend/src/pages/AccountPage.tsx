@@ -164,7 +164,7 @@ export function AccountPage() {
           </h2>
           <p className="mt-3 text-sm leading-6 text-muted">
             This permanently deletes your account, invalidates its sessions, and deletes all
-            Message, URL and Phone analyses owned by it.
+            Message, URL, Phone and QR analyses owned by it.
           </p>
           <button className="button-secondary mt-5 text-danger" onClick={() => setConfirming(true)}>
             <Trash2 size={15} aria-hidden="true" /> Delete account

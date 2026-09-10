@@ -2,7 +2,7 @@ from datetime import timedelta
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Query, Request
+from fastapi import APIRouter, Depends, File, Query, Request, UploadFile
 from sqlalchemy.orm import Session
 
 from app.api.analysis_schemas import AnalysisCreate, AnalysisDetail, AnalysisList
@@ -14,10 +14,12 @@ from app.core.auth import (
 )
 from app.core.errors import ApiError
 from app.db.session import get_session
+from app.qr_intelligence.decoder import QRImageError, decode_qr_image
 from app.services.analyses import (
     delete_submission,
     get_submission,
     list_submissions,
+    record_qr_submission,
     record_submission,
 )
 
@@ -54,6 +56,50 @@ def create_analysis(
         request.app.state.message_engine,
         request.app.state.url_engine,
         request.app.state.phone_engine,
+        authenticated.user.id,
+    )
+
+
+@router.post("/qr", response_model=AnalysisDetail, status_code=201)
+def create_qr_analysis(
+    request: Request,
+    session: Database,
+    authenticated: Annotated[AuthenticatedSession, Depends(require_csrf)],
+    file: Annotated[list[UploadFile], File(description="One PNG, JPEG or WebP QR image")],
+) -> AnalysisDetail:
+    enforce_rate_limit(
+        request,
+        session,
+        scope="analysis",
+        discriminator=str(authenticated.user.id),
+        limit=request.app.state.settings.analysis_rate_limit,
+        window=timedelta(minutes=1),
+    )
+    if len(file) != 1:
+        for upload in file:
+            upload.file.close()
+        raise ApiError(422, "QR_FILE_COUNT_INVALID", "Upload exactly one QR image.")
+    upload = file[0]
+    declared_mime = upload.content_type
+    try:
+        data = upload.file.read(request.app.state.settings.qr_max_upload_bytes + 1)
+    finally:
+        upload.file.close()
+    try:
+        decoded = decode_qr_image(
+            data,
+            declared_mime,
+            max_upload_bytes=request.app.state.settings.qr_max_upload_bytes,
+            max_dimension=request.app.state.settings.qr_max_dimension,
+            max_pixels=request.app.state.settings.qr_max_pixels,
+            max_payload_bytes=request.app.state.settings.qr_max_payload_bytes,
+        )
+    except QRImageError as exc:
+        raise ApiError(422, exc.code, exc.message) from exc
+    return record_qr_submission(
+        session,
+        decoded,
+        request.app.state.qr_engine,
         authenticated.user.id,
     )
 

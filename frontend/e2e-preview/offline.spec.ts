@@ -35,8 +35,10 @@ test('built SPA protects private routes when no API session can be restored', as
 test('built SPA keeps Help and privacy guidance public without a backend', async ({ page }) => {
   await page.goto('/help')
   await expect(page.getByRole('heading', { name: 'Help & Support' })).toBeVisible()
-  await expect(page.getByRole('heading', { name: 'Privacy in this academic prototype' })).toBeVisible()
-  await expect(page.getByText('20 answers available')).toBeVisible()
+  await expect(
+    page.getByRole('heading', { name: 'Privacy in this academic prototype' }),
+  ).toBeVisible()
+  await expect(page.getByText('22 answers available')).toBeVisible()
   await page.getByLabel('Search help').fill('account information')
   await expect(page.getByText('1 answer available')).toBeVisible()
   await page.getByText('What account information is stored?').click()

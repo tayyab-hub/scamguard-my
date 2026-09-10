@@ -1,7 +1,8 @@
 import type { Assessment, URLAssessment } from '../../lib/api'
-import { isPhoneAssessment, isURLAssessment } from '../../lib/resultPresentation'
+import { isPhoneAssessment, isQRAssessment, isURLAssessment } from '../../lib/resultPresentation'
 import { MessageResult } from './MessageResult'
 import { PhoneResult } from './PhoneResult'
+import { QrResult } from './QrResult'
 import {
   AnalysisMetaPanel,
   AnalysisResultHero,
@@ -12,11 +13,15 @@ import {
 export function AssessmentResult({
   assessment,
   analysisId,
+  content,
 }: {
   assessment: Assessment
   analysisId?: string
+  content?: string
 }) {
-  return isURLAssessment(assessment) ? (
+  return isQRAssessment(assessment) ? (
+    <QrResult assessment={assessment} analysisId={analysisId} content={content} />
+  ) : isURLAssessment(assessment) ? (
     <URLResult assessment={assessment} analysisId={analysisId} />
   ) : isPhoneAssessment(assessment) ? (
     <PhoneResult assessment={assessment} analysisId={analysisId} />
