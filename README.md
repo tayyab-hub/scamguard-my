@@ -4,11 +4,10 @@
 
 A general scam-awareness workspace with the approved warm light **Forensic Intelligence** identity. The project was initially Malaysia-focused and was generalized following supervisor feedback. The repository and Vercel domain retain their historical `-my` suffix.
 
-Tasks 1–6 are complete, including the user-verified Vercel → same-origin `/api/v1` rewrite → Render
-→ Neon production architecture and manually accepted Phone Intelligence. **Task 6.1 authentication,
-profile, validation and data-management polish is implemented and verified on
-`task-6-1-auth-profile-polish`, awaiting manual acceptance before merge.** QR remains unimplemented.
-See [Task 6.1](docs/TASK_6_1.md), [Phone Intelligence](docs/PHONE_INTELLIGENCE.md),
+Tasks 1–6.1 are complete and merged, including the user-verified Vercel → same-origin `/api/v1`
+rewrite → Render → Neon production architecture. **Task 7 QR Intelligence is implemented and fully
+locally verified on `task-7-qr-intelligence`, awaiting manual acceptance before merge.** Task 8 has
+not started. See [QR Intelligence](docs/QR_INTELLIGENCE.md), [Task 6.1](docs/TASK_6_1.md), [Phone Intelligence](docs/PHONE_INTELLIGENCE.md),
 [Authentication](docs/AUTHENTICATION.md), and [Privacy](docs/PRIVACY_MODEL.md).
 
 ## Project memory
@@ -81,12 +80,13 @@ Compose creates the configured database with a loopback-only port and persistent
 reviewed production start script. Start the frontend in a second terminal. A changed local API port
 requires matching `API_PROXY_TARGET`. Development API docs are at http://127.0.0.1:8000/docs.
 `GET /api/v1/health` checks process liveness; `/ready` checks PostgreSQL, required identity/domain
-tables and all three local intelligence engines. No `create_all()` is used.
+tables and all four local intelligence engines. No `create_all()` is used.
 
 Alembic `0001_analysis_intake` creates intake; `0002_message_intelligence` adds result/audit fields;
 `0003_auth_ownership` adds users, sessions, rate buckets and nullable legacy-compatible ownership;
 `0004_phone_intelligence` adds the PHONE input/content constraints without rewriting Message/URL
 rows, and `0005_auth_profile_polish` adds nullable legacy-safe profiles and digest-only reset tokens.
+`0006_qr_intelligence` adds QR input/content constraints without rewriting existing records.
 Upgrade → downgrade → upgrade and drift checks pass against a disposable real PostgreSQL
 database. Downgrade is destructive test activity and must never target development or production.
 
@@ -101,6 +101,7 @@ database. Downgrade is destructive test activity and must never target developme
   username or email. Account permits CSRF-protected name/username changes while email stays read-only.
 - Completed analyses are immutable. An owned expanded detail offers Analyse again, which creates an
   editable local copy and submits a new Message, URL or Phone record without changing the original.
+  QR requires a fresh image upload because the original image is discarded.
 - MESSAGE: trimmed non-empty text, at most 5,000 characters. URL: validated absolute HTTP(S), at most 2,048 characters; never visited automatically. PHONE: explicit international `+` context, normal ASCII formatting, at most 64 characters, normalized to E.164.
 - An authenticated backend accepts `POST /api/v1/analyses`, assigns ownership from the session and
   never accepts a frontend user ID. MESSAGE persists intake, runs local assessment synchronously and
@@ -113,9 +114,13 @@ database. Downgrade is destructive test activity and must never target developme
 - The local URL random forest achieved held-out macro F1 0.984698, with substantial source homepage/HTTPS bias. ML alone cannot produce elevated/high risk. Runtime parsing uses an offline public-suffix snapshot, and embedded userinfo is removed before storage. No live reputation adapter is configured.
 - Phone uses pinned offline `phonenumbers` metadata. Ordinary/foreign/mobile/fixed/VoIP/unknown or invalid numbers do not receive scam/safe claims; reliable premium/shared-cost metadata produces CAUTION only. No numeric Phone fraud score is invented.
 - Per-user total/latest/recent data, paginated history/detail/deletion and a real flagged count for
-  owned completed ELEVATED/HIGH Message, URL or Phone assessments. Empty history means measured zero;
+  owned completed ELEVATED/HIGH Message, URL, Phone or QR assessments. Empty history means measured zero;
   unavailable means unavailable.
-- QR accepts local filename/size selection for one non-empty PNG/JPEG/WEBP up to 5 MiB; no image reading, upload, storage, decoding or camera access. Unsubmitted drafts/file selection clear on navigation or reload.
+- QR accepts one PNG/JPEG/WebP up to 5 MiB, validates and decodes one symbol in backend memory, then
+  discards the image. HTTP(S), phone and suitable text payloads reuse existing intelligence;
+  email/SMS/Wi-Fi/geo/other content is labelled conservatively. EMV-style payment structure and CRC
+  never prove merchant or payment safety. Decoded content and derived private assessment metadata
+  persist; URL credentials and Wi-Fi passwords are redacted before storage.
 - Help search and feedback preparation run locally. `VITE_SUPPORT_EMAIL` is optional and public; when blank, the page truthfully states that online feedback is being prepared. A configured value opens the user's email application and never claims a message was sent.
 
 ## Security and privacy boundary
@@ -127,7 +132,11 @@ is never used for automatic training. Users can delete individual records or the
 records. Legacy unowned rows are hidden. See [Authentication](docs/AUTHENTICATION.md) and
 [Privacy](docs/PRIVACY_MODEL.md).
 
-Implemented protections include a 64 KiB request cap (including chunked bodies), server validation, parameterized ORM writes, explicit commit/rollback/close, safe errors/request IDs, no-store/nosniff headers, exact-origin CORS and content-safe exception logging. React renders submissions as escaped text; URLs are not clickable external targets.
+Implemented protections include a 64 KiB default request cap (including chunked bodies), a narrow
+multipart allowance for the 5 MiB QR route, server validation, parameterized ORM writes, explicit
+commit/rollback/close, safe errors/request IDs, no-store/nosniff headers, exact-origin CORS and
+content-safe exception logging. React renders decoded payloads as escaped inert text; URLs are not
+clickable external targets.
 
 Basic PostgreSQL-backed rate limits cover signup, login and analysis; they are not enterprise DDoS
 protection. Provider backup deletion/retention, formal policy, incident response and broad public
@@ -136,7 +145,7 @@ retrying; idempotency keys are not implemented.
 
 ## GitHub and Vercel
 
-Keep the existing origin and domain. Task 6 remains on its review branch until manual acceptance:
+Keep the existing origin and domain. Task 7 remains on its review branch until manual acceptance:
 
 ```sh
 git status
@@ -152,9 +161,8 @@ so the rewrite can reach Render. See [Production deployment](docs/PRODUCTION_DEP
 
 [TESTING](docs/TESTING.md) contains exact frontend/backend/real PostgreSQL/browser commands. [PROGRESS](PROGRESS.md) records actual results and limitations. Generated dependencies, builds, local PostgreSQL data, `.env` and test outputs are ignored; lockfiles, source, migrations, tests and intentional documentation screenshots stay tracked.
 
-Tasks 1–5 are complete. Task 6 automated local verification is complete but its manual acceptance,
-merge and deployment are pending. Task 7 QR Intelligence and Task 8 final integration/reporting have
-not started.
+Tasks 1–6.1 are complete. Task 7 automated local verification is complete, but manual acceptance,
+merge and deployment are pending. Task 8 final integration/reporting has not started.
 
 ## Post-Task 4 UI/UX refinement
 

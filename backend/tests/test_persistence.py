@@ -4,7 +4,7 @@ import os
 import subprocess
 import sys
 from pathlib import Path
-from uuid import uuid4
+from uuid import UUID, uuid4
 
 import pytest
 from fastapi.testclient import TestClient
@@ -19,6 +19,7 @@ from app.db.models import Analysis, InputType, User
 from app.db.session import build_engine
 from app.main import create_app
 from app.services.analyses import list_submissions
+from tests.qr_fixtures import multiple_qr_image_bytes, qr_image_bytes
 
 pytestmark = pytest.mark.integration
 ORIGIN = "http://localhost:5173"
@@ -60,6 +61,47 @@ def database():
         "password_reset_tokens",
     }.issubset(inspect(engine).get_table_names())
     subprocess.run([sys.executable, "-m", "alembic", "check"], cwd=root, env=env, check=True)
+    # A Task 6.1 profile and owned analysis survive the 0005 -> 0006 QR constraint upgrade.
+    migrate("0005_auth_profile_polish", "downgrade")
+    task_6_1_user_id = uuid4()
+    task_6_1_analysis_id = uuid4()
+    with engine.begin() as connection:
+        connection.execute(
+            text(
+                "INSERT INTO users (id, full_name, username, email, password_hash) VALUES "
+                "(:id, 'Preserved User', 'preserved_user', 'preserved@example.com', 'test-hash')"
+            ),
+            {"id": task_6_1_user_id},
+        )
+        connection.execute(
+            text(
+                "INSERT INTO analyses (id, user_id, input_type, status, content) VALUES "
+                "(:id, :user_id, 'MESSAGE', 'COMPLETED', 'Preserved Task 6.1 analysis')"
+            ),
+            {"id": task_6_1_analysis_id, "user_id": task_6_1_user_id},
+        )
+    migrate("head")
+    with engine.begin() as connection:
+        assert (
+            connection.scalar(
+                text("SELECT count(*) FROM users WHERE id = :id AND username = 'preserved_user'"),
+                {"id": task_6_1_user_id},
+            )
+            == 1
+        )
+        assert (
+            connection.scalar(
+                text("SELECT count(*) FROM analyses WHERE id = :id AND input_type = 'MESSAGE'"),
+                {"id": task_6_1_analysis_id},
+            )
+            == 1
+        )
+        connection.execute(
+            text(
+                "TRUNCATE TABLE analyses, auth_sessions, password_reset_tokens, users, "
+                "auth_rate_limits"
+            )
+        )
     # An actual Task 5/6 user and owned analysis survive the staged 0004 -> 0005 upgrade.
     migrate("0004_phone_intelligence", "downgrade")
     legacy_user_id = uuid4()
@@ -285,6 +327,7 @@ def test_real_dashboard_order_pagination_and_safe_previews(persistent):
             "updated_at",
             "preview",
             "risk_level",
+            "payload_type",
         }
     assert persistent.get("/api/v1/analyses?page=9999").json()["items"] == []
 
@@ -347,9 +390,9 @@ def test_ready_and_capability_advertise_all_available_intelligence(persistent):
     assert persistent.get("/api/v1/ready").status_code == 200
     caps = persistent.get("/api/v1/capabilities").json()
     assert caps["submission_available"] is True
-    assert caps["submission_inputs"] == ["MESSAGE", "URL", "PHONE"]
+    assert caps["submission_inputs"] == ["MESSAGE", "URL", "PHONE", "QR"]
     assert caps["analysis_available"] is True
-    assert caps["supported_inputs"] == ["MESSAGE", "URL", "PHONE"]
+    assert caps["supported_inputs"] == ["MESSAGE", "URL", "PHONE", "QR"]
 
 
 def test_phone_history_dashboard_deletion_and_persisted_metadata(persistent, database):
@@ -375,6 +418,114 @@ def test_phone_history_dashboard_deletion_and_persisted_metadata(persistent, dat
         assert row.fusion_version == "phone-fusion-v1"
     assert persistent.delete(f"/api/v1/analyses/{record['id']}").status_code == 204
     assert persistent.get("/api/v1/analyses").json()["total"] == 0
+
+
+def test_qr_upload_history_dashboard_ownership_and_deletion(persistent, database):
+    payload = "https://example.com/controlled-qr"
+    response = persistent.post(
+        "/api/v1/analyses/qr",
+        files={"file": ("odd <script> name", qr_image_bytes(payload), "image/png")},
+    )
+    assert response.status_code == 201
+    record = response.json()
+    assert record["input_type"] == "QR"
+    assert record["content"] == payload
+    assert record["status"] == "COMPLETED"
+    assert record["assessment"]["components"]["qr"]["payload_type"] == "URL"
+    assert record["assessment"]["components"]["qr"]["routed_engine"] == "URL"
+    assert record["assessment"]["components"]["qr"]["original_image_retained"] is False
+    assert record["assessment"]["components"]["url_structure"]["hostname"] == "example.com"
+    assert persistent.get(f"/api/v1/analyses/{record['id']}").json() == record
+    history = persistent.get("/api/v1/analyses").json()
+    assert history["items"][0]["input_type"] == "QR"
+    assert history["items"][0]["payload_type"] == "URL"
+    dashboard = persistent.get("/api/v1/dashboard").json()
+    assert dashboard["total_analyses"] == 1
+    assert dashboard["recent_analyses"][0]["input_type"] == "QR"
+
+    with TestClient(create_app(database[0])) as other:
+        signup = other.post(
+            "/api/v1/auth/signup",
+            json={
+                "full_name": "Other User",
+                "username": "other_qr_user",
+                "email": "other-qr@example.com",
+                "password": PASSWORD,
+            },
+            headers={"Origin": ORIGIN},
+        )
+        other.headers.update({"Origin": ORIGIN, "X-CSRF-Token": signup.json()["csrf_token"]})
+        assert other.get(f"/api/v1/analyses/{record['id']}").status_code == 404
+        assert other.delete(f"/api/v1/analyses/{record['id']}").status_code == 404
+        assert other.get("/api/v1/analyses").json()["total"] == 0
+
+    assert persistent.delete(f"/api/v1/analyses/{record['id']}").status_code == 204
+    assert persistent.get("/api/v1/analyses").json()["total"] == 0
+    with Session(database[1]) as session:
+        assert session.get(Analysis, UUID(record["id"])) is None
+
+
+def test_anonymous_qr_upload_is_rejected_before_analysis(database):
+    with TestClient(create_app(database[0])) as anonymous:
+        response = anonymous.post(
+            "/api/v1/analyses/qr",
+            files={"file": ("qr.png", qr_image_bytes("private QR payload"), "image/png")},
+            headers={"Origin": ORIGIN},
+        )
+    assert response.status_code == 401
+    assert response.json()["error"]["code"] == "AUTHENTICATION_REQUIRED"
+
+
+@pytest.mark.parametrize(
+    ("files", "code"),
+    [
+        ({"file": ("renamed.png", b"not an image", "image/png")}, "QR_IMAGE_INVALID"),
+        (
+            {"file": ("multiple.png", multiple_qr_image_bytes(), "image/png")},
+            "QR_MULTIPLE_DETECTED",
+        ),
+        (
+            [
+                ("file", ("one.png", qr_image_bytes("one QR"), "image/png")),
+                ("file", ("two.png", qr_image_bytes("two QR"), "image/png")),
+            ],
+            "QR_FILE_COUNT_INVALID",
+        ),
+    ],
+    ids=["renamed-text", "multiple-symbols", "multiple-files"],
+)
+def test_invalid_qr_uploads_never_persist(persistent, files, code):
+    response = persistent.post("/api/v1/analyses/qr", files=files)
+    assert response.status_code == 422
+    assert response.json()["error"]["code"] == code
+    assert persistent.get("/api/v1/analyses").json()["total"] == 0
+
+
+@pytest.mark.parametrize(
+    ("payload", "forbidden", "expected"),
+    [
+        (
+            "https://alice:super-secret@example.com/pay",
+            ["alice", "super-secret"],
+            "https://@example.com/pay",
+        ),
+        (
+            r"WIFI:T:WPA;S:Example;P:top\;secret;;",
+            ["top", "secret"],
+            r"WIFI:T:WPA;S:Example;P:[redacted];;",
+        ),
+    ],
+)
+def test_qr_history_redacts_embedded_credentials(persistent, payload, forbidden, expected):
+    created = persistent.post(
+        "/api/v1/analyses/qr",
+        files={"file": ("private.png", qr_image_bytes(payload), "image/png")},
+    )
+    assert created.status_code == 201
+    saved = persistent.get(f"/api/v1/analyses/{created.json()['id']}").json()
+    assert saved["content"] == expected
+    for secret in forbidden:
+        assert secret not in saved["content"]
 
 
 def test_phone_pipeline_failure_is_persisted_and_safe(persistent, monkeypatch):

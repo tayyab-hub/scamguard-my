@@ -1,83 +1,85 @@
 # SCAMGUARD — current project state
 
-Updated **2026-09-10, Asia/Kuala_Lumpur** for Task 6.1 implementation verification.
+Updated **2026-09-10, Asia/Kuala_Lumpur** for Task 7 implementation verification.
 
 ## Current milestone
 
-Tasks 1–5 are complete. The user manually verified the Task 5 production architecture: Vercel serves
-the frontend, its same-origin `/api/v1` rewrite reaches Render, and Render uses Neon PostgreSQL.
+Tasks 1–6.1 are complete. Task 6.1 was merged normally into `main` and pushed at
+`546447fa02072f0a87a5fae90c9f8f8f57aafa07`; its branch remains preserved. The user-verified
+production architecture remains Vercel → same-origin `/api/v1` rewrite → Render → Neon PostgreSQL.
 
-**Task 6 was manually accepted and merged to `main` at `f24db9fee97b54bad9c27984f7c56d5f2ac6fd5f`.
-Task 6.1 is implemented and locally verified on `task-6-1-auth-profile-polish`, awaiting manual
-acceptance before merge.** Task 7 QR Intelligence and Task 8 final integration/reporting have not started.
+**Task 7 QR Intelligence is implemented and fully locally verified on
+`task-7-qr-intelligence`, awaiting manual acceptance before merge or deployment.** Task 8 final
+integration/reporting has not started.
 
 | Area | Status | Current behavior |
 | --- | --- | --- |
-| Task 1 Foundation | COMPLETE | Responsive Forensic Intelligence UI, keyboard/reduced-motion behavior and Windows workflow. |
-| Task 2 Core Platform | COMPLETE | PostgreSQL/Alembic, persistence, history, dashboard and safe API foundation. |
-| Task 3 Message Intelligence | COMPLETE | Local three-class model, rules, conservative fusion and explainability. |
-| Task 4 URL Intelligence | COMPLETE | Strict offline parsing/model/rules/fusion without destination access. |
-| Task 5 Auth + Production | COMPLETE | Argon2id accounts, HttpOnly sessions, CSRF/origin controls, private ownership/deletion and verified Vercel → Render → Neon production. |
-| Task 6 Phone Intelligence | COMPLETE | Manually accepted, merged and pushed to main. |
-| Task 6.1 Auth/profile polish | IN REVIEW | Profile model/UI, username login, password reset and immutable Analyse again are verified; manual acceptance pending. |
-| Task 7 QR Intelligence | NOT STARTED | Local file metadata UI only; no upload, decode, camera or intelligence. |
-| Task 8 final integration/reporting | NOT STARTED | No final cross-task evaluation/reporting work begun. |
+| Tasks 1–5 | COMPLETE | Foundation, persistence/intelligence, authentication, ownership and production architecture. |
+| Task 6 Phone Intelligence | COMPLETE | Accepted, merged and preserved. |
+| Task 6.1 Auth/profile polish | COMPLETE | Accepted and merged; profiles, username login, password reset and immutable Analyse again. |
+| Task 7 QR Intelligence | IN REVIEW | Bounded upload/decoding, payload routing, private persistence and full local verification complete. |
+| Task 8 final integration/reporting | NOT STARTED | No implementation or reporting work begun. |
 
-## Task 6 implementation
+## Task 7 implementation
 
-- A pinned offline `phonenumbers==9.0.38` parser requires explicit international `+` context,
-  accepts normal ASCII formatting, normalizes accepted content to E.164, and returns only supported
-  numbering metadata.
-- The dedicated `app.phone_intelligence` engine emits structured `NUMBERING_METADATA` evidence and
-  contextual safety actions. Ordinary, foreign, mobile, fixed, VoIP, invalid and unknown numbers do
-  not receive scam/safe claims. Reliable premium/shared-cost metadata produces `CAUTION` only.
-- Phone results deliberately have no numeric risk or fraud-confidence score. The default outcome is
-  `INSUFFICIENT_EVIDENCE` because numbering metadata cannot establish caller identity or intent.
-- `PHONE` uses the existing authenticated `/api/v1/analyses` path, CSRF/origin checks, database-backed
-  rate limit, owner derivation, persistence, history/detail/delete, dashboard and account cascade.
-- Alembic `0004_phone_intelligence` extends the input/content constraints without changing existing
-  Message/URL data. The destructive rollback test clears only the disposable `*_test` database.
-- Capabilities advertises Phone; readiness verifies Phone engine initialization. Health is unchanged.
-- The frontend Phone mode validates, submits and renders structured Phone metadata/evidence/actions/
-  limitations in the existing design. QR remains disabled and unimplemented.
+- `POST /api/v1/analyses/qr` accepts exactly one authenticated PNG/JPEG/WebP multipart upload while
+  retaining opaque server sessions, exact Origin + CSRF, PostgreSQL analysis rate limiting and
+  backend-derived ownership. The generic JSON analysis route remains unchanged for Message/URL/Phone.
+- Pinned `zxing-cpp==3.1.1`, `Pillow==12.3.0` and `python-multipart==0.0.32` provide local decoding,
+  bounded raster validation and multipart parsing. No decoder API, OS package, OCR or network access
+  is used.
+- Backend limits are 5 MiB, 4096 pixels per axis, 16 million decoded pixels, one still image, one QR
+  symbol and 5,000 UTF-8 payload bytes. SVG, MIME/content mismatch, corrupt/disguised/animated files,
+  bombs, empty/no/multiple QR and unsupported controls fail safely before persistence.
+- Payloads classify as URL, PHONE, TEXT, EMAIL, SMS, WIFI, GEO, PAYMENT or OTHER. Supported HTTP(S),
+  phone and suitable text reuse the unchanged intelligence engines and inherit their exact risk,
+  score, confidence, evidence and actions. QR contributes no independent severity.
+- EMV-style payment TLV/CRC validation is bounded and conservative. A valid structure remains
+  insufficient evidence; invalid structure/CRC is at most caution. Formatting never verifies the
+  merchant, recipient, ownership, legitimacy or transaction safety.
+- The image is decoded in memory and discarded. Private history retains decoded content and derived
+  assessment/audit metadata, not the image. URL credentials and Wi-Fi passwords are redacted before
+  storage; phones use E.164. QR history requires a new upload rather than Analyse again.
+- The responsive frontend now supports click/drag/drop, mobile capture hint, preview/remove/replace,
+  decode progress/errors, escaped inert decoded content, payment limitations, subtype history and
+  dashboard counts without redesigning the approved Forensic Intelligence UI.
+- Readiness verifies QR decoder initialization, capabilities advertises QR, and Alembic
+  `0006_qr_intelligence` extends only analysis constraints while preserving Task 6.1 data.
 
-See [Phone Intelligence](docs/PHONE_INTELLIGENCE.md) for methodology, privacy and limitations.
+See [QR Intelligence](docs/QR_INTELLIGENCE.md) for the method, privacy boundary and limitations.
 
 ## Verification evidence
 
-Task 6.1 verification: backend Pytest **236 passed / 1 opt-in live-AI skipped**; Vitest **126 passed**;
-Playwright foundation **18 passed**, built preview **6 passed**, and real PostgreSQL desktop/mobile
-**10 passed**. TypeScript, ESLint, Ruff lint/format, production build, pip check, production wheel,
-Alembic head/current/check, `0005 → 0004 → 0005`, migration preservation and secret review pass.
-
 | Check | Observed result |
 | --- | --- |
-| Backend Pytest with real PostgreSQL | PASS: 207 passed; 1 explicitly opt-in live-AI test skipped; 2 existing dependency deprecation warnings. |
-| Phone engine/API/security | PASS: international types, normalization, conservative risk, hostile input/no-network guards, auth/CSRF, A/B isolation, spoof rejection, cascade deletion and DB rate limit. |
-| Alembic | PASS in disposable `scamguard_test`: `0004_phone_intelligence` head/current/check and downgrade-to-base/re-upgrade within the full fixture. |
-| Ruff / dependency check | PASS: lint, format check and `pip check`; 58 Python files formatted. |
+| Backend Pytest with real PostgreSQL | PASS: 283 passed; 1 explicitly opt-in live-AI test skipped; 2 existing dependency deprecation warnings. |
+| QR unit/API/security/persistence | PASS: raster and payload validation, classifications/routes, EMV/CRC, no severity inflation, no-network behavior, auth/CSRF, owner isolation, redaction, deletion and invalid-upload non-persistence. |
+| Ruff / dependency check | PASS: lint, format check and `pip check`; 67 Python files formatted. |
 | TypeScript / ESLint | PASS / PASS with zero ESLint warnings. |
-| Vitest | PASS: 97 tests in 7 files. |
-| Production frontend build | PASS: 1,759 modules; JS 454.46 kB (135.89 kB gzip), CSS 43.14 kB (8.84 kB gzip). Existing Zod/Rollup annotation warnings only. |
+| Vitest | PASS: 133 tests in 9 files. |
+| Production frontend build | PASS: 1,762 modules; JS 478.38 kB (142.17 kB gzip), CSS 43.86 kB (8.93 kB gzip). Existing Zod/Rollup annotation warnings only. |
 | Foundation/motion/visual Playwright | PASS: 18 desktop/mobile tests. |
-| Built offline preview | PASS: 6 desktop/mobile protected-route, public Help, keyboard and reduced-motion tests. |
-| Real PostgreSQL Playwright | PASS: 10 desktop/mobile tests, including login → Phone submit → result → history → refresh persistence. |
-| Packaging | PASS: wheel contains Phone modules, both existing model artifacts, and pinned `phonenumbers==9.0.38` runtime metadata. |
-| Secret scan | PASS: reviewed Task 6 source/diff contains no real API key, database credential, private key or environment secret; only explicit local/CI examples remain. |
+| Built offline preview | PASS: 6 desktop/mobile tests. |
+| Real PostgreSQL Playwright | PASS: 12 desktop/mobile tests, including upload → URL route → history/dashboard → refresh and no off-origin request. |
+| Alembic | PASS: `0006_qr_intelligence` single head/current/check and isolated `0006 → 0005 → 0006`; full fixture preserves a Task 6.1 user/analysis. |
+| Packaging | PASS: wheel contains all QR modules and exact Pillow/python-multipart/zxing-cpp runtime metadata. |
+| Secret/diff review | PASS: no private key or credential pattern found; generated/runtime folders remain ignored; `git diff --check` is clean. |
 
 ## Known limitations
 
-- Numbering metadata does not prove assignment, subscriber identity, caller authenticity, reputation,
-  spoofing, intent or fraud. Task 6 has no external lookup or reputation feed.
-- Metadata may become stale; upgrading `phonenumbers` requires an intentional dependency update and
-  regression review.
-- Existing Message/URL dataset and score limitations remain. Scores are modality-specific decision
-  support, never fraud probabilities.
-- Database rate limiting is basic abuse control, not enterprise bot/DDoS protection.
-- Provider backup retention/deletion, formal legal privacy language, incident response and broad
-  public operational controls remain owner responsibilities.
+- QR decoding cannot establish who created/distributed a code or whether its content is legitimate.
+- Stylized, damaged, obscured, multi-code, animated, non-raster, non-UTF-8 and oversized inputs are
+  intentionally unsupported; no general OCR or screenshot intelligence exists.
+- Payment structure and CRC are integrity checks, not bank/account/merchant/reputation validation.
+- No decoded link is opened or fetched; no number is contacted; no Wi-Fi or payment action executes.
+- Existing Message, URL, Phone, dataset/score and infrastructure limitations remain. Basic database
+  rate limiting is not enterprise DDoS protection.
+- Provider backup retention/deletion, legal privacy language, incident response and broad-public
+  controls remain owner responsibilities.
 
 ## Review boundary
 
-Do not merge or deploy Task 6.1 until the user completes manual testing. Required Resend/Render values
-remain owner setup; do not change production services manually. Do not begin Task 7 or Task 8.
+Do not merge or deploy Task 7 until the user completes manual acceptance. No Vercel, Render, Neon or
+Resend setting was changed. A later approved merge requires ordinary Render dependency install +
+Alembic/redeployment and a Vercel rebuild; the existing CDN rewrite must remain unchanged. Do not
+begin Task 8.

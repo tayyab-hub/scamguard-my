@@ -21,7 +21,7 @@ export const healthSchema = z.object({
 })
 const analysisFields = {
   id: z.uuid(),
-  input_type: z.enum(['MESSAGE', 'URL', 'PHONE']),
+  input_type: z.enum(['MESSAGE', 'URL', 'PHONE', 'QR']),
   status: z.enum(['SUBMITTED', 'PROCESSING', 'COMPLETED', 'FAILED']),
   created_at: z.iso.datetime({ offset: true }),
   updated_at: z.iso.datetime({ offset: true }),
@@ -161,14 +161,66 @@ export const phoneAssessmentSchema = z.object({
   limitations: z.array(z.string()),
   completed_at: z.iso.datetime({ offset: true }),
 })
+export const qrAssessmentSchema = z.object({
+  risk_level: z.enum(['LOW', 'CAUTION', 'ELEVATED', 'HIGH', 'INSUFFICIENT_EVIDENCE']),
+  risk_score: z.number().min(0).max(1).nullable(),
+  confidence_score: z.number().min(0).max(1).nullable(),
+  confidence_level: z.enum(['LOW', 'MEDIUM', 'HIGH']),
+  summary: z.string(),
+  evidence: z.array(
+    z.union([
+      structuredEvidenceSchema.extend({ source: z.string() }),
+      evidenceSchema.extend({ source: z.string() }),
+    ]),
+  ),
+  recommended_actions: z.array(z.string()),
+  components: z
+    .object({
+      qr: z.object({
+        engine_version: z.string(),
+        decoder_library: z.literal('zxing-cpp'),
+        decoder_version: z.string(),
+        classifier_version: z.string(),
+        fusion_version: z.string(),
+        payload_type: z.enum([
+          'URL',
+          'PHONE',
+          'TEXT',
+          'EMAIL',
+          'SMS',
+          'WIFI',
+          'GEO',
+          'PAYMENT',
+          'OTHER',
+        ]),
+        routed_engine: z.enum(['MESSAGE', 'URL', 'PHONE']).nullable(),
+        payload_bytes: z.number().int().positive(),
+        image_format: z.enum(['PNG', 'JPEG', 'WEBP']),
+        image_width: z.number().int().positive(),
+        image_height: z.number().int().positive(),
+        file_sha256: z.string().regex(/^[0-9a-f]{64}$/),
+        original_image_retained: z.literal(false),
+      }),
+      payment: z.record(z.string(), z.unknown()).optional(),
+    })
+    .catchall(z.unknown()),
+  limitations: z.array(z.string()),
+  completed_at: z.iso.datetime({ offset: true }),
+})
 export type URLAssessment = z.infer<typeof urlAssessmentSchema>
 export type PhoneAssessment = z.infer<typeof phoneAssessmentSchema>
-export type Assessment = MessageAssessment | URLAssessment | PhoneAssessment
+export type QRAssessment = z.infer<typeof qrAssessmentSchema>
+export type Assessment = MessageAssessment | URLAssessment | PhoneAssessment | QRAssessment
 export const analysisDetailSchema = z.object({
   ...analysisFields,
   content: z.string(),
   assessment: z
-    .union([messageAssessmentSchema, urlAssessmentSchema, phoneAssessmentSchema])
+    .union([
+      qrAssessmentSchema,
+      messageAssessmentSchema,
+      urlAssessmentSchema,
+      phoneAssessmentSchema,
+    ])
     .nullable()
     .default(null),
   failure_code: z.string().nullable().default(null),
@@ -180,6 +232,7 @@ export const analysisSummarySchema = z.object({
     .enum(['LOW', 'CAUTION', 'ELEVATED', 'HIGH', 'INSUFFICIENT_EVIDENCE'])
     .nullable()
     .default(null),
+  payload_type: z.string().nullable().default(null),
 })
 export const analysisListSchema = z.object({
   items: z.array(analysisSummarySchema).max(100),
@@ -190,6 +243,8 @@ export const analysisListSchema = z.object({
 export type AnalysisSummary = z.infer<typeof analysisSummarySchema>
 export type MessageAssessment = z.infer<typeof messageAssessmentSchema>
 export type SubmissionInput = { input_type: 'MESSAGE' | 'URL' | 'PHONE'; content: string }
+export type QRSubmissionInput = { input_type: 'QR'; file: File }
+export type SubmissionRequest = SubmissionInput | QRSubmissionInput
 export const userSchema = z.object({
   id: z.uuid(),
   full_name: z.string().nullable(),
@@ -218,9 +273,9 @@ export const dashboardSchema = z.discriminatedUnion('status', [
 export const capabilitiesSchema = z.object({
   // Older/offline previews never acquire a capability just because the UI exists.
   submission_available: z.boolean().default(false),
-  submission_inputs: z.array(z.enum(['MESSAGE', 'URL', 'PHONE'])).default([]),
+  submission_inputs: z.array(z.enum(['MESSAGE', 'URL', 'PHONE', 'QR'])).default([]),
   analysis_available: z.boolean(),
-  supported_inputs: z.array(z.enum(['MESSAGE', 'URL', 'PHONE'])),
+  supported_inputs: z.array(z.enum(['MESSAGE', 'URL', 'PHONE', 'QR'])),
   reason: z.string(),
 })
 
@@ -232,7 +287,12 @@ export async function getApi<T>(
   return requestApi(path, schema, { signal })
 }
 
-export async function postSubmission(input: SubmissionInput) {
+export async function postSubmission(input: SubmissionRequest) {
+  if (input.input_type === 'QR') {
+    const body = new FormData()
+    body.append('file', input.file, input.file.name)
+    return requestApi('/analyses/qr', analysisDetailSchema, { method: 'POST', body })
+  }
   return requestApi('/analyses', analysisDetailSchema, { method: 'POST', body: input })
 }
 
@@ -271,12 +331,19 @@ export async function requestApi<T>(
   const timeout = setTimeout(() => controller.abort(), 8_000)
   try {
     const method = options.method || 'GET'
+    const formData = options.body instanceof FormData
+    const requestBody: BodyInit | undefined =
+      options.body === undefined
+        ? undefined
+        : formData
+          ? (options.body as FormData)
+          : JSON.stringify(options.body)
     const response = await fetch(`${apiBaseUrl}${path}`, {
       ...(method === 'GET' ? {} : { method }),
-      ...(options.body !== undefined ? { body: JSON.stringify(options.body) } : {}),
+      ...(requestBody === undefined ? {} : { body: requestBody }),
       headers: {
         Accept: 'application/json',
-        ...(options.body !== undefined ? { 'Content-Type': 'application/json' } : {}),
+        ...(options.body !== undefined && !formData ? { 'Content-Type': 'application/json' } : {}),
         ...(method !== 'GET' && csrfToken ? { 'X-CSRF-Token': csrfToken } : {}),
       },
       signal: controller.signal,

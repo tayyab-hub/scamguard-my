@@ -24,6 +24,10 @@ class Settings(BaseSettings):
     db_connect_timeout_seconds: int = Field(default=3, ge=1, le=30)
     persistence_enabled: bool = False
     max_request_bytes: int = Field(default=65_536, ge=32_768, le=1_048_576)
+    qr_max_upload_bytes: int = Field(default=5_242_880, ge=262_144, le=10_485_760)
+    qr_max_dimension: int = Field(default=4096, ge=512, le=8192)
+    qr_max_pixels: int = Field(default=16_000_000, ge=262_144, le=33_554_432)
+    qr_max_payload_bytes: int = Field(default=5000, ge=256, le=5000)
     port: int = Field(default=8000, ge=1, le=65535)
     message_model_path: str | None = None
     url_model_path: str | None = None

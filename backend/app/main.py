@@ -15,6 +15,7 @@ from app.core.errors import error_response, install_error_handlers
 from app.db.session import build_engine
 from app.ml.engine import build_message_engine
 from app.phone_intelligence.engine import build_phone_engine
+from app.qr_intelligence.engine import build_qr_engine
 from app.services.mail import build_mail_service
 from app.url_intelligence.engine import build_url_engine
 
@@ -30,6 +31,12 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         application.state.message_engine = build_message_engine(config)
         application.state.url_engine = build_url_engine(config)
         application.state.phone_engine = build_phone_engine()
+        application.state.qr_engine = build_qr_engine(
+            config,
+            application.state.message_engine,
+            application.state.url_engine,
+            application.state.phone_engine,
+        )
         application.state.mail_service = build_mail_service(config)
         try:
             yield
@@ -45,7 +52,13 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         openapi_url="/openapi.json" if config.app_env != "production" else None,
     )
     application.state.settings = config
-    application.add_middleware(BodyLimitMiddleware, max_bytes=config.max_request_bytes)
+    application.add_middleware(
+        BodyLimitMiddleware,
+        max_bytes=config.max_request_bytes,
+        path_limits={
+            "/api/v1/analyses/qr": config.qr_max_upload_bytes + 65_536,
+        },
+    )
 
     @application.middleware("http")
     async def request_context(request: Request, call_next):

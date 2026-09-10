@@ -7,7 +7,7 @@ import { getSupportEmail } from '../lib/env'
 const faqs = [
   [
     'How is the risk score calculated?',
-    'Message shows its existing fusion score multiplied by 100 and rounded. URL shows an ordinal category index: Low 0, Caution 33, Elevated 67, High 100. Phone Intelligence shows no numeric score because numbering metadata has no defensible mapping to fraud probability. Insufficient evidence has no score. No displayed scale is a scam percentage; use the risk level and evidence.',
+    'Message shows its existing fusion score multiplied by 100 and rounded. URL shows an ordinal category index. Phone and unsupported or payment-only QR results show no numeric score. A QR routed to Message or URL preserves that engine’s presentation. No displayed scale is a scam percentage; use the risk level and evidence.',
   ],
   [
     'How is confidence different from risk?',
@@ -15,7 +15,7 @@ const faqs = [
   ],
   [
     'What does SCAMGUARD do today?',
-    'When the configured API and database are available, it assesses Messages with local machine learning and explainable indicators, URLs without opening the website, and international phone numbers using offline numbering-plan metadata.',
+    'When the configured API and database are available, it assesses Messages, URLs without opening the website, international phone numbers using offline numbering metadata, and QR images through local decoding and conservative payload routing.',
   ],
   [
     'Does an assessment prove content is safe or fraudulent?',
@@ -23,7 +23,7 @@ const faqs = [
   ],
   [
     'Why is analysis unavailable?',
-    'Message, URL and Phone intelligence require the configured API and database. QR intelligence remains planned.',
+    'Message, URL, Phone and QR intelligence require the configured API, database and their local components. QR readiness also requires the bundled decoder.',
   ],
   [
     'Can I analyse a phone number?',
@@ -31,11 +31,19 @@ const faqs = [
   ],
   [
     'Can I upload a QR image?',
-    'You can select one supported image locally. The browser does not read, decode, upload or save it.',
+    'Yes. One supported raster image is uploaded to the authenticated backend, validated and decoded in memory. The original image is discarded; its decoded payload, SHA-256 fingerprint, dimensions and assessment may be stored in your private history.',
   ],
   [
     'Which QR image formats are accepted?',
-    'The local selector accepts one non-empty PNG, JPG, JPEG or WEBP image up to 5 MB.',
+    'One non-empty PNG, JPG/JPEG or WebP image up to 5 MB and 4096 × 4096 pixels is accepted. SVG is rejected. Actual file content and declared type must agree.',
+  ],
+  [
+    'Does SCAMGUARD open QR content?',
+    'No. Decoded URLs, phone, SMS, email, Wi-Fi, geographic, payment and other content remain inert text. ScamGuard never automatically navigates, launches another application, executes content or fetches a decoded website.',
+  ],
+  [
+    'Can a valid payment QR prove the recipient is legitimate?',
+    'No. Supported EMV-style parsing can report fields and CRC consistency. CRC checks formatting integrity only; it cannot verify the merchant, account owner, business legitimacy or whether a payment is safe.',
   ],
   [
     'Does SCAMGUARD open submitted links?',
@@ -51,7 +59,7 @@ const faqs = [
   ],
   [
     'Who can see stored submissions?',
-    'Each submitted Message, URL or Phone analysis belongs to the signed-in account. Other normal users cannot list, open or delete it. Pre-account development records remain unowned and are hidden from every user.',
+    'Each submitted Message, URL, Phone or QR analysis belongs to the signed-in account. Other normal users cannot list, open or delete it. Pre-account development records remain unowned and are hidden from every user.',
   ],
   [
     'What account information is stored?',
@@ -132,7 +140,7 @@ export function HelpPage() {
           [
             '01',
             'Choose content',
-            'Use Message for an evidence-based assessment, analyse a URL without visiting it, check an international phone number without contacting it, or explore the planned QR interface locally.',
+            'Use Message for an evidence-based assessment, analyse a URL without visiting it, check a phone number without contacting it, or upload one QR image for local decoding and conservative payload analysis.',
           ],
           [
             '02',
@@ -166,7 +174,11 @@ export function HelpPage() {
           Analyse again to copy its input into a new editable draft and create a fresh result. Full
           name and username are editable on Account; email remains read-only until verified email
           changes are supported. Never submit passwords, one-time codes, payment credentials,
-          recovery phrases, identity documents or highly sensitive personal information.
+          recovery phrases, identity documents or highly sensitive personal information. Uploaded QR
+          images are decoded in memory and discarded; their SHA-256 fingerprint, dimensions, decoded
+          payload and assessment may remain in private history. QR content is never opened or
+          executed, decoded URLs retain the no-fetch guarantee, and payment QR structure cannot
+          prove recipient legitimacy.
         </p>
       </section>
 

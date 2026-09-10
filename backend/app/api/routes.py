@@ -49,6 +49,12 @@ def readiness(
             "INTELLIGENCE_UNAVAILABLE",
             "A required local intelligence component is unavailable.",
         )
+    if request.app.state.qr_engine is None or not request.app.state.qr_engine.operational:
+        raise ApiError(
+            503,
+            "INTELLIGENCE_UNAVAILABLE",
+            "A required local intelligence component is unavailable.",
+        )
     try:
         session.execute(text("SELECT 1"))
         if request.app.state.settings.persistence_enabled:
@@ -105,7 +111,8 @@ def capabilities(
         analysis_available=True,
         supported_inputs=list(InputType),
         reason=(
-            "Local Message, URL and Phone intelligence are available; submitted URLs are never "
-            "fetched and phone numbers are never contacted."
+            "Local Message, URL, Phone and QR intelligence are available; decoded content is "
+            "never automatically opened, URLs are never fetched and phone numbers are never "
+            "contacted."
         ),
     )

@@ -5,6 +5,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import zxingcpp
+from PIL import Image
 from sqlalchemy import create_engine, text
 from sqlalchemy.engine import make_url
 
@@ -27,3 +29,11 @@ try:
         )
 finally:
     engine.dispose()
+
+# Deterministic, non-sensitive browser fixture generated from the pinned production QR writer.
+fixture_dir = Path(__file__).resolve().parents[2] / "frontend" / "test-results" / "qr-fixtures"
+fixture_dir.mkdir(parents=True, exist_ok=True)
+barcode = zxingcpp.create_barcode(
+    "https://example.com/scamguard-qr-e2e", zxingcpp.BarcodeFormat.QRCode
+)
+Image.fromarray(barcode.to_image(scale=7)).save(fixture_dir / "controlled-url.png", format="PNG")

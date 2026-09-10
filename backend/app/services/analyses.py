@@ -16,6 +16,8 @@ from app.db.models import Analysis, AnalysisStatus, InputType
 from app.ml.engine import MessageIntelligenceEngine
 from app.phone_intelligence.engine import PhoneIntelligenceEngine
 from app.phone_intelligence.parsing import parse_phone_number
+from app.qr_intelligence.decoder import DecodedQR
+from app.qr_intelligence.engine import QRIntelligenceEngine, persisted_payload
 from app.url_intelligence.engine import URLIntelligenceEngine
 from app.url_intelligence.parsing import parse_url
 
@@ -32,6 +34,9 @@ def summary(record: Analysis) -> AnalysisSummary:
         updated_at=record.updated_at,
         preview=preview,
         risk_level=record.risk_level,
+        payload_type=(record.component_details or {}).get("qr", {}).get("payload_type")
+        if record.input_type == InputType.QR
+        else None,
     )
 
 
@@ -117,6 +122,48 @@ def record_submission(
     session.commit()
     # PostgreSQL normalizes timestamptz to the connection timezone; refresh keeps POST and GET
     # representations stable across process restarts.
+    session.refresh(record)
+    return detail(record)
+
+
+def record_qr_submission(
+    session: Session,
+    decoded: DecodedQR,
+    qr_engine: QRIntelligenceEngine,
+    user_id: UUID,
+) -> AnalysisDetail:
+    # The validated image has already been decoded. Persist only its text payload and derived
+    # metadata; the original binary image never enters PostgreSQL.
+    record = Analysis(
+        input_type=InputType.QR,
+        content=persisted_payload(decoded.payload),
+        user_id=user_id,
+    )
+    session.add(record)
+    session.commit()
+    record.status = AnalysisStatus.PROCESSING
+    session.commit()
+    try:
+        result = qr_engine.analyse(decoded)
+        record.status = AnalysisStatus.COMPLETED
+        record.risk_level = result.risk_level
+        record.risk_score = result.risk_score
+        record.confidence_score = result.confidence_score
+        record.confidence_level = result.confidence_level
+        record.result_summary = result.summary
+        record.evidence = result.evidence
+        record.recommended_actions = result.recommended_actions
+        record.component_details = result.components
+        record.limitations = result.limitations
+        record.model_version = result.model_version
+        record.rules_version = result.rules_version
+        record.fusion_version = result.fusion_version
+        record.completed_at = datetime.now(UTC)
+        record.failure_code = None
+    except Exception:
+        record.status = AnalysisStatus.FAILED
+        record.failure_code = "QR_ANALYSIS_FAILED"
+    session.commit()
     session.refresh(record)
     return detail(record)
 

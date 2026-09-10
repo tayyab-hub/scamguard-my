@@ -24,7 +24,7 @@ const metrics = [
   { label: 'Latest analysis', hint: 'Your most recent check', icon: Clock3 },
 ]
 
-const inputLabels = { MESSAGE: 'Message', URL: 'URL', PHONE: 'Phone' } as const
+const inputLabels = { MESSAGE: 'Message', URL: 'URL', PHONE: 'Phone', QR: 'QR' } as const
 
 export function DashboardPage() {
   const dashboard = useDashboard()
@@ -112,7 +112,7 @@ export function DashboardPage() {
                   {label === 'Latest analysis' && latest
                     ? new Date(latest.created_at).toLocaleString()
                     : label === 'Total analyses' && data
-                      ? 'Persisted Message, URL and Phone submissions'
+                      ? 'Persisted Message, URL, Phone and QR submissions'
                       : label === 'Flagged for review' && data && data.flagged_analyses !== null
                         ? 'Owned results at elevated or high risk'
                         : hint}
@@ -149,7 +149,7 @@ export function DashboardPage() {
                     }
                   >
                     {data
-                      ? 'No submissions have been recorded. Start with a message, URL or phone number.'
+                      ? 'No submissions have been recorded. Start with a message, URL, phone number or QR image.'
                       : 'Analysis history is not enabled yet. Once available, your recorded submissions will appear here.'}
                   </EmptyState>
                 )}
@@ -209,7 +209,7 @@ export function DashboardPage() {
                 <p className="mb-7 mt-3 text-xs leading-6 text-body">
                   A dedicated place to review messages, links, phone numbers and QR codes.
                   {availableModes.length > 0
-                    ? ` ${intelligenceLabel} intelligence is available. QR intelligence remains planned.`
+                    ? ` ${intelligenceLabel} intelligence is available.`
                     : ' Intelligence availability depends on the connected service.'}
                 </p>
                 <Link

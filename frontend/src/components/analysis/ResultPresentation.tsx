@@ -14,6 +14,7 @@ import type { Assessment } from '../../lib/api'
 import {
   isURLAssessment,
   isPhoneAssessment,
+  isQRAssessment,
   orderedEvidence,
   riskCopy,
   riskScorePresentation,
@@ -31,11 +32,13 @@ export function ConfidenceBadge({ assessment }: { assessment: Assessment }) {
         Confidence: {unavailable ? 'unavailable' : assessment.confidence_level.toLowerCase()}
       </p>
       <p className="mt-1 text-[11px] leading-5 text-muted">
-        {isURLAssessment(assessment)
-          ? 'Local classifier strength, not certainty about the website.'
-          : isPhoneAssessment(assessment)
-            ? 'Unavailable: numbering metadata cannot measure fraudulent intent.'
-            : 'Model and evidence strength, not a probability of fraud.'}
+        {isQRAssessment(assessment)
+          ? 'QR decoding and routed-engine evidence strength, not certainty about the code.'
+          : isURLAssessment(assessment)
+            ? 'Local classifier strength, not certainty about the website.'
+            : isPhoneAssessment(assessment)
+              ? 'Unavailable: numbering metadata cannot measure fraudulent intent.'
+              : 'Model and evidence strength, not a probability of fraud.'}
       </p>
     </div>
   )
@@ -122,11 +125,13 @@ export function AnalysisResultHero({ assessment }: { assessment: Assessment }) {
     <section className="result-hero" aria-label="Result summary">
       <div className="flex items-center justify-between gap-3">
         <p className="eyebrow !text-[9px]">
-          {isURLAssessment(assessment)
-            ? 'URL'
-            : isPhoneAssessment(assessment)
-              ? 'PHONE'
-              : 'MESSAGE'}{' '}
+          {isQRAssessment(assessment)
+            ? 'QR'
+            : isURLAssessment(assessment)
+              ? 'URL'
+              : isPhoneAssessment(assessment)
+                ? 'PHONE'
+                : 'MESSAGE'}{' '}
           / ASSESSMENT
         </p>
         <span className="risk-icon">
@@ -169,6 +174,12 @@ export function AnalysisResultHero({ assessment }: { assessment: Assessment }) {
       {isPhoneAssessment(assessment) && (
         <p className="mt-2 text-[11px] leading-5 text-muted">
           The number was not called, messaged or sent to an external reputation service.
+        </p>
+      )}
+      {isQRAssessment(assessment) && (
+        <p className="mt-2 text-[11px] leading-5 text-muted">
+          The QR code was decoded locally. Its content was not opened, executed, contacted or
+          fetched.
         </p>
       )}
     </section>
@@ -216,15 +227,23 @@ export function EvidencePanel({ assessment }: { assessment: Assessment }) {
   return (
     <section
       className="result-section"
-      aria-label={isPhoneAssessment(assessment) ? 'Phone numbering evidence' : 'Detected evidence'}
+      aria-label={
+        isQRAssessment(assessment)
+          ? 'QR decoding and security evidence'
+          : isPhoneAssessment(assessment)
+            ? 'Phone numbering evidence'
+            : 'Detected evidence'
+      }
     >
       <h3 className="flex items-center gap-2 text-sm font-semibold">
         <Fingerprint size={16} className="text-accent" aria-hidden="true" />
-        {url
-          ? 'URL evidence and structural indicators'
-          : phone
-            ? 'Phone numbering evidence'
-            : 'Detected evidence'}
+        {isQRAssessment(assessment)
+          ? 'QR decoding and routed intelligence evidence'
+          : url
+            ? 'URL evidence and structural indicators'
+            : phone
+              ? 'Phone numbering evidence'
+              : 'Detected evidence'}
       </h3>
       {assessment.evidence.length > 0 ? (
         <ul className="mt-4 space-y-3">

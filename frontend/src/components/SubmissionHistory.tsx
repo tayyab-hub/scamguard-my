@@ -7,7 +7,7 @@ import { ErrorState, LoadingState } from './States'
 import { AssessmentResult } from './analysis/URLResult'
 import { riskCopy } from '../lib/resultPresentation'
 
-const inputLabels = { MESSAGE: 'Message', URL: 'URL', PHONE: 'Phone' } as const
+const inputLabels = { MESSAGE: 'Message', URL: 'URL', PHONE: 'Phone', QR: 'QR' } as const
 
 export function SubmissionRows({ items }: { items: AnalysisSummary[] }) {
   const navigate = useNavigate()
@@ -28,7 +28,12 @@ export function SubmissionRows({ items }: { items: AnalysisSummary[] }) {
             onClick={() => setSelected(selected === item.id ? null : item.id)}
           >
             <span className="flex flex-wrap items-center justify-between gap-2">
-              <span className="text-sm font-semibold">{inputLabels[item.input_type]}</span>
+              <span className="text-sm font-semibold">
+                {inputLabels[item.input_type]}
+                {item.input_type === 'QR' && item.payload_type
+                  ? ` · ${item.payload_type.toLowerCase()}`
+                  : ''}
+              </span>
               <span className="status-chip">{item.status.replace('_', ' ')}</span>
             </span>
             {item.risk_level && (
@@ -70,6 +75,7 @@ export function SubmissionRows({ items }: { items: AnalysisSummary[] }) {
                       <AssessmentResult
                         assessment={detail.data.assessment}
                         analysisId={detail.data.id}
+                        content={detail.data.content}
                       />
                     </div>
                   )}
@@ -80,7 +86,7 @@ export function SubmissionRows({ items }: { items: AnalysisSummary[] }) {
                     </p>
                   )}
                   <div className="mt-5 border-t border-line pt-4">
-                    {detail.data.status === 'COMPLETED' && (
+                    {detail.data.status === 'COMPLETED' && detail.data.input_type !== 'QR' && (
                       <button
                         type="button"
                         className="button-secondary mr-3"
@@ -98,6 +104,12 @@ export function SubmissionRows({ items }: { items: AnalysisSummary[] }) {
                       >
                         <RotateCcw size={14} aria-hidden="true" /> Analyse again
                       </button>
+                    )}
+                    {detail.data.status === 'COMPLETED' && detail.data.input_type === 'QR' && (
+                      <p className="mb-3 text-[11px] leading-5 text-muted">
+                        Upload the QR image again for a new QR analysis. The original image was
+                        intentionally discarded after decoding.
+                      </p>
                     )}
                     <button
                       type="button"
