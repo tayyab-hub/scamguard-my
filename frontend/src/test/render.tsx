@@ -6,6 +6,8 @@ import { AuthContext, type AuthContextValue } from '../auth/AuthContext'
 
 const testUser = {
   id: 'c9274a91-93f8-4fa2-bad3-8453f1284e36',
+  full_name: 'Test User',
+  username: 'test_user',
   email: 'test@example.com',
   created_at: '2026-09-08T00:00:00Z',
 }
@@ -18,6 +20,7 @@ export function renderApp(path = '/', authOverrides: Partial<AuthContextValue> =
     error: null,
     signIn: async () => undefined,
     signUp: async () => undefined,
+    updateProfile: async () => undefined,
     signOut: async () => undefined,
     deleteAccount: async () => undefined,
     ...authOverrides,

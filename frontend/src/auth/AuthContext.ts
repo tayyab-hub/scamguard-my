@@ -5,8 +5,9 @@ export type AuthContextValue = {
   user: User | null
   loading: boolean
   error: string | null
-  signIn: (email: string, password: string) => Promise<void>
-  signUp: (email: string, password: string) => Promise<void>
+  signIn: (identifier: string, password: string) => Promise<void>
+  signUp: (fullName: string, username: string, email: string, password: string) => Promise<void>
+  updateProfile: (fullName: string, username: string) => Promise<void>
   signOut: () => Promise<void>
   deleteAccount: (password: string) => Promise<void>
 }

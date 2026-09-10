@@ -1,9 +1,10 @@
 import { useState } from 'react'
-import { ShieldAlert, Trash2 } from 'lucide-react'
+import { Database, Save, ShieldAlert, Trash2 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
 import { ApiError } from '../lib/api'
 import { PageHeading } from '../components/PageHeading'
+import { validateFullName, validateUsername } from '../lib/profileValidation'
 
 export function AccountPage() {
   const auth = useAuth()
@@ -12,6 +13,14 @@ export function AccountPage() {
   const [password, setPassword] = useState('')
   const [pending, setPending] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [fullName, setFullName] = useState(auth.user?.full_name || '')
+  const [username, setUsername] = useState(auth.user?.username || '')
+  const [profilePending, setProfilePending] = useState(false)
+  const [profileSubmitted, setProfileSubmitted] = useState(false)
+  const [profileError, setProfileError] = useState<string | null>(null)
+  const [profileSaved, setProfileSaved] = useState(false)
+  const fullNameError = profileSubmitted ? validateFullName(fullName) : null
+  const usernameError = profileSubmitted ? validateUsername(username) : null
 
   return (
     <>
@@ -23,13 +32,108 @@ export function AccountPage() {
       <div className="mt-7 grid gap-6 lg:grid-cols-2">
         <section className="panel p-6" aria-labelledby="account-details-heading">
           <h2 id="account-details-heading" className="text-base font-semibold">
-            Account details
+            Profile details
           </h2>
-          <dl className="mt-5 space-y-4 text-sm">
+          <p className="mt-2 text-xs leading-5 text-muted">
+            Your profile is editable. Email remains read-only until verified email changes are
+            supported.
+          </p>
+          <form
+            className="mt-5 space-y-4"
+            noValidate
+            onSubmit={(event) => {
+              event.preventDefault()
+              setProfileSubmitted(true)
+              setProfileSaved(false)
+              if (validateFullName(fullName) || validateUsername(username)) return
+              setProfilePending(true)
+              setProfileError(null)
+              void auth
+                .updateProfile(fullName, username)
+                .then(() => setProfileSaved(true))
+                .catch((reason: unknown) =>
+                  setProfileError(
+                    reason instanceof ApiError ? reason.message : 'Profile update failed.',
+                  ),
+                )
+                .finally(() => setProfilePending(false))
+            }}
+          >
             <div>
-              <dt className="text-xs text-muted">Email address</dt>
-              <dd className="mt-1 break-all font-medium">{auth.user?.email}</dd>
+              <label htmlFor="profile-full-name" className="mb-2 block text-xs font-medium">
+                Full name
+              </label>
+              <input
+                id="profile-full-name"
+                className="input-field"
+                autoComplete="name"
+                maxLength={100}
+                value={fullName}
+                onChange={(event) => setFullName(event.target.value)}
+                aria-invalid={Boolean(fullNameError) || undefined}
+                aria-describedby={fullNameError ? 'profile-full-name-error' : undefined}
+                disabled={profilePending}
+              />
+              {fullNameError && (
+                <p id="profile-full-name-error" role="alert" className="mt-2 text-xs text-danger">
+                  {fullNameError}
+                </p>
+              )}
             </div>
+            <div>
+              <label htmlFor="profile-username" className="mb-2 block text-xs font-medium">
+                Username
+              </label>
+              <input
+                id="profile-username"
+                className="input-field"
+                autoComplete="username"
+                maxLength={30}
+                spellCheck={false}
+                value={username}
+                onChange={(event) => setUsername(event.target.value)}
+                aria-invalid={Boolean(usernameError) || undefined}
+                aria-describedby={
+                  usernameError ? 'profile-username-error' : 'profile-username-help'
+                }
+                disabled={profilePending}
+              />
+              <p id="profile-username-help" className="mt-2 text-xs text-muted">
+                3–30 letters, numbers, or underscores. Saved in lowercase.
+              </p>
+              {usernameError && (
+                <p id="profile-username-error" role="alert" className="mt-2 text-xs text-danger">
+                  {usernameError}
+                </p>
+              )}
+            </div>
+            <div>
+              <label htmlFor="profile-email" className="mb-2 block text-xs font-medium">
+                Email address
+              </label>
+              <input
+                id="profile-email"
+                className="input-field"
+                value={auth.user?.email || ''}
+                readOnly
+                aria-readonly="true"
+              />
+            </div>
+            {profileError && (
+              <p role="alert" className="text-xs text-danger">
+                {profileError}
+              </p>
+            )}
+            {profileSaved && (
+              <p role="status" className="text-xs font-medium text-accent">
+                Profile saved.
+              </p>
+            )}
+            <button className="button-primary" disabled={profilePending}>
+              <Save size={15} aria-hidden="true" /> {profilePending ? 'Saving…' : 'Save profile'}
+            </button>
+          </form>
+          <dl className="mt-6 border-t border-line pt-5 text-sm">
             <div>
               <dt className="text-xs text-muted">Created</dt>
               <dd className="mt-1 font-medium">
@@ -37,6 +141,21 @@ export function AccountPage() {
               </dd>
             </div>
           </dl>
+        </section>
+        <section className="panel p-6" aria-labelledby="stored-data-heading">
+          <Database size={22} className="text-accent" aria-hidden="true" />
+          <h2 id="stored-data-heading" className="mt-4 text-base font-semibold">
+            Where your data appears
+          </h2>
+          <p className="mt-3 text-sm leading-6 text-muted">
+            Your analyses are stored in Neon PostgreSQL through the FastAPI service. The Overview,
+            Analysis History and expanded Analysis Detail views retrieve only records owned by your
+            account.
+          </p>
+          <p className="mt-3 text-sm leading-6 text-muted">
+            Completed results are immutable for forensic integrity. You may delete them or use
+            Analyse again to copy the input into a new, editable draft and create a separate record.
+          </p>
         </section>
         <section className="panel border-danger/20 p-6" aria-labelledby="delete-account-heading">
           <ShieldAlert size={22} className="text-danger" aria-hidden="true" />

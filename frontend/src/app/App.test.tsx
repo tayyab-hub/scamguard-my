@@ -107,6 +107,8 @@ describe('application routes and API states', () => {
   it.each([
     ['/login', 'Sign in', 'Welcome back'],
     ['/signup', 'Create account', 'Create your account'],
+    ['/forgot-password', 'Forgot password', 'Reset your password'],
+    [`/reset-password?token=${'x'.repeat(43)}`, 'Reset password', 'Choose a new password'],
   ])('recognizes the public auth route %s in page metadata', async (path, label, heading) => {
     renderApp(path, { user: null })
     expect(await screen.findByRole('heading', { name: heading })).toBeInTheDocument()

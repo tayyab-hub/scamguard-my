@@ -63,6 +63,10 @@ def test_production_disables_documentation():
         cookie_secure=True,
         cookie_samesite="none",
         auth_token_pepper="a-production-only-pepper-over-32-characters",
+        frontend_base_url="https://scamguard.example",
+        mail_provider="resend",
+        resend_api_key="resend-test-key-not-a-real-secret",
+        resend_from_email="SCAMGUARD <security@scamguard.example>",
     )
     with TestClient(create_app(settings)) as client:
         assert client.get("/docs").status_code == 404

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ArrowRight, CircleHelp, Info, LockKeyhole, ScanLine, ShieldCheck } from 'lucide-react'
 import { PageHeading } from '../components/PageHeading'
 import { EmptyState, LoadingState } from '../components/States'
@@ -15,17 +15,39 @@ import {
   type AnalysisMode,
   type DraftMode,
 } from '../components/analysis/modes'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 const inputLabels = { MESSAGE: 'Message', URL: 'URL', PHONE: 'Phone' } as const
 
+function copiedAnalysisDraft(state: unknown) {
+  if (!state || typeof state !== 'object' || !('analysisDraft' in state)) return null
+  const draft = (state as { analysisDraft?: unknown }).analysisDraft
+  if (!draft || typeof draft !== 'object') return null
+  const candidate = draft as { inputType?: unknown; content?: unknown; sourceId?: unknown }
+  if (
+    !['MESSAGE', 'URL', 'PHONE'].includes(String(candidate.inputType)) ||
+    typeof candidate.content !== 'string' ||
+    typeof candidate.sourceId !== 'string'
+  )
+    return null
+  return {
+    inputType: candidate.inputType as DraftMode,
+    content: candidate.content,
+    sourceId: candidate.sourceId,
+  }
+}
+
 export function AnalysePage() {
+  const location = useLocation()
+  const navigate = useNavigate()
+  const [copiedDraft] = useState(() => copiedAnalysisDraft(location.state))
   const capabilities = useCapabilities()
   const submission = useSubmitAnalysis()
-  const [inputType, setInputType] = useState<AnalysisMode>('MESSAGE')
+  const [inputType, setInputType] = useState<AnalysisMode>(copiedDraft?.inputType || 'MESSAGE')
   const [drafts, setDrafts] = useState<Record<DraftMode, string>>({
-    MESSAGE: '',
-    URL: '',
-    PHONE: '',
+    MESSAGE: copiedDraft?.inputType === 'MESSAGE' ? copiedDraft.content : '',
+    URL: copiedDraft?.inputType === 'URL' ? copiedDraft.content : '',
+    PHONE: copiedDraft?.inputType === 'PHONE' ? copiedDraft.content : '',
   })
   const [qrFile, setQrFile] = useState<File | null>(null)
   const [touched, setTouched] = useState<Record<DraftMode, boolean>>({
@@ -38,6 +60,9 @@ export function AnalysePage() {
     URL: false,
     PHONE: false,
   })
+  useEffect(() => {
+    if (copiedDraft) navigate('/analyse', { replace: true, state: null })
+  }, [copiedDraft, navigate])
   const content = inputType === 'QR' ? '' : drafts[inputType]
   const field = inputType === 'QR' ? null : draftFields[inputType]
   const setContent = (value: string) =>
@@ -89,6 +114,15 @@ export function AnalysePage() {
         title="Analyse suspicious content"
         description="A dedicated workspace for messages, links, phone numbers and QR images."
       />
+      {copiedDraft && (
+        <p
+          role="status"
+          className="mb-6 rounded-lg border border-accent/25 bg-accent-subtle px-5 py-4 text-sm text-body"
+        >
+          A copy of the saved {inputLabels[copiedDraft.inputType].toLowerCase()} input is ready to
+          edit. Submitting creates a new analysis; the original record remains unchanged.
+        </p>
+      )}
       {capabilities.isPending ? (
         <LoadingState label="Checking analysis availability" />
       ) : (

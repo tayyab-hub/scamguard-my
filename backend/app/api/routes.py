@@ -13,7 +13,14 @@ from app.api.schemas import (
 )
 from app.core.auth import AuthenticatedSession, require_authenticated_session
 from app.core.errors import ApiError
-from app.db.models import Analysis, AuthSession, InputType, RateLimitBucket, User
+from app.db.models import (
+    Analysis,
+    AuthSession,
+    InputType,
+    PasswordResetToken,
+    RateLimitBucket,
+    User,
+)
 from app.db.session import get_session
 from app.services.analyses import list_submissions
 
@@ -48,6 +55,7 @@ def readiness(
             session.execute(select(Analysis.id).limit(1))
             session.execute(select(User.id).limit(1))
             session.execute(select(AuthSession.id).limit(1))
+            session.execute(select(PasswordResetToken.id).limit(1))
             session.execute(select(RateLimitBucket.key_hash).limit(1))
     except SQLAlchemyError as exc:
         raise ApiError(503, "DATABASE_UNAVAILABLE", "Database connection is unavailable.") from exc

@@ -1,6 +1,7 @@
 import { useId, useState } from 'react'
 import type { AnalysisSummary } from '../lib/api'
-import { Trash2 } from 'lucide-react'
+import { RotateCcw, Trash2 } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { useAnalysisDetail, useDeleteAnalysis, useHistory } from '../lib/queries'
 import { ErrorState, LoadingState } from './States'
 import { AssessmentResult } from './analysis/URLResult'
@@ -9,6 +10,7 @@ import { riskCopy } from '../lib/resultPresentation'
 const inputLabels = { MESSAGE: 'Message', URL: 'URL', PHONE: 'Phone' } as const
 
 export function SubmissionRows({ items }: { items: AnalysisSummary[] }) {
+  const navigate = useNavigate()
   const prefix = useId()
   const [selected, setSelected] = useState<string | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null)
@@ -78,6 +80,25 @@ export function SubmissionRows({ items }: { items: AnalysisSummary[] }) {
                     </p>
                   )}
                   <div className="mt-5 border-t border-line pt-4">
+                    {detail.data.status === 'COMPLETED' && (
+                      <button
+                        type="button"
+                        className="button-secondary mr-3"
+                        onClick={() =>
+                          navigate('/analyse', {
+                            state: {
+                              analysisDraft: {
+                                inputType: detail.data.input_type,
+                                content: detail.data.content,
+                                sourceId: detail.data.id,
+                              },
+                            },
+                          })
+                        }
+                      >
+                        <RotateCcw size={14} aria-hidden="true" /> Analyse again
+                      </button>
+                    )}
                     <button
                       type="button"
                       className="button-quiet flex min-h-9 items-center gap-2 rounded px-2 text-xs font-semibold text-danger"

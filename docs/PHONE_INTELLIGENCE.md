@@ -1,6 +1,6 @@
 # Task 6 — Phone Intelligence
 
-Status: implemented and locally verified on `task-6-phone-intelligence`; not merged or deployed.
+Status: manually accepted and merged to `main` on 2026-09-10; production redeployment is owner-controlled.
 
 ## Objective and academic position
 

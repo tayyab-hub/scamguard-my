@@ -66,12 +66,20 @@ analysis is sufficient.
 Names only—values are secrets or environment-specific.
 
 Render required: `APP_ENV`, `PERSISTENCE_ENABLED`, `DATABASE_URL`, `CORS_ORIGINS`,
-`AUTH_TOKEN_PEPPER`, `COOKIE_SECURE`, `COOKIE_SAMESITE`, `PORT` (`PORT` is supplied by Render).
+`AUTH_TOKEN_PEPPER`, `COOKIE_SECURE`, `COOKIE_SAMESITE`, `FRONTEND_BASE_URL`, `MAIL_PROVIDER`,
+`RESEND_API_KEY`, `RESEND_FROM_EMAIL`, `PORT` (`PORT` is supplied by Render).
 
 Render optional/defaulted: `SESSION_COOKIE_NAME`, `SESSION_TTL_HOURS`, `LOGIN_RATE_LIMIT`,
-`SIGNUP_RATE_LIMIT`, `ANALYSIS_RATE_LIMIT`, `LOG_LEVEL`, `DB_CONNECT_TIMEOUT_SECONDS`,
+`SIGNUP_RATE_LIMIT`, `ANALYSIS_RATE_LIMIT`, `PASSWORD_RESET_REQUEST_RATE_LIMIT`,
+`PASSWORD_RESET_CONFIRM_RATE_LIMIT`, `PASSWORD_RESET_TTL_MINUTES`, `LOG_LEVEL`, `DB_CONNECT_TIMEOUT_SECONDS`,
 `MAX_REQUEST_BYTES`, `MESSAGE_MODEL_PATH`, `URL_MODEL_PATH`, `AI_REVIEW_ENABLED`, `OPENAI_API_KEY`,
 `OPENAI_MODEL`, `AI_TIMEOUT_SECONDS`.
+
+Resend was selected because its small HTTPS send API fits the existing Render service without an
+SMTP daemon and supports domain-scoped sending keys. Create an account in the Resend dashboard,
+verify a sending domain with its SPF/DKIM records, create a sending-only API key, and add the key and
+verified sender to Render. Do not place either value in Vercel. The frontend continues to use the
+checked-in relative `/api/v1` rewrite, so Task 6.1 requires no Vercel environment variable.
 
 Vercel public build configuration: `VITE_API_BASE_URL`; optional `VITE_SUPPORT_EMAIL`. Never place a
 secret in `VITE_*`. Local Vite alone may use `API_PROXY_TARGET`; it is not a production variable.

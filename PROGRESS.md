@@ -1,15 +1,15 @@
 # SCAMGUARD — current project state
 
-Updated **2026-09-10, Asia/Kuala_Lumpur** for Task 6 implementation verification.
+Updated **2026-09-10, Asia/Kuala_Lumpur** for Task 6.1 implementation verification.
 
 ## Current milestone
 
 Tasks 1–5 are complete. The user manually verified the Task 5 production architecture: Vercel serves
 the frontend, its same-origin `/api/v1` rewrite reaches Render, and Render uses Neon PostgreSQL.
 
-**Task 6 Phone Intelligence is implemented on `task-6-phone-intelligence`, locally verified, and
-awaiting the user's manual test. It is not merged or deployed.** Task 7 QR Intelligence and Task 8
-final integration/reporting have not started.
+**Task 6 was manually accepted and merged to `main` at `f24db9fee97b54bad9c27984f7c56d5f2ac6fd5f`.
+Task 6.1 is implemented and locally verified on `task-6-1-auth-profile-polish`, awaiting manual
+acceptance before merge.** Task 7 QR Intelligence and Task 8 final integration/reporting have not started.
 
 | Area | Status | Current behavior |
 | --- | --- | --- |
@@ -18,7 +18,8 @@ final integration/reporting have not started.
 | Task 3 Message Intelligence | COMPLETE | Local three-class model, rules, conservative fusion and explainability. |
 | Task 4 URL Intelligence | COMPLETE | Strict offline parsing/model/rules/fusion without destination access. |
 | Task 5 Auth + Production | COMPLETE | Argon2id accounts, HttpOnly sessions, CSRF/origin controls, private ownership/deletion and verified Vercel → Render → Neon production. |
-| Task 6 Phone Intelligence | IN PROGRESS | Implementation and automated local verification complete; manual acceptance/merge/deploy pending. |
+| Task 6 Phone Intelligence | COMPLETE | Manually accepted, merged and pushed to main. |
+| Task 6.1 Auth/profile polish | IN REVIEW | Profile model/UI, username login, password reset and immutable Analyse again are verified; manual acceptance pending. |
 | Task 7 QR Intelligence | NOT STARTED | Local file metadata UI only; no upload, decode, camera or intelligence. |
 | Task 8 final integration/reporting | NOT STARTED | No final cross-task evaluation/reporting work begun. |
 
@@ -43,6 +44,11 @@ final integration/reporting have not started.
 See [Phone Intelligence](docs/PHONE_INTELLIGENCE.md) for methodology, privacy and limitations.
 
 ## Verification evidence
+
+Task 6.1 verification: backend Pytest **236 passed / 1 opt-in live-AI skipped**; Vitest **126 passed**;
+Playwright foundation **18 passed**, built preview **6 passed**, and real PostgreSQL desktop/mobile
+**10 passed**. TypeScript, ESLint, Ruff lint/format, production build, pip check, production wheel,
+Alembic head/current/check, `0005 → 0004 → 0005`, migration preservation and secret review pass.
 
 | Check | Observed result |
 | --- | --- |
@@ -73,5 +79,5 @@ See [Phone Intelligence](docs/PHONE_INTELLIGENCE.md) for methodology, privacy an
 
 ## Review boundary
 
-Do not merge or deploy Task 6 until the user completes manual testing. Do not change Vercel, Render or
-Neon production settings. Do not begin Task 7 or Task 8.
+Do not merge or deploy Task 6.1 until the user completes manual testing. Required Resend/Render values
+remain owner setup; do not change production services manually. Do not begin Task 7 or Task 8.

@@ -4,11 +4,11 @@
 
 A general scam-awareness workspace with the approved warm light **Forensic Intelligence** identity. The project was initially Malaysia-focused and was generalized following supervisor feedback. The repository and Vercel domain retain their historical `-my` suffix.
 
-Tasks 1–5 are complete, including the user-verified Vercel → same-origin `/api/v1` rewrite → Render
-→ Neon production architecture. Message and URL run their established local explainable pipelines.
-**Task 6 Phone Intelligence is implemented and locally verified on `task-6-phone-intelligence`; it is
-not merged or deployed pending manual acceptance.** Phone uses offline numbering metadata and
-conservative risk rules; QR remains unimplemented. See [Phone Intelligence](docs/PHONE_INTELLIGENCE.md),
+Tasks 1–6 are complete, including the user-verified Vercel → same-origin `/api/v1` rewrite → Render
+→ Neon production architecture and manually accepted Phone Intelligence. **Task 6.1 authentication,
+profile, validation and data-management polish is implemented and verified on
+`task-6-1-auth-profile-polish`, awaiting manual acceptance before merge.** QR remains unimplemented.
+See [Task 6.1](docs/TASK_6_1.md), [Phone Intelligence](docs/PHONE_INTELLIGENCE.md),
 [Authentication](docs/AUTHENTICATION.md), and [Privacy](docs/PRIVACY_MODEL.md).
 
 ## Project memory
@@ -85,16 +85,22 @@ tables and all three local intelligence engines. No `create_all()` is used.
 
 Alembic `0001_analysis_intake` creates intake; `0002_message_intelligence` adds result/audit fields;
 `0003_auth_ownership` adds users, sessions, rate buckets and nullable legacy-compatible ownership;
-and `0004_phone_intelligence` adds the PHONE input/content constraints without rewriting Message/URL
-rows. Upgrade → downgrade → upgrade and drift checks pass against a disposable real PostgreSQL
+`0004_phone_intelligence` adds the PHONE input/content constraints without rewriting Message/URL
+rows, and `0005_auth_profile_polish` adds nullable legacy-safe profiles and digest-only reset tokens.
+Upgrade → downgrade → upgrade and drift checks pass against a disposable real PostgreSQL
 database. Downgrade is destructive test activity and must never target development or production.
 
 ## Implemented behavior
 
 - React/TypeScript/Vite, Router, Tailwind, TanStack Query and Zod; FastAPI/Pydantic, SQLAlchemy/Psycopg/PostgreSQL and Alembic.
-- Sign In (`/login`), Create Account (`/signup`) and public Help (`/help`); authenticated Overview
+- Sign In (`/login`), Create Account (`/signup`), password recovery (`/forgot-password` and
+  `/reset-password`) and public Help (`/help`); authenticated Overview
   (`/`), Analyse (`/analyse`) and Account (`/account`) routes; plus a catch-all 404. Responsive
   navigation, keyboard focus and reduced-motion CSS remain.
+- New accounts require a Unicode-aware full name and case-normalized unique username. Login accepts
+  username or email. Account permits CSRF-protected name/username changes while email stays read-only.
+- Completed analyses are immutable. An owned expanded detail offers Analyse again, which creates an
+  editable local copy and submits a new Message, URL or Phone record without changing the original.
 - MESSAGE: trimmed non-empty text, at most 5,000 characters. URL: validated absolute HTTP(S), at most 2,048 characters; never visited automatically. PHONE: explicit international `+` context, normal ASCII formatting, at most 64 characters, normalized to E.164.
 - An authenticated backend accepts `POST /api/v1/analyses`, assigns ownership from the session and
   never accepts a frontend user ID. MESSAGE persists intake, runs local assessment synchronously and

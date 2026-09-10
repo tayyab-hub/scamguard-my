@@ -1,5 +1,23 @@
 # Testing and verification
 
+## Task 6.1 verification (2026-09-10)
+
+- Backend: 236 passed against real PostgreSQL; one explicitly opt-in live external-AI test skipped.
+- Frontend: TypeScript and ESLint passed; Vitest 126 passed; production Vite build passed.
+- Playwright: 18 foundation/motion/visual, 6 built offline-preview and 10 real PostgreSQL
+  desktop/mobile scenarios passed.
+- Database: `0005_auth_profile_polish` is the single head; upgrade/current/heads/check and isolated
+  downgrade to `0004_phone_intelligence` then re-upgrade passed. The fixture also proves an existing
+  nullable-profile user and owned Phone analysis survive `0004 → 0005` unchanged.
+- Packaging/security: pip dependency check and isolated production wheel inspection passed; the
+  wheel includes `app/services/mail.py`. Diff/secret checks found no committed credential.
+
+Coverage includes Unicode/control-aware names, normalized/duplicate usernames, email and passphrase
+validation, username-or-email login with generic failures, owned CSRF profile updates, mass-assignment
+rejection, generic password-reset requests, digest-only expiry/replay/token handling, database rate
+limits, all-session revocation, account cascade, immutable analyses and Message/URL/Phone Analyse
+again behavior.
+
 ## Task 6 Phone Intelligence checks (2026-09-10)
 
 Task 6 retains every Task 5 gate and adds deterministic Phone parsing/risk tests, authoritative API

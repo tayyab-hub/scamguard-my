@@ -192,6 +192,8 @@ export type MessageAssessment = z.infer<typeof messageAssessmentSchema>
 export type SubmissionInput = { input_type: 'MESSAGE' | 'URL' | 'PHONE'; content: string }
 export const userSchema = z.object({
   id: z.uuid(),
+  full_name: z.string().nullable(),
+  username: z.string().nullable(),
   email: z.email(),
   created_at: z.iso.datetime({ offset: true }),
 })
@@ -242,7 +244,7 @@ export function setCsrfToken(value: string | null) {
 
 type RequestOptions = {
   signal?: AbortSignal
-  method?: 'GET' | 'POST' | 'DELETE'
+  method?: 'GET' | 'POST' | 'PATCH' | 'DELETE'
   body?: unknown
 }
 
@@ -320,17 +322,17 @@ export async function requestApi<T>(
   }
 }
 
-export async function signup(email: string, password: string) {
+export async function signup(fullName: string, username: string, email: string, password: string) {
   return requestApi('/auth/signup', authResponseSchema, {
     method: 'POST',
-    body: { email, password },
+    body: { full_name: fullName, username, email, password },
   })
 }
 
-export async function login(email: string, password: string) {
+export async function login(identifier: string, password: string) {
   return requestApi('/auth/login', authResponseSchema, {
     method: 'POST',
-    body: { email, password },
+    body: { identifier, password },
   })
 }
 
@@ -344,6 +346,27 @@ export async function logout() {
 
 export async function deleteAccount(password: string) {
   return requestApi('/auth/account', z.unknown(), { method: 'DELETE', body: { password } })
+}
+
+export async function updateProfile(fullName: string, username: string) {
+  return requestApi('/auth/profile', z.object({ user: userSchema }), {
+    method: 'PATCH',
+    body: { full_name: fullName, username },
+  })
+}
+
+export async function requestPasswordReset(email: string) {
+  return requestApi('/auth/password-reset/request', z.object({ message: z.string() }), {
+    method: 'POST',
+    body: { email },
+  })
+}
+
+export async function confirmPasswordReset(token: string, password: string) {
+  return requestApi('/auth/password-reset/confirm', z.unknown(), {
+    method: 'POST',
+    body: { token, password },
+  })
 }
 
 export async function deleteAnalysis(id: string) {
