@@ -23,8 +23,10 @@ without a verification flow. Completed analysis content and assessments are immu
 copies owned input into a new browser draft, which may be edited and submitted as a separate record;
 the original is not mutated.
 
-For QR, the authenticated backend validates and decodes one bounded raster image in memory. It does
-not persist the original image. Private history stores decoded content and derived audit metadata,
+For QR, the authenticated backend validates and decodes one bounded raster image into an in-memory
+pixel buffer. It does not retain the original image in application storage or PostgreSQL; the upload
+parser may use a transient operating-system spool that is closed and removed after the request.
+Private history stores decoded content and derived audit metadata,
 including a file SHA-256 fingerprint, and marks the original image as not retained. URL credentials
 and Wi-Fi password fields are redacted before storage; routed phones are normalized to E.164. Because
 the image is discarded, QR history cannot reconstruct it and requires a new upload for another run.

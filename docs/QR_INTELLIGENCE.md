@@ -63,8 +63,11 @@ recipient, account owner, request legitimacy or transaction safety.
 
 ## Privacy and persistence
 
-Decoding occurs in backend memory. The original image is not written to PostgreSQL or another file,
-and is discarded after the request. The private record contains the decoded payload, derived
+Pixel validation and decoding occur in backend memory. The original image is never written to
+PostgreSQL or application-owned durable storage. FastAPI's bounded upload parser may use an ephemeral
+operating-system temporary spool while receiving the multipart body; SCAMGUARD closes it immediately
+after reading, and it is removed rather than retained after the request. The private record contains
+the decoded payload, derived
 assessment, payload type/route, dimensions, actual format, byte count, file SHA-256 and decoder/
 classifier/fusion versions. It explicitly records `original_image_retained: false`.
 
