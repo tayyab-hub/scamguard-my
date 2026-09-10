@@ -1,8 +1,7 @@
 # Task 5 authentication and authorization
 
-Status (2026-09-09): **implemented and locally verified; Neon/Render infrastructure readiness is
-user-verified.** Vercel production signup/login/session/private-history acceptance remains pending the
-Task 5 main deployment and same-origin proxy verification.
+Status (2026-09-10): **complete and user-verified in the Vercel → Render → Neon production
+architecture.** Task 6 reuses these controls unchanged for Phone analyses.
 
 ## Architecture
 

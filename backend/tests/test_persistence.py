@@ -56,6 +56,30 @@ def database():
         inspect(engine).get_table_names()
     )
     subprocess.run([sys.executable, "-m", "alembic", "check"], cwd=root, env=env, check=True)
+    # The round-trip is intentionally destructive and only runs against *_test.
+    # Clear Task 6 PHONE rows before restoring the older MESSAGE/URL-only constraint.
+    with engine.begin() as connection:
+        connection.execute(text("TRUNCATE TABLE analyses, auth_sessions, users, auth_rate_limits"))
+    migrate("0003_auth_ownership", "downgrade")
+    with engine.begin() as connection:
+        connection.execute(
+            text(
+                "INSERT INTO analyses (id, input_type, status, content) VALUES "
+                "(:message_id, 'MESSAGE', 'SUBMITTED', 'preserved message'), "
+                "(:url_id, 'URL', 'SUBMITTED', 'https://example.com/preserved')"
+            ),
+            {"message_id": uuid4(), "url_id": uuid4()},
+        )
+    migrate("head")
+    with engine.begin() as connection:
+        preserved = connection.execute(
+            text("SELECT input_type, content FROM analyses ORDER BY input_type")
+        ).all()
+        assert preserved == [
+            ("MESSAGE", "preserved message"),
+            ("URL", "https://example.com/preserved"),
+        ]
+        connection.execute(text("TRUNCATE TABLE analyses, auth_sessions, users, auth_rate_limits"))
     migrate("base", "downgrade")
     assert "analyses" not in inspect(engine).get_table_names()
     migrate("head")
@@ -84,7 +108,11 @@ def persistent(database):
 
 @pytest.mark.parametrize(
     "mode,content",
-    [("MESSAGE", "  Private test message  "), ("URL", " https://example.com/path?q=test ")],
+    [
+        ("MESSAGE", "  Private test message  "),
+        ("URL", " https://example.com/path?q=test "),
+        ("PHONE", " +44 (20) 7946-0958 "),
+    ],
 )
 def test_create_read_and_restart(persistent, database, mode, content):
     response = persistent.post("/api/v1/analyses", json={"input_type": mode, "content": content})
@@ -110,10 +138,14 @@ def test_create_read_and_restart(persistent, database, mode, content):
             "INSUFFICIENT_EVIDENCE",
         }
         assert record["assessment"]["components"]["local_model"]["used"] is True
-    else:
+    elif mode == "URL":
         assert record["status"] == "COMPLETED"
         assert record["assessment"]["components"]["url_model"]["status"] == "COMPLETED"
-    assert record["content"] == content.strip()
+    else:
+        assert record["status"] == "COMPLETED"
+        assert record["assessment"]["risk_level"] == "INSUFFICIENT_EVIDENCE"
+        assert record["assessment"]["components"]["phone_metadata"]["valid"] is True
+    assert record["content"] == ("+442079460958" if mode == "PHONE" else content.strip())
     assert persistent.get(f"/api/v1/analyses/{record['id']}").json() == record
     # A fresh application/engine reads the committed row, not in-memory state.
     with TestClient(create_app(database[0])) as restarted:
@@ -132,7 +164,9 @@ def test_create_read_and_restart(persistent, database, mode, content):
         {"input_type": "URL", "content": "https://example.com:99999"},
         {"input_type": "URL", "content": "https://%"},
         {"input_type": "URL", "content": "https://example.com/" + "x" * 2048},
-        {"input_type": "PHONE", "content": "+1 202 555 0100"},
+        {"input_type": "PHONE", "content": "202 555 0100"},
+        {"input_type": "PHONE", "content": "+44<script>"},
+        {"input_type": "PHONE", "content": "+" + "1" * 16},
         {"input_type": "QR", "content": "test image"},
         {"input_type": "OTHER", "content": "private"},
         {"input_type": "MESSAGE", "content": 123},
@@ -241,13 +275,51 @@ def test_detail_errors(persistent):
     assert response.json()["error"]["code"] == "ANALYSIS_NOT_FOUND"
 
 
-def test_ready_and_capability_distinguish_message_from_url_intelligence(persistent):
+def test_ready_and_capability_advertise_all_available_intelligence(persistent):
     assert persistent.get("/api/v1/ready").status_code == 200
     caps = persistent.get("/api/v1/capabilities").json()
     assert caps["submission_available"] is True
-    assert caps["submission_inputs"] == ["MESSAGE", "URL"]
+    assert caps["submission_inputs"] == ["MESSAGE", "URL", "PHONE"]
     assert caps["analysis_available"] is True
-    assert caps["supported_inputs"] == ["MESSAGE", "URL"]
+    assert caps["supported_inputs"] == ["MESSAGE", "URL", "PHONE"]
+
+
+def test_phone_history_dashboard_deletion_and_persisted_metadata(persistent, database):
+    response = persistent.post(
+        "/api/v1/analyses",
+        json={"input_type": "PHONE", "content": "+49 900 1 234567"},
+    )
+    assert response.status_code == 201
+    record = response.json()
+    assert record["content"] == "+499001234567"
+    assert record["assessment"]["risk_level"] == "CAUTION"
+    assert record["assessment"]["components"]["phone_metadata"]["number_type"] == "PREMIUM_RATE"
+    history = persistent.get("/api/v1/analyses").json()
+    assert history["items"][0]["input_type"] == "PHONE"
+    assert history["items"][0]["preview"] == "+499001234567"
+    dashboard = persistent.get("/api/v1/dashboard").json()
+    assert dashboard["total_analyses"] == 1
+    assert dashboard["recent_analyses"][0]["input_type"] == "PHONE"
+    with Session(database[1]) as session:
+        row = session.get(Analysis, record["id"])
+        assert row.model_version is None
+        assert row.rules_version == "phone-rules-v1"
+        assert row.fusion_version == "phone-fusion-v1"
+    assert persistent.delete(f"/api/v1/analyses/{record['id']}").status_code == 204
+    assert persistent.get("/api/v1/analyses").json()["total"] == 0
+
+
+def test_phone_pipeline_failure_is_persisted_and_safe(persistent, monkeypatch):
+    def fail(content):
+        raise RuntimeError("private phone content must not leak")
+
+    monkeypatch.setattr(persistent.app.state.phone_engine, "analyse", fail)
+    result = persistent.post(
+        "/api/v1/analyses", json={"input_type": "PHONE", "content": "+1 202 555 0123"}
+    ).json()
+    assert result["status"] == "FAILED"
+    assert result["failure_code"] == "PHONE_ANALYSIS_FAILED"
+    assert result["assessment"] is None
 
 
 def test_database_constraints_and_rollback(database, persistent):

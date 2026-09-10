@@ -78,6 +78,10 @@ def submit_message(client: TestClient, content: str = "Test message"):
     return client.post("/api/v1/analyses", json={"input_type": "MESSAGE", "content": content})
 
 
+def submit_phone(client: TestClient, content: str = "+44 20 7946 0958"):
+    return client.post("/api/v1/analyses", json={"input_type": "PHONE", "content": content})
+
+
 def test_signup_normalizes_email_and_stores_only_argon2_hash(auth_client):
     client, engine = auth_client
     response = signup(client, "  Student@Example.COM ")
@@ -168,6 +172,17 @@ def test_origin_and_csrf_protect_state_changes(auth_client):
     assert submit_message(client).status_code == 201
 
 
+def test_unauthenticated_phone_submission_is_rejected(auth_client):
+    client, _ = auth_client
+    response = client.post(
+        "/api/v1/analyses",
+        json={"input_type": "PHONE", "content": "+44 20 7946 0958"},
+        headers={"Origin": ORIGIN},
+    )
+    assert response.status_code == 401
+    assert response.json()["error"]["code"] == "AUTHENTICATION_REQUIRED"
+
+
 def test_multi_user_history_detail_delete_and_dashboard_are_isolated(auth_client):
     client_a, engine = auth_client
     assert signup(client_a, "a@example.com").status_code == 201
@@ -189,6 +204,19 @@ def test_multi_user_history_detail_delete_and_dashboard_are_isolated(auth_client
         assert session.get(Analysis, UUID(analysis_a["id"])) is None
 
 
+def test_phone_analysis_inherits_multi_user_ownership(auth_client):
+    client_a, _ = auth_client
+    assert signup(client_a, "phone-a@example.com").status_code == 201
+    analysis_a = submit_phone(client_a).json()
+    assert analysis_a["input_type"] == "PHONE"
+    with TestClient(create_app(auth_client[0].app.state.settings)) as client_b:
+        assert signup(client_b, "phone-b@example.com").status_code == 201
+        assert client_b.get(f"/api/v1/analyses/{analysis_a['id']}").status_code == 404
+        assert client_b.delete(f"/api/v1/analyses/{analysis_a['id']}").status_code == 404
+        assert client_b.get("/api/v1/analyses").json()["total"] == 0
+    assert client_a.get(f"/api/v1/analyses/{analysis_a['id']}").status_code == 200
+
+
 def test_user_id_cannot_be_supplied_and_legacy_rows_remain_private(auth_client):
     client, engine = auth_client
     assert signup(client).status_code == 201
@@ -197,6 +225,11 @@ def test_user_id_cannot_be_supplied_and_legacy_rows_remain_private(auth_client):
         json={"input_type": "MESSAGE", "content": "private", "user_id": str(uuid4())},
     )
     assert spoofed.status_code == 422
+    spoofed_phone = client.post(
+        "/api/v1/analyses",
+        json={"input_type": "PHONE", "content": "+44 20 7946 0958", "user_id": str(uuid4())},
+    )
+    assert spoofed_phone.status_code == 422
     with Session(engine) as session:
         legacy = Analysis(input_type="MESSAGE", content="Legacy unowned analysis")
         session.add(legacy)
@@ -212,6 +245,7 @@ def test_account_deletion_is_transactional_and_cascades_private_data(auth_client
     client, engine = auth_client
     assert signup(client).status_code == 201
     assert submit_message(client).status_code == 201
+    assert submit_phone(client).status_code == 201
     wrong = client.request("DELETE", "/api/v1/auth/account", json={"password": "wrong password"})
     assert wrong.status_code == 401
     deleted = client.request("DELETE", "/api/v1/auth/account", json={"password": PASSWORD})
@@ -233,4 +267,19 @@ def test_database_backed_login_rate_limit(auth_database):
             assert login(client, "unknown@example.com", "wrong password").status_code == 401
         blocked = login(client, "unknown@example.com", "wrong password")
         assert blocked.status_code == 429
+        assert int(blocked.headers["retry-after"]) > 0
+
+
+def test_phone_submission_uses_database_backed_analysis_rate_limit(auth_database):
+    config, engine = auth_database
+    limited = config.model_copy(update={"analysis_rate_limit": 2})
+    with engine.begin() as connection:
+        connection.execute(text("TRUNCATE TABLE analyses, auth_sessions, users, auth_rate_limits"))
+    with TestClient(create_app(limited)) as client:
+        assert signup(client, "phone-limit@example.com").status_code == 201
+        assert submit_phone(client, "+44 20 7946 0958").status_code == 201
+        assert submit_phone(client, "+1 202 555 0123").status_code == 201
+        blocked = submit_phone(client, "+60 12 345 6789")
+        assert blocked.status_code == 429
+        assert blocked.json()["error"]["code"] == "RATE_LIMITED"
         assert int(blocked.headers["retry-after"]) > 0

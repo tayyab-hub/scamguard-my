@@ -21,7 +21,7 @@ const summary = { ...record, preview: record.content }
 const caps = {
   ...capabilitiesFixture,
   submission_available: true,
-  submission_inputs: ['MESSAGE', 'URL'],
+  submission_inputs: ['MESSAGE', 'URL', 'PHONE'],
 }
 const dashboard = {
   status: 'ready',
@@ -93,6 +93,7 @@ function setup(
 
 describe('persistent submission UI', () => {
   it.each([
+    [['MESSAGE', 'URL', 'PHONE'], 'Message, URL and Phone enabled'],
     [['MESSAGE', 'URL'], 'Message and URL enabled'],
     [['MESSAGE'], 'Message enabled'],
     [['URL'], 'URL enabled'],
@@ -231,7 +232,7 @@ describe('persistent submission UI', () => {
     expect(screen.queryByText('Submission recorded.')).not.toBeInTheDocument()
   })
 
-  it('never submits Phone or QR even when Message and URL persistence is available', async () => {
+  it('submits Phone through the shared analysis API but keeps QR unavailable', async () => {
     const fetchMock = setup()
     renderApp('/analyse')
     await screen.findByLabelText('Message content')
@@ -240,12 +241,18 @@ describe('persistent submission UI', () => {
     fireEvent.change(screen.getByRole('textbox', { name: 'Phone number' }), {
       target: { value: '+44 20 7946 0958' },
     })
-    expect(screen.getByRole('button', { name: 'Analyse phone number' })).toBeDisabled()
-    fireEvent.submit(screen.getByRole('button', { name: 'Analyse phone number' }).closest('form')!)
+    expect(screen.getByRole('button', { name: 'Analyse phone number' })).toBeEnabled()
+    await userEvent.click(screen.getByRole('button', { name: 'Analyse phone number' }))
+    await screen.findByText('Submission recorded.')
     await userEvent.click(screen.getByRole('tab', { name: 'QR Code' }))
     expect(screen.getByRole('button', { name: 'Analyse QR' })).toBeDisabled()
     fireEvent.submit(screen.getByRole('button', { name: 'Analyse QR' }).closest('form')!)
-    expect(fetchMock.mock.calls.filter(([, init]) => init?.method === 'POST')).toHaveLength(0)
+    const posts = fetchMock.mock.calls.filter(([, init]) => init?.method === 'POST')
+    expect(posts).toHaveLength(1)
+    expect(JSON.parse(posts[0]![1]!.body as string)).toEqual({
+      input_type: 'PHONE',
+      content: '+44 20 7946 0958',
+    })
   })
 
   it('shows real count/latest/preview and loads safe escaped detail and bounded history', async () => {
@@ -278,7 +285,9 @@ describe('persistent submission UI', () => {
   it('shows a measured zero only for a connected empty database', async () => {
     setup(undefined, true)
     renderApp()
-    await screen.findByText('No submissions have been recorded. Start with a message or URL.')
+    await screen.findByText(
+      'No submissions have been recorded. Start with a message, URL or phone number.',
+    )
     expect(
       within(screen.getByRole('region', { name: 'Total analyses' })).getByText('0'),
     ).toBeInTheDocument()
@@ -307,7 +316,7 @@ describe('persistent submission UI', () => {
 })
 
 describe('submission boundaries', () => {
-  it('shows exact Message and URL feedback only after interaction and updates while invalid', async () => {
+  it('shows exact Message, URL and Phone feedback only after interaction', async () => {
     setup()
     renderApp('/analyse')
     const message = await screen.findByLabelText('Message content')
@@ -329,6 +338,19 @@ describe('submission boundaries', () => {
     expect(
       screen.getByText('Enter a valid URL starting with http:// or https://.'),
     ).toBeInTheDocument()
+
+    await userEvent.click(screen.getByRole('tab', { name: 'Phone Number' }))
+    const phone = screen.getByLabelText('Phone number')
+    fireEvent.blur(phone)
+    expect(screen.getByText('Enter an international phone number to analyse.')).toBeInTheDocument()
+    fireEvent.change(phone, { target: { value: '0123456789' } })
+    expect(
+      screen.getByText('Include the international country calling code, beginning with +.'),
+    ).toBeInTheDocument()
+    fireEvent.change(phone, { target: { value: '+44 CALL NOW' } })
+    expect(
+      screen.getByText('Use only digits, spaces, hyphens and parentheses.'),
+    ).toBeInTheDocument()
   })
 
   it.each([
@@ -343,6 +365,9 @@ describe('submission boundaries', () => {
     expect(submissionError('MESSAGE', 'x'.repeat(5001))).not.toBeNull()
     expect(submissionError('URL', 'https://example.com/' + 'x'.repeat(2048))).not.toBeNull()
     expect(submissionError('MESSAGE', 'x'.repeat(5000))).toBeNull()
+    expect(submissionError('PHONE', '+44 20 7946 0958')).toBeNull()
+    expect(submissionError('PHONE', '+12')).not.toBeNull()
+    expect(submissionError('PHONE', '+' + '1'.repeat(16))).not.toBeNull()
     expect(dashboardSchema.safeParse({ ...dashboard, total_analyses: -1 }).success).toBe(false)
     expect(dashboardSchema.safeParse({ ...dashboard, flagged_analyses: 2 }).success).toBe(true)
   })

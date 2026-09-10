@@ -30,6 +30,7 @@ narwhals==2.25.0
 numpy==2.5.2
 openai==2.54.0
 packaging==26.3
+phonenumbers==9.0.38
 pluggy==1.6.0
 psycopg-binary==3.3.5
 psycopg==3.3.5

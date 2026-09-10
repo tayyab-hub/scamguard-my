@@ -21,7 +21,7 @@ export const healthSchema = z.object({
 })
 const analysisFields = {
   id: z.uuid(),
-  input_type: z.enum(['MESSAGE', 'URL']),
+  input_type: z.enum(['MESSAGE', 'URL', 'PHONE']),
   status: z.enum(['SUBMITTED', 'PROCESSING', 'COMPLETED', 'FAILED']),
   created_at: z.iso.datetime({ offset: true }),
   updated_at: z.iso.datetime({ offset: true }),
@@ -31,6 +31,14 @@ const evidenceSchema = z.object({
   label: z.string(),
   snippet: z.string(),
   source: z.enum(['DETERMINISTIC_RULE', 'EXTERNAL_AI']),
+})
+const structuredEvidenceSchema = z.object({
+  category: z.string(),
+  label: z.string(),
+  snippet: z.string(),
+  severity: z.enum(['CONTEXT', 'WEAK', 'MEANINGFUL']),
+  explanation: z.string(),
+  family: z.string(),
 })
 export const messageAssessmentSchema = z.object({
   risk_level: z.enum(['LOW', 'CAUTION', 'ELEVATED', 'HIGH', 'INSUFFICIENT_EVIDENCE']),
@@ -73,14 +81,8 @@ export const urlAssessmentSchema = z.object({
   confidence_level: z.enum(['LOW', 'MEDIUM', 'HIGH']),
   summary: z.string(),
   evidence: z.array(
-    z.object({
-      category: z.string(),
-      label: z.string(),
-      snippet: z.string(),
+    structuredEvidenceSchema.extend({
       source: z.enum(['DETERMINISTIC_RULE', 'REPUTATION']),
-      severity: z.enum(['CONTEXT', 'WEAK', 'MEANINGFUL']),
-      explanation: z.string(),
-      family: z.string(),
     }),
   ),
   recommended_actions: z.array(z.string()),
@@ -115,12 +117,60 @@ export const urlAssessmentSchema = z.object({
   limitations: z.array(z.string()),
   completed_at: z.iso.datetime({ offset: true }),
 })
+export const phoneAssessmentSchema = z.object({
+  risk_level: z.enum(['LOW', 'CAUTION', 'ELEVATED', 'HIGH', 'INSUFFICIENT_EVIDENCE']),
+  risk_score: z.null(),
+  confidence_score: z.null(),
+  confidence_level: z.literal('LOW'),
+  summary: z.string(),
+  evidence: z.array(structuredEvidenceSchema.extend({ source: z.literal('NUMBERING_METADATA') })),
+  recommended_actions: z.array(z.string()),
+  components: z.object({
+    phone_metadata: z.object({
+      engine_version: z.string(),
+      parser_version: z.string(),
+      library: z.literal('python-phonenumbers'),
+      library_version: z.string(),
+      normalized_e164: z.string().regex(/^\+[1-9]\d{6,14}$/),
+      international_format: z.string(),
+      country_calling_code: z.number().int().positive(),
+      region_code: z.string().nullable(),
+      possible: z.boolean(),
+      valid: z.boolean(),
+      number_type: z.enum([
+        'MOBILE',
+        'FIXED_LINE',
+        'FIXED_LINE_OR_MOBILE',
+        'TOLL_FREE',
+        'PREMIUM_RATE',
+        'SHARED_COST',
+        'VOIP',
+        'PERSONAL_NUMBER',
+        'PAGER',
+        'UAN',
+        'VOICEMAIL',
+        'UNKNOWN',
+      ]),
+    }),
+    phone_rules: z.object({
+      version: z.string(),
+      high_cost_indicator: z.boolean(),
+    }),
+    fusion: z.object({ version: z.string() }),
+  }),
+  limitations: z.array(z.string()),
+  completed_at: z.iso.datetime({ offset: true }),
+})
 export type URLAssessment = z.infer<typeof urlAssessmentSchema>
-export type Assessment = MessageAssessment | URLAssessment
+export type PhoneAssessment = z.infer<typeof phoneAssessmentSchema>
+export type Assessment = MessageAssessment | URLAssessment | PhoneAssessment
 export const analysisDetailSchema = z.object({
   ...analysisFields,
   content: z.string(),
-  assessment: z.union([messageAssessmentSchema, urlAssessmentSchema]).nullable().default(null),
+  assessment: z
+    .union([messageAssessmentSchema, urlAssessmentSchema, phoneAssessmentSchema])
+    .nullable()
+    .default(null),
   failure_code: z.string().nullable().default(null),
 })
 export const analysisSummarySchema = z.object({
@@ -139,7 +189,7 @@ export const analysisListSchema = z.object({
 })
 export type AnalysisSummary = z.infer<typeof analysisSummarySchema>
 export type MessageAssessment = z.infer<typeof messageAssessmentSchema>
-export type SubmissionInput = { input_type: 'MESSAGE' | 'URL'; content: string }
+export type SubmissionInput = { input_type: 'MESSAGE' | 'URL' | 'PHONE'; content: string }
 export const userSchema = z.object({
   id: z.uuid(),
   email: z.email(),
@@ -166,9 +216,9 @@ export const dashboardSchema = z.discriminatedUnion('status', [
 export const capabilitiesSchema = z.object({
   // Older/offline previews never acquire a capability just because the UI exists.
   submission_available: z.boolean().default(false),
-  submission_inputs: z.array(z.enum(['MESSAGE', 'URL'])).default([]),
+  submission_inputs: z.array(z.enum(['MESSAGE', 'URL', 'PHONE'])).default([]),
   analysis_available: z.boolean(),
-  supported_inputs: z.array(z.enum(['MESSAGE', 'URL'])),
+  supported_inputs: z.array(z.enum(['MESSAGE', 'URL', 'PHONE'])),
   reason: z.string(),
 })
 

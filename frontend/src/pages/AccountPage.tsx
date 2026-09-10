@@ -45,7 +45,7 @@ export function AccountPage() {
           </h2>
           <p className="mt-3 text-sm leading-6 text-muted">
             This permanently deletes your account, invalidates its sessions, and deletes all
-            Message and URL analyses owned by it.
+            Message, URL and Phone analyses owned by it.
           </p>
           <button className="button-secondary mt-5 text-danger" onClick={() => setConfirming(true)}>
             <Trash2 size={15} aria-hidden="true" /> Delete account
@@ -82,9 +82,17 @@ export function AccountPage() {
               onChange={(event) => setPassword(event.target.value)}
               disabled={pending}
             />
-            {error && <p role="alert" className="mt-3 text-xs text-danger">{error}</p>}
+            {error && (
+              <p role="alert" className="mt-3 text-xs text-danger">
+                {error}
+              </p>
+            )}
             <div className="mt-6 flex justify-end gap-3">
-              <button className="button-secondary" disabled={pending} onClick={() => setConfirming(false)}>
+              <button
+                className="button-secondary"
+                disabled={pending}
+                onClick={() => setConfirming(false)}
+              >
                 Cancel
               </button>
               <button

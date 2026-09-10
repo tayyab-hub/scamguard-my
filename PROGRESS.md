@@ -1,81 +1,77 @@
 # SCAMGUARD — current project state
 
-Updated **2026-09-09, Asia/Kuala_Lumpur** for Task 5 production closure.
+Updated **2026-09-10, Asia/Kuala_Lumpur** for Task 6 implementation verification.
 
 ## Current milestone
 
-**Task 4 URL Intelligence and its accepted UI refinement are COMPLETE and merged to `main`** at
-`386e4b7` and `080e800`. **Task 5 Authentication, User Ownership, Privacy Controls and Production
-Deployment is IN PROGRESS** on `task-5-auth-production` and must not be merged automatically.
+Tasks 1–5 are complete. The user manually verified the Task 5 production architecture: Vercel serves
+the frontend, its same-origin `/api/v1` rewrite reaches Render, and Render uses Neon PostgreSQL.
 
-The Task 5 application implementation is locally complete enough for final regression: real accounts,
-Argon2id hashes, opaque PostgreSQL sessions, synchronizer CSRF, database rate limits, per-user
-analyses/dashboard, analysis deletion, account cascade deletion, auth UI, production validation,
-bundled models and a Render Blueprint are present. All local static, unit, real-PostgreSQL, browser,
-packaging, migration and launcher checks listed below pass. The implementation branch is published.
-
-The user reports the production Neon PostgreSQL database and Render FastAPI backend are now deployed
-and connected. Alembic completed; `/api/v1/health` returned 200; `/api/v1/ready` returned ready with
-database, Message Intelligence and URL Intelligence ready. The Task 5 Vercel frontend remains pending
-the authorized main merge/redeployment, and the same-origin API proxy is still being finalized and
-verified. Deployed signup/login, private history and multi-user isolation through Vercel therefore
-remain unverified. See [Production deployment](docs/PRODUCTION_DEPLOYMENT.md).
-
-## Task 5 implementation
+**Task 6 Phone Intelligence is implemented on `task-6-phone-intelligence`, locally verified, and
+awaiting the user's manual test. It is not merged or deployed.** Task 7 QR Intelligence and Task 8
+final integration/reporting have not started.
 
 | Area | Status | Current behavior |
 | --- | --- | --- |
-| Task 1 Foundation | COMPLETE | Forensic Intelligence UI, responsive/keyboard/reduced-motion behavior and Windows launchers. |
-| Task 2 Core Platform | COMPLETE | PostgreSQL/Alembic intake, history, dashboard and safe API foundation. |
-| Task 3 Message Intelligence | COMPLETE | Local three-class model, rules, conservative fusion, explainability and optional disabled AI. |
-| Task 4 URL Intelligence | COMPLETE | Strict offline parsing, local model/rules/fusion and persisted explainable results without fetching. |
-| Task 5 accounts/sessions | IN PROGRESS | Implemented and fully locally tested; production browser acceptance pending. |
-| Ownership/private history | IN PROGRESS | Backend-enforced per-user list/detail/delete/dashboard and A/B tests implemented; production A/B check pending. |
-| Privacy controls | IN PROGRESS | Analysis deletion, password-confirmed account cascade deletion and Help/privacy disclosures implemented. |
-| Production infrastructure | IN PROGRESS | Neon deployed/connected and Render live/ready; Vercel Task 5 frontend and same-origin proxy acceptance remain. |
-| Phone Intelligence | NOT STARTED | Draft-only unavailable state retained. |
-| QR/Screenshot Intelligence | NOT STARTED | Local metadata UI only; no upload, decode, camera or intelligence. |
-| Community/adaptive/campaign work | NOT STARTED | No implementation. |
+| Task 1 Foundation | COMPLETE | Responsive Forensic Intelligence UI, keyboard/reduced-motion behavior and Windows workflow. |
+| Task 2 Core Platform | COMPLETE | PostgreSQL/Alembic, persistence, history, dashboard and safe API foundation. |
+| Task 3 Message Intelligence | COMPLETE | Local three-class model, rules, conservative fusion and explainability. |
+| Task 4 URL Intelligence | COMPLETE | Strict offline parsing/model/rules/fusion without destination access. |
+| Task 5 Auth + Production | COMPLETE | Argon2id accounts, HttpOnly sessions, CSRF/origin controls, private ownership/deletion and verified Vercel → Render → Neon production. |
+| Task 6 Phone Intelligence | IN PROGRESS | Implementation and automated local verification complete; manual acceptance/merge/deploy pending. |
+| Task 7 QR Intelligence | NOT STARTED | Local file metadata UI only; no upload, decode, camera or intelligence. |
+| Task 8 final integration/reporting | NOT STARTED | No final cross-task evaluation/reporting work begun. |
 
-## Current verification evidence
+## Task 6 implementation
+
+- A pinned offline `phonenumbers==9.0.38` parser requires explicit international `+` context,
+  accepts normal ASCII formatting, normalizes accepted content to E.164, and returns only supported
+  numbering metadata.
+- The dedicated `app.phone_intelligence` engine emits structured `NUMBERING_METADATA` evidence and
+  contextual safety actions. Ordinary, foreign, mobile, fixed, VoIP, invalid and unknown numbers do
+  not receive scam/safe claims. Reliable premium/shared-cost metadata produces `CAUTION` only.
+- Phone results deliberately have no numeric risk or fraud-confidence score. The default outcome is
+  `INSUFFICIENT_EVIDENCE` because numbering metadata cannot establish caller identity or intent.
+- `PHONE` uses the existing authenticated `/api/v1/analyses` path, CSRF/origin checks, database-backed
+  rate limit, owner derivation, persistence, history/detail/delete, dashboard and account cascade.
+- Alembic `0004_phone_intelligence` extends the input/content constraints without changing existing
+  Message/URL data. The destructive rollback test clears only the disposable `*_test` database.
+- Capabilities advertises Phone; readiness verifies Phone engine initialization. Health is unchanged.
+- The frontend Phone mode validates, submits and renders structured Phone metadata/evidence/actions/
+  limitations in the existing design. QR remains disabled and unimplemented.
+
+See [Phone Intelligence](docs/PHONE_INTELLIGENCE.md) for methodology, privacy and limitations.
+
+## Verification evidence
 
 | Check | Observed result |
 | --- | --- |
-| Backend full Pytest with real PostgreSQL | PASS: 171 passed, 1 deliberately skipped live-AI test; 2 existing dependency deprecation warnings. |
-| Authentication/authorization | PASS within full suite: signup, login failures, refresh, logout/revocation, invalid/expired sessions, CSRF/origin, cookie config, A/B isolation, spoof rejection, legacy isolation and cascades. |
-| Alembic | PASS on disposable `scamguard_test`: head/current/check `0003_auth_ownership`; isolated downgrade to `0002` and re-upgrade passed. |
-| TypeScript / ESLint | PASS / PASS; zero lint warnings. |
-| Vitest | PASS: 86 tests in 6 files. |
-| Production frontend build | PASS: 1,758 modules; JS 448.79 kB (134.27 kB gzip), CSS 43.14 kB (8.84 kB gzip). Existing Zod/Rollup annotation warnings only. |
+| Backend Pytest with real PostgreSQL | PASS: 207 passed; 1 explicitly opt-in live-AI test skipped; 2 existing dependency deprecation warnings. |
+| Phone engine/API/security | PASS: international types, normalization, conservative risk, hostile input/no-network guards, auth/CSRF, A/B isolation, spoof rejection, cascade deletion and DB rate limit. |
+| Alembic | PASS in disposable `scamguard_test`: `0004_phone_intelligence` head/current/check and downgrade-to-base/re-upgrade within the full fixture. |
+| Ruff / dependency check | PASS: lint, format check and `pip check`; 58 Python files formatted. |
+| TypeScript / ESLint | PASS / PASS with zero ESLint warnings. |
+| Vitest | PASS: 97 tests in 7 files. |
+| Production frontend build | PASS: 1,759 modules; JS 454.46 kB (135.89 kB gzip), CSS 43.14 kB (8.84 kB gzip). Existing Zod/Rollup annotation warnings only. |
 | Foundation/motion/visual Playwright | PASS: 18 desktop/mobile tests. |
-| Built offline preview | PASS: 6 desktop/mobile tests for protected redirects, public Help/privacy, keyboard and reduced motion. |
-| Real PostgreSQL browser suite | PASS: 8 desktop/mobile cases including auth lifecycle, Message/URL results, refresh persistence and deletions. |
-| Ruff / pip check | PASS: lint and format for 53 Python files; no broken requirements. |
-| Package artifact verification | PASS: built wheel contains Message `message_tfidf_v1.json` and URL `url_model_v1.json`. |
-| Windows launcher | PASS: 14 static safety contracts; actual cold start/current migration, health/readiness, duplicate reuse, clean stop and idempotent stop. |
-| Health/readiness smoke | PASS: process ok, PostgreSQL connected, Message ready, URL ready. |
-| Neon PostgreSQL production | USER-VERIFIED: deployed and connected. No secret was added to Git. |
-| Render FastAPI production | USER-VERIFIED: live; Alembic succeeded; health 200 and readiness PASS for database and both intelligence engines. |
-| Vercel Task 5 frontend | PENDING: main merge/redeployment and same-origin proxy verification. Production auth/history flows not yet tested. |
-
-Task 4's accepted evidence remains in [Task 4 report](docs/TASK_4_REPORT.md) and the prior Git history.
-Task 5 does not change Message/URL risk logic, datasets or evaluation. External contextual AI remains
-disabled by default and was not called. URL no-fetch guards remain mandatory.
+| Built offline preview | PASS: 6 desktop/mobile protected-route, public Help, keyboard and reduced-motion tests. |
+| Real PostgreSQL Playwright | PASS: 10 desktop/mobile tests, including login → Phone submit → result → history → refresh persistence. |
+| Packaging | PASS: wheel contains Phone modules, both existing model artifacts, and pinned `phonenumbers==9.0.38` runtime metadata. |
+| Secret scan | PASS: reviewed Task 6 source/diff contains no real API key, database credential, private key or environment secret; only explicit local/CI examples remain. |
 
 ## Known limitations
 
-- Vercel and Render are cross-site origins. Production uses `Secure; SameSite=None`; restrictive
-  third-party-cookie policies must be checked against the real deployment. Do not weaken CSRF/CORS to
-  work around a failure.
-- Render/Neon free services can suspend or cold-start and have compute/storage/egress limits. The free
-  single-instance Render workflow migrates on startup because its pre-deploy command is paid-only.
+- Numbering metadata does not prove assignment, subscriber identity, caller authenticity, reputation,
+  spoofing, intent or fraud. Task 6 has no external lookup or reputation feed.
+- Metadata may become stale; upgrading `phonenumbers` requires an intentional dependency update and
+  regression review.
+- Existing Message/URL dataset and score limitations remain. Scores are modality-specific decision
+  support, never fraud probabilities.
 - Database rate limiting is basic abuse control, not enterprise bot/DDoS protection.
-- Provider backup retention/deletion, legal privacy language, incident response and broader public
-  operational controls need owner review.
-- Message and URL model dataset limitations remain; results are decision support, never guarantees.
+- Provider backup retention/deletion, formal legal privacy language, incident response and broad
+  public operational controls remain owner responsibilities.
 
 ## Review boundary
 
-The user has authorized a safe no-fast-forward merge of the verified Task 5 branch into `main` and a
-main push. Stop after merge/remote verification. Do not expose a secret or begin Phone, QR, community,
-campaign or adaptive-learning work.
+Do not merge or deploy Task 6 until the user completes manual testing. Do not change Vercel, Render or
+Neon production settings. Do not begin Task 7 or Task 8.

@@ -14,6 +14,8 @@ from app.api.analysis_schemas import (
 from app.core.errors import ApiError
 from app.db.models import Analysis, AnalysisStatus, InputType
 from app.ml.engine import MessageIntelligenceEngine
+from app.phone_intelligence.engine import PhoneIntelligenceEngine
+from app.phone_intelligence.parsing import parse_phone_number
 from app.url_intelligence.engine import URLIntelligenceEngine
 from app.url_intelligence.parsing import parse_url
 
@@ -65,9 +67,15 @@ def record_submission(
     data: AnalysisCreate,
     engine: MessageIntelligenceEngine,
     url_engine: URLIntelligenceEngine,
+    phone_engine: PhoneIntelligenceEngine,
     user_id: UUID,
 ) -> AnalysisDetail:
-    content = parse_url(data.content).original if data.input_type == InputType.URL else data.content
+    if data.input_type == InputType.URL:
+        content = parse_url(data.content).original
+    elif data.input_type == InputType.PHONE:
+        content = parse_phone_number(data.content).e164
+    else:
+        content = data.content
     record = Analysis(input_type=data.input_type, content=content, user_id=user_id)
     session.add(record)
     session.commit()  # First durable boundary: the validated intake exists.
@@ -75,7 +83,14 @@ def record_submission(
     record.status = AnalysisStatus.PROCESSING
     session.commit()
     try:
-        result = (url_engine if data.input_type == InputType.URL else engine).analyse(data.content)
+        selected_engine = (
+            url_engine
+            if data.input_type == InputType.URL
+            else phone_engine
+            if data.input_type == InputType.PHONE
+            else engine
+        )
+        result = selected_engine.analyse(data.content)
         record.status = AnalysisStatus.COMPLETED
         record.risk_level = result.risk_level
         record.risk_score = result.risk_score

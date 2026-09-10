@@ -13,6 +13,7 @@ import {
 import type { Assessment } from '../../lib/api'
 import {
   isURLAssessment,
+  isPhoneAssessment,
   orderedEvidence,
   riskCopy,
   riskScorePresentation,
@@ -32,7 +33,9 @@ export function ConfidenceBadge({ assessment }: { assessment: Assessment }) {
       <p className="mt-1 text-[11px] leading-5 text-muted">
         {isURLAssessment(assessment)
           ? 'Local classifier strength, not certainty about the website.'
-          : 'Model and evidence strength, not a probability of fraud.'}
+          : isPhoneAssessment(assessment)
+            ? 'Unavailable: numbering metadata cannot measure fraudulent intent.'
+            : 'Model and evidence strength, not a probability of fraud.'}
       </p>
     </div>
   )
@@ -78,12 +81,18 @@ export function RiskScoreDisplay({ assessment }: { assessment: Assessment }) {
           />
         </div>
       ) : (
-        <p className="mt-3 text-xs text-muted">Not enough evidence to score.</p>
+        <p className="mt-3 text-xs text-muted">
+          {isPhoneAssessment(assessment)
+            ? 'No defensible numeric score from numbering metadata alone.'
+            : 'Not enough evidence to score.'}
+        </p>
       )}
       <p id={`${id}-note`} className="mt-3 text-[11px] leading-5 text-muted">
         {isURLAssessment(assessment)
           ? 'Category position, not a scam percentage.'
-          : 'Combined indicator strength, not a scam percentage.'}
+          : isPhoneAssessment(assessment)
+            ? 'No invented probability or category-to-number conversion.'
+            : 'Combined indicator strength, not a scam percentage.'}
       </p>
       <details className="score-method mt-3 text-[11px]">
         <summary className="inline-flex min-h-8 cursor-pointer items-center gap-2 rounded font-semibold text-body">
@@ -92,8 +101,8 @@ export function RiskScoreDisplay({ assessment }: { assessment: Assessment }) {
         <div className="disclosure-content mt-2 space-y-2 leading-5 text-muted">
           <p>{score.explanation}</p>
           <p>
-            These two score methods are not comparable across Message and URL. Use the risk level
-            and evidence to guide your next step.
+            Score methods are domain-specific and are not comparable across analysis types. Use the
+            risk level and evidence to guide your next step.
           </p>
         </div>
       </details>
@@ -113,7 +122,12 @@ export function AnalysisResultHero({ assessment }: { assessment: Assessment }) {
     <section className="result-hero" aria-label="Result summary">
       <div className="flex items-center justify-between gap-3">
         <p className="eyebrow !text-[9px]">
-          {isURLAssessment(assessment) ? 'URL' : 'MESSAGE'} / ASSESSMENT
+          {isURLAssessment(assessment)
+            ? 'URL'
+            : isPhoneAssessment(assessment)
+              ? 'PHONE'
+              : 'MESSAGE'}{' '}
+          / ASSESSMENT
         </p>
         <span className="risk-icon">
           <Icon size={22} strokeWidth={1.6} aria-hidden="true" />
@@ -137,7 +151,9 @@ export function AnalysisResultHero({ assessment }: { assessment: Assessment }) {
           <p className="mt-1 text-[10px] leading-5 text-muted">
             {isURLAssessment(assessment)
               ? 'Highest severity first; one signal per evidence family.'
-              : 'Selected detected signals in source order; individual contributions are not measured.'}
+              : isPhoneAssessment(assessment)
+                ? 'Numbering metadata ordered by relevance; it does not identify the caller.'
+                : 'Selected detected signals in source order; individual contributions are not measured.'}
           </p>
         </div>
       )}
@@ -148,6 +164,11 @@ export function AnalysisResultHero({ assessment }: { assessment: Assessment }) {
       {isURLAssessment(assessment) && (
         <p className="mt-2 text-[11px] leading-5 text-muted">
           URL structure was analysed without opening the website. HTTPS does not guarantee safety.
+        </p>
+      )}
+      {isPhoneAssessment(assessment) && (
+        <p className="mt-2 text-[11px] leading-5 text-muted">
+          The number was not called, messaged or sent to an external reputation service.
         </p>
       )}
     </section>
@@ -177,6 +198,7 @@ export function EvidenceCard({
                 ? 'Grounded contextual review'
                 : 'Local indicator'}
             {item.source === 'REPUTATION' ? ' · Reputation signal' : ''}
+            {item.source === 'NUMBERING_METADATA' ? ' · Numbering metadata' : ''}
           </p>
           {'explanation' in item && (
             <p className="mt-2 text-xs leading-6 text-body">{item.explanation}</p>
@@ -190,11 +212,19 @@ export function EvidenceCard({
 
 export function EvidencePanel({ assessment }: { assessment: Assessment }) {
   const url = isURLAssessment(assessment)
+  const phone = isPhoneAssessment(assessment)
   return (
-    <section className="result-section" aria-label="Detected evidence">
+    <section
+      className="result-section"
+      aria-label={isPhoneAssessment(assessment) ? 'Phone numbering evidence' : 'Detected evidence'}
+    >
       <h3 className="flex items-center gap-2 text-sm font-semibold">
         <Fingerprint size={16} className="text-accent" aria-hidden="true" />
-        {url ? 'URL evidence and structural indicators' : 'Detected evidence'}
+        {url
+          ? 'URL evidence and structural indicators'
+          : phone
+            ? 'Phone numbering evidence'
+            : 'Detected evidence'}
       </h3>
       {assessment.evidence.length > 0 ? (
         <ul className="mt-4 space-y-3">
@@ -206,7 +236,9 @@ export function EvidencePanel({ assessment }: { assessment: Assessment }) {
         <p className="mt-4 rounded-lg border border-dashed border-control p-4 text-xs leading-6 text-muted">
           {url
             ? 'No structural warning was found. This does not verify the destination.'
-            : 'No deterministic or grounded contextual indicator was found.'}
+            : phone
+              ? 'No usable numbering metadata was found. No caller assessment can be made.'
+              : 'No deterministic or grounded contextual indicator was found.'}
         </p>
       )}
     </section>

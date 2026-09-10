@@ -1,6 +1,6 @@
 # SCAMGUARD architecture
 
-Audited 2026-09-08. Read `PROGRESS.md` for executed verification and `DECISIONS.md` for constraints. The product uses the warm-light Forensic Intelligence identity and a general international scope.
+Audited 2026-09-10. Read `PROGRESS.md` for executed verification and `DECISIONS.md` for constraints. The product uses the warm-light Forensic Intelligence identity and a general international scope.
 
 ## CURRENTLY IMPLEMENTED
 
@@ -17,14 +17,20 @@ React Router → AuthProvider → public Sign In / Sign Up / Help
           optional backend-only grounded external contextual review
           conservative Message-specific fusion
                                   → local offline URL intelligence engine/artifact
-        SQLAlchemy/Psycopg → PostgreSQL → Alembic 0001 + 0002 + 0003
+                                  → local offline Phone numbering/rules engine
+        SQLAlchemy/Psycopg → PostgreSQL → Alembic 0001 + 0002 + 0003 + 0004
 ```
 
 ### Frontend
 
-React 18, TypeScript, Vite and Tailwind provide the responsive application. `AppShell` supplies the desktop sidebar, mobile navigation, skip link, focused route headings and titles. The design system centralizes the Forensic Intelligence tokens, short motion and `prefers-reduced-motion` behavior.
+React 19, TypeScript, Vite and Tailwind provide the responsive application. `AppShell` supplies the desktop sidebar, mobile navigation, skip link, focused route headings and titles. The design system centralizes the Forensic Intelligence tokens, short motion and `prefers-reduced-motion` behavior.
 
-The four typed Analyse modes are Message, URL, Phone and QR. Message submits only when both storage and Message intelligence are advertised. It displays real risk, separate confidence, evidence, actions, components, versions and limitations returned by the API. URL validates, runs a separate offline URL classifier/evidence/fusion pipeline, and persists an assessment without destination access. Phone is a local text draft. QR keeps local file metadata only for one PNG/JPEG/WEBP up to 5 MiB; no bytes are read, decoded, uploaded or persisted. Phone/QR controls remain disabled for analysis.
+The four typed Analyse modes are Message, URL, Phone and QR. Message submits only when both storage
+and intelligence are advertised. URL runs a separate offline classifier/evidence/fusion pipeline and
+persists without destination access. Phone requires explicit international context, normalizes through
+the shared API, and displays conservative offline numbering evidence without a numeric fraud score.
+QR keeps local file metadata only for one PNG/JPEG/WEBP up to 5 MiB; no bytes are read, decoded,
+uploaded or persisted, and QR analysis remains disabled.
 
 Overview uses only the authenticated user's database totals, flagged counts, latest time and recent
 records. A flagged record has stored `ELEVATED` or `HIGH` risk. Loading, unavailable, failure and
@@ -37,8 +43,8 @@ FastAPI owns the `/api/v1` contract, request IDs, no-store/nosniff headers, cred
 CORS, safe error envelopes and bounded bodies. Argon2id protects passwords. Opaque session/CSRF
 secrets are HMAC-digested in PostgreSQL, sessions expire/revoke, and Origin plus synchronizer-token
 checks protect state changes. SQLAlchemy sessions use explicit commits and rollback/close handling.
-PostgreSQL readiness checks connectivity and required domain/identity tables; startup verifies both
-model artifacts.
+PostgreSQL readiness checks connectivity and required domain/identity tables; startup verifies
+Message, URL and Phone engine initialization.
 
 Message processing is synchronous after durable intake. The checksum-verified JSON artifact contains a three-class word-ngram TF-IDF Logistic Regression model (`LEGITIMATE`, `SPAM`, `SCAM`); no pickle is loaded. Deterministic indicators cover urgency, threat, credentials, financial requests, impersonation, prizes, investments, job/tasks, delivery/account themes, secrecy, redirection and suspicious actions. Context rules suppress safety, education and negated examples.
 
@@ -53,6 +59,8 @@ Alembic `0001_analysis_intake` creates the analyses table and constraints. Addit
 `0003_auth_ownership` adds normalized users, hashed server-side sessions, hashed PostgreSQL rate
 buckets and nullable `analyses.user_id`. Historical rows remain null and invisible; new application
 writes always receive the authenticated user ID. User deletion cascades sessions and owned analyses.
+Additive `0004_phone_intelligence` extends the input-type and per-type length checks for PHONE without
+rewriting existing records. Accepted Phone drafts are stored in normalized E.164 form.
 
 `AnalysisStatus` is `SUBMITTED`, `PROCESSING`, `COMPLETED`, or `FAILED`. Message and URL records
 normally complete. Historical intake-only records remain submitted. The `(user_id, created_at DESC,
@@ -66,16 +74,32 @@ auth pepper, at least one exact HTTPS CORS origin, persistence, and `Secure; Sam
 Model paths and optional AI settings are environment controlled; secrets use `SecretStr` and are
 never returned.
 
-The production target is Vercel Vite → Render FastAPI → Neon PostgreSQL. Render receives secrets;
-Vercel receives only the public HTTPS API base. `render.yaml` builds the backend and the single-instance
+The user-verified production target is Vercel Vite → same-origin `/api/v1` CDN rewrite → Render
+FastAPI → Neon PostgreSQL. Render receives secrets; Vercel uses public routing only. `render.yaml`
+builds the backend and the single-instance
 free-tier start script applies Alembic before Uvicorn. Message and URL artifacts are packaged JSON,
-checksum-verified and never runtime-downloaded. This architecture is configured, but hosted services
-and external acceptance are not yet verified. See [PRODUCTION_DEPLOYMENT.md](PRODUCTION_DEPLOYMENT.md),
+checksum-verified and never runtime-downloaded; Phone numbering metadata ships in the pinned Python
+dependency. Task 6 does not change production configuration or deployment. See
+[PRODUCTION_DEPLOYMENT.md](PRODUCTION_DEPLOYMENT.md),
 [AUTHENTICATION.md](AUTHENTICATION.md), and [PRIVACY_MODEL.md](PRIVACY_MODEL.md).
 
 ## PLANNED ARCHITECTURE
 
-Live URL reputation adapters and remote webpage inspection, phone normalization/reporting/reputation, screenshot/OCR, QR decoding and URL/payment routing, cross-modal unified risk, community moderation, controlled adaptive learning, campaign intelligence and Model Lab are not implemented. Suspicious URLs must never be automatically browsed. Community reports must not directly retrain or promote a model. Genuine metrics and held-out evaluation are required for every learned component.
+Live URL reputation adapters and remote webpage inspection, Phone reputation/subscriber lookup,
+screenshot/OCR, QR decoding and URL/payment routing, cross-modal unified risk, community moderation,
+controlled adaptive learning, campaign intelligence and Model Lab are not implemented. Suspicious
+URLs must never be automatically browsed. Community reports must not directly retrain or promote a
+model. Genuine metrics and held-out evaluation are required for every learned component.
+
+## Task 6 Phone domain
+
+The service routes PHONE to `app/phone_intelligence` through the same authenticated analysis service.
+The parser pins `phonenumbers==9.0.38`, requires `+` international context, rejects hostile/ambiguous
+forms, and normalizes accepted values to E.164. The engine emits only supported bundled numbering
+metadata and rules-based evidence. Premium/shared-cost metadata may produce CAUTION; all other
+Phone-only cases conservatively report INSUFFICIENT_EVIDENCE. There is no Phone ML classifier,
+probability, provider, destination access, call/message, identity lookup or reputation adapter.
+History reads stored results without re-running parsing. See `PHONE_INTELLIGENCE.md`.
 
 Task 3 fusion applies only to Message evidence; it is not the planned cross-modal risk engine. A future queue/worker is also unselected and should be justified by measured latency or reliability needs rather than added speculatively.
 

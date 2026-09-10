@@ -136,7 +136,7 @@ describe('application routes and API states', () => {
     for (const [, options] of vi.mocked(fetch).mock.calls) expect(options?.method).toBeUndefined()
   })
 
-  it('offers four typed modes while phone and QR remain local planned interfaces', async () => {
+  it('offers four typed modes while unavailable capabilities and QR remain disabled', async () => {
     const user = userEvent.setup({ applyAccept: false })
     renderApp('/analyse')
     await screen.findByLabelText('Message content')
@@ -155,7 +155,7 @@ describe('application routes and API states', () => {
     expect(phone).toHaveAttribute('placeholder', '+60 12-345 6789')
     await user.type(phone, '+44 20 7946 0958')
     expect(screen.getByRole('button', { name: 'Analyse phone number' })).toBeDisabled()
-    expect(screen.getByText(/Phone intelligence will be available/)).toBeInTheDocument()
+    expect(screen.getByText(/ScamGuard checks numbering-plan metadata only/)).toBeInTheDocument()
 
     await user.click(screen.getByRole('tab', { name: 'QR Code' }))
     const input = screen.getByLabelText('Upload a QR screenshot or image')
@@ -371,7 +371,7 @@ describe('application routes and API states', () => {
     expect(await screen.findByRole('heading', { name: 'Help & Support' })).toBeInTheDocument()
     expect(screen.getAllByRole('group')).toHaveLength(20)
     await user.type(screen.getByLabelText('Search help'), 'QR')
-    expect(screen.getByText('2 answers available')).toBeInTheDocument()
+    expect(screen.getByText('3 answers available')).toBeInTheDocument()
     await user.clear(screen.getByLabelText('Search help'))
     await user.click(screen.getByRole('button', { name: 'Prepare feedback' }))
     expect(screen.getByText('Choose a feedback category.')).toBeInTheDocument()

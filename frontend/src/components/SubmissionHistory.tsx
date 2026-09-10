@@ -6,6 +6,8 @@ import { ErrorState, LoadingState } from './States'
 import { AssessmentResult } from './analysis/URLResult'
 import { riskCopy } from '../lib/resultPresentation'
 
+const inputLabels = { MESSAGE: 'Message', URL: 'URL', PHONE: 'Phone' } as const
+
 export function SubmissionRows({ items }: { items: AnalysisSummary[] }) {
   const prefix = useId()
   const [selected, setSelected] = useState<string | null>(null)
@@ -24,9 +26,7 @@ export function SubmissionRows({ items }: { items: AnalysisSummary[] }) {
             onClick={() => setSelected(selected === item.id ? null : item.id)}
           >
             <span className="flex flex-wrap items-center justify-between gap-2">
-              <span className="text-sm font-semibold">
-                {item.input_type === 'MESSAGE' ? 'Message' : 'URL'}
-              </span>
+              <span className="text-sm font-semibold">{inputLabels[item.input_type]}</span>
               <span className="status-chip">{item.status.replace('_', ' ')}</span>
             </span>
             {item.risk_level && (

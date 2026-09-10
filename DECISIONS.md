@@ -6,7 +6,7 @@ Recorded: 2026-09-03, Asia/Kuala_Lumpur. These decisions come from the current i
 | --- | --- | --- |
 | D01 | FastAPI backend | Implemented with an application factory, Pydantic schemas/settings and versioned routes. Keep a clear HTTP boundary and centralized safe errors. |
 | D02 | React + TypeScript frontend | Implemented with strict compiler settings, React Router, TanStack Query, and Zod. Preserve typed presentation and runtime validation at the network boundary. |
-| D03 | PostgreSQL with SQLAlchemy/Psycopg and Alembic | Implemented through additive revision `0003_auth_ownership`, with real readiness, explicit transactions and isolated PostgreSQL integration/migration tests. Do not substitute an in-memory database for persistence evidence. |
+| D03 | PostgreSQL with SQLAlchemy/Psycopg and Alembic | Implemented through additive revision `0004_phone_intelligence`, with real readiness, explicit transactions and isolated PostgreSQL integration/migration tests. Do not substitute an in-memory database for persistence evidence. |
 | D04 | Forensic Intelligence identity | Implemented warm light ivory/charcoal/terracotta/olive theme. Tokens, branding, footer, documentation and screenshot assets agree. Preserve accessibility and professional workspace layout. |
 | D05 | Real database-derived analytics only | Dashboard totals/latest/recent and flagged counts query only the authenticated user's persisted submissions. No production fake data or synthetic fallback. Unavailable is distinct from measured zero. |
 | D06 | Controlled adaptive learning | Planned only. Feedback must be validated/moderated, datasets and models versioned, evaluation reproducible, and promotion explicit with rollback. Unreviewed community input must never trigger automatic training or deployment. |
@@ -14,9 +14,9 @@ Recorded: 2026-09-03, Asia/Kuala_Lumpur. These decisions come from the current i
 | D08 | Genuine ML metrics only | No models, training code, dataset, predictions or evaluation metrics exist. Future metrics must come from documented reproducible experiments, with provenance and leakage-resistant splits. Heuristics and demonstrations must be labelled accurately. |
 | D09 | Separate risk from confidence | Planned result-contract rule. Risk and strength of supporting evidence are different quantities; neither may be fabricated or substituted for the other. No current API field or UI score implements this decision. |
 | D10 | Insufficient-information outcome | Planned explicit domain state for missing, unsupported or inconclusive evidence. It must not imply “safe.” It differs from current analysis-unavailable and network-error states; no assessment outcome exists yet. |
-| D11 | Distinct liveness, readiness and capabilities | Implemented: health is process liveness; readiness verifies database/tables and Message/URL artifacts; capabilities reports supported modes. “API connected” alone is not proof of readiness. |
-| D12 | Minimal navigation and honest unavailable behavior | Implemented public Sign In, Sign Up and Help plus protected Overview, Analyse and Account routes. Phone/QR remain unavailable drafts; no fixture replaces a failed API/account/result. |
-| D13 | Privacy before content collection | Task 5 adds real accounts, ownership, private history, individual/account deletion and basic abuse controls. Phone/QR drafts remain local. Formal retention/backups, legal notices, incident response and broad-public operational controls still require owner review. See D41–D44. |
+| D11 | Distinct liveness, readiness and capabilities | Implemented: health is process liveness; readiness verifies database/tables and all required local engines; capabilities reports supported modes. “API connected” alone is not proof of readiness. |
+| D12 | Minimal navigation and honest unavailable behavior | Implemented public Sign In, Sign Up and Help plus protected Overview, Analyse and Account routes. Phone is live only when advertised; QR remains an unavailable draft. No fixture replaces a failed API/account/result. |
+| D13 | Privacy before content collection | Task 5 adds real accounts, ownership, private history, individual/account deletion and basic abuse controls. Task 6 persists only normalized, authenticated Phone submissions and uses no external lookup; QR drafts remain local. Formal retention/backups, legal notices, incident response and broad-public operational controls still require owner review. See D41–D44 and D46–D47. |
 | D14 | Preserve contracts during redesigns | Implemented visual migration retained backend and API/client behavior. Future functional contract evolution must be explicitly scoped and coordinated across schemas, tests, and docs. Never enable capabilities based solely on a frontend control. |
 | D15 | Explicit task boundaries and honest evidence | Task 1 and its visual migration were delivered; the memory-handoff task added documentation only. No automatic Task 2 continuation. Preserve tests and historical evidence; record skips, unrun CI, environment limits and actual completion status. See D16 for the later deployment-preparation scope. |
 
@@ -217,3 +217,21 @@ authorized main merge/redeployment, and its same-origin API proxy plus signup/lo
 flow remain unverified. The user authorizes a documentation-only checkpoint commit, feature-branch
 push, no-fast-forward Task 5 merge into `main`, and main push. Do not infer Vercel success from the Git
 push; stop without beginning Task 6.
+
+## D46 — International offline Phone normalization (2026-09-10)
+
+Task 6 pins `phonenumbers==9.0.38` and requires an explicit `+` country calling code because the
+existing compact UI has no region selector and silently assuming Malaysia would be incorrect. Normal
+ASCII spaces, hyphens and balanced parentheses are accepted; authoritative backend parsing normalizes
+accepted values to E.164 before persistence. Only bundled numbering-plan metadata is used. No call,
+message, identity/reverse lookup, external reputation request or optional AI request is permitted.
+
+## D47 — Conservative Phone risk and shared pipeline (2026-09-10)
+
+A valid ordinary, foreign, mobile, fixed, VoIP or unknown number is not evidence of safety or fraud.
+Invalid/impossible numbering is a format finding, not a High verdict. Reliable valid premium-rate or
+shared-cost metadata may produce CAUTION only. All other Phone-only results report
+INSUFFICIENT_EVIDENCE. Phone exposes no numeric risk/confidence score because no defensible probability
+or calibrated model exists. PHONE extends the authenticated `/api/v1/analyses` pipeline, database
+ownership/rate limit/history/dashboard/delete behavior and readiness/capabilities; it does not create a
+parallel endpoint. Alembic `0004_phone_intelligence` changes only input/content constraints.
