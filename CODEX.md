@@ -2,13 +2,11 @@
 
 SCAMGUARD is a general **Multi-Modal Scam Detection & Reporting Web Application**. Its approved
 visual identity is **Forensic Intelligence**: warm light ivory, charcoal, terracotta and olive with
-restrained editorial motion. The repository has completed Task 1 Foundation, Task 2 Core Platform
-and Task 3 Message Intelligence; Task 4 URL Intelligence is COMPLETE and merged to main at `386e4b7`,
-with its accepted UI closure merged at `080e800`. Task 5 Authentication, Ownership, Privacy and
-Production is ready for its authorized main merge from `task-5-auth-production`: Neon and Render
-readiness are user-verified, while Vercel Task 5 auth/private-history acceptance remains pending.
-Never infer functionality from
-a planned UI control, roadmap line, screenshot or old conversation.
+restrained editorial motion. Tasks 1–5 are complete, including user-verified Vercel → Render → Neon
+production. Task 6 Phone Intelligence is implemented and locally verified on
+`task-6-phone-intelligence`, but awaits manual acceptance and must not be merged or deployed yet.
+Task 7 QR Intelligence and Task 8 final integration/reporting have not started. Never infer
+functionality from a planned UI control, roadmap line, screenshot or old conversation.
 
 ## Required reading order
 
@@ -35,7 +33,11 @@ Current source is authoritative when historical wording conflicts.
   intentional contract change across backend schemas, frontend validation, tests and `docs/API.md`.
 - Liveness, database readiness, submission availability and intelligence capability are different.
   Never combine them into a misleading healthy, safe or supported claim.
-- MESSAGE and URL intelligence are implemented. URL uses its separate offline parser/model/rules/fusion, never destination requests. Real Task 5 accounts, server-side sessions, ownership and privacy controls now exist on the Task 5 branch. PHONE and QR remain local UI only. No phone, image, QR, payment, community, campaign or adaptive learning feature may be claimed from scaffolding.
+- MESSAGE, URL and PHONE intelligence are implemented. URL never requests destinations. Phone uses
+  pinned offline numbering metadata, requires explicit international context, and never identifies or
+  contacts a subscriber. Task 5 accounts, server-side sessions, ownership and privacy controls remain
+  mandatory. QR is still local UI only; no QR, image, payment, community, campaign or adaptive
+  learning feature may be claimed from scaffolding.
 - Keep the frontend useful with approved loading/error/empty/unavailable states. Never replace a
   failed API response with production mock data.
 - Use Alembic only; no startup `create_all`, implicit commits, destructive reset, SQLite substitute
@@ -84,8 +86,10 @@ Current source is authoritative when historical wording conflicts.
 - Optional external AI is backend-only, disabled by default, uses best-effort redaction and strict
   grounded structured output. No key in `VITE_*`, source, tests or logs. Provider failure must not
   erase local evidence or prevent a local result.
-- Phone/QR stay local and disabled. Never read/upload QR bytes or request camera access in current
-  scope. Never reuse private submissions for model training without explicit permission.
+- Phone numbers are persisted only after authenticated submission and are never sent to external
+  providers. Never log complete submissions unnecessarily. QR stays local and disabled: never
+  read/upload QR bytes or request camera access. Never reuse private submissions for model training
+  without explicit permission.
 
 ## Git safety and task boundaries
 
@@ -93,10 +97,9 @@ Current source is authoritative when historical wording conflicts.
   commits, discard user work, expose ignored secrets, or alter the configured remote casually.
 - Keep `node_modules`, `.venv`, `dist`, caches, coverage, logs, `.local`, test output and secrets
   ignored. Dataset source and reviewed model artifacts are intentional versioned research assets.
-- Tasks 2, 3 and 4 plus the accepted UI closure are merged to `main` (`386e4b7`, `080e800`). Task 5
-  is explicitly authorized for a safe no-fast-forward main merge after recording its production
-  checkpoint. Retain prior branches/history. Stop after the main push; Phone/QR intelligence,
-  community reporting and adaptive learning remain out of scope.
+- Tasks 1–5 are merged to `main`. Retain prior branches/history. Task 6 must stay on
+  `task-6-phone-intelligence` until manual acceptance; do not merge or deploy it automatically. Do not
+  begin Task 7 QR Intelligence or Task 8 final integration/reporting.
 
 ## Definition of done and completion procedure
 

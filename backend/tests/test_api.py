@@ -47,6 +47,7 @@ def test_readiness_probes_database(app, client):
         "database": "connected",
         "message_intelligence": "ready",
         "url_intelligence": "ready",
+        "phone_intelligence": "ready",
     }
     assert str(session.execute.call_args.args[0]) == "SELECT 1"
 
@@ -64,6 +65,13 @@ def test_readiness_returns_safe_503_when_database_fails(app, client):
 
 def test_readiness_rejects_a_missing_required_model(app, client):
     app.state.url_engine.classifier = None
+    response = client.get("/api/v1/ready")
+    assert response.status_code == 503
+    assert response.json()["error"]["code"] == "INTELLIGENCE_UNAVAILABLE"
+
+
+def test_readiness_rejects_a_missing_phone_engine(app, client):
+    app.state.phone_engine = None
     response = client.get("/api/v1/ready")
     assert response.status_code == 503
     assert response.json()["error"]["code"] == "INTELLIGENCE_UNAVAILABLE"

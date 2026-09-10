@@ -239,7 +239,7 @@ test('text, controls, and focus tokens have sufficient contrast in the light the
   expect(contrast('control', 'surface')).toBeGreaterThanOrEqual(3)
 })
 
-test('planned phone and QR modes preserve local privacy, file focus and reduced motion', async ({
+test('unavailable Phone and planned QR modes preserve local privacy, file focus and reduced motion', async ({
   page,
 }, testInfo) => {
   const failures: string[] = []

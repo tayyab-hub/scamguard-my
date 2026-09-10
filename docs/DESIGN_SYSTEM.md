@@ -48,7 +48,13 @@ Skip navigation, semantic landmarks, route-heading focus, tab keyboard interacti
 
 The regression suite checks selected normal-text token pairs at a minimum 4.5:1 contrast and selected focus/control boundaries at 3:1. CSS honors reduced-motion preference. These checks complement screenshot inspection and do not replace a full accessibility audit. Interactive controls retain visible focus; programmatically focused page/main landmarks intentionally suppress the default outline while supporting skip navigation and route announcements.
 
-Loading, request failure, retry, explicit empty history, unavailable metrics, and analysis-unavailable messages all use the same light theme. Em dashes continue to mean unavailable values. No synthetic records or fabricated analytics appear. Message/URL drafts remain local until an available storage service accepts submission. Completed Message records show real risk, separate confidence, grounded evidence, actions and limitations without an absolute verdict. URL records display `SUBMITTED` with no assessment; Phone/QR stay disabled. Real counts/history use the existing panels/tokens; unavailable values remain unavailable.
+Loading, request failure, retry, explicit empty history, unavailable metrics, and analysis-unavailable
+messages all use the same light theme. Em dashes continue to mean unavailable values. No synthetic
+records or fabricated analytics appear. Message/URL/Phone drafts remain local until an available
+storage service accepts submission. Completed records show domain-appropriate risk, separate
+confidence when meaningful, grounded evidence, actions and limitations without an absolute verdict.
+Phone deliberately has no numeric score and becomes available only when advertised. QR stays
+disabled. Real counts/history use the existing panels/tokens; unavailable values remain unavailable.
 
 ## Motion and interaction
 
@@ -78,7 +84,11 @@ Motion is declarative CSS; no animation timers, new manual DOM animation or anim
 
 ## Visual evidence
 
-See [SCREENSHOTS.md](SCREENSHOTS.md) for current desktop/mobile Overview and Analyse captures, and [REDESIGN.md](REDESIGN.md) for the historical migration checks, preservation audit, and limitations. [TESTING.md](TESTING.md) documents opt-in screenshot refresh and manual review. The suite captures images and checks behavior/layout; it does not compare golden-image pixels. The September 4 interface enhancement refreshes Analyse and adds Phone/QR desktop/mobile captures. Phone uses a compact natural-entry field; QR uses a dashed local selection area, filename feedback and removable selection. Both have an Upcoming state and an explained disabled action. No camera, decoder, reputation check or assessment is implied. The warm light theme is the only supported theme; there is no alternate legacy palette.
+See [SCREENSHOTS.md](SCREENSHOTS.md) for historical desktop/mobile captures and [TESTING.md](TESTING.md)
+for current browser checks. The suite captures images and checks behavior/layout; it does not compare
+golden-image pixels. Task 6 preserves the compact Phone field and adds result panels using the shared
+hero/evidence/actions/metadata vocabulary. QR retains its dashed local selection area and disabled
+action; no camera, decoder or assessment is implied. The warm light theme is the only supported theme.
 
 ## Task 2 persistence and Task 3 Message result presentation
 

@@ -4,7 +4,7 @@ import { FileText, Link2, Phone, QrCode } from 'lucide-react'
 export const analysisModes = [
   { type: 'MESSAGE', label: 'Message', icon: FileText, planned: false },
   { type: 'URL', label: 'URL', icon: Link2, planned: false },
-  { type: 'PHONE', label: 'Phone Number', icon: Phone, planned: true },
+  { type: 'PHONE', label: 'Phone Number', icon: Phone, planned: false },
   { type: 'QR', label: 'QR Code', icon: QrCode, planned: true },
 ] as const
 
@@ -26,7 +26,7 @@ export const analysisActions = {
   URL: { label: 'Analyse content', reason: 'Analysis service not enabled' },
   PHONE: {
     label: 'Analyse phone number',
-    reason: 'Phone intelligence will be available in a later milestone.',
+    reason: 'Phone intelligence is not available from the connected service.',
   },
   QR: {
     label: 'Analyse QR',

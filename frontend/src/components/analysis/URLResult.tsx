@@ -1,6 +1,7 @@
 import type { Assessment, URLAssessment } from '../../lib/api'
-import { isURLAssessment } from '../../lib/resultPresentation'
+import { isPhoneAssessment, isURLAssessment } from '../../lib/resultPresentation'
 import { MessageResult } from './MessageResult'
+import { PhoneResult } from './PhoneResult'
 import {
   AnalysisMetaPanel,
   AnalysisResultHero,
@@ -17,6 +18,8 @@ export function AssessmentResult({
 }) {
   return isURLAssessment(assessment) ? (
     <URLResult assessment={assessment} analysisId={analysisId} />
+  ) : isPhoneAssessment(assessment) ? (
+    <PhoneResult assessment={assessment} analysisId={analysisId} />
   ) : (
     <MessageResult assessment={assessment} analysisId={analysisId} />
   )

@@ -36,6 +36,12 @@ def readiness(
             "INTELLIGENCE_UNAVAILABLE",
             "A required local intelligence model is unavailable.",
         )
+    if request.app.state.phone_engine is None:
+        raise ApiError(
+            503,
+            "INTELLIGENCE_UNAVAILABLE",
+            "A required local intelligence component is unavailable.",
+        )
     try:
         session.execute(text("SELECT 1"))
         if request.app.state.settings.persistence_enabled:
@@ -91,6 +97,7 @@ def capabilities(
         analysis_available=True,
         supported_inputs=list(InputType),
         reason=(
-            "Local Message and URL intelligence are available; submitted URLs are never fetched."
+            "Local Message, URL and Phone intelligence are available; submitted URLs are never "
+            "fetched and phone numbers are never contacted."
         ),
     )

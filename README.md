@@ -4,20 +4,12 @@
 
 A general scam-awareness workspace with the approved warm light **Forensic Intelligence** identity. The project was initially Malaysia-focused and was generalized following supervisor feedback. The repository and Vercel domain retain their historical `-my` suffix.
 
-**Task 1 Foundation, Task 2 Core Platform and Task 3 Message Intelligence are complete and merged
-to `main`.** MESSAGE submissions run
-a genuine local three-class model, deterministic evidence rules and conservative fusion, then store
-an explainable result. Optional backend contextual AI is disabled by default. **Task 4 URL Intelligence is COMPLETE and merged to main.** URL submissions now receive local model, structural evidence and conservative risk assessments without fetching destinations. Phone and QR remain local UI only. See [Message Intelligence](docs/MESSAGE_INTELLIGENCE.md),
-[Datasets](docs/DATASETS.md) and [Model Evaluation](docs/MODEL_EVALUATION.md).
-
-**Task 5 Authentication, User Ownership, Privacy Controls and Production Deployment is IN PROGRESS
-on `task-5-auth-production`.** Real accounts, opaque cookie sessions, CSRF protection, private
-analysis ownership/deletion, account deletion and production configuration are implemented and
-locally verified. The user has now verified the Neon production database, Render deployment,
-Alembic migration, health and full database/Message/URL readiness. The existing frontend at
-https://scamguard-my.vercel.app/ still awaits the Task 5 main deployment and proxy verification. See
-[Authentication](docs/AUTHENTICATION.md), [Privacy](docs/PRIVACY_MODEL.md), and
-[Production deployment](docs/PRODUCTION_DEPLOYMENT.md).
+Tasks 1–5 are complete, including the user-verified Vercel → same-origin `/api/v1` rewrite → Render
+→ Neon production architecture. Message and URL run their established local explainable pipelines.
+**Task 6 Phone Intelligence is implemented and locally verified on `task-6-phone-intelligence`; it is
+not merged or deployed pending manual acceptance.** Phone uses offline numbering metadata and
+conservative risk rules; QR remains unimplemented. See [Phone Intelligence](docs/PHONE_INTELLIGENCE.md),
+[Authentication](docs/AUTHENTICATION.md), and [Privacy](docs/PRIVACY_MODEL.md).
 
 ## Project memory
 
@@ -47,7 +39,7 @@ After the one-time setup below, choose one workflow from the repository root:
 2. In a trusted VS Code workspace, allow the **SCAMGUARD: Start Development** folder-open task; run **SCAMGUARD: Stop Development** from **Terminal → Run Task** when finished.
 3. In PowerShell, run `.\dev.ps1` and `.\stop-dev.ps1`. Add `-NoBrowser` when you do not want the launcher to open a browser tab.
 
-The launcher checks the portable PostgreSQL runtime/data, backend `.venv` and `.env`, frontend dependencies, and persistence setting; starts the isolated database on `127.0.0.1:55432`; applies Alembic through `0003_auth_ownership`; and starts the backend and frontend in visible terminals. It reuses healthy SCAMGUARD services and refuses unknown processes on ports 8000, 5173, or 55432 without killing them. Shutdown verifies recorded process identity and stops only launcher-owned app processes, then cleanly stops this repository's PostgreSQL cluster. It never deletes the database. Final URLs are `http://127.0.0.1:5173` and `http://127.0.0.1:8000/api/v1/health`.
+The launcher checks the portable PostgreSQL runtime/data, backend `.venv` and `.env`, frontend dependencies, and persistence setting; starts the isolated database on `127.0.0.1:55432`; applies Alembic through the current head; and starts the backend and frontend in visible terminals. It reuses healthy SCAMGUARD services and refuses unknown processes on ports 8000, 5173, or 55432 without killing them. Shutdown verifies recorded process identity and stops only launcher-owned app processes, then cleanly stops this repository's PostgreSQL cluster. It never deletes the database. Final URLs are `http://127.0.0.1:5173` and `http://127.0.0.1:8000/api/v1/health`.
 
 VS Code intentionally requires workspace trust before an automatic folder-open task runs. Review `.vscode/tasks.json`, `dev.ps1`, and `stop-dev.ps1`, then trust this repository if you want that convenience. No execution-policy setting is changed globally; wrappers use a process-scoped policy for the checked-in scripts.
 
@@ -57,10 +49,9 @@ npm run preview
 ```
 
 Build output is `frontend/dist`; preview is http://127.0.0.1:4173. Static preview has no API proxy.
-Local development may use relative `/api/v1`; a production build requires an explicit non-local
-HTTPS `VITE_API_BASE_URL` including `/api/v1` and must be rebuilt after it changes.
-`API_PROXY_TARGET` is local Vite configuration only (default http://127.0.0.1:8000). Never place
-secrets in `VITE_*` variables.
+Normal development and production requests use relative `/api/v1`; Vite proxies locally and the
+existing Vercel CDN rewrite proxies production requests to Render. `API_PROXY_TARGET` is local Vite
+configuration only (default http://127.0.0.1:8000). Never place secrets in `VITE_*` variables.
 
 ## Local PostgreSQL and API (PowerShell)
 
@@ -90,13 +81,13 @@ Compose creates the configured database with a loopback-only port and persistent
 reviewed production start script. Start the frontend in a second terminal. A changed local API port
 requires matching `API_PROXY_TARGET`. Development API docs are at http://127.0.0.1:8000/docs.
 `GET /api/v1/health` checks process liveness; `/ready` checks PostgreSQL, required identity/domain
-tables and both local intelligence engines. No `create_all()` is used.
+tables and all three local intelligence engines. No `create_all()` is used.
 
-Alembic `0001_analysis_intake` creates intake; additive `0002_message_intelligence` adds result/audit
-fields; additive `0003_auth_ownership` adds users, server-side sessions, database rate buckets and
-nullable ownership. Existing unowned rows survive but are hidden from ordinary accounts. Upgrade →
-downgrade → upgrade and drift checks passed against a disposable real PostgreSQL database. Downgrade
-destroys Task 5 identity/session data and is for disposable test databases only.
+Alembic `0001_analysis_intake` creates intake; `0002_message_intelligence` adds result/audit fields;
+`0003_auth_ownership` adds users, sessions, rate buckets and nullable legacy-compatible ownership;
+and `0004_phone_intelligence` adds the PHONE input/content constraints without rewriting Message/URL
+rows. Upgrade → downgrade → upgrade and drift checks pass against a disposable real PostgreSQL
+database. Downgrade is destructive test activity and must never target development or production.
 
 ## Implemented behavior
 
@@ -104,7 +95,7 @@ destroys Task 5 identity/session data and is for disposable test databases only.
 - Sign In (`/login`), Create Account (`/signup`) and public Help (`/help`); authenticated Overview
   (`/`), Analyse (`/analyse`) and Account (`/account`) routes; plus a catch-all 404. Responsive
   navigation, keyboard focus and reduced-motion CSS remain.
-- MESSAGE: trimmed non-empty text, at most 5,000 characters. URL: validated absolute HTTP(S), at most 2,048 characters; never visited automatically.
+- MESSAGE: trimmed non-empty text, at most 5,000 characters. URL: validated absolute HTTP(S), at most 2,048 characters; never visited automatically. PHONE: explicit international `+` context, normal ASCII formatting, at most 64 characters, normalized to E.164.
 - An authenticated backend accepts `POST /api/v1/analyses`, assigns ownership from the session and
   never accepts a frontend user ID. MESSAGE persists intake, runs local assessment synchronously and
   returns `COMPLETED` with risk, separate confidence, evidence, actions,
@@ -114,10 +105,11 @@ destroys Task 5 identity/session data and is for disposable test databases only.
   untouched-test macro F1 0.8952 and weighted F1 0.9690 on the documented split; these are
   dataset-specific measurements, not a promise for live messages.
 - The local URL random forest achieved held-out macro F1 0.984698, with substantial source homepage/HTTPS bias. ML alone cannot produce elevated/high risk. Runtime parsing uses an offline public-suffix snapshot, and embedded userinfo is removed before storage. No live reputation adapter is configured.
+- Phone uses pinned offline `phonenumbers` metadata. Ordinary/foreign/mobile/fixed/VoIP/unknown or invalid numbers do not receive scam/safe claims; reliable premium/shared-cost metadata produces CAUTION only. No numeric Phone fraud score is invented.
 - Per-user total/latest/recent data, paginated history/detail/deletion and a real flagged count for
-  owned completed ELEVATED/HIGH Message or URL assessments. Empty history means measured zero;
+  owned completed ELEVATED/HIGH Message, URL or Phone assessments. Empty history means measured zero;
   unavailable means unavailable.
-- Phone accepts natural international drafts but cannot submit. QR accepts local filename/size selection for one non-empty PNG/JPEG/WEBP up to 5 MiB; no image reading, upload, storage, decoding or camera access. Unsubmitted drafts/file selection clear on navigation or reload.
+- QR accepts local filename/size selection for one non-empty PNG/JPEG/WEBP up to 5 MiB; no image reading, upload, storage, decoding or camera access. Unsubmitted drafts/file selection clear on navigation or reload.
 - Help search and feedback preparation run locally. `VITE_SUPPORT_EMAIL` is optional and public; when blank, the page truthfully states that online feedback is being prepared. A configured value opens the user's email application and never claims a message was sent.
 
 ## Security and privacy boundary
@@ -138,8 +130,7 @@ retrying; idempotency keys are not implemented.
 
 ## GitHub and Vercel
 
-Keep the existing origin and domain. Task 4 plus its UI closure are on `main`; Task 5 is authorized
-for closure merge from its review branch:
+Keep the existing origin and domain. Task 6 remains on its review branch until manual acceptance:
 
 ```sh
 git status
@@ -147,19 +138,17 @@ git remote -v
 git log --oneline --decorate -n 10
 ```
 
-Vercel settings remain: Root Directory `frontend`, framework Vite, install `npm ci`, build
-`npm run build`, output `dist`, Node 24. A production build must set the public Render HTTPS base as
-`VITE_API_BASE_URL`; `frontend/vercel.json` handles SPA routes. FastAPI is prepared for Render and
-managed PostgreSQL for Neon. See [Production deployment](docs/PRODUCTION_DEPLOYMENT.md).
+Vercel settings and the working CDN rewrite remain unchanged. Root Directory is `frontend`, framework
+Vite, install `npm ci`, build `npm run build`, output `dist`, Node 24. Normal API calls stay relative
+so the rewrite can reach Render. See [Production deployment](docs/PRODUCTION_DEPLOYMENT.md).
 
 ## Verification and next step
 
 [TESTING](docs/TESTING.md) contains exact frontend/backend/real PostgreSQL/browser commands. [PROGRESS](PROGRESS.md) records actual results and limitations. Generated dependencies, builds, local PostgreSQL data, `.env` and test outputs are ignored; lockfiles, source, migrations, tests and intentional documentation screenshots stay tracked.
 
-Task 4 is COMPLETE, verified and merged, including the accepted UI closure. Task 5 is authorized for
-its safe no-fast-forward main merge after recording the verified Neon/Render checkpoint. Production
-Vercel authentication acceptance remains pending. Phone/QR intelligence, community reporting and
-adaptive learning have not started.
+Tasks 1–5 are complete. Task 6 automated local verification is complete but its manual acceptance,
+merge and deployment are pending. Task 7 QR Intelligence and Task 8 final integration/reporting have
+not started.
 
 ## Post-Task 4 UI/UX refinement
 

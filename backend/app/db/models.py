@@ -26,6 +26,7 @@ from app.db.base import Base
 class InputType(StrEnum):
     MESSAGE = "MESSAGE"
     URL = "URL"
+    PHONE = "PHONE"
 
 
 class AnalysisStatus(StrEnum):
@@ -77,14 +78,15 @@ class RateLimitBucket(Base):
 class Analysis(Base):
     __tablename__ = "analyses"
     __table_args__ = (
-        CheckConstraint("input_type IN ('MESSAGE', 'URL')", name="analysis_input_type"),
+        CheckConstraint("input_type IN ('MESSAGE', 'URL', 'PHONE')", name="analysis_input_type"),
         CheckConstraint(
             "status IN ('SUBMITTED', 'PROCESSING', 'COMPLETED', 'FAILED')", name="analysis_status"
         ),
         CheckConstraint("char_length(btrim(content)) > 0", name="ck_analyses_content_nonempty"),
         CheckConstraint(
             "char_length(content) <= 5000 AND "
-            "(input_type != 'URL' OR char_length(content) <= 2048)",
+            "(input_type != 'URL' OR char_length(content) <= 2048) AND "
+            "(input_type != 'PHONE' OR char_length(content) <= 64)",
             name="ck_analyses_content_length",
         ),
         CheckConstraint(

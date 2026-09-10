@@ -1,6 +1,6 @@
 # Current API contract
 
-Base: `/api/v1`. Reconciled with Task 5 source on 2026-09-08.
+Base: `/api/v1`. Reconciled with Task 6 source on 2026-09-10.
 
 Responses include `X-Request-ID`, `Cache-Control: no-store`, and
 `X-Content-Type-Options: nosniff`. Production CORS uses an exact HTTPS origin list, credentials,
@@ -11,14 +11,14 @@ Responses include `X-Request-ID`, `Cache-Control: no-store`, and
 | Method/path | Authentication | Contract |
 | --- | --- | --- |
 | `GET /health` | Public | Process liveness: `200 {status:"ok",service:"scamguard-api",version:"0.1.0"}`. |
-| `GET /ready` | Public | Verifies PostgreSQL, required domain/identity tables and required Message/URL intelligence. Returns safe 503 if unavailable. |
-| `GET /capabilities` | Public | Reports database-backed submission and local MESSAGE/URL support without exposing user data. |
+| `GET /ready` | Public | Verifies PostgreSQL, required domain/identity tables and required Message/URL/Phone intelligence. Returns safe 503 if unavailable. |
+| `GET /capabilities` | Public | Reports database-backed submission and local MESSAGE/URL/PHONE support without exposing user data. |
 | `POST /auth/signup` | Exact Origin | Creates a normalized account and opaque session. |
 | `POST /auth/login` | Exact Origin | Creates a session or returns the same generic credentials error for wrong/unknown accounts. |
 | `GET /auth/me` | Session cookie | Returns minimal user data and rotates the synchronizer CSRF token. |
 | `POST /auth/logout` | Session + Origin + CSRF | Revokes the current server-side session and clears the cookie. |
 | `DELETE /auth/account` | Session + Origin + CSRF + password | Transactionally deletes account, sessions and owned analyses. |
-| `POST /analyses` | Session + Origin + CSRF | Runs and persists an owned Message or URL assessment. |
+| `POST /analyses` | Session + Origin + CSRF | Runs and persists an owned Message, URL or Phone assessment. |
 | `GET /analyses?page=1&page_size=10` | Session | Returns only the current user's newest-first summaries. |
 | `GET /analyses/{analysis_id}` | Session + ownership | Returns the current user's full stored record; missing/foreign/legacy all use the same 404. |
 | `DELETE /analyses/{analysis_id}` | Session + Origin + CSRF + ownership | Deletes an owned record or returns the same safe 404. |
@@ -56,21 +56,25 @@ memory and sends it as `X-CSRF-Token` for state changes. Account deletion accept
 {"input_type":"MESSAGE","content":"Urgent: provide your verification code now."}
 ```
 
-URL example: `{"input_type":"URL","content":"https://example.com"}`. There is no `user_id` input;
+URL example: `{"input_type":"URL","content":"https://example.com"}`. Phone example:
+`{"input_type":"PHONE","content":"+44 (20) 7946-0958"}`. There is no `user_id` input;
 extra keys are rejected and ownership always comes from the authenticated session.
 
-`input_type` is `MESSAGE` or `URL`; Phone/QR are rejected. Content is trimmed and non-empty. Message
+`input_type` is `MESSAGE`, `URL` or `PHONE`; QR is rejected. Content is trimmed and non-empty. Message
 length is at most 5,000 characters. URL length is at most 2,048 and must be absolute HTTP(S), without
 embedded whitespace, controls, malformed percent escapes or backslashes. Embedded userinfo is used
 only as evidence and removed before storage. URLs are never fetched, opened or executed. The request
-body limit defaults to 65,536 bytes.
+body limit defaults to 65,536 bytes. Phone input is at most 64 characters, requires `+` international
+context, permits ASCII digits/spaces/hyphens/balanced parentheses, and is normalized to E.164 before
+storage. It uses bundled offline numbering metadata and makes no external request.
 
 The durable lifecycle is `SUBMITTED -> PROCESSING -> COMPLETED`. A local-pipeline exception records
-`FAILED` with `MESSAGE_ANALYSIS_FAILED` or `URL_ANALYSIS_FAILED`. Optional external-review failure
+`FAILED` with `MESSAGE_ANALYSIS_FAILED`, `URL_ANALYSIS_FAILED` or `PHONE_ANALYSIS_FAILED`. Optional external-review failure
 does not fail the local Message result. A completed detail includes identity/type/timestamps plus
 assessment risk, confidence, summary, evidence, recommended actions, components, limitations and
-completion time. Message risk score and URL categorical semantics remain documented in their domain
-reports; consumers must not turn them into unsupported fraud probabilities.
+completion time. Phone components include normalized/display form, calling code, region,
+possible/valid flags, number type and parser/library/rules/fusion versions. Phone risk and confidence
+scores are `null`; consumers must not invent a fraud probability. See `PHONE_INTELLIGENCE.md`.
 
 History uses bounded offset pagination (`page` 1–10,000, `page_size` 1–100) and a repeatable-read
 count/page snapshot. A response lost after a committed POST is ambiguous; clients should inspect
@@ -96,3 +100,7 @@ Migration `0003_auth_ownership` adds nullable `analyses.user_id`. All new API wr
 session. Existing pre-auth rows stay null and are excluded from every account's history, detail and
 dashboard. User deletion cascades owned analyses and sessions. See
 [Authentication](AUTHENTICATION.md) for the threat-model rationale.
+
+Migration `0004_phone_intelligence` extends the existing input-type and content-length constraints for
+PHONE. It preserves all Message/URL rows. Its downgrade requires Phone rows to be removed first and is
+tested only against a cleared disposable `*_test` database.

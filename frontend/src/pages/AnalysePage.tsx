@@ -16,6 +16,8 @@ import {
   type DraftMode,
 } from '../components/analysis/modes'
 
+const inputLabels = { MESSAGE: 'Message', URL: 'URL', PHONE: 'Phone' } as const
+
 export function AnalysePage() {
   const capabilities = useCapabilities()
   const submission = useSubmitAnalysis()
@@ -26,20 +28,22 @@ export function AnalysePage() {
     PHONE: '',
   })
   const [qrFile, setQrFile] = useState<File | null>(null)
-  const [touched, setTouched] = useState<Record<'MESSAGE' | 'URL', boolean>>({
+  const [touched, setTouched] = useState<Record<DraftMode, boolean>>({
     MESSAGE: false,
     URL: false,
+    PHONE: false,
   })
-  const [submitAttempted, setSubmitAttempted] = useState<Record<'MESSAGE' | 'URL', boolean>>({
+  const [submitAttempted, setSubmitAttempted] = useState<Record<DraftMode, boolean>>({
     MESSAGE: false,
     URL: false,
+    PHONE: false,
   })
   const content = inputType === 'QR' ? '' : drafts[inputType]
   const field = inputType === 'QR' ? null : draftFields[inputType]
   const setContent = (value: string) =>
     inputType !== 'QR' && setDrafts((previous) => ({ ...previous, [inputType]: value }))
   const action = analysisActions[inputType]
-  const supportedMode = inputType === 'MESSAGE' || inputType === 'URL'
+  const supportedMode = inputType !== 'QR'
   const canStore = !capabilities.isError && capabilities.data?.submission_available === true
   const canAnalyseMessage =
     !capabilities.isError &&
@@ -49,6 +53,16 @@ export function AnalysePage() {
     !capabilities.isError &&
     capabilities.data?.analysis_available === true &&
     capabilities.data.supported_inputs.includes('URL')
+  const canAnalysePhone =
+    !capabilities.isError &&
+    capabilities.data?.analysis_available === true &&
+    capabilities.data.supported_inputs.includes('PHONE')
+  const availableIntelligence = [
+    canAnalyseMessage ? 'Message' : null,
+    canAnalyseURL ? 'URL' : null,
+    canAnalysePhone ? 'Phone' : null,
+  ].filter((value): value is string => value !== null)
+  const intelligenceLabel = availableIntelligence.join(', ').replace(/, ([^,]*)$/, ' and $1')
   const available =
     supportedMode && canStore && capabilities.data?.submission_inputs.includes(inputType)
   const validation = supportedMode ? submissionError(inputType, content) : null
@@ -59,12 +73,14 @@ export function AnalysePage() {
       ? validationVisible
         ? 'Correct the highlighted field to enable submission.'
         : validation
-          ? `${inputType === 'MESSAGE' ? 'Add a valid message' : 'Add a valid URL'} to enable submission.`
+          ? `Add a valid ${inputType === 'MESSAGE' ? 'message' : inputType === 'URL' ? 'URL' : 'international phone number'} to enable submission.`
           : inputType === 'MESSAGE' && canAnalyseMessage
             ? 'Runs local message intelligence and records the result.'
             : inputType === 'URL' && canAnalyseURL
               ? 'Runs local URL intelligence without opening the website.'
-              : 'Records the submission only. Intelligence is unavailable.'
+              : inputType === 'PHONE' && canAnalysePhone
+                ? 'Runs local phone-number metadata analysis without contacting the number.'
+                : 'Records the submission only. Intelligence is unavailable.'
       : action.reason
   return (
     <>
@@ -93,19 +109,15 @@ export function AnalysePage() {
             <Info size={18} className="mt-0.5 shrink-0 text-warning" aria-hidden="true" />
             <div>
               <p className="text-sm font-medium text-warning">
-                {canAnalyseMessage
-                  ? canAnalyseURL
-                    ? 'Local Message and URL intelligence are available.'
-                    : 'Local message intelligence is available.'
+                {availableIntelligence.length
+                  ? `Local ${intelligenceLabel} intelligence is available.`
                   : 'Analysis is not enabled in this release.'}
               </p>
               <p className="mt-1 text-xs leading-5 text-muted">
-                {canAnalyseMessage
-                  ? canAnalyseURL
-                    ? 'Messages and URLs receive local evidence-based assessments. Submitted websites are never opened or fetched.'
-                    : 'Messages receive a local evidence-based assessment. URL intelligence is unavailable.'
+                {availableIntelligence.length
+                  ? 'Messages, URLs and phone numbers receive local evidence-based assessments. Websites are never opened and phone numbers are never contacted.'
                   : canStore
-                    ? 'Message and URL submissions can be recorded. No risk assessment is generated.'
+                    ? 'Supported submissions can be recorded. No risk assessment is generated.'
                     : 'You can explore this workspace. No content is submitted and no risk assessment is generated.'}
               </p>
             </div>
@@ -166,11 +178,12 @@ export function AnalysePage() {
                           <div className="mb-4">
                             <div className="mb-3 flex items-center justify-between gap-3">
                               <h3 className="text-sm font-semibold">Number intelligence</h3>
-                              <span className="status-chip">Upcoming</span>
+                              <span className="status-chip">Local metadata</span>
                             </div>
                             <p className="text-xs leading-6 text-muted">
-                              Reputation and report-based phone analysis is planned for a later
-                              milestone.
+                              Enter an international number beginning with +. ScamGuard checks
+                              numbering-plan metadata only; it never calls, messages or identifies
+                              the subscriber.
                             </p>
                           </div>
                         )}
@@ -216,8 +229,7 @@ export function AnalysePage() {
                             disabled={submission.isPending}
                             onChange={(event) => setContent(event.target.value)}
                             onBlur={() =>
-                              inputType === 'URL' &&
-                              setTouched((previous) => ({ ...previous, URL: true }))
+                              setTouched((previous) => ({ ...previous, [inputType]: true }))
                             }
                             maxLength={inputType === 'PHONE' ? field.limit : undefined}
                             placeholder={field.placeholder}
@@ -230,7 +242,7 @@ export function AnalysePage() {
                         <div className="mb-6 mt-2 flex flex-wrap justify-between gap-2 text-[11px] text-muted">
                           <p id="content-hint">
                             {inputType === 'PHONE'
-                              ? 'Include the country code, if known. International formats welcome.'
+                              ? 'Country calling code required. Spaces, hyphens and parentheses are accepted.'
                               : 'Avoid including passwords or sensitive personal details.'}
                           </p>
                           <span id="content-count" className="font-mono">
@@ -256,7 +268,9 @@ export function AnalysePage() {
                     {available
                       ? inputType === 'MESSAGE' && canAnalyseMessage
                         ? 'This analysis is stored in your private account history. Local analysis runs first; optional external contextual review remains disabled by default. Use non-sensitive content only.'
-                        : 'This analysis is stored in your private account history. Other users cannot access it. Use non-sensitive content only.'
+                        : inputType === 'PHONE'
+                          ? 'The normalized number and assessment are stored in your private history. No external phone or identity lookup is performed.'
+                          : 'This analysis is stored in your private account history. Other users cannot access it. Use non-sensitive content only.'
                       : 'Nothing is submitted while analysis is unavailable.'}
                   </p>
                   <button
@@ -272,7 +286,9 @@ export function AnalysePage() {
                         ? 'Analysing message…'
                         : inputType === 'URL' && canAnalyseURL
                           ? 'Analysing URL…'
-                          : 'Recording submission…'
+                          : inputType === 'PHONE' && canAnalysePhone
+                            ? 'Analysing phone number…'
+                            : 'Recording submission…'
                       : action.label}
                     <ArrowRight size={15} className="motion-arrow" aria-hidden="true" />
                   </button>
@@ -289,7 +305,9 @@ export function AnalysePage() {
                       ? 'Running local message assessment…'
                       : inputType === 'URL' && canAnalyseURL
                         ? 'Running local URL assessment…'
-                        : 'Recording your submission…'}
+                        : inputType === 'PHONE' && canAnalysePhone
+                          ? 'Running local phone assessment…'
+                          : 'Recording your submission…'}
                   </p>
                 )}
                 {submission.data?.assessment && (
@@ -337,8 +355,7 @@ export function AnalysePage() {
                       {submission.data.assessment ? 'Analysis completed.' : 'Submission recorded.'}
                     </p>
                     <p className="mt-1 text-[11px] text-muted">
-                      {submission.data.input_type === 'MESSAGE' ? 'Message' : 'URL'} ·{' '}
-                      {submission.data.status}
+                      {inputLabels[submission.data.input_type]} · {submission.data.status}
                     </p>
                     {!submission.data.assessment && (
                       <p className="mt-2 break-all font-mono text-[11px] text-muted">
@@ -367,9 +384,9 @@ export function AnalysePage() {
                   />
                 ) : (
                   <EmptyState icon={ShieldCheck} title="No assessment yet">
-                    {submission.isSuccess && submission.data.input_type === 'URL'
-                      ? 'The URL was recorded without an assessment.'
-                      : 'Submit a message or URL when intelligence is available. No safety verdict has been made.'}
+                    {submission.isSuccess
+                      ? 'The submission was recorded without an assessment.'
+                      : 'Submit a message, URL or phone number when intelligence is available. No safety verdict has been made.'}
                   </EmptyState>
                 )}
               </section>

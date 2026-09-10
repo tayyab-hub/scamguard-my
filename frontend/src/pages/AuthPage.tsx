@@ -99,7 +99,11 @@ export function AuthPage({ mode }: { mode: 'login' | 'signup' }) {
                 onClick={() => setVisible((current) => !current)}
                 aria-label={visible ? 'Hide password' : 'Show password'}
               >
-                {visible ? <EyeOff size={17} aria-hidden="true" /> : <Eye size={17} aria-hidden="true" />}
+                {visible ? (
+                  <EyeOff size={17} aria-hidden="true" />
+                ) : (
+                  <Eye size={17} aria-hidden="true" />
+                )}
               </button>
             </div>
             {signup && (
@@ -137,18 +141,30 @@ export function AuthPage({ mode }: { mode: 'login' | 'signup' }) {
             </div>
           )}
           {error && (
-            <p role="alert" className="rounded-lg border border-danger/30 bg-danger/5 p-3 text-sm text-danger">
+            <p
+              role="alert"
+              className="rounded-lg border border-danger/30 bg-danger/5 p-3 text-sm text-danger"
+            >
               {error}
             </p>
           )}
           <button type="submit" className="button-primary w-full justify-center" disabled={pending}>
             <LockKeyhole size={16} aria-hidden="true" />
-            {pending ? (signup ? 'Creating account…' : 'Signing in…') : signup ? 'Create account' : 'Sign in'}
+            {pending
+              ? signup
+                ? 'Creating account…'
+                : 'Signing in…'
+              : signup
+                ? 'Create account'
+                : 'Sign in'}
           </button>
         </form>
         <p className="mt-6 text-center text-xs text-muted">
           {signup ? 'Already have an account?' : 'New to SCAMGUARD?'}{' '}
-          <Link className="action-link font-semibold text-accent" to={signup ? '/login' : '/signup'}>
+          <Link
+            className="action-link font-semibold text-accent"
+            to={signup ? '/login' : '/signup'}
+          >
             {signup ? 'Sign in' : 'Create account'}
           </Link>
         </p>
@@ -158,7 +174,7 @@ export function AuthPage({ mode }: { mode: 'login' | 'signup' }) {
           <ShieldCheck size={30} className="text-accent" aria-hidden="true" />
           <h2 className="mt-5 text-xl font-semibold">Built around private ownership</h2>
           <ul className="mt-5 space-y-3 text-sm leading-6 text-muted">
-            <li>Each Message and URL analysis is assigned by the server to your account.</li>
+            <li>Each Message, URL and Phone analysis is assigned by the server to your account.</li>
             <li>Other users cannot list, open, or delete your records.</li>
             <li>You can remove individual analyses or delete your account and linked data.</li>
           </ul>

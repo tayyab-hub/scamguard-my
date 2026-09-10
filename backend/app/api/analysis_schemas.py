@@ -12,6 +12,7 @@ from pydantic import (
 )
 
 from app.db.models import AnalysisStatus, InputType
+from app.phone_intelligence.parsing import parse_phone_number
 from app.url_intelligence.parsing import parse_url
 
 
@@ -25,6 +26,8 @@ class AnalysisCreate(BaseModel):
     def trim_content(cls, value: str, info: ValidationInfo) -> str:
         if info.data.get("input_type") == InputType.URL:
             parse_url(value)
+        elif info.data.get("input_type") == InputType.PHONE:
+            parse_phone_number(value)
         value = value.strip()
         if not value or "\x00" in value:
             raise ValueError("Content must be non-empty text")
@@ -36,11 +39,17 @@ class AnalysisCreate(BaseModel):
 
     @model_validator(mode="after")
     def validate_input(self) -> "AnalysisCreate":
-        limit = 5000 if self.input_type == InputType.MESSAGE else 2048
+        limit = {
+            InputType.MESSAGE: 5000,
+            InputType.URL: 2048,
+            InputType.PHONE: 64,
+        }[self.input_type]
         if len(self.content) > limit:
             raise ValueError("Content exceeds the input limit")
         if self.input_type == InputType.URL:
             parse_url(self.content)
+        elif self.input_type == InputType.PHONE:
+            parse_phone_number(self.content)
         return self
 
 
@@ -84,13 +93,19 @@ class URLEvidenceResponse(EvidenceResponse):
     family: str
 
 
+class PhoneEvidenceResponse(EvidenceResponse):
+    severity: str
+    explanation: str
+    family: str
+
+
 class AssessmentResponse(BaseModel):
     risk_level: str
     risk_score: float | None
     confidence_score: float | None
     confidence_level: str
     summary: str
-    evidence: list[URLEvidenceResponse | EvidenceResponse]
+    evidence: list[URLEvidenceResponse | PhoneEvidenceResponse | EvidenceResponse]
     recommended_actions: list[str]
     components: dict[str, Any]
     limitations: list[str]

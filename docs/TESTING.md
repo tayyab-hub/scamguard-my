@@ -1,5 +1,33 @@
 # Testing and verification
 
+## Task 6 Phone Intelligence checks (2026-09-10)
+
+Task 6 retains every Task 5 gate and adds deterministic Phone parsing/risk tests, authoritative API
+validation, PostgreSQL ownership/rate-limit/cascade/migration coverage, frontend Phone presentation
+tests, and a real login → Phone → result → history → refresh browser workflow. Use only the disposable
+database URLs described below.
+
+Observed local results on `task-6-phone-intelligence`:
+
+- backend Pytest with `scamguard_test`: 207 passed, one deliberately opt-in live-provider test skipped;
+- Ruff check/format and `pip check`: passed;
+- TypeScript and zero-warning ESLint: passed;
+- Vitest: 97 passed in 7 files;
+- production Vite build: passed;
+- foundation/motion/visual Playwright: 18 passed on desktop/mobile;
+- built preview: 6 passed; full PostgreSQL browser suite: 10 passed on desktop/mobile;
+- Alembic head is `0004_phone_intelligence`; the full persistence fixture ran check,
+  downgrade-to-base and re-upgrade after clearing only `scamguard_test`.
+
+Phone unit cases replace socket connect/DNS calls with raising guards. They cover multiple countries,
+fixed/mobile/VoIP/premium/shared-cost metadata, E.164 normalization, uncertainty, invalid/impossible,
+missing country context, HTML/SQL-like text, Unicode/control characters and length bounds. Browser
+tests assert no off-origin request. No live caller, messaging, subscriber or reputation service exists.
+
+The `0004` downgrade cannot restore the old Message/URL-only check while PHONE rows exist. The test
+fixture therefore truncates all data only after verifying the database suffix is `_test`, then performs
+the destructive round-trip. Never copy that downgrade sequence to development, Neon or production.
+
 ## Task 5 authentication/production checks (2026-09-08)
 
 Task 5 adds auth UI/unit cases, environment validation, real PostgreSQL session/ownership/rate-limit
@@ -41,8 +69,8 @@ $env:TEST_DATABASE_URL = '<private postgresql+psycopg URL ending in _test>'
 .\.venv\Scripts\python.exe -m alembic check
 ```
 
-The isolated migration exercise upgrades to `0003_auth_ownership`, checks current/head/drift,
-downgrades only that disposable database to `0002_message_intelligence`, then upgrades/checks again.
+The isolated migration exercise upgrades to `0004_phone_intelligence`, checks current/head/drift,
+downgrades only the cleared disposable database to base, then upgrades/checks again.
 It verifies legacy null ownership, foreign keys/cascades and normalized unique emails. Do not run a
 downgrade on development or production.
 
@@ -165,7 +193,14 @@ $env:PLAYWRIGHT_CHANNEL = 'chrome'
 npm.cmd run test:persistence
 ```
 
-The config refuses a DB not ending in `_e2e`. `backend/scripts/prepare_e2e.py` applies real Alembic migrations, without seeding. Isolated FastAPI/Vite servers use 8002/5175. One worker prevents concurrent test-count interference. Desktop/mobile cases submit controlled non-sensitive test messages and example.com URLs, verify a real Message assessment and evidence, completed URL evidence and actions, real total/flagged increments, history/detail, navigation/reload persistence, disabled Phone/QR and no uncaught browser errors. External review stays disabled. Test submissions remain only in the disposable E2E database; every run measures its baseline count. Never target a public/development database.
+The config refuses a DB not ending in `_e2e`. `backend/scripts/prepare_e2e.py` applies real Alembic
+migrations, without seeding. Isolated FastAPI/Vite servers use 8002/5175. One worker prevents
+concurrent test-count interference. Desktop/mobile cases submit controlled non-sensitive test
+messages, example.com URLs and reserved example Phone values. They verify real Message/URL/Phone
+results, evidence/actions, totals, private history/detail, login, navigation/reload persistence,
+keyboard/reduced-motion behavior and responsive layout. QR remains disabled. External review stays
+disabled. Test submissions remain only in the disposable E2E database; every run measures its
+baseline count. Never target a public/development database.
 
 ## Screenshots and manual review
 

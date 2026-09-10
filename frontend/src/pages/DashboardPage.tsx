@@ -24,6 +24,8 @@ const metrics = [
   { label: 'Latest analysis', hint: 'Your most recent check', icon: Clock3 },
 ]
 
+const inputLabels = { MESSAGE: 'Message', URL: 'URL', PHONE: 'Phone' } as const
+
 export function DashboardPage() {
   const dashboard = useDashboard()
   const capabilities = useCapabilities()
@@ -31,9 +33,9 @@ export function DashboardPage() {
   const data = !dashboard.isError && dashboard.data?.status === 'ready' ? dashboard.data : null
   const availableModes =
     !capabilities.isError && capabilities.data?.analysis_available
-      ? capabilities.data.supported_inputs.map((input) => (input === 'MESSAGE' ? 'Message' : 'URL'))
+      ? capabilities.data.supported_inputs.map((input) => inputLabels[input])
       : []
-  const intelligenceLabel = availableModes.join(' and ')
+  const intelligenceLabel = availableModes.join(', ').replace(/, ([^,]*)$/, ' and $1')
   const latest = data?.recent_analyses[0]
   return (
     <>
@@ -91,9 +93,7 @@ export function DashboardPage() {
                       : label === 'Flagged for review' && data && data.flagged_analyses !== null
                         ? data.flagged_analyses.toLocaleString()
                         : label === 'Latest analysis' && latest
-                          ? latest.input_type === 'MESSAGE'
-                            ? 'Message'
-                            : 'URL'
+                          ? inputLabels[latest.input_type]
                           : '—'}
                   </span>
                   <span className="status-chip">
@@ -112,9 +112,9 @@ export function DashboardPage() {
                   {label === 'Latest analysis' && latest
                     ? new Date(latest.created_at).toLocaleString()
                     : label === 'Total analyses' && data
-                      ? 'Persisted Message and URL submissions'
+                      ? 'Persisted Message, URL and Phone submissions'
                       : label === 'Flagged for review' && data && data.flagged_analyses !== null
-                        ? 'Message and URL results at elevated or high risk'
+                        ? 'Owned results at elevated or high risk'
                         : hint}
                 </p>
               </section>
@@ -149,7 +149,7 @@ export function DashboardPage() {
                     }
                   >
                     {data
-                      ? 'No submissions have been recorded. Start with a message or URL.'
+                      ? 'No submissions have been recorded. Start with a message, URL or phone number.'
                       : 'Analysis history is not enabled yet. Once available, your recorded submissions will appear here.'}
                   </EmptyState>
                 )}
@@ -170,7 +170,7 @@ export function DashboardPage() {
                 <div className="flex items-start gap-2.5 border-t border-line bg-surface-raised/40 px-5 py-3.5 text-[11px] leading-5 text-muted sm:px-6">
                   <Info size={14} className="mt-0.5 shrink-0" aria-hidden="true" />
                   {data
-                    ? 'Private account history. Message and URL results are decision support, not proof of fraud or safety.'
+                    ? 'Private account history. Results are decision support, not proof of fraud or safety.'
                     : 'No live statistics are being collected or displayed.'}
                 </div>
               </section>
@@ -209,7 +209,7 @@ export function DashboardPage() {
                 <p className="mb-7 mt-3 text-xs leading-6 text-body">
                   A dedicated place to review messages, links, phone numbers and QR codes.
                   {availableModes.length > 0
-                    ? ` ${intelligenceLabel} intelligence is available. Phone and QR intelligence remain planned.`
+                    ? ` ${intelligenceLabel} intelligence is available. QR intelligence remains planned.`
                     : ' Intelligence availability depends on the connected service.'}
                 </p>
                 <Link

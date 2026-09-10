@@ -7,15 +7,15 @@ import { getSupportEmail } from '../lib/env'
 const faqs = [
   [
     'How is the risk score calculated?',
-    'Message shows its existing fusion score multiplied by 100 and rounded. URL shows an ordinal category index: Low 0, Caution 33, Elevated 67, High 100. URL values indicate category position, not precision within a category. Insufficient evidence has no score. Neither scale is a scam percentage: 0 is not a safety guarantee and 100 is not certainty of fraud. Do not compare scores across Message and URL; use the risk level and evidence.',
+    'Message shows its existing fusion score multiplied by 100 and rounded. URL shows an ordinal category index: Low 0, Caution 33, Elevated 67, High 100. Phone Intelligence shows no numeric score because numbering metadata has no defensible mapping to fraud probability. Insufficient evidence has no score. No displayed scale is a scam percentage; use the risk level and evidence.',
   ],
   [
     'How is confidence different from risk?',
-    'Confidence describes model and evidence strength for Message, and uncalibrated classifier strength for URL. It does not measure certainty of fraud. An unavailable URL model has unavailable confidence even when structural rules can still provide an assessment.',
+    'Confidence describes model and evidence strength for Message, and uncalibrated classifier strength for URL. Phone numbering metadata does not produce a caller-fraud confidence value. Confidence never measures certainty of fraud.',
   ],
   [
     'What does SCAMGUARD do today?',
-    'When the configured API and database are available, it assesses Message submissions with local machine learning and explainable indicators. URL submissions receive a local model and structural evidence assessment without opening the website.',
+    'When the configured API and database are available, it assesses Messages with local machine learning and explainable indicators, URLs without opening the website, and international phone numbers using offline numbering-plan metadata.',
   ],
   [
     'Does an assessment prove content is safe or fraudulent?',
@@ -23,11 +23,11 @@ const faqs = [
   ],
   [
     'Why is analysis unavailable?',
-    'Message and URL intelligence require the configured API and database. Other intelligence modes remain planned.',
+    'Message, URL and Phone intelligence require the configured API and database. QR intelligence remains planned.',
   ],
   [
     'Can I analyse a phone number?',
-    'You can draft a phone number locally. Phone reputation and intelligence are not implemented and the draft is not submitted.',
+    'Yes. Enter an international number beginning with + and its country calling code. ScamGuard normalizes it and checks offline numbering-plan format, region, validity and service type. It does not call the number, identify its subscriber or use an external reputation service.',
   ],
   [
     'Can I upload a QR image?',
@@ -51,7 +51,7 @@ const faqs = [
   ],
   [
     'Who can see stored submissions?',
-    'Each submitted Message or URL analysis belongs to the signed-in account. Other normal users cannot list, open or delete it. Pre-account development records remain unowned and are hidden from every user.',
+    'Each submitted Message, URL or Phone analysis belongs to the signed-in account. Other normal users cannot list, open or delete it. Pre-account development records remain unowned and are hidden from every user.',
   ],
   [
     'What account information is stored?',
@@ -63,7 +63,7 @@ const faqs = [
   ],
   [
     'Is submitted content sent to an external AI service?',
-    'No external AI is required. Contextual external review remains optional and disabled by default. If an administrator enables it later, that deployment must disclose the configured provider; local Message and URL intelligence continues without it.',
+    'No external AI is required. Contextual external review remains optional and disabled by default for Message analysis. Phone numbers are never sent to that optional service; Phone Intelligence uses only bundled local numbering metadata.',
   ],
   [
     'Why are dashboard values unavailable?',
@@ -132,7 +132,7 @@ export function HelpPage() {
           [
             '01',
             'Choose content',
-            'Use Message for an evidence-based assessment, analyse a URL without visiting it, or explore planned Phone and QR interfaces locally.',
+            'Use Message for an evidence-based assessment, analyse a URL without visiting it, check an international phone number without contacting it, or explore the planned QR interface locally.',
           ],
           [
             '02',
@@ -159,10 +159,11 @@ export function HelpPage() {
         </h2>
         <p className="mt-3 max-w-4xl text-xs leading-6 text-muted">
           An account stores an email address and links submitted analyses to that account so its
-          history remains private from other users. Do not submit passwords, one-time codes,
-          payment credentials, recovery phrases, identity documents or highly sensitive personal
-          information. Message and URL results are limited decision support, not proof of safety or
-          fraud. External AI review is disabled by default and is not required for local analysis.
+          history remains private from other users. Do not submit passwords, one-time codes, payment
+          credentials, recovery phrases, identity documents or highly sensitive personal
+          information. Message, URL and Phone results are limited decision support, not proof of
+          safety or fraud. Phone numbering metadata cannot establish caller identity or intent.
+          External AI review is disabled by default and is not required for local analysis.
         </p>
       </section>
 
