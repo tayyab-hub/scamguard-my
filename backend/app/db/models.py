@@ -38,15 +38,39 @@ class AnalysisStatus(StrEnum):
 
 class User(Base):
     __tablename__ = "users"
-    __table_args__ = (CheckConstraint("email = lower(email)", name="ck_users_email_normalized"),)
+    __table_args__ = (
+        CheckConstraint("email = lower(email)", name="ck_users_email_normalized"),
+        CheckConstraint(
+            "username IS NULL OR username = lower(username)",
+            name="ck_users_username_normalized",
+        ),
+        CheckConstraint(
+            "username IS NULL OR username ~ '^[a-z0-9_]{3,30}$'",
+            name="ck_users_username_format",
+        ),
+        CheckConstraint(
+            "full_name IS NULL OR (char_length(btrim(full_name)) BETWEEN 2 AND 100)",
+            name="ck_users_full_name_length",
+        ),
+    )
 
     id: Mapped[UUID] = mapped_column(Uuid, primary_key=True, default=uuid4)
+    full_name: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    username: Mapped[str | None] = mapped_column(String(30), nullable=True)
     email: Mapped[str] = mapped_column(String(320), unique=True, index=True)
     password_hash: Mapped[str] = mapped_column(Text)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
     )
+
+
+Index(
+    "ix_users_username",
+    User.username,
+    unique=True,
+    postgresql_where=User.username.is_not(None),
+)
 
 
 class AuthSession(Base):
@@ -64,6 +88,19 @@ class AuthSession(Base):
         DateTime(timezone=True), server_default=func.now()
     )
     revoked_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class PasswordResetToken(Base):
+    __tablename__ = "password_reset_tokens"
+
+    id: Mapped[UUID] = mapped_column(Uuid, primary_key=True, default=uuid4)
+    user_id: Mapped[UUID] = mapped_column(
+        Uuid, ForeignKey("users.id", ondelete="CASCADE"), index=True
+    )
+    token_hash: Mapped[str] = mapped_column(String(64), unique=True, index=True)
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), index=True)
+    used_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
 
 class RateLimitBucket(Base):

@@ -2,6 +2,8 @@ import type { Page } from '@playwright/test'
 
 const user = {
   id: 'c9274a91-93f8-4fa2-bad3-8453f1284e36',
+  full_name: 'Browser Test',
+  username: 'browser_test',
   email: 'browser-test@example.com',
   created_at: '2026-09-08T00:00:00Z',
 }

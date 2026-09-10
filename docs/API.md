@@ -13,9 +13,12 @@ Responses include `X-Request-ID`, `Cache-Control: no-store`, and
 | `GET /health` | Public | Process liveness: `200 {status:"ok",service:"scamguard-api",version:"0.1.0"}`. |
 | `GET /ready` | Public | Verifies PostgreSQL, required domain/identity tables and required Message/URL/Phone intelligence. Returns safe 503 if unavailable. |
 | `GET /capabilities` | Public | Reports database-backed submission and local MESSAGE/URL/PHONE support without exposing user data. |
-| `POST /auth/signup` | Exact Origin | Creates a normalized account and opaque session. |
-| `POST /auth/login` | Exact Origin | Creates a session or returns the same generic credentials error for wrong/unknown accounts. |
-| `GET /auth/me` | Session cookie | Returns minimal user data and rotates the synchronizer CSRF token. |
+| `POST /auth/signup` | Exact Origin | Creates a normalized full-name/username/email account and opaque session. |
+| `POST /auth/login` | Exact Origin | Accepts normalized username or email and returns one generic credentials error for wrong/unknown accounts. |
+| `GET /auth/me` | Session cookie | Returns the current user's profile and rotates the synchronizer CSRF token. |
+| `PATCH /auth/profile` | Session + Origin + CSRF | Updates only the current user's validated full name and username. |
+| `POST /auth/password-reset/request` | Exact Origin | Always returns the same public confirmation; creates and emails a one-time token only for an existing email. |
+| `POST /auth/password-reset/confirm` | Exact Origin | Consumes a valid reset token, updates the Argon2id password hash and revokes all user sessions. |
 | `POST /auth/logout` | Session + Origin + CSRF | Revokes the current server-side session and clears the cookie. |
 | `DELETE /auth/account` | Session + Origin + CSRF + password | Transactionally deletes account, sessions and owned analyses. |
 | `POST /analyses` | Session + Origin + CSRF | Runs and persists an owned Message, URL or Phone assessment. |

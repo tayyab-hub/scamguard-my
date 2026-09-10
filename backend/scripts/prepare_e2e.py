@@ -19,6 +19,11 @@ subprocess.run(
 engine = create_engine(url, hide_parameters=True)
 try:
     with engine.begin() as connection:
-        connection.execute(text("TRUNCATE TABLE analyses, auth_sessions, users, auth_rate_limits"))
+        connection.execute(
+            text(
+                "TRUNCATE TABLE analyses, auth_sessions, password_reset_tokens, users, "
+                "auth_rate_limits"
+            )
+        )
 finally:
     engine.dispose()

@@ -93,6 +93,73 @@ function setup(
 
 describe('persistent submission UI', () => {
   it.each([
+    [
+      'MESSAGE',
+      'Original private message',
+      'Edited private message',
+      'Message content',
+      'Analyse content',
+    ],
+    [
+      'URL',
+      'https://example.com/original',
+      'https://example.com/edited',
+      'Website URL',
+      'Analyse content',
+    ],
+    ['PHONE', '+442079460958', '+12025550123', 'Phone number', 'Analyse phone number'],
+  ] as const)(
+    'copies a completed %s record into an editable draft and creates a new immutable record',
+    async (mode, originalContent, editedContent, fieldLabel, submitLabel) => {
+      const saved = {
+        ...record,
+        input_type: mode,
+        content: originalContent,
+        preview: originalContent,
+        status: 'COMPLETED',
+        assessment: null,
+        failure_code: null,
+      }
+      const originalSnapshot = structuredClone(saved)
+      const newId = '71ea83b5-e4dc-4af3-aeca-01167761d103'
+      const fetchMock = vi.fn(async (url: string, init?: RequestInit) => {
+        if (url.endsWith('/health')) return Response.json(healthFixture)
+        if (url.endsWith('/capabilities')) return Response.json(caps)
+        if (url.endsWith('/dashboard')) {
+          return Response.json({
+            ...dashboard,
+            recent_analyses: [saved],
+            total_analyses: 1,
+          })
+        }
+        if (url.endsWith(saved.id)) return Response.json(saved)
+        if (init?.method === 'POST') {
+          const input = JSON.parse(init.body as string)
+          return Response.json({ ...saved, ...input, id: newId }, { status: 201 })
+        }
+        return new Response(null, { status: 404 })
+      })
+      vi.stubGlobal('fetch', fetchMock)
+      renderApp('/')
+      await userEvent.click(await screen.findByRole('button', { name: /View submission/ }))
+      await userEvent.click(await screen.findByRole('button', { name: 'Analyse again' }))
+      const input = await screen.findByLabelText(fieldLabel)
+      expect(input).toHaveValue(originalContent)
+      expect(screen.getByText(/original record remains unchanged/i)).toBeInTheDocument()
+      fireEvent.change(input, { target: { value: editedContent } })
+      await userEvent.click(screen.getByRole('button', { name: submitLabel }))
+      expect(await screen.findByText('Submission recorded.')).toBeInTheDocument()
+      const post = fetchMock.mock.calls.find(([, init]) => init?.method === 'POST')
+      expect(JSON.parse(post?.[1]?.body as string)).toEqual({
+        input_type: mode,
+        content: editedContent,
+      })
+      expect(saved).toEqual(originalSnapshot)
+      expect(newId).not.toBe(saved.id)
+    },
+  )
+
+  it.each([
     [['MESSAGE', 'URL', 'PHONE'], 'Message, URL and Phone enabled'],
     [['MESSAGE', 'URL'], 'Message and URL enabled'],
     [['MESSAGE'], 'Message enabled'],

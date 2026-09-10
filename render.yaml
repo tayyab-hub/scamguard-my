@@ -25,3 +25,11 @@ services:
         value: none
       - key: AI_REVIEW_ENABLED
         value: "false"
+      - key: FRONTEND_BASE_URL
+        value: https://scamguard-my.vercel.app
+      - key: MAIL_PROVIDER
+        value: resend
+      - key: RESEND_API_KEY
+        sync: false
+      - key: RESEND_FROM_EMAIL
+        sync: false

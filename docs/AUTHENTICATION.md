@@ -5,7 +5,7 @@ architecture.** Task 6 reuses these controls unchanged for Phone analyses.
 
 ## Architecture
 
-SCAMGUARD uses email/password accounts and opaque server-side sessions. Passwords are hashed with
+SCAMGUARD uses full-name/username/email accounts and opaque server-side sessions. Passwords are hashed with
 Argon2id (`argon2-cffi`) using the application's explicit time, memory and parallelism settings.
 Passwords, raw session tokens and raw CSRF tokens are never stored. A cryptographically random
 session token exists only in an HttpOnly cookie; the database stores an HMAC-SHA-256 digest made
@@ -24,20 +24,34 @@ State-changing requests require all three of:
 2. an exact allowed `Origin` header; and
 3. the matching `X-CSRF-Token` synchronizer token.
 
-This protects logout, analysis creation/deletion and account deletion. Signup and login require an
-exact allowed origin and have PostgreSQL-backed rate limits. Login errors deliberately use the same
-`Invalid email or password.` response for an unknown account and a wrong password; a dummy Argon2
+This protects logout, profile changes, analysis creation/deletion and account deletion. Signup and login require an
+exact allowed origin and have PostgreSQL-backed rate limits. Login accepts a normalized username or
+email. Errors deliberately use the same `Invalid username/email or password.` response for an unknown account and a wrong password; a dummy Argon2
 verification reduces user-enumeration timing differences. Email is validated, normalized to lower
 case, unique in PostgreSQL, and duplicate races return a safe conflict response. Passwords are 12–128
-characters without obsolete composition rules.
+characters without obsolete composition rules. Usernames are 3–30 ASCII letters, numbers or
+underscores, stored lowercase and uniquely indexed. Full names support Unicode letters/marks, spaces,
+apostrophes, periods and hyphens after trimming, and reject controls/markup. Migration
+`0005_auth_profile_polish` keeps both fields nullable for existing production users; new signups and
+profile updates require both.
+
+Password recovery stores only an HMAC-SHA-256 digest of a 256-bit random one-time token. Tokens expire
+after 30 minutes, become used on success, and are removed with the account. Request and confirmation
+use the existing PostgreSQL rate buckets. A successful reset replaces the Argon2id hash and revokes
+every session. Public request responses never disclose whether the email exists. Development/test
+delivery is held only in an in-process outbox; production uses Resend server-side and never returns or
+logs the reset URL.
 
 ## Endpoints
 
 | Method and path | Behavior |
 | --- | --- |
-| `POST /api/v1/auth/signup` | Creates a normalized account and session; returns minimal user data plus the in-memory CSRF token. |
-| `POST /api/v1/auth/login` | Verifies credentials with a generic failure response and creates a new session token, preventing fixation. |
-| `GET /api/v1/auth/me` | Validates the cookie and returns only `id`, `email`, `created_at`, plus a rotated CSRF token. |
+| `POST /api/v1/auth/signup` | Creates a validated profile and session; returns minimal user data plus the in-memory CSRF token. |
+| `POST /api/v1/auth/login` | Verifies a username/email identifier with a generic failure and creates a new session token. |
+| `GET /api/v1/auth/me` | Validates the cookie and returns the current profile plus a rotated CSRF token. |
+| `PATCH /api/v1/auth/profile` | Changes only the authenticated user's full name and username; requires Origin and CSRF. |
+| `POST /api/v1/auth/password-reset/request` | Gives a generic response and delivers a short-lived one-time link where applicable. |
+| `POST /api/v1/auth/password-reset/confirm` | Consumes the link, replaces the password hash and revokes all sessions. |
 | `POST /api/v1/auth/logout` | Requires CSRF, revokes the database session and clears the cookie. |
 | `DELETE /api/v1/auth/account` | Requires CSRF and the current password; deletes the user transactionally. Foreign-key cascades delete sessions and owned analyses. |
 
@@ -60,7 +74,7 @@ the first or any later user. Schema nullability exists only for those records; t
 sets ownership for new writes.
 
 PostgreSQL-backed fixed-window rate buckets cover signup by client IP, login by IP plus normalized
-email, and analysis submission by user. Transaction-scoped PostgreSQL advisory locks serialize each
+identifier, password-reset request/confirmation, and analysis submission by user. Transaction-scoped PostgreSQL advisory locks serialize each
 bucket, so limits are shared across workers. This is basic application abuse protection, not a DDoS
 service or enterprise bot defense.
 

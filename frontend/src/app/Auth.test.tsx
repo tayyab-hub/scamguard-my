@@ -9,6 +9,8 @@ import { capabilitiesFixture, dashboardFixture, healthFixture } from '../test/fi
 
 const user = {
   id: 'c9274a91-93f8-4fa2-bad3-8453f1284e36',
+  full_name: 'Test Person',
+  username: 'test_person',
   email: 'person@example.com',
   created_at: '2026-09-08T00:00:00Z',
 }
@@ -70,7 +72,7 @@ describe('authenticated application experience', () => {
     )
     const userEventApi = userEvent.setup()
     renderAuthenticatedApp('/analyse')
-    await userEventApi.type(await screen.findByLabelText('Email address'), 'person@example.com')
+    await userEventApi.type(await screen.findByLabelText('Username or email'), 'person@example.com')
     await userEventApi.type(screen.getByLabelText('Password'), 'correct horse battery staple')
     await userEventApi.click(screen.getByRole('button', { name: 'Sign in' }))
     expect(screen.getByRole('button', { name: 'Signing in…' })).toBeDisabled()
@@ -85,7 +87,7 @@ describe('authenticated application experience', () => {
       method: 'POST',
       credentials: 'include',
       body: JSON.stringify({
-        email: 'person@example.com',
+        identifier: 'person@example.com',
         password: 'correct horse battery staple',
       }),
     })
@@ -96,24 +98,32 @@ describe('authenticated application experience', () => {
       'fetch',
       vi.fn((url: string, options?: RequestInit) =>
         url.endsWith('/auth/login') && options?.method === 'POST'
-          ? Promise.resolve(errorResponse(401, 'INVALID_CREDENTIALS', 'Invalid email or password.'))
+          ? Promise.resolve(
+              errorResponse(401, 'INVALID_CREDENTIALS', 'Invalid username/email or password.'),
+            )
           : applicationFetch(url, options),
       ),
     )
     const userEventApi = userEvent.setup()
     renderAuthenticatedApp('/login')
-    await userEventApi.type(await screen.findByLabelText('Email address'), 'person@example.com')
+    await userEventApi.type(await screen.findByLabelText('Username or email'), 'person@example.com')
     await userEventApi.type(screen.getByLabelText('Password'), 'incorrect password')
     await userEventApi.click(screen.getByRole('button', { name: 'Sign in' }))
-    expect(await screen.findByRole('alert')).toHaveTextContent('Invalid email or password.')
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'Invalid username/email or password.',
+    )
     expect(screen.getByRole('alert')).not.toHaveTextContent('INVALID_CREDENTIALS')
   })
 
   it('validates signup confirmation locally before making a request', async () => {
     const userEventApi = userEvent.setup()
     renderAuthenticatedApp('/signup')
+    await userEventApi.type(await screen.findByLabelText('Full name'), 'Test Person')
+    await userEventApi.type(screen.getByLabelText('Username'), 'test_person')
+    await userEventApi.type(screen.getByLabelText('Email address'), 'person@example.com')
     await userEventApi.type(await screen.findByLabelText('Password'), 'long enough password')
     await userEventApi.type(screen.getByLabelText('Confirm password'), 'different password')
+    await userEventApi.click(screen.getByRole('button', { name: 'Create account' }))
     expect(screen.getByRole('alert')).toHaveTextContent('Passwords do not match')
     expect(screen.getByRole('button', { name: 'Create account' })).toBeEnabled()
   })
@@ -132,6 +142,8 @@ describe('authenticated application experience', () => {
     renderAuthenticatedApp('/signup')
     expect(await screen.findByRole('heading', { name: 'Create your account' })).toBeInTheDocument()
     expect(await screen.findAllByText('API unavailable')).not.toHaveLength(0)
+    await userEventApi.type(screen.getByLabelText('Full name'), 'Test Person')
+    await userEventApi.type(screen.getByLabelText('Username'), 'test_person')
     await userEventApi.type(screen.getByLabelText('Email address'), 'person@example.com')
     await userEventApi.type(screen.getByLabelText('Password'), 'correct horse battery staple')
     await userEventApi.type(
@@ -145,6 +157,106 @@ describe('authenticated application experience', () => {
       .mock.calls.find(([url]) => String(url).endsWith('/auth/signup'))
     expect(signupCall?.[0]).toBe('/api/v1/auth/signup')
     expect(signupCall?.[1]).toMatchObject({ method: 'POST', credentials: 'include' })
+    expect(JSON.parse(signupCall?.[1]?.body as string)).toEqual({
+      full_name: 'Test Person',
+      username: 'test_person',
+      email: 'person@example.com',
+      password: 'correct horse battery staple',
+    })
+  })
+
+  it('uses a generic forgot-password confirmation for the same-origin request', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn((url: string, options?: RequestInit) => {
+        if (url.endsWith('/auth/password-reset/request') && options?.method === 'POST')
+          return Promise.resolve(
+            Response.json(
+              {
+                message:
+                  'If an account exists for that email, password reset instructions have been sent.',
+              },
+              { status: 202 },
+            ),
+          )
+        return applicationFetch(url, options)
+      }),
+    )
+    const userEventApi = userEvent.setup()
+    renderAuthenticatedApp('/forgot-password')
+    await userEventApi.type(await screen.findByLabelText('Email address'), 'person@example.com')
+    await userEventApi.click(screen.getByRole('button', { name: 'Send reset instructions' }))
+    expect(await screen.findByText('Check your email')).toBeInTheDocument()
+    expect(screen.getByText(/If an account exists/)).toBeInTheDocument()
+    const call = vi
+      .mocked(fetch)
+      .mock.calls.find(([url]) => String(url).endsWith('/password-reset/request'))
+    expect(call?.[0]).toBe('/api/v1/auth/password-reset/request')
+  })
+
+  it('submits a one-time reset token and shows the session-revocation success state', async () => {
+    const token = 'x'.repeat(43)
+    vi.stubGlobal(
+      'fetch',
+      vi.fn((url: string, options?: RequestInit) => {
+        if (url.endsWith('/auth/password-reset/confirm') && options?.method === 'POST')
+          return Promise.resolve(new Response(null, { status: 204 }))
+        return applicationFetch(url, options)
+      }),
+    )
+    const userEventApi = userEvent.setup()
+    renderAuthenticatedApp(`/reset-password?token=${token}`)
+    await userEventApi.type(
+      await screen.findByLabelText('New password'),
+      'new correct horse battery staple',
+    )
+    await userEventApi.type(
+      screen.getByLabelText('Confirm new password'),
+      'new correct horse battery staple',
+    )
+    await userEventApi.click(screen.getByRole('button', { name: 'Update password' }))
+    expect(await screen.findByText('Password updated')).toBeInTheDocument()
+    expect(screen.getByText(/All previous sessions were revoked/)).toBeInTheDocument()
+    const call = vi
+      .mocked(fetch)
+      .mock.calls.find(([url]) => String(url).endsWith('/password-reset/confirm'))
+    expect(JSON.parse(call?.[1]?.body as string)).toEqual({
+      token,
+      password: 'new correct horse battery staple',
+    })
+  })
+
+  it('edits the authenticated profile while keeping email read-only and sends CSRF', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn((url: string, options?: RequestInit) => {
+        if (url.endsWith('/auth/me')) return Promise.resolve(Response.json(authResponse))
+        if (url.endsWith('/auth/profile') && options?.method === 'PATCH')
+          return Promise.resolve(
+            Response.json({
+              user: { ...user, full_name: 'Updated Person', username: 'updated_person' },
+            }),
+          )
+        return applicationFetch(url, options)
+      }),
+    )
+    const userEventApi = userEvent.setup()
+    renderAuthenticatedApp('/account')
+    const fullName = await screen.findByLabelText('Full name')
+    await userEventApi.clear(fullName)
+    await userEventApi.type(fullName, 'Updated Person')
+    const username = screen.getByLabelText('Username')
+    await userEventApi.clear(username)
+    await userEventApi.type(username, 'Updated_Person')
+    expect(screen.getByLabelText('Email address')).toHaveAttribute('readonly')
+    await userEventApi.click(screen.getByRole('button', { name: 'Save profile' }))
+    expect(await screen.findByText('Profile saved.')).toBeInTheDocument()
+    const call = vi.mocked(fetch).mock.calls.find(([url]) => String(url).endsWith('/auth/profile'))
+    expect(call?.[1]?.headers).toMatchObject({ 'X-CSRF-Token': authResponse.csrf_token })
+    expect(JSON.parse(call?.[1]?.body as string)).toEqual({
+      full_name: 'Updated Person',
+      username: 'Updated_Person',
+    })
   })
 
   it('restores a session, exposes the account menu, and logs out cleanly', async () => {

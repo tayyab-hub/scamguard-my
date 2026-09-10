@@ -15,6 +15,7 @@ from app.core.errors import error_response, install_error_handlers
 from app.db.session import build_engine
 from app.ml.engine import build_message_engine
 from app.phone_intelligence.engine import build_phone_engine
+from app.services.mail import build_mail_service
 from app.url_intelligence.engine import build_url_engine
 
 
@@ -29,6 +30,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         application.state.message_engine = build_message_engine(config)
         application.state.url_engine = build_url_engine(config)
         application.state.phone_engine = build_phone_engine()
+        application.state.mail_service = build_mail_service(config)
         try:
             yield
         finally:
@@ -70,7 +72,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         CORSMiddleware,
         allow_origins=config.cors_origins,
         allow_credentials=True,
-        allow_methods=["GET", "POST", "DELETE"],
+        allow_methods=["GET", "POST", "PATCH", "DELETE"],
         allow_headers=["Accept", "Content-Type", "X-CSRF-Token"],
         expose_headers=["X-Request-ID"],
     )

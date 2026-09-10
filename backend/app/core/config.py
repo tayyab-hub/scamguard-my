@@ -41,6 +41,13 @@ class Settings(BaseSettings):
     login_rate_limit: int = Field(default=10, ge=1, le=100)
     signup_rate_limit: int = Field(default=5, ge=1, le=100)
     analysis_rate_limit: int = Field(default=30, ge=1, le=1000)
+    password_reset_request_rate_limit: int = Field(default=5, ge=1, le=100)
+    password_reset_confirm_rate_limit: int = Field(default=10, ge=1, le=100)
+    password_reset_ttl_minutes: int = Field(default=30, ge=10, le=120)
+    frontend_base_url: str = "http://localhost:5173"
+    mail_provider: Literal["development", "resend"] = "development"
+    resend_api_key: SecretStr | None = Field(default=None, repr=False)
+    resend_from_email: str | None = None
 
     @field_validator("database_url", mode="before")
     @classmethod
@@ -74,6 +81,23 @@ class Settings(BaseSettings):
                 raise ValueError("CORS origins must be exact HTTP(S) origins without paths")
         return values
 
+    @field_validator("frontend_base_url")
+    @classmethod
+    def validate_frontend_base_url(cls, value: str) -> str:
+        normalized = value.rstrip("/")
+        parsed = urlparse(normalized)
+        if (
+            parsed.scheme not in {"http", "https"}
+            or not parsed.netloc
+            or parsed.path
+            or parsed.query
+            or parsed.fragment
+            or parsed.username
+            or parsed.password
+        ):
+            raise ValueError("FRONTEND_BASE_URL must be an HTTP(S) origin without a path")
+        return normalized
+
     @model_validator(mode="after")
     def validate_production(self) -> "Settings":
         if self.app_env == "production":
@@ -96,6 +120,14 @@ class Settings(BaseSettings):
             query = parse_qs(urlparse(str(self.database_url)).query)
             if query.get("sslmode", [""])[0] not in {"require", "verify-ca", "verify-full"}:
                 raise ValueError("Production DATABASE_URL must require PostgreSQL TLS")
+            if not self.frontend_base_url.startswith("https://"):
+                raise ValueError("Production FRONTEND_BASE_URL must use HTTPS")
+            if self.mail_provider != "resend":
+                raise ValueError("Production MAIL_PROVIDER must be resend")
+            if self.resend_api_key is None or not self.resend_api_key.get_secret_value().strip():
+                raise ValueError("Production RESEND_API_KEY is required")
+            if self.resend_from_email is None or "@" not in self.resend_from_email:
+                raise ValueError("Production RESEND_FROM_EMAIL is required")
         return self
 
 

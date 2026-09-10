@@ -6,6 +6,7 @@ import { NotFoundPage } from '../pages/NotFoundPage'
 import { HelpPage } from '../pages/HelpPage'
 import { AuthPage } from '../pages/AuthPage'
 import { AccountPage } from '../pages/AccountPage'
+import { ForgotPasswordPage, ResetPasswordPage } from '../pages/PasswordResetPages'
 import { ProtectedRoute } from '../auth/ProtectedRoute'
 
 export function App() {
@@ -38,6 +39,8 @@ export function App() {
         />
         <Route path="login" element={<AuthPage mode="login" />} />
         <Route path="signup" element={<AuthPage mode="signup" />} />
+        <Route path="forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="reset-password" element={<ResetPasswordPage />} />
         <Route path="help" element={<HelpPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>

@@ -7,6 +7,7 @@ import {
   logout as logoutRequest,
   setCsrfToken,
   signup as signupRequest,
+  updateProfile as updateProfileRequest,
   type User,
 } from '../lib/api'
 import { AuthContext, type AuthContextValue } from './AuthContext'
@@ -45,27 +46,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       .finally(() => setLoading(false))
   }, [])
 
-  const authenticate = useCallback(
-    async (
-      request: (email: string, password: string) => ReturnType<typeof loginRequest>,
-      email: string,
-      password: string,
-    ) => {
-      const result = await request(email, password)
-      setCsrfToken(result.csrf_token)
-      setUser(result.user)
-      setError(null)
-    },
-    [],
-  )
+  const authenticate = useCallback(async (request: () => ReturnType<typeof loginRequest>) => {
+    const result = await request()
+    setCsrfToken(result.csrf_token)
+    setUser(result.user)
+    setError(null)
+  }, [])
 
   const value = useMemo<AuthContextValue>(
     () => ({
       user,
       loading,
       error,
-      signIn: (email, password) => authenticate(loginRequest, email, password),
-      signUp: (email, password) => authenticate(signupRequest, email, password),
+      signIn: (identifier, password) => authenticate(() => loginRequest(identifier, password)),
+      signUp: (fullName, username, email, password) =>
+        authenticate(() => signupRequest(fullName, username, email, password)),
+      updateProfile: async (fullName, username) => {
+        const result = await updateProfileRequest(fullName, username)
+        setUser(result.user)
+      },
       signOut: async () => {
         try {
           await logoutRequest()

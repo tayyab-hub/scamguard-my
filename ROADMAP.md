@@ -1,6 +1,6 @@
 # SCAMGUARD roadmap
 
-Audited 2026-09-10. Status reflects implemented evidence and the current Task 6 review boundary.
+Audited 2026-09-10. Status reflects Task 6 closure and the current Task 6.1 review boundary.
 
 | Order | Milestone | Status | Real state / exit criteria |
 | --- | --- | --- | --- |
@@ -9,12 +9,13 @@ Audited 2026-09-10. Status reflects implemented evidence and the current Task 6 
 | 3 | Message Intelligence | ✅ COMPLETE | Three-class local model, provenance/evaluation, rules/fusion and explainability. |
 | 4 | URL Intelligence | ✅ COMPLETE | Offline parser/model/rules/fusion; no destination fetch. |
 | 5 | Authentication, Ownership, Privacy & Production | ✅ COMPLETE | User-verified Vercel → Render → Neon deployment with private authenticated analyses. |
-| 6 | Phone Intelligence | 🟡 IN PROGRESS | Code and automated local verification complete on `task-6-phone-intelligence`; manual acceptance, merge and deployment pending. |
+| 6 | Phone Intelligence | ✅ COMPLETE | Manually accepted and merged to main. |
+| 6.1 | Authentication/profile polish | 🟡 IN REVIEW | Implementation and full local verification complete; manual acceptance and merge pending. |
 | 7 | QR Intelligence | ⚪ NOT STARTED | Local image metadata selection only; no upload, decode, URL/payment routing or camera. |
 | 8 | Final integration/reporting | ⚪ NOT STARTED | Final cross-task integration, evaluation and capstone report work has not begun. |
 
 ## Current boundary
 
-Do not merge or deploy Task 6 until the user manually tests it. Production Vercel, Render and Neon
-configuration was not changed during Task 6. Task 7 QR Intelligence and Task 8 final
+Do not merge or deploy Task 6.1 until the user manually tests it. Production Vercel, Render and Neon
+state was not changed during implementation. Task 7 QR Intelligence and Task 8 final
 integration/reporting remain explicitly out of scope and were not started.

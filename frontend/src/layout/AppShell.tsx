@@ -29,6 +29,8 @@ const routeLabels: Record<string, string> = {
   '/login': 'Sign in',
   '/signup': 'Create account',
   '/account': 'Account',
+  '/forgot-password': 'Forgot password',
+  '/reset-password': 'Reset password',
 }
 
 function routeLabel(pathname: string) {
@@ -115,7 +117,10 @@ export function AppShell() {
             </div>
             {auth.user ? (
               <div className="flex min-w-0 items-center gap-1 rounded-lg border border-line bg-surface-raised p-1">
-                <span className="hidden max-w-52 truncate px-2 text-xs text-muted md:block" title={auth.user.email}>
+                <span
+                  className="hidden max-w-52 truncate px-2 text-xs text-muted md:block"
+                  title={auth.user.email}
+                >
                   {auth.user.email}
                 </span>
                 <Link
@@ -158,6 +163,15 @@ export function AppShell() {
             )}
           </div>
         </header>
+        {auth.user && (!auth.user.full_name || !auth.user.username) && (
+          <div className="border-b border-warning/30 bg-warning-subtle px-5 py-3 text-center text-xs text-warning sm:px-8">
+            Your account predates profile fields.{' '}
+            <Link className="action-link font-semibold" to="/account">
+              Complete your profile
+            </Link>{' '}
+            to add your name and username.
+          </div>
+        )}
         <div className="flex items-center justify-between gap-2 border-b border-line bg-surface/70 px-5 py-3 sm:hidden">
           <span className="text-[11px] text-muted">Forensic Intelligence</span>
           <ApiStatus />

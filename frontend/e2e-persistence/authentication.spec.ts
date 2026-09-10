@@ -3,12 +3,17 @@ import { expect, test } from '@playwright/test'
 test('real PostgreSQL: signup, refresh, logout, login, deletion and account privacy controls', async ({
   page,
 }, info) => {
-  const identity = `auth-${info.project.name}-${Date.now()}`.toLowerCase().replace(/[^a-z0-9-]/g, '')
+  const identity = `auth-${info.project.name}-${Date.now()}`
+    .toLowerCase()
+    .replace(/[^a-z0-9-]/g, '')
   const email = `${identity}@example.com`
+  const username = `auth_${identity.replace(/[^a-z0-9_]/g, '')}`.slice(0, 30)
   const password = 'browser authentication test password'
   const message = `Private authentication fixture ${identity}`
 
   await page.goto('/signup')
+  await page.getByLabel('Full name').fill('Browser Authentication User')
+  await page.getByLabel('Username').fill(username)
   await page.getByLabel('Email address').fill(email)
   await page.getByLabel('Password', { exact: true }).fill(password)
   await page.getByLabel('Confirm password').fill(password)
@@ -28,7 +33,7 @@ test('real PostgreSQL: signup, refresh, logout, login, deletion and account priv
   await page.goto('/analyse')
   await expect(page.getByRole('heading', { name: 'Welcome back' })).toBeVisible()
 
-  await page.getByLabel('Email address').fill(email)
+  await page.getByLabel('Username or email').fill(username.toUpperCase())
   await page.getByLabel('Password', { exact: true }).fill(password)
   await page.getByRole('button', { name: 'Sign in' }).click()
   await expect(page.getByRole('heading', { name: 'Analyse suspicious content' })).toBeVisible()
@@ -45,6 +50,10 @@ test('real PostgreSQL: signup, refresh, logout, login, deletion and account priv
 
   await page.getByRole('link', { name: 'Account' }).click()
   await expect(page.getByRole('heading', { name: 'Account controls' })).toBeVisible()
+  await expect(page.getByLabel('Email address')).toHaveAttribute('readonly', '')
+  await page.getByLabel('Full name').fill('Updated Browser User')
+  await page.getByRole('button', { name: 'Save profile' }).click()
+  await expect(page.getByText('Profile saved.')).toBeVisible()
   await page.getByRole('button', { name: 'Delete account' }).click()
   const accountDialog = page.getByRole('dialog', { name: 'Permanently delete this account?' })
   await accountDialog.getByLabel('Current password').fill(password)

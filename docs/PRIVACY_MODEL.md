@@ -3,17 +3,25 @@
 Status: implemented for the Task 5 application boundary; this is an academic prototype explanation,
 not a legally complete privacy policy.
 
-SCAMGUARD minimizes account data to a normalized email address, a one-way Argon2id password hash and
+SCAMGUARD limits account profile data to a full name, normalized username, normalized email address,
+a one-way Argon2id password hash and
 timestamps. It stores submitted Message/URL content, normalized E.164 Phone content, the local assessment, evidence and audit metadata
 under the submitting account so the user can retrieve private history. It does not store plaintext
-passwords, password hints, raw session/CSRF secrets, security questions or profile data.
+passwords, password hints, raw session/CSRF/reset secrets, or security questions. Reset records contain
+only an HMAC digest, expiry/use timestamps and the owning user ID.
 
 Authenticated users can list, read and delete only their own analyses. Other accounts cannot see the
 record in history, fetch it directly, delete it, or include it in dashboard totals. Historical records
 created before accounts have no owner and are hidden from all ordinary users. Account deletion requires
 the current password and deletes the account, all server-side sessions and all ownership-linked
-analyses through reviewed foreign-key cascades. An individual analysis deletion requires a restrained
+analyses and reset records through reviewed foreign-key cascades. An individual analysis deletion requires a restrained
 frontend confirmation and immediately invalidates the user's history/dashboard queries.
+
+The Overview, Analysis History and expanded Analysis Detail are the user-facing views of persisted
+Neon data. Security tables are never exposed. Full name and username may be updated; email is read-only
+without a verification flow. Completed analysis content and assessments are immutable. Analyse again
+copies owned input into a new browser draft, which may be edited and submitted as a separate record;
+the original is not mutated.
 
 Users should not submit passwords, one-time codes, financial credentials, government identifiers or
 other unnecessary sensitive information. URL analysis is string-only and never opens or fetches the

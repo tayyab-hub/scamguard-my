@@ -28,7 +28,7 @@ PASSWORD = "correct horse battery staple"
 def sign_in(client: TestClient, email: str = "owner@example.com") -> None:
     response = client.post(
         "/api/v1/auth/login",
-        json={"email": email, "password": PASSWORD},
+        json={"identifier": email, "password": PASSWORD},
         headers={"Origin": ORIGIN},
     )
     assert response.status_code == 200
@@ -52,14 +52,62 @@ def database():
         )
 
     migrate("head")
-    assert {"analyses", "users", "auth_sessions", "auth_rate_limits"}.issubset(
-        inspect(engine).get_table_names()
-    )
+    assert {
+        "analyses",
+        "users",
+        "auth_sessions",
+        "auth_rate_limits",
+        "password_reset_tokens",
+    }.issubset(inspect(engine).get_table_names())
     subprocess.run([sys.executable, "-m", "alembic", "check"], cwd=root, env=env, check=True)
+    # An actual Task 5/6 user and owned analysis survive the staged 0004 -> 0005 upgrade.
+    migrate("0004_phone_intelligence", "downgrade")
+    legacy_user_id = uuid4()
+    legacy_analysis_id = uuid4()
+    with engine.begin() as connection:
+        connection.execute(
+            text(
+                "INSERT INTO users (id, email, password_hash) "
+                "VALUES (:id, 'legacy@example.com', 'legacy-test-hash')"
+            ),
+            {"id": legacy_user_id},
+        )
+        connection.execute(
+            text(
+                "INSERT INTO analyses (id, user_id, input_type, status, content) VALUES "
+                "(:id, :user_id, 'PHONE', 'COMPLETED', '+442079460958')"
+            ),
+            {"id": legacy_analysis_id, "user_id": legacy_user_id},
+        )
+    migrate("head")
+    with engine.begin() as connection:
+        legacy = connection.execute(
+            text("SELECT full_name, username, email FROM users WHERE id = :id"),
+            {"id": legacy_user_id},
+        ).one()
+        assert legacy == (None, None, "legacy@example.com")
+        assert (
+            connection.scalar(
+                text("SELECT count(*) FROM analyses WHERE id = :id AND user_id = :user_id"),
+                {"id": legacy_analysis_id, "user_id": legacy_user_id},
+            )
+            == 1
+        )
+        connection.execute(
+            text(
+                "TRUNCATE TABLE analyses, auth_sessions, password_reset_tokens, users, "
+                "auth_rate_limits"
+            )
+        )
     # The round-trip is intentionally destructive and only runs against *_test.
     # Clear Task 6 PHONE rows before restoring the older MESSAGE/URL-only constraint.
     with engine.begin() as connection:
-        connection.execute(text("TRUNCATE TABLE analyses, auth_sessions, users, auth_rate_limits"))
+        connection.execute(
+            text(
+                "TRUNCATE TABLE analyses, auth_sessions, password_reset_tokens, users, "
+                "auth_rate_limits"
+            )
+        )
     migrate("0003_auth_ownership", "downgrade")
     with engine.begin() as connection:
         connection.execute(
@@ -79,7 +127,12 @@ def database():
             ("MESSAGE", "preserved message"),
             ("URL", "https://example.com/preserved"),
         ]
-        connection.execute(text("TRUNCATE TABLE analyses, auth_sessions, users, auth_rate_limits"))
+        connection.execute(
+            text(
+                "TRUNCATE TABLE analyses, auth_sessions, password_reset_tokens, users, "
+                "auth_rate_limits"
+            )
+        )
     migrate("base", "downgrade")
     assert "analyses" not in inspect(engine).get_table_names()
     migrate("head")
@@ -92,18 +145,33 @@ def database():
 def persistent(database):
     config, engine = database
     with engine.begin() as connection:
-        connection.execute(text("TRUNCATE TABLE analyses, auth_sessions, users, auth_rate_limits"))
+        connection.execute(
+            text(
+                "TRUNCATE TABLE analyses, auth_sessions, password_reset_tokens, users, "
+                "auth_rate_limits"
+            )
+        )
     with TestClient(create_app(config)) as client:
         response = client.post(
             "/api/v1/auth/signup",
-            json={"email": "owner@example.com", "password": PASSWORD},
+            json={
+                "full_name": "Owner Example",
+                "username": "owner_user",
+                "email": "owner@example.com",
+                "password": PASSWORD,
+            },
             headers={"Origin": ORIGIN},
         )
         assert response.status_code == 201
         client.headers.update({"Origin": ORIGIN, "X-CSRF-Token": response.json()["csrf_token"]})
         yield client
     with engine.begin() as connection:
-        connection.execute(text("TRUNCATE TABLE analyses, auth_sessions, users, auth_rate_limits"))
+        connection.execute(
+            text(
+                "TRUNCATE TABLE analyses, auth_sessions, password_reset_tokens, users, "
+                "auth_rate_limits"
+            )
+        )
 
 
 @pytest.mark.parametrize(

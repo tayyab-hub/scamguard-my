@@ -158,12 +158,15 @@ export function HelpPage() {
           Privacy in this academic prototype
         </h2>
         <p className="mt-3 max-w-4xl text-xs leading-6 text-muted">
-          An account stores an email address and links submitted analyses to that account so its
-          history remains private from other users. Do not submit passwords, one-time codes, payment
-          credentials, recovery phrases, identity documents or highly sensitive personal
-          information. Message, URL and Phone results are limited decision support, not proof of
-          safety or fraud. Phone numbering metadata cannot establish caller identity or intent.
-          External AI review is disabled by default and is not required for local analysis.
+          Secure accounts store a full name, normalized username and email alongside an Argon2id
+          password hash. Analysis records are persisted in Neon PostgreSQL and shown through your
+          Overview, Analysis History and expanded Analysis Detail. The FastAPI service returns only
+          records owned by your authenticated account; other users cannot access them. Completed
+          results remain immutable for forensic integrity. You may delete your own record or choose
+          Analyse again to copy its input into a new editable draft and create a fresh result. Full
+          name and username are editable on Account; email remains read-only until verified email
+          changes are supported. Never submit passwords, one-time codes, payment credentials,
+          recovery phrases, identity documents or highly sensitive personal information.
         </p>
       </section>
 

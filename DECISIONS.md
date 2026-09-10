@@ -235,3 +235,28 @@ INSUFFICIENT_EVIDENCE. Phone exposes no numeric risk/confidence score because no
 or calibrated model exists. PHONE extends the authenticated `/api/v1/analyses` pipeline, database
 ownership/rate limit/history/dashboard/delete behavior and readiness/capabilities; it does not create a
 parallel endpoint. Alembic `0004_phone_intelligence` changes only input/content constraints.
+
+## D48 — Transitional profile fields and normalized usernames (2026-09-10)
+
+Migration `0005_auth_profile_polish` adds nullable `full_name` and `username` columns so existing
+production accounts remain valid without fabricated identity data. New signups and profile updates
+require both. Usernames are stored lowercase, restricted to 3–30 ASCII letters/numbers/underscores,
+and protected by a partial unique index. Full names retain international Unicode letters and marks
+with ordinary name punctuation while controls and markup are rejected. Existing users receive a
+profile-completion prompt and keep access through their normalized email.
+
+## D49 — Digest-only password reset with Resend delivery (2026-09-10)
+
+Password-reset links use 256-bit random secrets; PostgreSQL stores only peppered HMAC-SHA-256
+digests, expiry and use timestamps. Public request responses are identical for existing and absent
+emails, and the existing database rate limiter covers request and confirmation. Successful reset is
+single-use, updates the Argon2id hash and revokes all sessions. Local/test delivery uses a private
+in-process outbox. Production uses the Resend HTTPS API with Render-only credentials and a verified
+sending domain; no reset secret is returned or logged.
+
+## D50 — Immutable analyses with Analyse again (2026-09-10)
+
+Completed forensic records have no update endpoint. Owned history/detail views may copy Message, URL
+or Phone input into an editable Analyse draft, but submission always creates a new owned record and
+leaves the source unchanged. Foreign detail remains a uniform 404, so another user cannot use this UI
+path to recover protected input. QR remains disabled and outside Task 6.1.

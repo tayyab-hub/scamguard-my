@@ -17,7 +17,7 @@ test('real PostgreSQL: login, Phone assessment, history and refreshed result per
   const account = await createAuthenticatedAccount(page.request, info)
   await page.context().clearCookies()
   await page.goto('/login')
-  await page.getByLabel('Email address').fill(account.email)
+  await page.getByLabel('Username or email').fill(account.email)
   await page.getByLabel('Password', { exact: true }).fill(account.password)
   await page.getByRole('button', { name: 'Sign in' }).click()
   await expect(page.getByRole('heading', { name: 'Security overview' })).toBeVisible()
