@@ -1,0 +1,15 @@
+{
+  "wheel": "scamguard_api-0.1.0-py3-none-any.whl",
+  "bytes": 790984,
+  "sha256": "e882c5a96aef94b77d5b5f77e7db6280a97d58a0409e41d2291cb1180b408bed",
+  "checked_modules_and_artifacts": [
+    "app/ml/artifacts/message_tfidf_v1.json",
+    "app/url_intelligence/artifacts/url_model_v1.json",
+    "app/phone_intelligence/engine.py",
+    "app/qr_intelligence/engine.py",
+    "app/qr_intelligence/decoder.py",
+    "app/services/mail.py"
+  ],
+  "decoder_dependencies": "PASS",
+  "excluded_tests_env_and_caches": "PASS"
+}

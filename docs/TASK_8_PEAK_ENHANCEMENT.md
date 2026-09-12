@@ -1,5 +1,10 @@
 # Task 8 — Peak enhancement, UX innovation and product polish
 
+Historical implementation record. On 2026-09-12 the owner accepted Task 8, which was merged and
+deployed at main `4b327ccf21b59e295622e3b321cec62dc523dbde`. Its original review restrictions and
+Task 9-not-started wording below are superseded. Current status/evidence: PROGRESS.md,
+FINAL_TEST_REPORT.md and PRODUCTION_ACCEPTANCE.md. Original results/dates are preserved.
+
 Task 8 development starts from `42a9db1e1d29ef0c05c248a416f6b90ac341d256`, verified equal to
 `origin/main` after fetching, with a clean worktree. Branch: `task-8-peak-enhancement`.
 Task 7 and the production routing fixes are present. Production operational status is supplied by

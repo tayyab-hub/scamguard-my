@@ -326,3 +326,33 @@ after transitions. Failed logout remains an explicit failure rather than pretend
 Native modal dialogs provide inert background, explicit Tab wrapping, safe initial focus, Escape
 handling, pending protection and focus restoration. Tokenized short motion stops immediately under
 reduced-motion preference; status remains textual. No independent animation library is warranted.
+
+## D57 — Accepted Task 8 and final feature freeze (2026-09-12)
+
+Task 8 is owner-accepted, merged and deployed at main/origin-main
+`4b327ccf21b59e295622e3b321cec62dc523dbde`; same-day provider and Neon observations confirm the baseline.
+This supersedes historical D52/D53 and Task 8 review restrictions. Task 9 is authorized on exactly
+`task-9-final-closure` for commit/push and owner review, not automatic main merge or production changes.
+Only justified corrections, tests, evidence, documentation and presentation support are allowed.
+No new feature, engine, infrastructure, schema migration or intelligence tuning was warranted.
+
+## D58 — Final privacy and reproducibility corrections (2026-09-12)
+
+New saved QR records redact first-field Wi-Fi passwords and embedded payment URL userinfo. Original
+decoded bytes remain the input to payment/routed assessment; redacted saved payment text is an audit
+record, not a valid reusable payment instruction. Existing production rows are not rewritten.
+Raw Message CSV bytes are restored from the checksum-verified publisher archive and protected by
+an explicit -text attribute. Normalized text/labels and model artifacts are unchanged. A guarded
+disposable migration fixture clears prior QR test rows before downgrading; production migrations
+are unchanged. The static launcher test footer now correctly reports its 16 existing assertions.
+
+## D59 — Evidence and academic claim boundary (2026-09-12)
+
+Frozen model metrics, authored fixture checks, functional/security regression, warm local timings,
+public production smoke, owner reports and physical/human evidence are reported separately.
+URL includes both a learned random forest and deterministic rules. No Phone fraud accuracy, QR
+real-world decoding accuracy, full EMV compliance, calibrated final risk, independent pentest,
+WCAG certification, high-distinction result or enterprise reliability is claimed. The owner says
+"its working", with no device/study particulars; generic functional acceptance is recorded, device
+evidence remains unrecorded and volunteer usability is NOT YET CONDUCTED. The final report/deck and
+rehearsal remain owner artifacts; the subjective readiness score is 78/100, not a predicted grade.

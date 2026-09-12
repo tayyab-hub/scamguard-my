@@ -101,7 +101,14 @@ def persisted_payload(payload: str) -> str:
     if classified.type == "WIFI":
         # Wi-Fi QR payloads commonly embed a password in the P field. Classification does not
         # need that secret, so do not write it to PostgreSQL or return it from saved history.
-        return re.sub(r"(?i)(^|;)P:(?:\\.|[^;])*", r"\1P:[redacted]", payload.strip())
+        text = payload.strip()
+        # The password can be the first field immediately after WIFI:, not only after ';'.
+        return text[:5] + re.sub(r"(?i)(^|;)P:(?:\\.|[^;])*", r"\1P:[redacted]", text[5:])
+    if classified.type == "PAYMENT":
+        # Analysis uses the original decoded bytes. Saved text must not retain userinfo in
+        # embedded HTTP(S) URLs, including URLs beyond the first routed one. Redaction can
+        # change TLV lengths/CRC: the saved text is a private record, not a payment instruction.
+        return re.sub(r"(?i)(https?://)[^/\s?#]*@", r"\1[redacted]@", payload)
     return payload
 
 

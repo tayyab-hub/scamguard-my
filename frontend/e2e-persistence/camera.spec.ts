@@ -148,7 +148,7 @@ test('camera: cancellation, switching, navigation, reduced motion and upload fal
       .locator('.scanner-line')
       .evaluate((element) => getComputedStyle(element).animationName),
   ).toBe('none')
-  for (const width of [375, 390, 430, 768, 1024, 1366, 1440]) {
+  for (const width of [320, 375, 390, 430, 768, 1024, 1366, 1440]) {
     await page.setViewportSize({ width, height: 950 })
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
     await page.screenshot({

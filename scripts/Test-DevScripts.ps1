@@ -37,4 +37,4 @@ Check (@($tasks.tasks).Count -eq 2 -and $tasks.tasks[0].runOptions.runOn -eq 'fo
 Check ($dev -notmatch 'DATABASE_URL' -and $dev -notmatch 'pg-password') 'launcher does not read or print database secrets'
 
 if ($failures.Count) { throw "$($failures.Count) development launcher checks failed." }
-Write-Host 'All 14 development launcher checks passed.' -ForegroundColor Cyan
+Write-Host 'All 16 development launcher checks passed.' -ForegroundColor Cyan

@@ -1,6 +1,48 @@
 # SCAMGUARD architecture
 
-Audited 2026-09-10. Read `PROGRESS.md` for executed verification and `DECISIONS.md` for constraints. The product uses the warm-light Forensic Intelligence identity and a general international scope.
+Audited 2026-09-12. Read `PROGRESS.md` for executed verification and `DECISIONS.md` for constraints.
+Tasks 1–8 are deployed; Task 9 is a review branch under feature freeze, with no new migration.
+The product uses the warm-light Forensic Intelligence identity and a general international scope.
+
+```mermaid
+flowchart TD
+  U[User browser] --> F[Vercel React frontend]
+  F -->|same-origin HTTPS /api/v1 rewrite| A[Render FastAPI: validation / auth / Origin / CSRF]
+  A --> O[Owned analysis orchestration]
+  O --> M[Message: local model / rules / fusion]
+  O --> L[URL: offline parser / model / rules / fusion]
+  O --> P[Phone: offline metadata / conservative rules]
+  O --> Q[QR: bounded decoding / classification / payment TLV and CRC]
+  Q -->|supported route| M
+  Q -->|supported route| L
+  Q -->|supported route| P
+  A --> D[(Neon PostgreSQL over TLS)]
+  O -->|owned intake and immutable result| D
+  A --> R[Reset-token service]
+  R --> D
+  R --> S[Resend]
+  S --> I[User inbox]
+```
+
+## Trust boundaries and recovery
+
+The browser is untrusted; frontend visibility is not authorization. API ownership comes only from
+the validated session, with exact Origin/CSRF protection for mutations and private search. React
+renders submitted/decoded content as escaped inert text. Browser/edge, backend, database and mail
+provider are separate trust boundaries. Backend secrets never enter VITE_* or source control.
+
+Argon2id protects passwords; HttpOnly cookies carry opaque session tokens, while PostgreSQL stores
+their HMAC digests. Production requires Secure, SameSite=None and exact HTTPS origins; Origin/CSRF
+remains essential. Password reset uses generic responses, expiring digest-only random tokens and
+locked single-use consumption, then revokes all sessions. Resend processes the reset recipient/link.
+Development mail capture is environment-gated. Readiness does not prove inbox delivery.
+
+Task 9 redacts first-field Wi-Fi passwords and embedded payment URL userinfo before new QR records
+are stored. Assessment uses original bytes, so saved redacted payment text is not a reusable payment
+instruction. This does not detect arbitrary secrets in free text or rewrite old production records.
+Payment parsing covers a generic TLV/CRC subset, not full EMV mandatory-field compliance or merchant
+identity. See [security](SECURITY_REVIEW.md), [data flows](DATA_FLOW.md), [database](DATABASE.md),
+[evaluation](EVALUATION.md) and [production acceptance](PRODUCTION_ACCEPTANCE.md).
 
 ## CURRENTLY IMPLEMENTED
 

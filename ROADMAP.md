@@ -1,6 +1,6 @@
 # SCAMGUARD roadmap
 
-Updated 2026-09-10. The user confirmed Task 7 acceptance, merge and successful production deployment.
+Updated 2026-09-12. Tasks 1–8 are accepted, merged and deployed. Feature freeze is active.
 
 | Order | Milestone | Status | Real state / exit criteria |
 | --- | --- | --- | --- |
@@ -12,15 +12,15 @@ Updated 2026-09-10. The user confirmed Task 7 acceptance, merge and successful p
 | 6 | Phone Intelligence | ✅ COMPLETE | Manually accepted and merged. |
 | 6.1 | Authentication/profile polish | ✅ COMPLETE | Manually accepted and merged at `546447fa`; profile, reset and Analyse again shipped. |
 | 7 | QR Intelligence | ✅ COMPLETE | Accepted, merged and deployed; readiness/capabilities for all four modes confirmed by the user. |
-| 8 | Peak Enhancement, UX Innovation & Product Polish | 🟡 MANUAL REVIEW | Implemented on feature branch: live camera, searchable history, measured dashboard, session reliability and UX polish. No merge/deploy. |
-| 9 | Final Integration, Evaluation & Capstone Closure | ⚪ NOT STARTED | Final merge, deployment verification, evaluation, report, presentation and closure require later instructions. |
+| 8 | Peak Enhancement, UX Innovation & Product Polish | ✅ COMPLETE | Accepted, merged and deployed on main `4b327ccf21b59e295622e3b321cec62dc523dbde`. |
+| 9 | Final Integration, Evaluation & Capstone Closure | 🟡 OWNER REVIEW | Repository fixes, regression, evaluation, documentation and presentation plans prepared on `task-9-final-closure`; no automatic merge. Device/mail evidence, real study and final report/deck remain owner work. |
 
 ## Current boundary
 
-Task 8 began from clean main/origin-main at `42a9db1e1d29ef0c05c248a416f6b90ac341d256`.
-Keep `task-8-peak-enhancement` separate until the user manually accepts it. Commit/push is authorized;
-merge, deployment and provider/secret configuration changes are not. Task 9 is NOT STARTED.
-Local screenshot inspection is Task 8 product QA, not a final report or presentation evidence pack.
+Task 9 began from clean main/origin-main at `4b327ccf21b59e295622e3b321cec62dc523dbde`.
+Keep `task-9-final-closure` separate until owner review. Commit/push is authorized; automatic merge,
+deployment and provider/secret changes are not. No new product features or intelligence tuning.
+Historical task records preserve their original dates; `docs/INDEX.md` identifies current documents.
 
 Windows development continues to use the existing repository-relative PowerShell launcher, real
 PostgreSQL, explicit Alembic migrations and isolated `_test`/`_e2e` databases. See

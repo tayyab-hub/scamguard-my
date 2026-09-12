@@ -1,2 +1,4 @@
 * text=auto eol=lf
 *.png binary
+# Preserve the reviewed publisher CSV byte-for-byte (original CRLF checksum).
+data/raw/mendeley_sms_phishing_v1/source/Dataset_5971.csv -text whitespace=cr-at-eol

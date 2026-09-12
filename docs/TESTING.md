@@ -1,6 +1,15 @@
 # Testing and verification
 
-## Task 8 verification (2026-09-10)
+## Current Task 9 verification (2026-09-12)
+
+The authoritative final counts and evidence distinctions are in [FINAL_TEST_REPORT.md](FINAL_TEST_REPORT.md):
+159 Vitest, 310 Pytest passes plus one opt-in skip, and 50 Playwright passes (18 + 8 + 24).
+The existing commands below still apply, with isolated `_test`/`_e2e` PostgreSQL only.
+Task 9 expands broad camera/product loops to 320px and adds all-width auth, four-mode persisted-result
+and dialog checks. Its security regressions cover QR credential redaction and all-mode A/B isolation.
+Feature freeze and owner review apply to `task-9-final-closure`; Task 8 is already merged/deployed.
+
+## Historical Task 8 verification (2026-09-10)
 
 Run the existing commands below with private local database configuration. This task used separate
 loopback `_test` and `_e2e` databases, never the development or hosted database. No secret was printed.
@@ -37,7 +46,8 @@ fixed navigation and the offscreen skip link at capture-scroll positions; assess
 reachability using browser assertions rather than interpreting those positions as document flow.
 
 See [Task 8 manual acceptance](TASK_8_PEAK_ENHANCEMENT.md) for camera, mobile, auth, results and
-regression instructions, dependencies, audit and honest limits. Do not merge/deploy or start Task 9.
+regression instructions, dependencies, audit and honest limits. Its former merge/Task 9 restriction
+was superseded by the owner's Task 8 acceptance and Task 9 instruction on 2026-09-12.
 
 ## Historical Task 7 verification (2026-09-10)
 

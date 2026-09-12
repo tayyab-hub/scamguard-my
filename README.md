@@ -2,18 +2,31 @@
 
 **SCAMGUARD: Multi-Modal Scam Detection & Reporting Web Application**
 
-A general scam-awareness workspace with the approved warm light **Forensic Intelligence** identity. The project was initially Malaysia-focused and was generalized following supervisor feedback. The repository and Vercel domain retain their historical `-my` suffix.
+A private scam-awareness workspace that helps people inspect suspicious messages, URLs, phone numbers
+and QR content before acting. Local evidence and explicit uncertainty support a decision; results
+are not proof of fraud or safety. The approved warm light identity is **Forensic Intelligence**.
+The project was generalized following supervisor feedback; the repository/domain retain the historical
+`-my` suffix. The formal title includes Reporting, but delivered reporting is private analysis/history,
+not a public scam-reporting or moderation network.
 
-Tasks 1–7, including Task 6.1, are complete, merged and deployed as confirmed by the user. The stable
-production architecture is Vercel → same-origin `/api/v1` rewrite → Render → Neon.
-**Task 8 Peak Enhancement is implemented on `task-8-peak-enhancement` for manual review. It has not
-been merged or deployed. Task 9 Final Integration is NOT STARTED.** Task 8 adds explicit live-camera
-QR capture, private searchable history, measured dashboard distributions, session reliability and
-accessibility/UX polish. See [Task 8 audit and acceptance](docs/TASK_8_PEAK_ENHANCEMENT.md),
+**2026-09-12:** Tasks 1–8 are accepted, merged and deployed on main
+`4b327ccf21b59e295622e3b321cec62dc523dbde`. Task 9 final closure is ready for owner review on
+`task-9-final-closure`; feature freeze is active and no automatic merge is authorized.
+The Task 9 QR credential-redaction correction reaches production only after review/merge.
+The production architecture is Vercel → same-origin `/api/v1` rewrite → Render → Neon, with Resend
+for password-reset delivery. Live camera, private searchable history, measured dashboard distributions
+and session/accessibility polish are included. See [documentation index](docs/INDEX.md),
+[final tests](docs/FINAL_TEST_REPORT.md), [evaluation](docs/EVALUATION.md),
+[production acceptance](docs/PRODUCTION_ACCEPTANCE.md), [historical Task 8 audit](docs/TASK_8_PEAK_ENHANCEMENT.md),
 [QR Intelligence](docs/QR_INTELLIGENCE.md), [Task 6.1](docs/TASK_6_1.md), [Phone Intelligence](docs/PHONE_INTELLIGENCE.md),
 [Authentication](docs/AUTHENTICATION.md), and [Privacy](docs/PRIVACY_MODEL.md).
 
 ## Project memory
+
+Technology stack: React 19, strict TypeScript, Vite, Tailwind, React Router, TanStack Query and Zod;
+Python/FastAPI/Pydantic, SQLAlchemy/Psycopg, PostgreSQL and Alembic. Training uses scikit-learn;
+runtime models are JSON, Phone uses offline phonenumbers, and QR uses Pillow/zxing-cpp plus a browser
+zxing-wasm fallback. [Architecture diagram](docs/ARCHITECTURE.md) shows the browser/API/DB/mail boundaries.
 
 Before code changes, read [CODEX](CODEX.md) → [PROGRESS](PROGRESS.md) → [ROADMAP](ROADMAP.md) → [DECISIONS](DECISIONS.md) → README → [ARCHITECTURE](docs/ARCHITECTURE.md) → [DESIGN_SYSTEM](docs/DESIGN_SYSTEM.md) → [API](docs/API.md) → [TESTING](docs/TESTING.md). Historical Task 1/redesign reports remain in docs and are not current feature claims.
 
@@ -43,6 +56,9 @@ After the one-time setup below, choose one workflow from the repository root:
 
 The launcher checks the portable PostgreSQL runtime/data, backend `.venv` and `.env`, frontend dependencies, and persistence setting; starts the isolated database on `127.0.0.1:55432`; applies Alembic through the current head; and starts the backend and frontend in visible terminals. It reuses healthy SCAMGUARD services and refuses unknown processes on ports 8000, 5173, or 55432 without killing them. Shutdown verifies recorded process identity and stops only launcher-owned app processes, then cleanly stops this repository's PostgreSQL cluster. It never deletes the database. Final URLs are `http://127.0.0.1:5173` and `http://127.0.0.1:8000/api/v1/health`.
 
+This convenience launcher requires the existing ignored .local portable cluster to be provisioned;
+a fresh clone should use the Compose/manual API setup below unless that runtime is installed.
+
 VS Code intentionally requires workspace trust before an automatic folder-open task runs. Review `.vscode/tasks.json`, `dev.ps1`, and `stop-dev.ps1`, then trust this repository if you want that convenience. No execution-policy setting is changed globally; wrappers use a process-scoped policy for the checked-in scripts.
 
 ```sh
@@ -63,14 +79,14 @@ credentials separate from production. Continue to use non-sensitive test content
 Requirements: Python 3.12+, PostgreSQL 17 (existing server or Docker Compose), Node/npm. From the repository root, copy examples only when the destination does not already exist:
 
 ```powershell
-Copy-Item .env.example .env
+if (-not (Test-Path .env)) { Copy-Item .env.example .env }
 # Edit POSTGRES_PASSWORD in .env; do not commit it.
 docker compose up -d db
 docker compose ps
 cd backend
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -c requirements.lock -e '.[dev,ml,ai]'
-Copy-Item .env.example .env
+if (-not (Test-Path .env)) { Copy-Item .env.example .env }
 # Set DATABASE_URL to your local database credentials.
 # Set PERSISTENCE_ENABLED=true for this private workspace.
 .\.venv\Scripts\python.exe -m alembic upgrade head
@@ -155,7 +171,7 @@ retrying; idempotency keys are not implemented.
 
 ## GitHub and Vercel
 
-Keep the existing origin and domain. Task 8 remains on its review branch until manual acceptance:
+Keep the existing origin and domain. Task 9 remains on its review branch until owner acceptance:
 
 ```sh
 git status
@@ -171,8 +187,33 @@ so the rewrite can reach Render. See [Production deployment](docs/PRODUCTION_DEP
 
 [TESTING](docs/TESTING.md) contains exact frontend/backend/real PostgreSQL/browser commands. [PROGRESS](PROGRESS.md) records actual results and limitations. Generated dependencies, builds, local PostgreSQL data, `.env` and test outputs are ignored; lockfiles, source, migrations, tests and intentional documentation screenshots stay tracked.
 
-Tasks 1–7 are complete, merged and deployed as confirmed by the user. Task 8 implementation and local
-verification are complete; manual review comes before merge/deployment. Task 9 is NOT STARTED.
+Task 9 observed 159 Vitest, 50 Playwright and 310 Pytest passes, with one opt-in live AI test skipped.
+See the final test report for exact commands, scope, warnings and production/manual distinctions.
+The owner reports the application works; device-specific hardware evidence is unrecorded and the
+volunteer usability study is **NOT YET CONDUCTED**. No independent penetration test, WCAG certification,
+enterprise load validation or live scam-detection accuracy is claimed.
+
+## Submission evidence
+
+[Requirements](docs/REQUIREMENTS_TRACEABILITY.md), [architecture](docs/ARCHITECTURE.md),
+[data flows](docs/DATA_FLOW.md), [database](docs/DATABASE.md), [security](docs/SECURITY_REVIEW.md),
+[limitations](docs/LIMITATIONS.md) and [future work](docs/FUTURE_WORK.md) support the written report.
+[Report guide](docs/CAPSTONE_REPORT_GUIDE.md), [presentation plan](docs/PRESENTATION_PLAN.md),
+[demo script](docs/DEMO_SCRIPT.md), [examiner Q&A](docs/EXAMINER_QA.md),
+[screenshot instructions](docs/SCREENSHOT_CHECKLIST.md) and [strict assessment](docs/EXAMINER_REVIEW.md)
+support the remaining owner work. Historical records are retained with their original evidence dates.
+
+Controlled text and generated QR fixtures are in [data/demo/task9](data/demo/task9/fixtures.json).
+Keep URLs, numbers and payment content inert. Reproduce without retraining from the repository root:
+
+```powershell
+.\backend\.venv\Scripts\python.exe backend/scripts/evaluate_final.py
+.\backend\.venv\Scripts\python.exe backend/scripts/verify_url_pipeline.py
+.\backend\.venv\Scripts\python.exe backend/scripts/scan_repository_secrets.py
+```
+
+The Message source CSV intentionally retains publisher CRLF bytes for checksum reproducibility.
+Both research archives and reviewed model artifacts are intentional licensed provenance.
 
 ## Post-Task 4 UI/UX refinement
 
