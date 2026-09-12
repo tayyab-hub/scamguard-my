@@ -1,8 +1,43 @@
 # SCAMGUARD — current project state
 
-Updated **2026-09-10, Asia/Kuala_Lumpur** for Task 8 implementation and review.
+Updated **2026-09-12, Asia/Kuala_Lumpur** for Task 9 final closure review.
 
-## Current milestone
+## Current Task 9 closure
+
+Starting clean main/origin-main: `4b327ccf21b59e295622e3b321cec62dc523dbde`, with Task 8 accepted,
+merged and deployed. Vercel Ready and Render Live at that commit; Render tracks main with On Commit
+auto-deploy. Neon and local Alembic head: `0006_qr_intelligence`. Public health/ready/capabilities
+pass directly and through Vercel. Dated evidence: `docs/PRODUCTION_ACCEPTANCE.md`.
+
+Feature freeze is active. Task 9 lives only on `task-9-final-closure`, ready for owner review;
+commit/push is authorized, automatic main merge/deployment is not. Runtime correction: redact
+first-field Wi-Fi passwords and embedded payment URL userinfo before saving new QR analyses.
+Original-byte assessment is unchanged. The production baseline awaits this correction's merge.
+Raw Message CSV publisher bytes restored from the verified archive, with a -text attribute;
+normalized content and frozen models unchanged. The disposable migration fixture now clears old
+QR test rows before its pre-QR downgrade. No production migration or infrastructure change.
+
+Final verification: TypeScript/ESLint PASS; Vitest 159/11 files; Pytest 310 passed, one opt-in live AI
+skip, two dependency warnings; Playwright 18 foundation + 8 built preview + 24 real PostgreSQL = 50;
+Ruff check/format PASS (71 files); pip check PASS; Alembic current/heads/check PASS; production build
+and wheel PASS. See `docs/FINAL_TEST_REPORT.md` for scan, package, accessibility and scope details.
+All eight required widths (320/375/390/430/768/1024/1366/1440) exercised; camera streams are synthetic.
+
+Message's frozen 1,160-test matrix reproduced (accuracy .968966, macro F1 .895235); URL's 36,901-test
+matrix reproduced (accuracy .984824, macro F1 .984698). Controlled URL 13/13, Phone 10/10, QR 15/15,
+payment 4/4 behavior checks passed. A separate missing-payment-fields case documents incomplete
+standard validation. These are not live fraud accuracy or full EMV compliance results.
+
+Documentation index: `docs/INDEX.md`; includes requirements, architecture/data/database, security,
+evaluation, tests, limitations/future work, report guide, presentation/demo/Q&A, screenshot checklist,
+production acceptance and strict examiner review. Subjective readiness: 78/100, not an academic grade.
+The owner says "its working": generic functional acceptance only. Device/date/evidence unspecified;
+volunteer usability is NOT YET CONDUCTED. Report/deck authorship, device/mail evidence, study and
+rehearsal remain owner actions. No production accounts or messages were created/sent by this review.
+
+The following Task 8 record is historical and superseded by the current closure above.
+
+## Historical Task 8 milestone (2026-09-10)
 
 Tasks 1–7, including Task 6.1, are complete, accepted, merged and deployed as confirmed by the user.
 The stable production architecture is Vercel → same-origin `/api/v1` rewrite → Render → Neon.

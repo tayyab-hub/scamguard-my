@@ -1,0 +1,48 @@
+{
+  "warning": "Controlled demonstration only. Never open URLs, call numbers or authorize payment.",
+  "messages": {
+    "benign": "Hello, our project meeting is at the library tomorrow afternoon.",
+    "scam_like": "Your bank account is locked. Send your password and OTP immediately to avoid arrest.",
+    "insufficient": "hello"
+  },
+  "urls": {
+    "conventional": "https://example.com/",
+    "ip_host": "http://192.0.2.10/login",
+    "userinfo": "https://example.com@other.example/",
+    "subdomains": "https://a.b.c.d.example.com/",
+    "punycode": "https://bücher.example/",
+    "mixed_script": "https://аpple.example.com/",
+    "port": "https://example.com:8088/",
+    "encoded": "https://example.com/%252f%2540",
+    "keywords": "https://example.com/account/settings",
+    "brand_structure": "https://paypal.com.secure-login.example.net/verify"
+  },
+  "phones": {
+    "mobile": "+60 12-345 6789",
+    "fixed": "+44 20 7946 0958",
+    "foreign": "+1 (202) 555-0123",
+    "voip": "+44 56 1234 5678",
+    "premium": "+49 900 1 234567",
+    "shared_cost": "+33 884 01 23 45",
+    "invalid": "+44 1234567"
+  },
+  "qr": {
+    "url": "https://example.com/",
+    "phone": "tel:+44 20 7946 0958",
+    "message": "Your bank account is locked. Send your password and OTP immediately to avoid arrest.",
+    "plain_text": "Hello",
+    "payment": "00020101021126180014A0000006770101520458125303458540512.345802MY5909SCAMGUARD6012KUALA LUMPUR63040F49",
+    "invalid_crc": "00020101021126180014A0000006770101520458125303458540512.345802MY5909SCAMGUARD6012KUALA LUMPUR63040000",
+    "unknown": "custom:inert-demo",
+    "unsafe_scheme": "javascript:alert(1)",
+    "wifi": "WIFI:T:nopass;S:SCAMGUARD-DEMO;;",
+    "sms": "SMSTO:+442079460958:Hello",
+    "email": "mailto:demo@example.com",
+    "payment_url": "00020101021126180014A00000067701012720https://example.com/520458125303458540512.345802MY5909SCAMGUARD6012KUALA LUMPUR63041AA8"
+  },
+  "message_observed_risks": {
+    "benign": "LOW",
+    "scam_like": "ELEVATED",
+    "insufficient": "INSUFFICIENT_EVIDENCE"
+  }
+}

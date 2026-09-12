@@ -61,6 +61,15 @@ def database():
         "password_reset_tokens",
     }.issubset(inspect(engine).get_table_names())
     subprocess.run([sys.executable, "-m", "alembic", "check"], cwd=root, env=env, check=True)
+    # This guarded disposable database may contain QR rows from earlier test modules.
+    # Clear fixture data before testing a revision whose constraints predate QR support.
+    with engine.begin() as connection:
+        connection.execute(
+            text(
+                "TRUNCATE TABLE analyses, auth_sessions, password_reset_tokens, users, "
+                "auth_rate_limits"
+            )
+        )
     # A Task 6.1 profile and owned analysis survive the 0005 -> 0006 QR constraint upgrade.
     migrate("0005_auth_profile_polish", "downgrade")
     task_6_1_user_id = uuid4()

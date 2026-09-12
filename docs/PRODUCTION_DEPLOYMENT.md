@@ -1,9 +1,11 @@
-# Task 5 production deployment
+# Production deployment runbook
 
-Status (2026-09-10): **the user has manually verified the Task 5 Vercel → same-origin `/api/v1`
-rewrite → Render → Neon production architecture and authentication/private-history flow.** Task 7 is
-implemented only on its feature branch; no production service or variable was changed. Do not
-interpret a future Git push or provider build badge as Task 7 acceptance evidence.
+Current status (2026-09-12): Tasks 1–8 are accepted, merged and deployed at main
+`4b327ccf21b59e295622e3b321cec62dc523dbde`. Vercel Ready, Render Live/main/On Commit and Neon
+`0006_qr_intelligence` were observed during same-day Task 8 closure; fresh Task 9 public endpoints pass.
+See [PRODUCTION_ACCEPTANCE.md](PRODUCTION_ACCEPTANCE.md) for evidence classes and remaining owner checks.
+Task 9 remains a separate review branch; its QR privacy fix is not in production yet.
+The sections below retain the original setup guidance. A build badge is not full workflow acceptance.
 
 | Production checkpoint | Status |
 | --- | --- |
@@ -12,10 +14,10 @@ interpret a future Git push or provider build badge as Task 7 acceptance evidenc
 | Alembic production migration | PASS (user-verified) |
 | `/api/v1/health` | PASS — 200 (user-verified) |
 | `/api/v1/ready` | PASS for the deployed release (user-verified) |
-| Vercel Task 5 frontend | DEPLOYED (user-verified) |
+| Vercel Tasks 1–8 frontend | READY at current main (provider UI observed) |
 | Vercel same-origin API proxy | PASS (user-verified) |
 | Production signup, login and private history | PASS (user-verified) |
-| Task 7 QR release | NOT MERGED / NOT DEPLOYED |
+| Task 7 QR / Task 8 camera release | MERGED / DEPLOYED; device-specific acceptance unrecorded |
 
 ## Selected architecture
 
@@ -24,7 +26,7 @@ Browser -> Vercel Vite frontend -> Render FastAPI service -> Neon PostgreSQL
                                       |-> bundled Message JSON model
                                       |-> bundled URL JSON model
                                       |-> bundled Phone metadata
-                                      `-> bundled QR decoder wheel after Task 7 deployment
+                                      `-> bundled QR decoder wheel
 ```
 
 Neon was selected for managed PostgreSQL because its current free tier is PostgreSQL-compatible,
@@ -43,7 +45,7 @@ migration responsibility. Neon free-tier compute can also suspend when idle and 
 egress limits. Review current provider terms before final submission; no paid plan is authorized here.
 
 Both ML artifacts are package data and checksum-validated at startup. No artifact is downloaded from a
-runtime URL. After Task 7 deployment, `/api/v1/ready` also verifies the local QR decoder alongside
+runtime URL. `/api/v1/ready` also verifies the local QR decoder alongside
 PostgreSQL and all required intelligence engines. The
 optional external AI service is excluded from readiness because it is disabled by default and local
 analysis is sufficient.
@@ -78,7 +80,9 @@ Resend was selected because its small HTTPS send API fits the existing Render se
 SMTP daemon and supports domain-scoped sending keys. Create an account in the Resend dashboard,
 verify a sending domain with its SPF/DKIM records, create a sending-only API key, and add the key and
 verified sender to Render. Do not place either value in Vercel. The frontend continues to use the
-checked-in relative `/api/v1` rewrite, so Task 6.1 requires no Vercel environment variable.
+provider-configured relative `/api/v1` rewrite, so Task 6.1 requires no Vercel environment variable.
+The checked-in vercel.json contains the SPA catch-all; preserve the existing project API rewrite
+ahead of that fallback. Recreating the project requires recreating this provider configuration.
 
 Vercel public build configuration: optional `VITE_SUPPORT_EMAIL`. The checked-in production API
 architecture uses the relative rewrite and requires no API URL variable. Never place a
@@ -95,7 +99,11 @@ passwords, weak/default peppers, non-HTTPS or wildcard CORS origins, and cookies
 `Secure; SameSite=None`. Local `.env` uses the independent portable PostgreSQL database and remains
 ignored.
 
-## Required external acceptance
+## Historical full external-acceptance protocol
+
+The current Task 9 agent review creates no production accounts or messages. Use
+PRODUCTION_ACCEPTANCE.md for owner actions and actual observations. The original two-account protocol
+below is retained as a future owner-controlled test; local `_test`/`_e2e` suites already exercise it.
 
 With the laptop's local servers stopped: open the deployed frontend, create Account A, refresh, run a
 Message analysis and a URL analysis, inspect real results, refresh private history, delete one analysis,
@@ -104,9 +112,9 @@ confirm A's records/totals cannot be listed, fetched or deleted and B's dashboar
 the test accounts, then recheck `/health`, `/ready`, browser console, network destinations, mobile layout
 and keyboard flow. Confirm no request targets localhost.
 
-The Render/Neon backend is verified independent of the laptop. Until the Vercel sequence passes,
-deployed signup/login, Message/URL analysis through the frontend, persistence and multi-user isolation
-are **not verified end to end**.
+The deployed backend is independent of the laptop. The owner previously accepted production flows
+and now reports "its working"; exact device/test artifacts remain unspecified. Automated A/B proof
+is local isolated PostgreSQL evidence, not a claim that this review repeated destructive production tests.
 
 Official references: [Render web services](https://render.com/docs/web-services), [Render free
 limits](https://render.com/docs/free), [Render deploys and pre-deploy commands](https://render.com/docs/deploys),

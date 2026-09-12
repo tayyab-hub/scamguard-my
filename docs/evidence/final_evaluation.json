@@ -1,0 +1,652 @@
+{
+  "measured_at_utc": "2026-09-12T12:53:12.291018+00:00",
+  "python": "3.12.14",
+  "platform": "Windows",
+  "message": {
+    "artifact_sha256": "818d99f72c8502fe6ec28849e42c77f4707949366bf014bd5677079dde2c3dd3",
+    "manifest_sha256": "542027e3904e7e132cdf5ebd272c5cd7addd23172ea427dc75bc4f7584aaf714",
+    "checked_manifest_rows": 5797,
+    "split_counts": {
+      "test": 1160,
+      "validation": 1160,
+      "train": 3477
+    },
+    "class_order": [
+      "LEGITIMATE",
+      "SPAM",
+      "SCAM"
+    ],
+    "confusion_matrix": [
+      [
+        960,
+        4,
+        3
+      ],
+      [
+        7,
+        71,
+        9
+      ],
+      [
+        0,
+        13,
+        93
+      ]
+    ],
+    "metrics": {
+      "accuracy": 0.9689655172413794,
+      "LEGITIMATE": {
+        "precision": 0.9927611168562565,
+        "recall": 0.9927611168562565,
+        "f1": 0.9927611168562565,
+        "support": 967
+      },
+      "SPAM": {
+        "precision": 0.8068181818181818,
+        "recall": 0.8160919540229885,
+        "f1": 0.8114285714285714,
+        "support": 87
+      },
+      "SCAM": {
+        "precision": 0.8857142857142857,
+        "recall": 0.8773584905660378,
+        "f1": 0.8815165876777252,
+        "support": 106
+      },
+      "macro_f1": 0.895235425320851,
+      "weighted_f1": 0.9689957275932107
+    },
+    "interpretation": "Frozen runtime reproduction, not a new independent test set or retraining."
+  },
+  "controlled": {
+    "url": [
+      {
+        "case": "conventional",
+        "expected": true,
+        "observed": true,
+        "passed": true,
+        "input": "https://example.com/",
+        "rule_categories": [],
+        "fused_risk": "CAUTION"
+      },
+      {
+        "case": "ip_host",
+        "expected": true,
+        "observed": true,
+        "passed": true,
+        "input": "http://192.0.2.10/login",
+        "rule_categories": [
+          "IP_ADDRESS_HOST",
+          "HTTP_ONLY",
+          "SUSPICIOUS_KEYWORDS"
+        ],
+        "fused_risk": "CAUTION"
+      },
+      {
+        "case": "userinfo",
+        "expected": true,
+        "observed": true,
+        "passed": true,
+        "input": "https://example.com@other.example/",
+        "rule_categories": [
+          "MISSING_MEANINGFUL_DOMAIN",
+          "EMBEDDED_CREDENTIALS",
+          "AT_SIGN_CONFUSION"
+        ],
+        "fused_risk": "CAUTION"
+      },
+      {
+        "case": "subdomains",
+        "expected": true,
+        "observed": true,
+        "passed": true,
+        "input": "https://a.b.c.d.example.com/",
+        "rule_categories": [
+          "EXCESSIVE_SUBDOMAINS"
+        ],
+        "fused_risk": "CAUTION"
+      },
+      {
+        "case": "punycode",
+        "expected": true,
+        "observed": true,
+        "passed": true,
+        "input": "https://bücher.example/",
+        "rule_categories": [
+          "MISSING_MEANINGFUL_DOMAIN",
+          "PUNYCODE"
+        ],
+        "fused_risk": "CAUTION"
+      },
+      {
+        "case": "mixed_script",
+        "expected": true,
+        "observed": true,
+        "passed": true,
+        "input": "https://аpple.example.com/",
+        "rule_categories": [
+          "PUNYCODE",
+          "UNICODE_HOMOGLYPH_RISK"
+        ],
+        "fused_risk": "CAUTION"
+      },
+      {
+        "case": "port",
+        "expected": true,
+        "observed": true,
+        "passed": true,
+        "input": "https://example.com:8088/",
+        "rule_categories": [
+          "UNUSUAL_PORT"
+        ],
+        "fused_risk": "CAUTION"
+      },
+      {
+        "case": "encoded",
+        "expected": true,
+        "observed": true,
+        "passed": true,
+        "input": "https://example.com/%252f%2540",
+        "rule_categories": [
+          "ENCODING_OBFUSCATION"
+        ],
+        "fused_risk": "ELEVATED"
+      },
+      {
+        "case": "keywords",
+        "expected": true,
+        "observed": true,
+        "passed": true,
+        "input": "https://example.com/account/settings",
+        "rule_categories": [
+          "SUSPICIOUS_KEYWORDS"
+        ],
+        "fused_risk": "CAUTION"
+      },
+      {
+        "case": "brand_structure",
+        "expected": true,
+        "observed": true,
+        "passed": true,
+        "input": "https://paypal.com.secure-login.example.net/verify",
+        "rule_categories": [
+          "SUSPICIOUS_SUBDOMAIN_BRANDING",
+          "SUSPICIOUS_KEYWORDS"
+        ],
+        "fused_risk": "ELEVATED"
+      },
+      {
+        "case": "malformed_10",
+        "expected": true,
+        "observed": true,
+        "passed": true,
+        "input": "example.com"
+      },
+      {
+        "case": "malformed_11",
+        "expected": true,
+        "observed": true,
+        "passed": true,
+        "input": "javascript:alert(1)"
+      },
+      {
+        "case": "malformed_12",
+        "expected": true,
+        "observed": true,
+        "passed": true,
+        "input": "https://"
+      }
+    ],
+    "phone": [
+      {
+        "case": "mobile",
+        "expected": [
+          "+60123456789",
+          "MY",
+          "MOBILE",
+          true,
+          "INSUFFICIENT_EVIDENCE"
+        ],
+        "observed": [
+          "+60123456789",
+          "MY",
+          "MOBILE",
+          true,
+          "INSUFFICIENT_EVIDENCE"
+        ],
+        "passed": true,
+        "input": "+60 12-345 6789"
+      },
+      {
+        "case": "fixed",
+        "expected": [
+          "+442079460958",
+          "GB",
+          "FIXED_LINE",
+          true,
+          "INSUFFICIENT_EVIDENCE"
+        ],
+        "observed": [
+          "+442079460958",
+          "GB",
+          "FIXED_LINE",
+          true,
+          "INSUFFICIENT_EVIDENCE"
+        ],
+        "passed": true,
+        "input": "+44 20 7946 0958"
+      },
+      {
+        "case": "foreign",
+        "expected": [
+          "+12025550123",
+          "US",
+          "FIXED_LINE_OR_MOBILE",
+          true,
+          "INSUFFICIENT_EVIDENCE"
+        ],
+        "observed": [
+          "+12025550123",
+          "US",
+          "FIXED_LINE_OR_MOBILE",
+          true,
+          "INSUFFICIENT_EVIDENCE"
+        ],
+        "passed": true,
+        "input": "+1 (202) 555-0123"
+      },
+      {
+        "case": "voip",
+        "expected": [
+          "+445612345678",
+          "GB",
+          "VOIP",
+          true,
+          "INSUFFICIENT_EVIDENCE"
+        ],
+        "observed": [
+          "+445612345678",
+          "GB",
+          "VOIP",
+          true,
+          "INSUFFICIENT_EVIDENCE"
+        ],
+        "passed": true,
+        "input": "+44 56 1234 5678"
+      },
+      {
+        "case": "premium",
+        "expected": [
+          "+499001234567",
+          "DE",
+          "PREMIUM_RATE",
+          true,
+          "CAUTION"
+        ],
+        "observed": [
+          "+499001234567",
+          "DE",
+          "PREMIUM_RATE",
+          true,
+          "CAUTION"
+        ],
+        "passed": true,
+        "input": "+49 900 1 234567"
+      },
+      {
+        "case": "shared_cost",
+        "expected": [
+          "+33884012345",
+          "FR",
+          "SHARED_COST",
+          true,
+          "CAUTION"
+        ],
+        "observed": [
+          "+33884012345",
+          "FR",
+          "SHARED_COST",
+          true,
+          "CAUTION"
+        ],
+        "passed": true,
+        "input": "+33 884 01 23 45"
+      },
+      {
+        "case": "invalid",
+        "expected": [
+          "+441234567",
+          null,
+          "UNKNOWN",
+          false,
+          "INSUFFICIENT_EVIDENCE"
+        ],
+        "observed": [
+          "+441234567",
+          null,
+          "UNKNOWN",
+          false,
+          "INSUFFICIENT_EVIDENCE"
+        ],
+        "passed": true,
+        "input": "+44 1234567"
+      },
+      {
+        "case": "rejected_7",
+        "expected": true,
+        "observed": true,
+        "passed": true,
+        "input": "0123456789"
+      },
+      {
+        "case": "rejected_8",
+        "expected": true,
+        "observed": true,
+        "passed": true,
+        "input": "+12"
+      },
+      {
+        "case": "rejected_9",
+        "expected": true,
+        "observed": true,
+        "passed": true,
+        "input": "+44 20 CALL NOW"
+      }
+    ],
+    "qr": [
+      {
+        "case": "url",
+        "expected": [
+          true,
+          "URL",
+          "URL"
+        ],
+        "observed": [
+          true,
+          "URL",
+          "URL"
+        ],
+        "passed": true,
+        "fused_risk": "CAUTION",
+        "image_sha256": "c7c2cb86fdabe61642db934c7c66351957ebdc1f077ba86cf67d5f3260a7017e"
+      },
+      {
+        "case": "phone",
+        "expected": [
+          true,
+          "PHONE",
+          "PHONE"
+        ],
+        "observed": [
+          true,
+          "PHONE",
+          "PHONE"
+        ],
+        "passed": true,
+        "fused_risk": "INSUFFICIENT_EVIDENCE",
+        "image_sha256": "4a55d788d939d9868b907913a000ce42af0b142250dee8fbe0fadbe82fea88c6"
+      },
+      {
+        "case": "message",
+        "expected": [
+          true,
+          "TEXT",
+          "MESSAGE"
+        ],
+        "observed": [
+          true,
+          "TEXT",
+          "MESSAGE"
+        ],
+        "passed": true,
+        "fused_risk": "ELEVATED",
+        "image_sha256": "bdecec6e85b745cdbc68240ba40581d72bd3d952de4d5143371c4b91692342cd"
+      },
+      {
+        "case": "plain_text",
+        "expected": [
+          true,
+          "TEXT",
+          null
+        ],
+        "observed": [
+          true,
+          "TEXT",
+          null
+        ],
+        "passed": true,
+        "fused_risk": "INSUFFICIENT_EVIDENCE",
+        "image_sha256": "ca3d4eabc2a578004caa0d61a4ba9010757e6aa15e3b9db90bc4846202d24025"
+      },
+      {
+        "case": "payment",
+        "expected": [
+          true,
+          "PAYMENT",
+          null
+        ],
+        "observed": [
+          true,
+          "PAYMENT",
+          null
+        ],
+        "passed": true,
+        "fused_risk": "INSUFFICIENT_EVIDENCE",
+        "image_sha256": "9575df94aa1e484369fa27f02a40fb5d92a459a09cd9792967373af3216b9c7d"
+      },
+      {
+        "case": "invalid_crc",
+        "expected": [
+          true,
+          "PAYMENT",
+          null
+        ],
+        "observed": [
+          true,
+          "PAYMENT",
+          null
+        ],
+        "passed": true,
+        "fused_risk": "CAUTION",
+        "image_sha256": "fafd7bde38e4c2f10200fb1a38f9786f2415249251b035cb8823f9c9ef2b9aba"
+      },
+      {
+        "case": "unknown",
+        "expected": [
+          true,
+          "OTHER",
+          null
+        ],
+        "observed": [
+          true,
+          "OTHER",
+          null
+        ],
+        "passed": true,
+        "fused_risk": "INSUFFICIENT_EVIDENCE",
+        "image_sha256": "8649b24f19f648cf5ea901f3045d2b392799f9ebbe8d081220f187cc84df53cc"
+      },
+      {
+        "case": "unsafe_scheme",
+        "expected": [
+          true,
+          "OTHER",
+          null
+        ],
+        "observed": [
+          true,
+          "OTHER",
+          null
+        ],
+        "passed": true,
+        "fused_risk": "INSUFFICIENT_EVIDENCE",
+        "image_sha256": "da48d4d1dcac130defecda2544f83faed645e773b8222219b6b9d64026349026"
+      },
+      {
+        "case": "wifi",
+        "expected": [
+          true,
+          "WIFI",
+          null
+        ],
+        "observed": [
+          true,
+          "WIFI",
+          null
+        ],
+        "passed": true,
+        "fused_risk": "INSUFFICIENT_EVIDENCE",
+        "image_sha256": "ae10448ad89f834a142bb06184841900f08ac1504a97c1bc5f25ea86f48a9425"
+      },
+      {
+        "case": "sms",
+        "expected": [
+          true,
+          "SMS",
+          null
+        ],
+        "observed": [
+          true,
+          "SMS",
+          null
+        ],
+        "passed": true,
+        "fused_risk": "INSUFFICIENT_EVIDENCE",
+        "image_sha256": "92ed4a38f9118c4491f56ad6d7781eed6d719d68fc4b51a2dcfef0a12e6de6c4"
+      },
+      {
+        "case": "email",
+        "expected": [
+          true,
+          "EMAIL",
+          null
+        ],
+        "observed": [
+          true,
+          "EMAIL",
+          null
+        ],
+        "passed": true,
+        "fused_risk": "INSUFFICIENT_EVIDENCE",
+        "image_sha256": "60e43163f1a7ba273c70c6a37e1e171ce732960982c8162156c5ac9f493dede2"
+      },
+      {
+        "case": "payment_url",
+        "expected": [
+          true,
+          "PAYMENT",
+          "URL"
+        ],
+        "observed": [
+          true,
+          "PAYMENT",
+          "URL"
+        ],
+        "passed": true,
+        "fused_risk": "CAUTION",
+        "image_sha256": "10abacbff96d59894fd3f1e697fc4645b9be37e6f0f2a9f1f45e3602e33b13f2"
+      },
+      {
+        "case": "multiple",
+        "expected": "QR_MULTIPLE_DETECTED",
+        "observed": "QR_MULTIPLE_DETECTED",
+        "passed": true
+      },
+      {
+        "case": "corrupt",
+        "expected": "QR_IMAGE_INVALID",
+        "observed": "QR_IMAGE_INVALID",
+        "passed": true
+      },
+      {
+        "case": "no_code",
+        "expected": "QR_NOT_DETECTED",
+        "observed": "QR_NOT_DETECTED",
+        "passed": true
+      }
+    ],
+    "payment": [
+      {
+        "case": "valid_subset",
+        "expected": [
+          true,
+          true
+        ],
+        "observed": [
+          true,
+          true
+        ],
+        "passed": true
+      },
+      {
+        "case": "invalid_crc",
+        "expected": [
+          false,
+          false
+        ],
+        "observed": [
+          false,
+          false
+        ],
+        "passed": true
+      },
+      {
+        "case": "malformed_tlv",
+        "expected": [
+          false,
+          null
+        ],
+        "observed": [
+          false,
+          null
+        ],
+        "passed": true
+      },
+      {
+        "case": "missing_crc",
+        "expected": [
+          false,
+          null
+        ],
+        "observed": [
+          false,
+          null
+        ],
+        "passed": true
+      }
+    ],
+    "payment_subset_limitation": {
+      "case": "missing_merchant_fields_with_valid_crc",
+      "expected_complete_standard_validation": false,
+      "observed_subset_structurally_valid": true,
+      "limitation": "Mandatory merchant fields are not exhaustively validated; subset TLV/CRC only."
+    },
+    "timings": {
+      "message": {
+        "n": 30,
+        "median_ms": 0.17919999663718045,
+        "p95_ms": 0.22929999977350235,
+        "max_ms": 0.23040000814944506
+      },
+      "url": {
+        "n": 30,
+        "median_ms": 0.3571499837562442,
+        "p95_ms": 0.589400005992502,
+        "max_ms": 0.6713999900966883
+      },
+      "phone": {
+        "n": 30,
+        "median_ms": 0.09849999332800508,
+        "p95_ms": 0.1352000399492681,
+        "max_ms": 0.13649999164044857
+      },
+      "qr_decode_and_assess": {
+        "n": 30,
+        "median_ms": 1.194899989059195,
+        "p95_ms": 1.7804999952204525,
+        "max_ms": 1.8371999613009393
+      }
+    }
+  },
+  "boundaries": "Local frozen models and authored synthetic fixtures; no user records, no network."
+}

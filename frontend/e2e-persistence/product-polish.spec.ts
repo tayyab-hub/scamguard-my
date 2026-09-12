@@ -92,7 +92,7 @@ test('product polish: all major routes and forms fit representative viewport wid
   const errors: string[] = []
   page.on('pageerror', (error) => errors.push(error.message))
   await page.emulateMedia({ reducedMotion: 'reduce' })
-  for (const width of [375, 390, 430, 768, 1024, 1366, 1440]) {
+  for (const width of [320, 375, 390, 430, 768, 1024, 1366, 1440]) {
     await page.setViewportSize({ width, height: 950 })
     for (const [route, heading] of [
       ['/', 'Security overview'],

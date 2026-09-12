@@ -2,9 +2,11 @@
 
 SCAMGUARD is a general **Multi-Modal Scam Detection & Reporting Web Application**. Its approved
 visual identity is **Forensic Intelligence**: warm light ivory, charcoal, terracotta and olive with
-restrained editorial motion. Tasks 1–7 (including Task 6.1) are complete, merged and deployed as
-confirmed by the user. Task 8 Peak Enhancement is implemented on `task-8-peak-enhancement` for
-manual review; it must not be merged or deployed yet. Task 9 Final Integration is NOT STARTED.
+restrained editorial motion. Tasks 1–8 (including Task 6.1) are accepted, merged and deployed at main
+`4b327ccf21b59e295622e3b321cec62dc523dbde`. Task 9 final closure is on `task-9-final-closure` for
+owner review. Feature freeze permits justified corrections, tests, evaluation and documentation only.
+Do not automatically merge Task 9 or change production configuration. See `docs/FINAL_TEST_REPORT.md`
+and `docs/PRODUCTION_ACCEPTANCE.md` for dated evidence and remaining manual acceptance.
 See `docs/TASK_8_PEAK_ENHANCEMENT.md` for the audit, camera boundary and acceptance instructions. Never infer
 functionality from a planned UI control, roadmap line, screenshot or old conversation.
 
@@ -102,10 +104,11 @@ Current source is authoritative when historical wording conflicts.
   commits, discard user work, expose ignored secrets, or alter the configured remote casually.
 - Keep `node_modules`, `.venv`, `dist`, caches, coverage, logs, `.local`, test output and secrets
   ignored. Dataset source and reviewed model artifacts are intentional versioned research assets.
-- Tasks 1–7 are merged to `main`. Retain prior branches/history. Task 8 must stay on
-  `task-8-peak-enhancement` until manual acceptance; do not merge or deploy it automatically.
+- Tasks 1–8 are merged to `main`. Retain prior branches/history. Task 9 must stay on
+  `task-9-final-closure` until owner review; do not merge or deploy it automatically.
   Production Vercel/Render/Neon/Resend configuration is the stable baseline: do not change secrets
-  or provider settings. Task 9 final integration/evaluation/reporting/closure is NOT STARTED.
+  or provider settings. Task 9 repository closure is prepared; final report/deck, volunteer study,
+  device-specific evidence and owner deployment acceptance are distinct remaining owner work.
 
 ## Definition of done and completion procedure
 
