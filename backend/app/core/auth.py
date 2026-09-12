@@ -49,6 +49,12 @@ def new_secret() -> str:
     return secrets.token_urlsafe(32)
 
 
+def session_csrf_token(request: Request, raw_session: str) -> str:
+    # Domain separation makes this token unrecoverable from the stored session digest.
+    # Stable within a session so restoring another tab does not invalidate its peers.
+    return secret_hash(request, f"csrf-session-v1:{raw_session}")
+
+
 def require_allowed_origin(request: Request) -> None:
     origin = request.headers.get("origin")
     if origin not in request.app.state.settings.cors_origins:

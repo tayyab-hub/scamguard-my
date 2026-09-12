@@ -282,3 +282,47 @@ but a valid CRC is never merchant/recipient/account/legitimacy evidence. Valid p
 remain INSUFFICIENT_EVIDENCE and malformed/invalid-CRC payloads are capped at CAUTION. No decoded
 payload is opened, fetched, executed, contacted or sent to an external provider. Task 7 stays on its
 feature branch until manual acceptance; Task 8 remains unstarted.
+
+## D53 — Task 7 accepted; Task 8 enhancement boundary (2026-09-10)
+
+The user confirms Task 7 is accepted, merged and deployed, including correction of Render's old
+backend branch and completed Task 6.1 mail configuration. This supersedes D52's historical review
+boundary. Task 8 starts on `task-8-peak-enhancement` from clean main/origin-main
+`42a9db1e1d29ef0c05c248a416f6b90ac341d256`. Commit/push only; no merge, deployment, provider setting
+or secret changes. Task 9 is the final integration/evaluation/documentation/presentation stage and
+is NOT STARTED.
+
+## D54 — Explicit on-device camera and honest provenance (2026-09-10)
+
+Camera capture requires a separate Start action, then stops before inert decoded-content review and
+explicit Analyse. Native BarcodeDetector QR support is feature-detected; the pinned MIT
+`zxing-wasm@3.1.3` reader runs in a worker with its own same-origin packaged binary as fallback.
+Frames never go to a server or recorder. Sequential scans use bounded resolution/frequency, a
+90-second deadline and cancellation checks for permission/decoder races. All exits release media,
+worker, timers and pixels. Image upload remains available. The new authenticated/CSRF-protected
+payload route reuses the same QR classifier and persistence service, validates 5,000 UTF-8 bytes
+and records CAMERA/client-reported provenance with null image metadata. No server-verified image
+claim, new severity or payload activation is introduced. Physical mobile compatibility needs testing.
+
+## D55 — Private search and measured distributions (2026-09-10)
+
+History is a first-class route. Search is a read-only POST with CSRF so sensitive search terms stay
+out of URL/access-log/query-history text. Bound parameters and literal wildcard escaping search only
+owned stored content/summary; type/risk filters, deterministic ordering and existing bounded offset
+pagination run in PostgreSQL under the existing consistent read snapshot. Summary queries select
+small columns and QR subtype rather than loading all evidence JSON. No new migration or speculative
+search index is needed for capstone-scale records. Large histories may justify measured trigram
+indexes/keyset pagination later. Dashboard bars are labelled real grouped counts, with separate
+insufficient/unassessed categories, linking directly to filters; no chart dependency or fake trends.
+
+## D56 — Session continuity and accessible state transitions (2026-09-10)
+
+CSRF tokens derive from a domain-separated HMAC of each opaque session using the existing pepper;
+only a digest is stored. `/me` returns the same token for that session, including a one-time legacy
+digest transition, so opening a tab no longer invalidates another. New sessions still receive
+different tokens. Private query keys include user identity; cache clearing, identity-only
+BroadcastChannel notifications and stale-response guards prevent old private data from reappearing
+after transitions. Failed logout remains an explicit failure rather than pretending revocation.
+Native modal dialogs provide inert background, explicit Tab wrapping, safe initial focus, Escape
+handling, pending protection and focus restoration. Tokenized short motion stops immediately under
+reduced-motion preference; status remains textual. No independent animation library is warranted.

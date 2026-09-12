@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import { useEffect, useRef, type ReactNode } from 'react'
 
 export function PageHeading({
   eyebrow,
@@ -11,6 +11,10 @@ export function PageHeading({
   description: string
   action?: ReactNode
 }) {
+  const heading = useRef<HTMLHeadingElement>(null)
+  useEffect(() => {
+    heading.current?.focus()
+  }, [])
   return (
     <div className="page-heading mb-8 flex flex-wrap items-end justify-between gap-5">
       <div>
@@ -19,6 +23,7 @@ export function PageHeading({
           {eyebrow}
         </p>
         <h1
+          ref={heading}
           id="page-heading"
           tabIndex={-1}
           className="motion-enter motion-delay-1 font-display text-[32px] font-normal leading-[1.18] tracking-[-0.035em] text-ink outline-none sm:text-[40px]"

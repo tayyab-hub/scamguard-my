@@ -17,6 +17,7 @@ import {
   isQRAssessment,
   orderedEvidence,
   riskCopy,
+  riskGuidance,
   riskScorePresentation,
   SCORE_PRESENTATION_VERSION,
   topSignals,
@@ -91,7 +92,7 @@ export function RiskScoreDisplay({ assessment }: { assessment: Assessment }) {
         </p>
       )}
       <p id={`${id}-note`} className="mt-3 text-[11px] leading-5 text-muted">
-        {isURLAssessment(assessment)
+        {score.kind === 'URL category index'
           ? 'Category position, not a scam percentage.'
           : isPhoneAssessment(assessment)
             ? 'No invented probability or category-to-number conversion.'
@@ -142,6 +143,9 @@ export function AnalysisResultHero({ assessment }: { assessment: Assessment }) {
       <h3 className="mt-3 font-display text-[30px] leading-tight tracking-tight text-ink">
         {riskCopy[assessment.risk_level]}
       </h3>
+      <p className="risk-guidance mt-3 text-xs font-medium leading-6 text-body">
+        {riskGuidance[assessment.risk_level]}
+      </p>
       <p className="mt-3 text-xs leading-6 text-body">{assessment.summary}</p>
       <div className="result-summary-grid mt-5">
         <RiskScoreDisplay assessment={assessment} />
@@ -294,39 +298,44 @@ export function AnalysisMetaPanel({
   children: ReactNode
 }) {
   return (
-    <details className="analysis-meta result-section text-[11px]">
-      <summary className="flex min-h-8 cursor-pointer items-center justify-between gap-3 rounded font-semibold text-body">
-        Components and limitations
-        <ArrowUpRight size={15} aria-hidden="true" />
-      </summary>
-      <div className="disclosure-content">
-        <dl className="metadata-grid mt-4">
-          {analysisId && (
-            <div>
-              <dt>Analysis ID</dt>
-              <dd className="font-mono">{analysisId}</dd>
-            </div>
-          )}
-          <div>
-            <dt>Completed</dt>
-            <dd>
-              <time dateTime={assessment.completed_at}>
-                {new Date(assessment.completed_at).toLocaleString()}
-              </time>
-            </dd>
-          </div>
-          {children}
-          <div>
-            <dt>Score presentation</dt>
-            <dd>{SCORE_PRESENTATION_VERSION}</dd>
-          </div>
-        </dl>
-        <ul className="mt-4 list-disc space-y-2 pl-4 leading-5 text-muted">
+    <>
+      <section className="result-section" aria-label="Assessment limitations">
+        <h3 className="text-sm font-semibold">What this assessment cannot tell you</h3>
+        <ul className="mt-3 list-disc space-y-2 pl-4 text-xs leading-6 text-muted">
           {assessment.limitations.map((limitation) => (
             <li key={limitation}>{limitation}</li>
           ))}
         </ul>
-      </div>
-    </details>
+      </section>
+      <details className="analysis-meta result-section text-[11px]">
+        <summary className="flex min-h-8 cursor-pointer items-center justify-between gap-3 rounded font-semibold text-body">
+          Technical details
+          <ArrowUpRight size={15} aria-hidden="true" />
+        </summary>
+        <div className="disclosure-content">
+          <dl className="metadata-grid mt-4">
+            {analysisId && (
+              <div>
+                <dt>Analysis ID</dt>
+                <dd className="font-mono">{analysisId}</dd>
+              </div>
+            )}
+            <div>
+              <dt>Completed</dt>
+              <dd>
+                <time dateTime={assessment.completed_at}>
+                  {new Date(assessment.completed_at).toLocaleString()}
+                </time>
+              </dd>
+            </div>
+            {children}
+            <div>
+              <dt>Score presentation</dt>
+              <dd>{SCORE_PRESENTATION_VERSION}</dd>
+            </div>
+          </dl>
+        </div>
+      </details>
+    </>
   )
 }

@@ -4,7 +4,17 @@ The primary experience is a warm light workspace inspired by careful document re
 
 All tokens live in `frontend/src/styles.css`: color/type tokens use Tailwind 4 `@theme`, and reusable motion tokens use `:root`. Canvas and text have separate semantic names; components use these shared tokens instead of hard-coded surface colors.
 
-Reconciled with the source on 2026-09-04. This identity is an accepted project decision in [DECISIONS.md](../DECISIONS.md); [CODEX.md](../CODEX.md) defines preservation rules. [PROGRESS.md](../PROGRESS.md) is the latest handoff. Design presentation must not imply that the planned analysis and analytics services already work.
+Reconciled for Task 8 on 2026-09-10. This identity is an accepted project decision in [DECISIONS.md](../DECISIONS.md); [CODEX.md](../CODEX.md) defines preservation rules. [PROGRESS.md](../PROGRESS.md) is the latest handoff. Only real measured data may appear in analytics.
+
+Task 8 preserves this identity. The scanner uses a contained dark video surface, fine cream frame
+and restrained moving line; detection changes to a labelled stopped-camera preview. Native dialogs
+have a subtle backdrop/180ms entrance and keyboard containment. Route/mode/result/disclosure
+entrances use the existing opacity/transform tokens; reduced motion immediately removes animation
+and keeps text feedback. Distribution bars are static with counts and link labels rather than
+hover-only tooltips. Five risk names accompany semantic color, and uncertainty remains explicit.
+History now appears in both sidebar and four-item mobile navigation. Mobile inputs use 16px to avoid
+focus zoom without disabling pinch zoom. Healthy availability uses a neutral surface, and the empty
+analysis icon makes no safety implication. See [Task 8](TASK_8_PEAK_ENHANCEMENT.md) for the audit.
 
 | Token | Value | Role |
 | --- | --- | --- |

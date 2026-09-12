@@ -75,7 +75,7 @@ describe('application routes and API states', () => {
     expect(screen.getAllByText('Not available yet')).toHaveLength(3)
     expect(screen.getByText('Your activity starts here')).toBeInTheDocument()
     expect(screen.getByText('Workspace status')).toBeInTheDocument()
-    expect(screen.getByText('None configured')).toBeInTheDocument()
+    expect(screen.getByText('Not connected')).toBeInTheDocument()
     expect(
       screen.getByText('No live statistics are being collected or displayed.'),
     ).toBeInTheDocument()
@@ -157,7 +157,7 @@ describe('application routes and API states', () => {
     expect(phone).toHaveAttribute('placeholder', '+60 12-345 6789')
     await user.type(phone, '+44 20 7946 0958')
     expect(screen.getByRole('button', { name: 'Analyse phone number' })).toBeDisabled()
-    expect(screen.getByText(/ScamGuard checks numbering-plan metadata only/)).toBeInTheDocument()
+    expect(screen.getByText(/A number alone cannot establish scam intent/)).toBeInTheDocument()
 
     await user.click(screen.getByRole('tab', { name: 'QR Code' }))
     const input = screen.getByLabelText('Upload a QR screenshot or image')

@@ -8,6 +8,7 @@ const python =
 
 export default defineConfig({
   testDir: './e2e',
+  outputDir: './test-results/foundation',
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
   retries: 0,

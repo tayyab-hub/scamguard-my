@@ -209,7 +209,7 @@ describe('persistent submission UI', () => {
     expect(
       screen.getByText('Do not send money, credentials or verification codes.'),
     ).toBeInTheDocument()
-    await userEvent.click(screen.getByText('Components and limitations'))
+    await userEvent.click(screen.getByText('Technical details'))
     expect(screen.getByText(/SCAM · message-tfidf-logreg-v1/)).toBeInTheDocument()
     expect(screen.getByText('disabled · no contribution')).toBeInTheDocument()
     expect(screen.getByRole('meter')).toHaveAttribute('aria-valuenow', '86')
@@ -354,7 +354,7 @@ describe('persistent submission UI', () => {
     setup(undefined, true)
     renderApp()
     await screen.findByText(
-      'No submissions have been recorded. Start with a message, URL, phone number or QR image.',
+      'You have not analysed anything yet. Check a suspicious message, URL, phone number or QR code to start building your private history.',
     )
     expect(
       within(screen.getByRole('region', { name: 'Total analyses' })).getByText('0'),

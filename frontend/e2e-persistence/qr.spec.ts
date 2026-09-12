@@ -37,6 +37,7 @@ test('real PostgreSQL: QR upload, routed result and private history survive refr
   await expect(page.getByLabel('QR assessment')).toBeVisible()
   await expect(page.getByLabel('QR decoding result')).toContainText('url')
   await expect(page.getByText('https://example.com/scamguard-qr-e2e')).toBeVisible()
+  await page.screenshot({ path: info.outputPath('task8-qr-result.png'), fullPage: true })
 
   await page.goto('/')
   await expect(
@@ -49,7 +50,7 @@ test('real PostgreSQL: QR upload, routed result and private history survive refr
   await expect(page.getByText('QR · url')).toBeVisible()
   await page.getByRole('button', { name: /https:\/\/example\.com\/scamguard-qr-e2e/ }).click()
   await expect(page.getByLabel('QR assessment')).toBeVisible()
-  await expect(page.getByText(/Upload the QR image again/)).toBeVisible()
+  await expect(page.getByText(/Scan the code or upload its image again/)).toBeVisible()
   await expect(page.getByRole('button', { name: 'Analyse again' })).toHaveCount(0)
 
   await page.emulateMedia({ reducedMotion: 'reduce' })

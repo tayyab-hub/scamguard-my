@@ -1,6 +1,45 @@
 # Testing and verification
 
-## Task 7 verification (2026-09-10)
+## Task 8 verification (2026-09-10)
+
+Run the existing commands below with private local database configuration. This task used separate
+loopback `_test` and `_e2e` databases, never the development or hosted database. No secret was printed.
+
+| Gate | Final observed result |
+| --- | --- |
+| `npm run typecheck` / `npm run lint` | PASS / PASS, zero lint warnings |
+| `npm test` | 159 passed across 11 files |
+| `npm run build` | PASS, 1,769 modules; main JS 476.16 kB (143.08 gzip), CSS 46.96 (9.52 gzip); QR license notices included |
+| `npm run test:e2e -- --workers=2` | 18 desktop/mobile passed |
+| `npm run test:preview -- --workers=2` | 8 desktop/mobile passed, including packaged worker/WASM |
+| `npm run test:persistence -- --workers=1` | 20 desktop/mobile passed; 14 camera/product/result cases repeated for visual captures |
+| Full `python -m pytest -q` with isolated PostgreSQL | 300 passed, 1 opt-in live-provider skipped; 2 existing deprecation warnings |
+| `ruff check` / `ruff format --check` | PASS, 68 Python files |
+| `pip check` | No broken requirements |
+| `alembic current` / `heads` / `check` | `0006_qr_intelligence`, single head, no drift |
+| `npm audit --omit=dev` | Zero reported runtime vulnerabilities |
+| Changed-file secret scan / `git diff --check` | No private environment value or credential-pattern findings / clean |
+
+Task 8 unit regressions cover camera lifecycle/late permission/late decoding, inert payloads,
+multi-code/timeout/errors, private cache/session transition, safe examples and labelled counts.
+API tests cover the camera route's auth/Origin/CSRF/rate/size/provenance/redaction and owner isolation,
+stable multi-tab CSRF, literal search escaping, combined filters/order/pages and dashboard counts.
+Real-browser camera tests use an actual generated QR through canvas MediaStream and the actual
+same-origin WASM decoder. A separate production-build test loads the emitted worker and binary.
+This is not physical camera permission, iOS/WebKit or Android hardware acceptance.
+
+Product/browser checks cover all seven requested widths (375/390/430/768/1024/1366/1440), plus
+existing 320px coverage; focus wrapping/restoration, deletion of the last page item, cross-tab
+profile/logout, search privacy, old records, real results, offline errors and live reduced motion.
+Foundation output now uses `test-results/foundation`; preview and persistence keep separate folders.
+Review screenshots under ignored `frontend/test-results` after tests. Full-page capture can place
+fixed navigation and the offscreen skip link at capture-scroll positions; assess actual viewport
+reachability using browser assertions rather than interpreting those positions as document flow.
+
+See [Task 8 manual acceptance](TASK_8_PEAK_ENHANCEMENT.md) for camera, mobile, auth, results and
+regression instructions, dependencies, audit and honest limits. Do not merge/deploy or start Task 9.
+
+## Historical Task 7 verification (2026-09-10)
 
 - Backend: 283 passed against the real disposable PostgreSQL database; one explicitly opt-in live
   external-AI test skipped; two existing dependency deprecation warnings.

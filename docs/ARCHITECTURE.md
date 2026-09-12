@@ -6,7 +6,7 @@ Audited 2026-09-10. Read `PROGRESS.md` for executed verification and `DECISIONS.
 
 ```text
 React Router → AuthProvider → public Sign In / Sign Up / Help
-                            → protected AppShell / Overview / Analyse / Account
+                            → protected AppShell / Overview / Analyse / History / Account
   TanStack Query + Zod credentialed transport + in-memory CSRF token
     /api/v1
       FastAPI → safe request/error middleware → typed routes
@@ -23,6 +23,18 @@ React Router → AuthProvider → public Sign In / Sign Up / Help
 ```
 
 ### Frontend
+
+Task 8 adds a user-started MediaStream → bounded canvas → native QR detector or same-origin WASM
+worker → stopped-camera inert preview → explicit `/analyses/qr/payload` path. It feeds the existing
+QR engine/persistence service. No recording, frame upload or destination request occurs. Worker/WASM
+assets load on demand; Help, Account and reset pages use route chunks. Identity-scoped query keys,
+cache clearing and identity-only tab notifications prevent old-account UI reuse. A revision guard
+rejects late restoration/profile results after identity changes.
+
+History search is a CSRF-protected read-only JSON POST, retaining owner checks, bounded offset
+pagination and repeatable-read consistency. SQL selects summaries rather than hydrating every
+assessment. Dashboard counts use grouped SQL, and labelled bars link to History filters. No schema
+change is required; Alembic remains `0006_qr_intelligence`. See the Task 8 document for tradeoffs.
 
 React 19, TypeScript, Vite and Tailwind provide the responsive application. `AppShell` supplies the desktop sidebar, mobile navigation, skip link, focused route headings and titles. The design system centralizes the Forensic Intelligence tokens, short motion and `prefers-reduced-motion` behavior.
 

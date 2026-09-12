@@ -39,13 +39,14 @@ test('real PostgreSQL: login, Phone assessment, history and refreshed result per
   await expect(page.getByText('Analysis completed.')).toBeVisible()
   const result = page.getByLabel('Phone assessment')
   await expect(result).toContainText('Insufficient evidence')
+  await page.screenshot({ path: info.outputPath('task8-phone-result.png'), fullPage: true })
   await expect(result.getByRole('meter')).toHaveCount(0)
   await expect(
     result
       .getByRole('region', { name: 'Phone numbering evidence' })
       .getByText('Valid international numbering format'),
   ).toBeVisible()
-  await result.getByText('Components and limitations').focus()
+  await result.getByText('Technical details').focus()
   await page.keyboard.press('Enter')
   await expect(
     result.getByText(/cannot by itself establish whether the caller is fraudulent/),
@@ -56,7 +57,7 @@ test('real PostgreSQL: login, Phone assessment, history and refreshed result per
   const history = page.getByRole('region', { name: 'Submission history' })
   await expect(history.getByText('+442079460958')).toBeVisible()
   await page.reload()
-  await page.getByRole('button', { name: 'Browse history' }).click()
+  await expect(page.getByRole('heading', { name: 'Analysis history', exact: true })).toBeVisible()
   await history.getByRole('button', { name: /\+442079460958/ }).click()
   await expect(page.getByLabel('Phone assessment')).toBeVisible()
   await expect(page.getByText('Saved content · COMPLETED')).toBeVisible()

@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any
+from typing import Any, Literal
 from uuid import UUID
 
 from pydantic import (
@@ -13,6 +13,7 @@ from pydantic import (
 
 from app.db.models import AnalysisStatus, InputType
 from app.phone_intelligence.parsing import parse_phone_number
+from app.qr_intelligence.decoder import validate_payload_bytes
 from app.url_intelligence.parsing import parse_url
 
 
@@ -62,6 +63,39 @@ class AnalysisFields(BaseModel):
     status: AnalysisStatus
     created_at: datetime
     updated_at: datetime
+
+
+RiskFilter = Literal["LOW", "CAUTION", "ELEVATED", "HIGH", "INSUFFICIENT_EVIDENCE"]
+HistorySort = Literal["newest", "oldest", "risk"]
+
+
+class HistorySearch(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    query: str = Field(default="", max_length=200, strict=True)
+    input_type: InputType | None = None
+    risk_level: RiskFilter | None = None
+    sort: HistorySort = "newest"
+    page: int = Field(default=1, ge=1, le=10000)
+    page_size: int = Field(default=10, ge=1, le=100)
+
+    @field_validator("query")
+    @classmethod
+    def validate_query(cls, value: str) -> str:
+        if any(ord(char) < 32 for char in value):
+            raise ValueError("Search cannot contain control characters")
+        value.encode("utf-8")
+        return value.strip()
+
+
+class CameraQRCreate(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    payload: str = Field(strict=True, min_length=1, max_length=5000)
+    decoder: Literal["BarcodeDetector", "zxing-wasm"]
+
+    @field_validator("payload")
+    @classmethod
+    def validate_payload(cls, value: str) -> str:
+        return validate_payload_bytes(value.encode("utf-8"), 5000)
 
 
 class AnalysisDetail(AnalysisFields):

@@ -77,20 +77,31 @@ def dashboard(
     if not request.app.state.settings.persistence_enabled:
         return DashboardResponse()
     records = list_submissions(session, 1, 5, authenticated.user.id)
-    flagged = session.scalar(
-        select(func.count())
-        .select_from(Analysis)
-        .where(
-            Analysis.user_id == authenticated.user.id,
-            Analysis.risk_level.in_(["ELEVATED", "HIGH"]),
-        )
-    )
+    counts = session.execute(
+        select(Analysis.input_type, Analysis.risk_level, func.count())
+        .where(Analysis.user_id == authenticated.user.id)
+        .group_by(Analysis.input_type, Analysis.risk_level)
+    ).all()
+    type_counts = {mode.value: 0 for mode in InputType}
+    risk_counts = {
+        risk: 0 for risk in ("LOW", "CAUTION", "ELEVATED", "HIGH", "INSUFFICIENT_EVIDENCE")
+    }
+    unassessed = 0
+    for input_type, risk, count in counts:
+        type_counts[input_type.value] += count
+        if risk in risk_counts:
+            risk_counts[risk] += count
+        else:
+            unassessed += count
     return DashboardResponse(
         status="ready",
         total_analyses=records.total,
-        flagged_analyses=flagged,
+        flagged_analyses=risk_counts["HIGH"] + risk_counts["ELEVATED"],
         last_analysis_at=records.items[0].created_at if records.items else None,
         recent_analyses=records.items,
+        type_counts=type_counts,
+        risk_counts=risk_counts,
+        unassessed_analyses=unassessed,
     )
 
 

@@ -4,10 +4,13 @@
 
 A general scam-awareness workspace with the approved warm light **Forensic Intelligence** identity. The project was initially Malaysia-focused and was generalized following supervisor feedback. The repository and Vercel domain retain their historical `-my` suffix.
 
-Tasks 1–6.1 are complete and merged, including the user-verified Vercel → same-origin `/api/v1`
-rewrite → Render → Neon production architecture. **Task 7 QR Intelligence is implemented and fully
-locally verified on `task-7-qr-intelligence`, awaiting manual acceptance before merge.** Task 8 has
-not started. See [QR Intelligence](docs/QR_INTELLIGENCE.md), [Task 6.1](docs/TASK_6_1.md), [Phone Intelligence](docs/PHONE_INTELLIGENCE.md),
+Tasks 1–7, including Task 6.1, are complete, merged and deployed as confirmed by the user. The stable
+production architecture is Vercel → same-origin `/api/v1` rewrite → Render → Neon.
+**Task 8 Peak Enhancement is implemented on `task-8-peak-enhancement` for manual review. It has not
+been merged or deployed. Task 9 Final Integration is NOT STARTED.** Task 8 adds explicit live-camera
+QR capture, private searchable history, measured dashboard distributions, session reliability and
+accessibility/UX polish. See [Task 8 audit and acceptance](docs/TASK_8_PEAK_ENHANCEMENT.md),
+[QR Intelligence](docs/QR_INTELLIGENCE.md), [Task 6.1](docs/TASK_6_1.md), [Phone Intelligence](docs/PHONE_INTELLIGENCE.md),
 [Authentication](docs/AUTHENTICATION.md), and [Privacy](docs/PRIVACY_MODEL.md).
 
 ## Project memory
@@ -95,13 +98,20 @@ database. Downgrade is destructive test activity and must never target developme
 - React/TypeScript/Vite, Router, Tailwind, TanStack Query and Zod; FastAPI/Pydantic, SQLAlchemy/Psycopg/PostgreSQL and Alembic.
 - Sign In (`/login`), Create Account (`/signup`), password recovery (`/forgot-password` and
   `/reset-password`) and public Help (`/help`); authenticated Overview
-  (`/`), Analyse (`/analyse`) and Account (`/account`) routes; plus a catch-all 404. Responsive
+  (`/`), Analyse (`/analyse`), History (`/history`) and Account (`/account`) routes; plus a catch-all 404. Responsive
   navigation, keyboard focus and reduced-motion CSS remain.
 - New accounts require a Unicode-aware full name and case-normalized unique username. Login accepts
   username or email. Account permits CSRF-protected name/username changes while email stays read-only.
 - Completed analyses are immutable. An owned expanded detail offers Analyse again, which creates an
   editable local copy and submits a new Message, URL or Phone record without changing the original.
-  QR requires a fresh image upload because the original image is discarded.
+  QR requires a fresh image upload or explicit camera scan because images are not retained.
+- Live camera QR uses an explicit Start camera action, native QR detection when available and a
+  same-origin `zxing-wasm@3.1.3` worker fallback. Frames stay on-device; detection stops capture before
+  an inert payload preview and a separate Analyse action. HTTPS/localhost is required. Hardware
+  iPhone/Android/Edge acceptance remains owner testing; image upload is always the fallback.
+- Private history supports server-side content/summary search, type/risk filters, newest/oldest/risk
+  sorting and bounded pagination. Overview shows measured type/risk counts with links to filtered
+  history. Insufficient evidence is unranked and never presented as safety.
 - MESSAGE: trimmed non-empty text, at most 5,000 characters. URL: validated absolute HTTP(S), at most 2,048 characters; never visited automatically. PHONE: explicit international `+` context, normal ASCII formatting, at most 64 characters, normalized to E.164.
 - An authenticated backend accepts `POST /api/v1/analyses`, assigns ownership from the session and
   never accepts a frontend user ID. MESSAGE persists intake, runs local assessment synchronously and
@@ -145,7 +155,7 @@ retrying; idempotency keys are not implemented.
 
 ## GitHub and Vercel
 
-Keep the existing origin and domain. Task 7 remains on its review branch until manual acceptance:
+Keep the existing origin and domain. Task 8 remains on its review branch until manual acceptance:
 
 ```sh
 git status
@@ -161,8 +171,8 @@ so the rewrite can reach Render. See [Production deployment](docs/PRODUCTION_DEP
 
 [TESTING](docs/TESTING.md) contains exact frontend/backend/real PostgreSQL/browser commands. [PROGRESS](PROGRESS.md) records actual results and limitations. Generated dependencies, builds, local PostgreSQL data, `.env` and test outputs are ignored; lockfiles, source, migrations, tests and intentional documentation screenshots stay tracked.
 
-Tasks 1–6.1 are complete. Task 7 automated local verification is complete, but manual acceptance,
-merge and deployment are pending. Task 8 final integration/reporting has not started.
+Tasks 1–7 are complete, merged and deployed as confirmed by the user. Task 8 implementation and local
+verification are complete; manual review comes before merge/deployment. Task 9 is NOT STARTED.
 
 ## Post-Task 4 UI/UX refinement
 

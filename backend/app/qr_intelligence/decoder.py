@@ -25,12 +25,13 @@ class QRImageError(ValueError):
 class DecodedQR:
     payload: str
     payload_bytes: int
-    file_sha256: str
-    image_format: str
-    width: int
-    height: int
+    file_sha256: str | None
+    image_format: str | None
+    width: int | None
+    height: int | None
     decoder_library: str = DECODER_LIBRARY
     decoder_version: str = DECODER_VERSION
+    source: str = "UPLOAD"
 
 
 def decoder_operational() -> bool:

@@ -1,4 +1,4 @@
-# Task 5–7 privacy model
+# Task 5–8 privacy model
 
 Status: implemented for the Task 5 application boundary; this is an academic prototype explanation,
 not a legally complete privacy policy.
@@ -29,7 +29,20 @@ parser may use a transient operating-system spool that is closed and removed aft
 Private history stores decoded content and derived audit metadata,
 including a file SHA-256 fingerprint, and marks the original image as not retained. URL credentials
 and Wi-Fi password fields are redacted before storage; routed phones are normalized to E.164. Because
-the image is discarded, QR history cannot reconstruct it and requires a new upload for another run.
+the image is discarded, QR history cannot reconstruct it and requires a new upload or camera scan.
+
+Task 8 camera frames are processed only in local browser memory, without recording or upload.
+Permission is requested after Start camera; detection, cancel, timeout, backgrounding, navigation,
+unmount and errors stop capture and release the decoder. Decoded text remains in the page until
+cleared, changed or explicitly submitted. Submitted CAMERA results contain browser-reported decoder
+provenance and null image metadata; this is not proof that a camera/image was independently verified.
+Raw decoded content can contain sensitive data before submission; users should avoid private codes.
+
+History search terms travel in a CSRF-protected body instead of a URL. Normal access logs do not
+receive the search phrase, but an independently configured body-logging proxy could still record it;
+do not enable such logging. Private client caches clear on identity transitions and tabs receive
+only identity-change notifications, never submitted content. This is not protection against a
+compromised browser, extensions, screen capture or unauthorized physical device access.
 
 Users should not submit passwords, one-time codes, financial credentials, government identifiers or
 other unnecessary sensitive information. URL analysis is string-only and never opens or fetches the

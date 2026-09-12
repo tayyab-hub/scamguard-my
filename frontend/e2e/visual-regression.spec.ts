@@ -51,7 +51,12 @@ test('Forensic Intelligence screens retain navigation and keyboard access', asyn
   const nav = page.getByRole('navigation', {
     name: testInfo.project.name === 'desktop' ? 'Desktop navigation' : 'Mobile navigation',
   })
-  await expect(nav.getByRole('link')).toHaveText(['Overview', 'Analyse', 'Help & Support'])
+  await expect(nav.getByRole('link')).toHaveText([
+    'Overview',
+    'Analyse',
+    'History',
+    'Help & Support',
+  ])
   await expect(nav.getByRole('link', { name: 'Overview' })).toHaveAttribute('href', '/')
   await expect(nav.getByRole('link', { name: 'Overview' })).toHaveAttribute('aria-current', 'page')
   await expect(page).toHaveTitle('Overview · SCAMGUARD')
@@ -265,6 +270,10 @@ test('unavailable Phone and QR modes preserve local privacy, file focus and redu
   await page.getByRole('tab', { name: 'QR Code' }).click()
   const picker = page.getByLabel('Upload a QR screenshot or image')
   await page.getByRole('tab', { name: 'QR Code' }).focus()
+  await page.keyboard.press('Tab')
+  await expect(page.getByRole('button', { name: 'Upload image', exact: true })).toBeFocused()
+  await page.keyboard.press('Tab')
+  await expect(page.getByRole('button', { name: 'Scan with camera', exact: true })).toBeFocused()
   await page.keyboard.press('Tab')
   await expect(picker).toBeFocused()
   await expect(page.locator('.qr-file-control')).toHaveCSS('outline-style', 'solid')
