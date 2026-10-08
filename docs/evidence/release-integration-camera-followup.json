@@ -1,0 +1,43 @@
+{
+  "checked_at_utc": "2026-10-08T14:06:02.132725+00:00",
+  "change": "Vite optimizeDeps.include adds zxing-wasm/reader; no runtime source or dependency changes.",
+  "checks": [
+    {
+      "name": "TypeScript",
+      "result": "PASS",
+      "exit_code": 0
+    },
+    {
+      "name": "ESLint",
+      "result": "PASS",
+      "exit_code": 0
+    },
+    {
+      "name": "Vitest: 164 passed / 12 files",
+      "result": "PASS",
+      "exit_code": 0
+    },
+    {
+      "name": "PostgreSQL Playwright: 26 passed",
+      "result": "PASS",
+      "exit_code": 0
+    },
+    {
+      "name": "Vite production build",
+      "result": "PASS",
+      "exit_code": 0
+    }
+  ],
+  "persistence_browser_reported_duration": "5.1 minutes",
+  "build_asset_names_unchanged": true,
+  "initial_hosted_failure": {
+    "runs": [
+      37786092261,
+      37787541002
+    ],
+    "test": "First desktop camera scan",
+    "evidence": "Worker imports zxing-wasm/reader; document reload follows; optimized React dependency hash changes; camera input returns to upload mode.",
+    "assertions_or_retry_settings_relaxed": false
+  },
+  "verification_notes": "Separate follow-up results after the full 571-test release suite; duplicate executions are not added to the unique test total."
+}

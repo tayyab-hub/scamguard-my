@@ -8,6 +8,9 @@ the verified work present here. This supersedes earlier no-publication boundarie
 See `docs/SCAMGUARD_RELEASE_INTEGRATION.md` for actual commit/deployment status. Preserve secrets,
 production records and historical evidence; keep personal/generated Word submissions local.
 Frontend compatibility is deployed before the backend's nullable-confidence responses.
+Application release reference: `9034f1b01144a733fe29d2ad33d047bee6083a7e`. Production synthetic
+smoke passed 16 checks and removed its accounts. Render commit/log inspection and a fresh Neon
+version query remain sign-in dependent. Use the release record for the final hosted CI result.
 
 SCAMGUARD is a general **Multi-Modal Scam Detection & Reporting Web Application**. Its approved
 visual identity is **Forensic Intelligence**: warm light ivory, charcoal, terracotta and olive with

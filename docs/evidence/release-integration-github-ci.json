@@ -1,0 +1,126 @@
+{
+  "run_id": 37788914588,
+  "job_id": 113350760923,
+  "sha": "9034f1b01144a733fe29d2ad33d047bee6083a7e",
+  "url": "https://github.com/tayyab-hub/scamguard-my/actions/runs/37788914588",
+  "conclusion": "success",
+  "started_at": "2026-10-08T14:00:29Z",
+  "completed_at": "2026-10-08T14:07:41Z",
+  "steps": [
+    {
+      "name": "Set up job",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Initialize containers",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Run actions/checkout@v7",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Run actions/setup-node@v7",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Run actions/setup-python@v7",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Install backend",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Backend quality and PostgreSQL integration",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Install frontend",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Frontend checks",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Install test browser",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Live API browser smoke tests",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Create isolated browser database",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Real PostgreSQL browser submissions",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Built frontend without a backend",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Run actions/upload-artifact@v7",
+      "status": "completed",
+      "conclusion": "skipped"
+    },
+    {
+      "name": "Post Run actions/setup-python@v7",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Post Run actions/setup-node@v7",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Post Run actions/checkout@v7",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Stop containers",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Complete job",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "test_results": {
+    "backend_passed": 355,
+    "backend_skipped": 1,
+    "frontend_passed": 164,
+    "browser_foundation_passed": 18,
+    "browser_persistence_passed": 26,
+    "browser_preview_passed": 8,
+    "total_unique_passed": 571,
+    "failed": 0
+  },
+  "notes": [
+    "Camera assertions, retry policy and timeouts unchanged.",
+    "Upload failure artifact step intentionally skipped on success.",
+    "Final documentation-only commit is separate from this verified application-code commit."
+  ]
+}

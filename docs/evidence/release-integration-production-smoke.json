@@ -1,0 +1,115 @@
+{
+  "started_at_utc": "2026-10-08T13:58:07.381Z",
+  "origin": "https://scamguard-my.vercel.app",
+  "checks": [
+    {
+      "name": "Unauthenticated private API requests return 401",
+      "status": "PASS"
+    },
+    {
+      "name": "Reset request remains generic and invalid reset token is rejected",
+      "status": "PASS",
+      "inbox_delivery_tested": false
+    },
+    {
+      "name": "Browser signup, secure cookie and session restoration through Vercel proxy",
+      "status": "PASS"
+    },
+    {
+      "name": "Missing CSRF and untrusted Origin are rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "Message v2 obfuscation, evidence explanation and applicable actions",
+      "status": "PASS"
+    },
+    {
+      "name": "Nullable confidence and Insufficient Evidence render without a numeric meter",
+      "status": "PASS"
+    },
+    {
+      "name": "URL v2 offline assessment and explanation",
+      "status": "PASS"
+    },
+    {
+      "name": "Phone numbering assessment without an identity claim",
+      "status": "PASS"
+    },
+    {
+      "name": "QR image decoding, routed assessment and no retained image",
+      "status": "PASS"
+    },
+    {
+      "name": "QR payment integrity warning appears in the verdict explanation",
+      "status": "PASS"
+    },
+    {
+      "name": "Six owned analyses persist, reopen after refresh and drive dashboard counts",
+      "status": "PASS"
+    },
+    {
+      "name": "A second synthetic account cannot list, read or delete the first account records",
+      "status": "PASS"
+    },
+    {
+      "name": "Profile update and five main routes fit desktop, tablet and mobile widths",
+      "status": "PASS"
+    },
+    {
+      "name": "Deletion removes only the selected owned synthetic analysis",
+      "status": "PASS"
+    },
+    {
+      "name": "Browser logout/login and invalidated-session handling protect private navigation",
+      "status": "PASS"
+    },
+    {
+      "name": "No uncaught page errors or requests to submitted/external destinations",
+      "status": "PASS"
+    }
+  ],
+  "cleanup": [
+    {
+      "account": "synthetic release account",
+      "deleted": true
+    },
+    {
+      "account": "synthetic release account",
+      "deleted": true
+    }
+  ],
+  "limitations": [
+    "Synthetic accounts and authored fixtures only.",
+    "No real-device camera or inbox-delivery test."
+  ],
+  "completed_at_utc": "2026-10-08T14:00:49.777Z",
+  "passed": 16,
+  "failed": 0,
+  "result": "PASS",
+  "code_release_reference": "9034f1b01144a733fe29d2ad33d047bee6083a7e",
+  "scope_note": "Live application source unchanged from 2620bdfa; later Vite pre-bundling fix only affects development. Render SHA independently unverified.",
+  "harness_sha256": "6c8f83343c330a1866b00f6c44d47f3c54c506d01e091a20727399c7f8f0f6ca",
+  "first_attempt": {
+    "passed": 14,
+    "failed": 1,
+    "failure": {
+      "name": "Error",
+      "message": "expect(locator).toBeVisible() failed\n\nLocator: getByRole('heading', { name: 'Security overview', exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"to.be.visible\" with timeout 5000ms\n  - waiting for getByRole('heading', { name: 'Security overview', exact: true })\n"
+    },
+    "accounts_deleted": 2,
+    "resolution": "Await actual login HTTP 200 before UI assertion. No product behavior or timeouts were relaxed."
+  },
+  "total_synthetic_accounts_created_and_deleted": 4,
+  "screenshots": [
+    {
+      "path": "docs/evidence/release-integration-screenshots/dashboard-mobile.png",
+      "sha256": "a1d66b93e49c3a52a3a2eee1177569ff4ab53090ff17f8b76860145d2ff4817a",
+      "data": "Synthetic account and authored fixtures; visually reviewed."
+    },
+    {
+      "path": "docs/evidence/release-integration-screenshots/message-desktop.png",
+      "sha256": "568c208a5ef91d8a2c044b8ca39d056e7e2a824f937f469409c82b7c2f446f5d",
+      "data": "Synthetic account and authored fixtures; visually reviewed."
+    }
+  ]
+}

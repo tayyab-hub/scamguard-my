@@ -1,10 +1,11 @@
 # SCAMGUARD
 
-**October release integration:** the baseline and existing Phase 1 improvements are being
-released through the original GitHub → Vercel/Render workflow. Phase 2 is planned only, as
+**October release integration:** the baseline and existing Phase 1 improvements are pushed
+and serving through the original GitHub → Vercel/Render workflow. Phase 2 is planned only, as
 confirmed by the owner. Fresh checks passed: **355 backend + 164 frontend + 52 browser tests**,
 with one intentional live-AI skip. See the [release integration record](docs/SCAMGUARD_RELEASE_INTEGRATION.md)
-for exact pushed/deployed commits and production verification; historical reports below keep
+for exact pushed/deployed commits, 16 passing live smoke checks and provider-access limitations;
+historical reports below keep
 their original scope. Generated Word submissions remain local under `output/`.
 
 **SCAMGUARD: Multi-Modal Scam Detection & Reporting Web Application**
@@ -24,8 +25,8 @@ See [final release](docs/FINAL_RELEASE.md) and [academic package](docs/FINAL_ACA
 **2026-10-08 local engineering review:** strengthened session/rate-limit security, Message
 evidence and uncertainty guards, URL/QR edge cases, result explanations and dashboard guidance.
 Verified 355 backend tests, 164 frontend tests and 52 browser tests; one live-AI test skipped.
-No schema, model, dependency or environment-variable changes. These changes are not deployed;
-release the frontend before the backend. See the [engineering report](docs/ENGINEERING_REVIEW_2026-10-08.md)
+No schema, model, dependency or environment-variable changes. The subsequent release followed
+the required frontend-before-backend order. See the [engineering report](docs/ENGINEERING_REVIEW_2026-10-08.md)
 for measured results, remaining limits and exact report/presentation updates.
 
 The production architecture is Vercel → same-origin `/api/v1` rewrite → Render → Neon, with Resend

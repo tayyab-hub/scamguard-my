@@ -1,18 +1,23 @@
 # SCAMGUARD — current project state
 
-## Release integration in progress — 2026-10-08
+## Release pushed; provider inspection partly access-limited — 2026-10-08
 
 The owner authorized GitHub push and deployment and clarified that Phase 2 was planned only.
 A recoverable local checkpoint preserves all pre-integration work. No conflicts or new migrations.
 Fresh 19-gate verification passed: 355 backend, 164 frontend and 52 browser tests; one live-AI skip.
-The first frontend compatibility merge `ad14e75345f7566df0825a74eecbbd08bb83e108` is pushed;
-Vercel reports a successful production deployment. Backend integration and production smoke
-verification follow. Current release evidence: [integration record](docs/SCAMGUARD_RELEASE_INTEGRATION.md).
+Frontend compatibility was released first, then the integrated backend. Application release
+reference `9034f1b01144a733fe29d2ad33d047bee6083a7e` also fixes the cold Vite camera-worker reload
+found in hosted CI; its complete hosted rerun passed 571 tests with one live-AI skip and zero
+failures. Vercel deploys successfully; Render serves
+v2 results with all four engines ready and database connected. Live smoke: 16 passed, 0 failed;
+all four synthetic accounts across both attempts were deleted. Render SHA/startup logs and a
+fresh Neon version query need provider sign-in. Current evidence:
+[integration record](docs/SCAMGUARD_RELEASE_INTEGRATION.md).
 The engineering-review section below describes the earlier local checkpoint.
 
 Updated **2026-10-08, Asia/Kuala_Lumpur** after the user-authorized local engineering review.
 
-## Current local engineering review
+## Historical local engineering review checkpoint
 
 Implemented account/source login budgets, replacement-session revocation, safe failure logs,
 startup/body-buffer reliability, Message v2 normalization/abstention/conflict guards, URL v2

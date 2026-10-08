@@ -1,5 +1,10 @@
 # Production acceptance and owner checklist
 
+October update: [release integration](SCAMGUARD_RELEASE_INTEGRATION.md) records 16 executed
+production smoke checks with synthetic accounts and completed cleanup. It also distinguishes
+the remaining provider sign-in, inbox and physical-camera checks. The September evidence below
+is retained as history and does not override the newer scoped observations.
+
 Date: 2026-09-12. Final release: `4df277bdf93a2e1424ac533d488cd7ba127b35ce`. Task 9 was accepted,
 merged and deployed. Vercel Ready and Render Live at that SHA, SELECT-only Alembic head
 `0006_qr_intelligence`, and health/ready/capabilities HTTP 200 were recorded in

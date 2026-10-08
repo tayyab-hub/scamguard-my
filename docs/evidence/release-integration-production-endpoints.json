@@ -1,0 +1,96 @@
+{
+  "checked_at_utc": "2026-10-08T13:53:33.176782+00:00",
+  "results": [
+    {
+      "url": "https://scamguard-my.vercel.app/api/v1/health",
+      "http_status": 200,
+      "body": {
+        "status": "ok",
+        "service": "scamguard-api",
+        "version": "0.1.0"
+      }
+    },
+    {
+      "url": "https://scamguard-my.vercel.app/api/v1/ready",
+      "http_status": 200,
+      "body": {
+        "status": "ready",
+        "database": "connected",
+        "message_intelligence": "ready",
+        "url_intelligence": "ready",
+        "phone_intelligence": "ready",
+        "qr_intelligence": "ready"
+      }
+    },
+    {
+      "url": "https://scamguard-my.vercel.app/api/v1/capabilities",
+      "http_status": 200,
+      "body": {
+        "submission_available": true,
+        "submission_inputs": [
+          "MESSAGE",
+          "URL",
+          "PHONE",
+          "QR"
+        ],
+        "analysis_available": true,
+        "supported_inputs": [
+          "MESSAGE",
+          "URL",
+          "PHONE",
+          "QR"
+        ],
+        "reason": "Available local engines: MESSAGE, URL, PHONE, QR. Decoded content is never opened, URLs are never fetched and phone numbers are never contacted."
+      }
+    },
+    {
+      "url": "https://scamguard-capstone-api.onrender.com/api/v1/health",
+      "http_status": 200,
+      "body": {
+        "status": "ok",
+        "service": "scamguard-api",
+        "version": "0.1.0"
+      }
+    },
+    {
+      "url": "https://scamguard-capstone-api.onrender.com/api/v1/ready",
+      "http_status": 200,
+      "body": {
+        "status": "ready",
+        "database": "connected",
+        "message_intelligence": "ready",
+        "url_intelligence": "ready",
+        "phone_intelligence": "ready",
+        "qr_intelligence": "ready"
+      }
+    },
+    {
+      "url": "https://scamguard-capstone-api.onrender.com/api/v1/capabilities",
+      "http_status": 200,
+      "body": {
+        "submission_available": true,
+        "submission_inputs": [
+          "MESSAGE",
+          "URL",
+          "PHONE",
+          "QR"
+        ],
+        "analysis_available": true,
+        "supported_inputs": [
+          "MESSAGE",
+          "URL",
+          "PHONE",
+          "QR"
+        ],
+        "reason": "Available local engines: MESSAGE, URL, PHONE, QR. Decoded content is never opened, URLs are never fetched and phone numbers are never contacted."
+      }
+    },
+    {
+      "url": "https://scamguard-my.vercel.app/",
+      "http_status": 200,
+      "body": {
+        "title_present": true
+      }
+    }
+  ]
+}

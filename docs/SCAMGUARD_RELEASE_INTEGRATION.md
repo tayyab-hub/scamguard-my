@@ -1,6 +1,8 @@
 # SCAMGUARD release integration — 8 October 2026
 
-Status: release verification and deployment in progress. Do not treat pending checks below as passed.
+Status: implemented baseline + Phase 1 pushed and serving in production; 16 live smoke checks passed.
+The camera correction's final hosted CI passed all 571 tests. Provider-level Render commit/log and fresh
+Neon migration-head verification remain access-limited; they are not claimed as complete.
 
 ## Scope and baseline
 
@@ -25,6 +27,7 @@ Phase 1 includes account/source login budgets, replacement-session revocation, r
 | Frontend compatibility commit | `da01a036fa8d9b72a0687af81bb8571ff8a59893`, normally merged as `ad14e75345f7566df0825a74eecbbd08bb83e108` and pushed to main |
 | Backend, integration tests and technical documentation | `219db7978e984045a040eb493b0509bbdd7ae292` |
 | Integrated main / GitHub push | Normal merge `2620bdfa43d6696b1695b3f14cd40616197b94cc`; both main and integration branch verified on origin |
+| Camera cold-start fix | `1439d27`, normally merged and pushed as `9034f1b01144a733fe29d2ad33d047bee6083a7e`; application-code release reference |
 | Vercel compatibility frontend | Ready production deployment [6HzpvLG88m5uiQKf5tN5MDpfc5aS](https://vercel.com/tayyab-d919/scamguard-my/6HzpvLG88m5uiQKf5tN5MDpfc5aS), source `ad14e75345f7566df0825a74eecbbd08bb83e108` |
 | Render production | Existing service; dashboard authentication pending |
 
@@ -46,8 +49,14 @@ upload mode. This is cold-start Vite dependency discovery, not evidence of a fai
 Explicitly include `zxing-wasm/reader` in `optimizeDeps` so discovery happens at startup. This
 follows [Vite's dependency pre-bundling guidance](https://vite.dev/guide/dep-pre-bundling).
 No assertion, retry setting, timeout or test was removed. This configuration does not change
-the production bundle or the QR decoder. Follow-up local frontend checks passed; the complete
-hosted rerun and final smoke evidence are recorded below when available.
+the production bundle or the QR decoder: all content-hashed build filenames match the earlier
+verified build. Follow-up local checks passed: 164 Vitest, all 26 PostgreSQL browser tests,
+TypeScript, ESLint and production build. Hosted rerun:
+[37788914588](https://github.com/tayyab-hub/scamguard-my/actions/runs/37788914588) completed
+successfully at `9034f1b`: **571 passed, 0 failed, 1 intentional live-AI skip**. Both desktop and
+mobile camera tests passed on the fresh hosted runner. See
+[CI evidence](evidence/release-integration-github-ci.json) and
+[local correction checks](evidence/release-integration-camera-followup.json).
 
 Frontend-before-backend compatibility still applies. New Message results can have null confidence; the new frontend accepts old and new payloads, but the old frontend can reject those results. The safe sequence is to deploy the compatibility frontend with the old backend, verify Vercel Ready at that commit, then release the backend and integrated tests/documentation. Existing auto-deploy behavior should be used, without duplicate deployments. No provider secret, paid plan or new service is required.
 
@@ -55,7 +64,13 @@ Observed Vercel configuration: Git repository `tayyab-hub/scamguard-my`, product
 
 ## Database safety
 
-There are no new migrations or schema changes in this integration. The expected single head is `0006_qr_intelligence`. Local downgrade/re-upgrade and schema checks use isolated `_test` / `_e2e` PostgreSQL databases. Production validation will use read-only readiness/schema evidence plus synthetic account-owned test records, with cleanup limited to those accounts. No existing production users or analyses may be altered.
+There are no new migrations or schema changes in this integration. The expected single head is
+`0006_qr_intelligence`. Local downgrade/re-upgrade and schema checks used isolated `_test` / `_e2e`
+PostgreSQL databases. Both production readiness paths return database connected; controlled
+account/history creation, reading and deletion also succeeded. This verifies the configured
+backend database works, but does not independently identify the current Neon branch or read its
+Alembic version. The September Neon observation is historical. No production schema commands
+or changes to existing users were made; cleanup removed only this run's synthetic accounts.
 
 ## Release verification
 
@@ -77,15 +92,43 @@ The online npm advisory audit was previously blocked by automatic approval revie
 
 | Area | Actual release result |
 | --- | --- |
-| GitHub expected commits / source/model presence | Pending push verification |
-| Vercel live SHA and deployment | Pending |
-| Render live SHA and startup logs | Pending |
-| Neon connectivity and migration readiness | Pending live checks |
-| Website navigation, responsive layout and console | Pending live smoke |
-| Auth, session restoration/logout and account isolation | Pending live smoke |
-| Message, URL, Phone, QR, uncertainty and explanations | Pending live smoke |
-| Persistence, reopening and owned deletion | Pending live smoke |
+| GitHub expected commits / source/model presence | Pushed main and integration branch; both frozen JSON model artifacts are tracked (743,223 and 1,515,138 bytes) and packaged; final docs commit is distinct from the code release above |
+| Vercel live SHA and deployment | [ywfifHWM3jaifPyqhU7LcxS5C8Uv](https://vercel.com/tayyab-d919/scamguard-my/ywfifHWM3jaifPyqhU7LcxS5C8Uv) Ready / Production / Current at `9034f1b01144a733fe29d2ad33d047bee6083a7e`, domain `scamguard-my.vercel.app` |
+| Render live behavior | Health/ready/capabilities HTTP 200 directly and through Vercel; Message/URL/QR v2 responses executed successfully |
+| Render live SHA and startup logs | Unverified: console redirects to sign-in; source-based auto-deployment is evidenced by changed live behavior, not an independently read SHA |
+| Neon connectivity and migration readiness | Configured database connected; owned CRUD passed; local head `0006_qr_intelligence`; fresh production version query unavailable without console access |
+| Website navigation, responsive layout and console | PASS: five routes at 320/390/768/1440 px, no overflow; no uncaught page errors or unexpected external-destination requests |
+| Auth, session restoration/logout and account isolation | PASS: signup, secure HttpOnly SameSite=None cookie, refresh, login/logout, revoked session handling, two-account read/list/delete isolation |
+| Message, URL, Phone, QR, uncertainty and explanations | PASS: obfuscated credential request, OOV abstention/null confidence, offline URL, numbering Phone, QR image and invalid payment integrity |
+| Persistence, reopening and owned deletion | PASS: six analyses, refresh/reopen, correct dashboard counts, owned deletion, synthetic account deletion |
 | Reset-mail delivery to an owner-controlled inbox | Not verified; requires an owner-controlled inbox |
+
+Live smoke completed at **14:00:49 UTC, 8 October 2026**: **16 passed, 0 failed**. Both accounts
+created by the final attempt were deleted and subsequent session checks returned 401. The first
+attempt passed 14 checks before its five-second UI assertion expired while login was pending;
+both of its accounts were also deleted. Correcting the harness to await the actual login HTTP
+response (required 200) produced the successful full run. No product timeout or auth policy was
+relaxed. Four synthetic accounts in total were created and deleted across the two attempts;
+no existing records were touched. A real seven-day TTL wait was not performed; invalidation and
+the shared unauthorized handling were tested instead. Reset checks covered generic request
+acceptance and rejection of an invalid token, not delivery or a valid inbox reset.
+
+Evidence: [smoke results](evidence/release-integration-production-smoke.json),
+[public endpoints](evidence/release-integration-production-endpoints.json), and synthetic
+[desktop result](evidence/release-integration-screenshots/message-desktop.png) /
+[mobile dashboard](evidence/release-integration-screenshots/dashboard-mobile.png).
+The application source used for smoke is identical between `2620bdfa` and `9034f1b`; only the
+Vite development pre-bundling configuration and release notes changed.
+
+## Access-limited checks to finish
+
+1. Sign in to the [existing Render service](https://dashboard.render.com/web/srv-dafsk1740ujc73cpn0ng),
+   confirm the latest successful deployment's commit and inspect startup logs for migration,
+   model-loading and server errors. Do not duplicate a successful auto-deployment.
+2. Sign in to [Neon](https://console.neon.tech), choose the existing production database and run
+   only `SELECT version_num FROM alembic_version;`; compare to `0006_qr_intelligence`.
+3. When an owner-controlled inbox and physical camera are available, perform those manual checks.
+   They are separate from the synthetic browser camera tests that passed locally.
 
 ## Rollback and limitations
 
@@ -95,4 +138,9 @@ No claim of calibrated fraud probability, live reputation lookup, caller identit
 
 ## Academic alignment
 
-Keep the four-engine scope, frozen models and Vercel–Render–Neon topology. No ER diagram update is needed. Update implementation/methodology/security explanations and screenshots using the exact deltas in section 13 of the Phase 1 report. Label Phase 2 as planned. The generated September Word package remains a historical local artifact; production claims must use the final deployed commit and smoke evidence recorded here when complete.
+Keep the four-engine scope, frozen models and Vercel–Render–Neon topology. No ER diagram update
+is needed. Update implementation/methodology/security explanations using section 13 of the
+Phase 1 report; use the new live synthetic screenshots above for current UI evidence. Label
+Phase 2 as planned. Distinguish the 571-test local suite, hosted CI and 16 live smoke checks.
+The generated September Word package remains a historical local artifact. Do not claim a
+fresh Neon version query, Render log review, inbox delivery or real-device camera result.

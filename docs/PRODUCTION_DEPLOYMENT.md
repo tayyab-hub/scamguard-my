@@ -1,8 +1,10 @@
 # Production deployment runbook
 
-## October local patch — release ordering
+## October integration — release ordering
 
-The [October engineering review](ENGINEERING_REVIEW_2026-10-08.md) is verified locally but is not deployed. **Release the frontend first, then
+The [October engineering review](ENGINEERING_REVIEW_2026-10-08.md) was subsequently pushed and
+smoke-tested live; current evidence and access limits are in
+[release integration](SCAMGUARD_RELEASE_INTEGRATION.md). **Release the frontend first, then
 the backend**: new Message abstention responses may have null confidence, which the older
 frontend rejects. The updated frontend accepts old and new records. Do not roll back only the
 frontend while retaining the newer backend. No Vercel, Render or Neon configuration, dependency,
