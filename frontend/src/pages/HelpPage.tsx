@@ -11,7 +11,7 @@ const faqs = [
   ],
   [
     'How is confidence different from risk?',
-    'Confidence describes model and evidence strength for Message, and uncalibrated classifier strength for URL. Phone numbering metadata does not produce a caller-fraud confidence value. Confidence never measures certainty of fraud.',
+    'Confidence describes uncalibrated model and evidence strength for Message, and uncalibrated classifier strength for URL. Message confidence is unavailable when the evidence cannot support it, and capped at low when strong model and rule signals conflict. Phone numbering metadata does not produce a caller-fraud confidence value. Confidence never measures certainty of fraud.',
   ],
   [
     'What does SCAMGUARD do today?',
@@ -67,7 +67,7 @@ const faqs = [
   ],
   [
     'Can I remove my data?',
-    'You can delete an individual analysis from Overview. Account settings can permanently delete the account, its active sessions and all analyses linked to it after password confirmation.',
+    'You can delete an individual analysis from Overview or History. Account settings can permanently delete the account, its active sessions and all analyses linked to it after password confirmation.',
   ],
   [
     'Is submitted content sent to an external AI service?',

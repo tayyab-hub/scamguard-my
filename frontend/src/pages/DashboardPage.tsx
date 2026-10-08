@@ -162,7 +162,7 @@ export function DashboardPage() {
                   >
                     {data
                       ? 'You have not analysed anything yet. Check a suspicious message, URL, phone number or QR code to start building your private history.'
-                      : 'Analysis history is not enabled yet. Once available, your recorded submissions will appear here.'}
+                      : 'Your history is currently unavailable. Retry the connection to load your saved submissions.'}
                   </EmptyState>
                 )}
                 {data && (
@@ -216,39 +216,43 @@ export function DashboardPage() {
                   ))}
                 </div>
               </section>
-              <section className="relative overflow-hidden rounded-lg border border-accent/25 bg-accent-subtle p-6">
-                <div className="mb-6 flex items-center justify-between">
-                  <span className="eyebrow !text-accent">A SAFER NEXT STEP</span>
-                  <ScanLine
-                    size={23}
-                    className="text-accent"
-                    strokeWidth={1.4}
-                    aria-hidden="true"
-                  />
-                </div>
-                <h2 className="max-w-[230px] font-display text-[29px] font-normal leading-[1.15] tracking-tight text-ink">
-                  Uncertain?
-                  <br />
-                  Start with a check.
+              <section
+                className="rounded-lg border border-accent/25 bg-accent-subtle p-5"
+                aria-labelledby="reading-results-heading"
+              >
+                <p className="eyebrow !text-accent">FROM EVIDENCE TO ACTION</p>
+                <h2 id="reading-results-heading" className="mt-3 font-display text-2xl text-ink">
+                  Read beyond the score
                 </h2>
-                <p className="mb-7 mt-3 text-xs leading-6 text-body">
-                  A dedicated place to review messages, links, phone numbers and QR codes.
-                  {availableModes.length > 0
-                    ? ` ${intelligenceLabel} intelligence is available.`
-                    : ' Intelligence availability depends on the connected service.'}
-                </p>
+                <ol className="mt-4 space-y-4 text-xs leading-6 text-body">
+                  <li>
+                    <strong className="block text-ink">1. Start with the verdict</strong>Risk
+                    describes the observed warning signs. It never proves fraud or safety.
+                  </li>
+                  <li>
+                    <strong className="block text-ink">2. Check the evidence</strong>Read the
+                    detected indicators and any uncertainty before deciding what to do.
+                  </li>
+                  <li>
+                    <strong className="block text-ink">3. Verify independently</strong>Use an
+                    official contact channel you locate yourself, especially before sharing codes or
+                    paying.
+                  </li>
+                </ol>
                 <Link
-                  to="/analyse"
-                  className="action-link flex min-h-11 items-center justify-between rounded-sm border-t border-accent/25 pt-4 text-xs font-semibold text-accent"
+                  to="/help"
+                  className="action-link mt-4 inline-flex min-h-11 items-center gap-2 text-xs font-semibold text-accent"
                 >
-                  Visit Analyse
-                  <ArrowRight size={16} className="motion-arrow" aria-hidden="true" />
+                  Understanding assessments <ArrowRight size={15} aria-hidden="true" />
                 </Link>
               </section>
               <section className="panel p-5">
                 <div className="mb-4 flex items-center justify-between">
                   <h2 className="text-sm font-semibold">Workspace status</h2>
-                  <span className="size-1.5 rounded-full bg-warning" aria-hidden="true" />
+                  <span
+                    className={`size-1.5 rounded-full ${availableModes.length > 0 && data ? 'bg-success' : 'bg-warning'}`}
+                    aria-hidden="true"
+                  />
                 </div>
                 <dl className="space-y-4 text-xs">
                   <div className="flex justify-between gap-3">

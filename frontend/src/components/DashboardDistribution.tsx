@@ -20,6 +20,23 @@ export function DashboardDistribution({
           Your analysis patterns
         </h2>
       </div>
+      {risks.INSUFFICIENT_EVIDENCE > 0 && (
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line bg-canvas px-5 py-4 text-xs leading-6 sm:px-6">
+          <p>
+            <strong className="text-ink">
+              {risks.INSUFFICIENT_EVIDENCE} inconclusive{' '}
+              {risks.INSUFFICIENT_EVIDENCE === 1 ? 'assessment' : 'assessments'}
+            </strong>{' '}
+            · These records need independent verification, not a low-risk interpretation.
+          </p>
+          <Link
+            className="action-link inline-flex min-h-11 items-center font-semibold text-accent"
+            to="/history?risk=INSUFFICIENT_EVIDENCE"
+          >
+            Review inconclusive results
+          </Link>
+        </div>
+      )}
       <div className="grid gap-6 p-5 sm:p-6 md:grid-cols-2">
         <Distribution
           title="Checks by type"

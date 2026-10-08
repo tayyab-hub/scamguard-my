@@ -34,6 +34,11 @@ export function ErrorState({
       <div>
         <h2 className="text-lg font-semibold">We couldn’t load this view</h2>
         <p className="mt-2 max-w-lg text-sm leading-6 text-muted">{error.message}</p>
+        {error instanceof ApiError && error.retryAfterSeconds !== undefined && (
+          <p className="mt-2 text-sm text-body">
+            Try again in about {Math.max(1, Math.ceil(error.retryAfterSeconds / 60))} minute(s).
+          </p>
+        )}
       </div>
       <button type="button" className="button-secondary" onClick={onRetry} disabled={retrying}>
         <RefreshCw size={15} className="motion-icon" aria-hidden="true" />

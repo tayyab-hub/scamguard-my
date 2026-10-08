@@ -7,6 +7,7 @@ export class ApiError extends Error {
     public status?: number,
     public requestId?: string,
     public code?: string,
+    public retryAfterSeconds?: number,
   ) {
     super(message)
     this.name = 'ApiError'
@@ -40,10 +41,16 @@ const structuredEvidenceSchema = z.object({
   explanation: z.string(),
   family: z.string(),
 })
+export const assessmentBasisSchema = z.object({
+  decision: z.string(),
+  supporting: z.array(z.string()),
+  mitigating: z.array(z.string()),
+  uncertainty: z.array(z.string()),
+})
 export const messageAssessmentSchema = z.object({
   risk_level: z.enum(['LOW', 'CAUTION', 'ELEVATED', 'HIGH', 'INSUFFICIENT_EVIDENCE']),
   risk_score: z.number().min(0).max(1).nullable(),
-  confidence_score: z.number().min(0).max(1),
+  confidence_score: z.number().min(0).max(1).nullable(),
   confidence_level: z.enum(['LOW', 'MEDIUM', 'HIGH']),
   summary: z.string(),
   evidence: z.array(evidenceSchema),
@@ -55,6 +62,7 @@ export const messageAssessmentSchema = z.object({
       class_estimate: z.enum(['LEGITIMATE', 'SPAM', 'SCAM']),
       class_probabilities: z.record(z.string(), z.number()),
       confidence: z.number().min(0).max(1),
+      matched_features: z.number().int().nonnegative().optional(),
     }),
     deterministic_rules: z.object({
       used: z.literal(true),
@@ -62,6 +70,7 @@ export const messageAssessmentSchema = z.object({
       score: z.number().min(0).max(1),
       indicator_count: z.number().int().nonnegative(),
       contextual_suppressions: z.number().int().nonnegative(),
+      normalization_applied: z.boolean().optional(),
     }),
     external_ai: z.object({
       status: z.enum(['DISABLED', 'UNAVAILABLE', 'NOT_NEEDED', 'COMPLETED', 'ERROR', 'INVALID']),
@@ -69,7 +78,12 @@ export const messageAssessmentSchema = z.object({
       model: z.string().nullable(),
       contributed: z.boolean(),
     }),
-    fusion: z.object({ version: z.string() }),
+    fusion: z.object({
+      version: z.string(),
+      reason: z.string().optional(),
+      disagreement: z.boolean().optional(),
+    }),
+    assessment_basis: assessmentBasisSchema.optional(),
   }),
   limitations: z.array(z.string()),
   completed_at: z.iso.datetime({ offset: true }),
@@ -113,6 +127,7 @@ export const urlAssessmentSchema = z.object({
       credentials_removed: z.boolean(),
       fragment_excluded: z.boolean(),
     }),
+    assessment_basis: assessmentBasisSchema.optional(),
   }),
   limitations: z.array(z.string()),
   completed_at: z.iso.datetime({ offset: true }),
@@ -335,8 +350,10 @@ export async function postSubmission(input: SubmissionRequest) {
 }
 
 let csrfToken: string | null = null
+let sessionRevision = 0
 
 export function setCsrfToken(value: string | null) {
+  sessionRevision++
   csrfToken = value
 }
 
@@ -345,6 +362,7 @@ type RequestOptions = {
   handlesSessionExpiry?: boolean
   method?: 'GET' | 'POST' | 'PATCH' | 'DELETE'
   body?: unknown
+  timeoutMs?: number
 }
 
 const apiErrorSchema = z.object({
@@ -363,11 +381,19 @@ export async function requestApi<T>(
   // Validate inside the query so a bad deployment setting renders a recoverable view,
   // rather than throwing during module initialization and leaving a blank application.
   const apiBaseUrl = getApiBaseUrl()
+  const requestRevision = sessionRevision
   const controller = new AbortController()
   const abort = () => controller.abort()
   if (options.signal?.aborted) controller.abort()
   options.signal?.addEventListener('abort', abort, { once: true })
-  const timeout = setTimeout(() => controller.abort(), 8_000)
+  const isAnalysisWrite =
+    options.method === 'POST' &&
+    ['/analyses', '/analyses/qr', '/analyses/qr/payload'].includes(path)
+  // Optional contextual review can take up to 30s; allow bounded processing overhead.
+  const timeout = setTimeout(
+    () => controller.abort(),
+    options.timeoutMs ?? (isAnalysisWrite ? 45_000 : 8_000),
+  )
   try {
     const method = options.method || 'GET'
     const formData = options.body instanceof FormData
@@ -405,9 +431,13 @@ export async function requestApi<T>(
           ? parsed.data.error.request_id
           : response.headers.get('X-Request-ID') || undefined,
         parsed.success ? parsed.data.error.code : undefined,
+        /^\d+$/.test(response.headers.get('Retry-After') ?? '')
+          ? Math.min(Number(response.headers.get('Retry-After')), 86_400)
+          : undefined,
       )
       if (
         response.status === 401 &&
+        requestRevision === sessionRevision &&
         !options.handlesSessionExpiry &&
         (!path.startsWith('/auth/') ||
           ['INVALID_SESSION', 'AUTHENTICATION_REQUIRED'].includes(error.code ?? ''))
@@ -423,7 +453,11 @@ export async function requestApi<T>(
     if (error instanceof ApiError) throw error
     if (options.signal?.aborted) throw error
     if (controller.signal.aborted)
-      throw new ApiError('The service took too long to respond. Please try again.')
+      throw new ApiError(
+        isAnalysisWrite
+          ? 'The analysis response took too long. Check your history before submitting again; the result may already be saved.'
+          : 'The service took too long to respond. Please try again.',
+      )
     if (error instanceof SyntaxError)
       throw new ApiError('The service returned an unexpected response.')
     throw new ApiError('We could not reach the service. Check your connection and try again.')
@@ -471,6 +505,7 @@ export async function requestPasswordReset(email: string) {
   return requestApi('/auth/password-reset/request', z.object({ message: z.string() }), {
     method: 'POST',
     body: { email },
+    timeoutMs: 15_000,
   })
 }
 

@@ -25,6 +25,7 @@ export function PhoneResult({
       aria-label="Phone assessment"
     >
       <AnalysisResultHero assessment={assessment} />
+      <RecommendedActionsPanel actions={assessment.recommended_actions} />
       <section className="result-section" aria-label="Phone intelligence details">
         <h3 className="text-sm font-semibold">Phone Intelligence</h3>
         <dl className="metadata-grid mt-4">
@@ -58,7 +59,6 @@ export function PhoneResult({
         </dl>
       </section>
       <EvidencePanel assessment={assessment} />
-      <RecommendedActionsPanel actions={assessment.recommended_actions} />
       <AnalysisMetaPanel assessment={assessment} analysisId={analysisId}>
         <div>
           <dt>Phone engine</dt>

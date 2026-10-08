@@ -2,6 +2,7 @@ import type { MessageAssessment } from '../../lib/api'
 import {
   AnalysisMetaPanel,
   AnalysisResultHero,
+  AssessmentBasisPanel,
   EvidencePanel,
   RecommendedActionsPanel,
 } from './ResultPresentation'
@@ -21,8 +22,9 @@ export function MessageResult({
       aria-label="Message assessment"
     >
       <AnalysisResultHero assessment={assessment} />
-      <EvidencePanel assessment={assessment} />
       <RecommendedActionsPanel actions={assessment.recommended_actions} />
+      <AssessmentBasisPanel assessment={assessment} />
+      <EvidencePanel assessment={assessment} />
       <AnalysisMetaPanel assessment={assessment} analysisId={analysisId}>
         <div>
           <dt>Local model</dt>
@@ -49,6 +51,14 @@ export function MessageResult({
           <dt>Fusion</dt>
           <dd>{components.fusion.version}</dd>
         </div>
+        {components.local_model.matched_features !== undefined && (
+          <div>
+            <dt>Matched vocabulary features</dt>
+            <dd>
+              {components.local_model.matched_features} · support check, not a confidence percentage
+            </dd>
+          </div>
+        )}
       </AnalysisMetaPanel>
     </div>
   )
