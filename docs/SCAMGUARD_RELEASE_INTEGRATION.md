@@ -23,10 +23,31 @@ Phase 1 includes account/source login budgets, replacement-session revocation, r
 | Commit / step | State |
 | --- | --- |
 | Frontend compatibility commit | `da01a036fa8d9b72a0687af81bb8571ff8a59893`, normally merged as `ad14e75345f7566df0825a74eecbbd08bb83e108` and pushed to main |
-| Backend, integration tests and technical documentation | Pending commit after final checks |
-| Final main / GitHub push | Pending |
+| Backend, integration tests and technical documentation | `219db7978e984045a040eb493b0509bbdd7ae292` |
+| Integrated main / GitHub push | Normal merge `2620bdfa43d6696b1695b3f14cd40616197b94cc`; both main and integration branch verified on origin |
 | Vercel compatibility frontend | Ready production deployment [6HzpvLG88m5uiQKf5tN5MDpfc5aS](https://vercel.com/tayyab-d919/scamguard-my/6HzpvLG88m5uiQKf5tN5MDpfc5aS), source `ad14e75345f7566df0825a74eecbbd08bb83e108` |
 | Render production | Existing service; dashboard authentication pending |
+
+The integrated Vercel deployment [45FaBNvYNDZ8ZQb8ooEf3iL2YAM2](https://vercel.com/tayyab-d919/scamguard-my/45FaBNvYNDZ8ZQb8ooEf3iL2YAM2)
+is Ready / Production / Current at `2620bdfa43d6696b1695b3f14cd40616197b94cc`.
+Render's public capabilities changed to the v2 implementation by 13:53 UTC, with all four
+engines ready and database connected. Its exact deployed SHA and startup logs still require
+dashboard sign-in; behavior alone is not SHA verification.
+
+## Integration correction discovered in GitHub CI
+
+Both initial hosted runs failed the first desktop camera test while all other executed tests
+passed (the integrated run: 355 backend, 164 frontend, 18 foundation and 25 persistence passed;
+one camera failure, one live-AI skip; preview did not execute). The retained Playwright trace
+shows the first camera worker request loading `zxing-wasm/reader`, followed by a document reload
+and changed optimized React dependency hash. The reload resets the selected camera input to
+upload mode. This is cold-start Vite dependency discovery, not evidence of a failed QR decode.
+
+Explicitly include `zxing-wasm/reader` in `optimizeDeps` so discovery happens at startup. This
+follows [Vite's dependency pre-bundling guidance](https://vite.dev/guide/dep-pre-bundling).
+No assertion, retry setting, timeout or test was removed. This configuration does not change
+the production bundle or the QR decoder. Follow-up local frontend checks passed; the complete
+hosted rerun and final smoke evidence are recorded below when available.
 
 Frontend-before-backend compatibility still applies. New Message results can have null confidence; the new frontend accepts old and new payloads, but the old frontend can reject those results. The safe sequence is to deploy the compatibility frontend with the old backend, verify Vercel Ready at that commit, then release the backend and integrated tests/documentation. Existing auto-deploy behavior should be used, without duplicate deployments. No provider secret, paid plan or new service is required.
 
@@ -41,6 +62,12 @@ There are no new migrations or schema changes in this integration. The expected 
 The complete current suite passed again: **355 backend + 164 frontend + 52 browser tests = 571 passed**, zero final test failures, one opt-in live-AI skip. The browser total is 18 foundation + 8 built preview + 26 real PostgreSQL. All 19 release gates passed, including 16 separate static launcher assertions. Detailed logs remain local under `.tmp/release-integration-20261008/checks/`; commands, log hashes, timings, test counts and model packaging checks are in [release-integration-verification.json](evidence/release-integration-verification.json).
 
 The first static-launcher invocation was blocked by the machine's default PowerShell script policy before execution. The repository's established per-process invocation passed; no machine-wide setting changed. The existing two backend dependency deprecations and Vite annotation warnings remain. Both frozen model reproductions passed without retraining. Alembic reports the single `0006_qr_intelligence` head and no schema drift. No package dependency changed.
+
+Staged inspection covered 144 files, no prohibited paths and no file above 50 MiB; the largest
+new file was a 580,243-byte synthetic screenshot. A fresh bounded scan covered 287 current files
+and 859 historical blobs with zero findings. Generated SVG path-line trailing spaces were
+normalized before commit; parsed XML semantics were checked unchanged. Original bytes remain
+in the local checkpoint, and historical evidence hashes retain their original scope.
 
 Required gates: TypeScript, ESLint, Vitest, production build, full pytest with real PostgreSQL, Ruff lint/format, pip compatibility, Alembic current/heads/check, frozen Message evaluation, URL pipeline verification, backend wheel packaging, all three Playwright suites, static launcher checks, whitespace and bounded secret/staged-file inspection.
 

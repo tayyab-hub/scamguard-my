@@ -7,6 +7,9 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   return {
     plugins: [react(), tailwindcss()],
+    // The camera worker is loaded on demand. Discover its decoder up front so a
+    // cold dev server does not reload the page and cancel the first camera scan.
+    optimizeDeps: { include: ['zxing-wasm/reader'] },
     server: {
       port: 5173,
       strictPort: true,
