@@ -27,18 +27,18 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     @asynccontextmanager
     async def lifespan(application: FastAPI):
         engine = build_engine(config)
-        application.state.session_factory = sessionmaker(bind=engine, expire_on_commit=False)
-        application.state.message_engine = build_message_engine(config)
-        application.state.url_engine = build_url_engine(config)
-        application.state.phone_engine = build_phone_engine()
-        application.state.qr_engine = build_qr_engine(
-            config,
-            application.state.message_engine,
-            application.state.url_engine,
-            application.state.phone_engine,
-        )
-        application.state.mail_service = build_mail_service(config)
         try:
+            application.state.session_factory = sessionmaker(bind=engine, expire_on_commit=False)
+            application.state.message_engine = build_message_engine(config)
+            application.state.url_engine = build_url_engine(config)
+            application.state.phone_engine = build_phone_engine()
+            application.state.qr_engine = build_qr_engine(
+                config,
+                application.state.message_engine,
+                application.state.url_engine,
+                application.state.phone_engine,
+            )
+            application.state.mail_service = build_mail_service(config)
             yield
         finally:
             engine.dispose()

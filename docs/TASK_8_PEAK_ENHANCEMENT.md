@@ -1,5 +1,7 @@
 # Task 8 — Peak enhancement, UX innovation and product polish
 
+Historical record: status, permissions, versions and screenshots below apply to the named earlier stage. They do not supersede the accepted final release in [FINAL_RELEASE.md](FINAL_RELEASE.md) or the current [academic package](FINAL_ACADEMIC_PACKAGE.md).
+
 Historical implementation record. On 2026-09-12 the owner accepted Task 8, which was merged and
 deployed at main `4b327ccf21b59e295622e3b321cec62dc523dbde`. Its original review restrictions and
 Task 9-not-started wording below are superseded. Current status/evidence: PROGRESS.md,

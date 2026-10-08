@@ -1,3 +1,4 @@
+import logging
 from datetime import UTC, datetime
 from uuid import UUID
 
@@ -21,6 +22,18 @@ from app.qr_intelligence.decoder import DecodedQR
 from app.qr_intelligence.engine import QRIntelligenceEngine, persisted_payload
 from app.url_intelligence.engine import URLIntelligenceEngine
 from app.url_intelligence.parsing import parse_url
+
+logger = logging.getLogger("scamguard.analysis")
+
+
+def log_analysis_failure(record: Analysis, exc: Exception) -> None:
+    # IDs correlate stored failures; exception messages may contain submitted content or secrets.
+    logger.error(
+        "event=analysis_failed analysis_id=%s input_type=%s exception_type=%s",
+        record.id,
+        record.input_type.value,
+        type(exc).__name__,
+    )
 
 
 def summary(record: Analysis | Row) -> AnalysisSummary:
@@ -115,7 +128,8 @@ def record_submission(
             record.ai_contributed = result.components["external_ai"]["contributed"]
         record.completed_at = datetime.now(UTC)
         record.failure_code = None
-    except Exception:
+    except Exception as exc:
+        log_analysis_failure(record, exc)
         record.status = AnalysisStatus.FAILED
         record.failure_code = f"{data.input_type.value}_ANALYSIS_FAILED"
     session.commit()
@@ -159,7 +173,8 @@ def record_qr_submission(
         record.fusion_version = result.fusion_version
         record.completed_at = datetime.now(UTC)
         record.failure_code = None
-    except Exception:
+    except Exception as exc:
+        log_analysis_failure(record, exc)
         record.status = AnalysisStatus.FAILED
         record.failure_code = "QR_ANALYSIS_FAILED"
     session.commit()

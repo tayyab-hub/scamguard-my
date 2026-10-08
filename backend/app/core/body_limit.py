@@ -17,7 +17,8 @@ class BodyLimitMiddleware:
             await self.app(scope, receive, send)
             return
         max_bytes = self.path_limits.get(scope.get("path", ""), self.max_bytes)
-        chunks = []
+        # Bound allocation by bytes, even when a sender streams many tiny chunks.
+        body = bytearray()
         size = 0
         while True:
             message = await receive()
@@ -30,7 +31,7 @@ class BodyLimitMiddleware:
                 )
                 await response(scope, receive, send)
                 return
-            chunks.append(message.get("body", b""))
+            body.extend(message.get("body", b""))
             if not message.get("more_body", False):
                 break
         delivered = False
@@ -39,7 +40,7 @@ class BodyLimitMiddleware:
             nonlocal delivered
             if not delivered:
                 delivered = True
-                return {"type": "http.request", "body": b"".join(chunks), "more_body": False}
+                return {"type": "http.request", "body": bytes(body), "more_body": False}
             return await receive()
 
         await self.app(scope, replay, send)

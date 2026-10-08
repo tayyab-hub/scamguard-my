@@ -3,7 +3,7 @@
 from app.url_intelligence.reputation import ReputationSignal
 from app.url_intelligence.rules import Evidence
 
-FUSION_VERSION = "url_fusion_v1"
+FUSION_VERSION = "url_fusion_v2"
 
 
 def fuse(classification, evidence: list[Evidence], reputation: ReputationSignal) -> str:
@@ -20,7 +20,7 @@ def fuse(classification, evidence: list[Evidence], reputation: ReputationSignal)
         return "HIGH" if strong_ml else "ELEVATED"
     if meaningful and strong_ml:
         return "ELEVATED"
-    if evidence or (
+    if any(item.severity != "CONTEXT" for item in evidence) or (
         classification and (classification.label == "PHISHING" or classification.confidence < 0.75)
     ):
         return "CAUTION"

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="460.8pt" height="513.36pt" viewBox="0 0 460.8 513.36" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-09-12T23:08:44.244725</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.2, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 513.36
+L 460.8 513.36
+L 460.8 -0
+L 0 -0
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 22.824 87.4494
+L 214.776 87.4494
+Q 218.3472 87.4494 218.3472 84.123
+L 218.3472 21.753
+Q 218.3472 18.4266 214.776 18.4266
+L 22.824 18.4266
+Q 19.2528 18.4266 19.2528 21.753
+L 19.2528 84.123
+Q 19.2528 87.4494 22.824 87.4494
+z
+" clip-path="url(#p662928d71f)" style="fill: #f4f3ed; stroke: #333333; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 246.024 87.4494
+L 437.976 87.4494
+Q 441.5472 87.4494 441.5472 84.123
+L 441.5472 21.753
+Q 441.5472 18.4266 437.976 18.4266
+L 246.024 18.4266
+Q 242.4528 18.4266 242.4528 21.753
+L 242.4528 84.123
+Q 242.4528 87.4494 246.024 87.4494
+z
+" clip-path="url(#p662928d71f)" style="fill: #f4f3ed; stroke: #333333; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 74.16 208.0314
+L 386.64 208.0314
+Q 390.2112 208.0314 390.2112 204.705
+L 390.2112 146.493
+Q 390.2112 143.1666 386.64 143.1666
+L 74.16 143.1666
+Q 70.5888 143.1666 70.5888 146.493
+L 70.5888 204.705
+Q 70.5888 208.0314 74.16 208.0314
+z
+" clip-path="url(#p662928d71f)" style="fill: #f4f3ed; stroke: #333333; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 74.16 303.6654
+L 386.64 303.6654
+Q 390.2112 303.6654 390.2112 300.339
+L 390.2112 246.285
+Q 390.2112 242.9586 386.64 242.9586
+L 74.16 242.9586
+Q 70.5888 242.9586 70.5888 246.285
+L 70.5888 300.339
+Q 70.5888 303.6654 74.16 303.6654
+z
+" clip-path="url(#p662928d71f)" style="fill: #f4f3ed; stroke: #333333; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 74.16 405.5364
+L 386.64 405.5364
+Q 390.2112 405.5364 390.2112 402.21
+L 390.2112 343.998
+Q 390.2112 340.6716 386.64 340.6716
+L 74.16 340.6716
+Q 70.5888 340.6716 70.5888 343.998
+L 70.5888 402.21
+Q 70.5888 405.5364 74.16 405.5364
+z
+" clip-path="url(#p662928d71f)" style="fill: #f4f3ed; stroke: #333333; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_1">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(40.915312 41.24925)">Upload PNG / JPEG / WebP</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(37.839375 57.41175)">Backend limits and decode</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(52.399687 71.24925)">Transient image bytes</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(279.070312 41.24925)">Explicit Start camera</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(263.710312 56.24925)">Local detection → preview</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(244.262812 71.24925)">Stop stream; Analyse separately</text>
+   </g>
+   <g id="text_3">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(109.405312 171.41025)">Classify decoded text without opening it</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(101.867812 186.41025)">URL / text / Phone / Wi-Fi / payment / other</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(99.265312 269.12325)">Route supported text to the existing engine</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(84.255937 284.12325)">Payment: bounded TLV / CRC consistency subset</text>
+   </g>
+   <g id="text_5">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(74.011875 361.41525)">Assess original bytes, then redact saved credentials</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(107.712187 376.41525)">Return inert explanations and limitations</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(140.406562 391.889625)">Create owned QR assessment</text>
+   </g>
+   <g id="patch_7">
+    <path d="M 120.547156 85.099435
+Q 174.600267 115.308149 227.189436 144.698709
+" style="fill: none; stroke: #343434; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 223.918639 139.892267
+L 227.189436 144.698709
+L 221.381804 144.431481
+" style="fill: none; stroke: #343434; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 340.252844 85.099435
+Q 286.199733 115.308149 233.610564 144.698709
+" style="fill: none; stroke: #343434; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 239.418196 144.431481
+L 233.610564 144.698709
+L 236.881361 139.892267
+" style="fill: none; stroke: #343434; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 230.4 206.707357
+Q 230.4 225.498524 230.4 242.612641
+" style="fill: none; stroke: #343434; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 233 237.412641
+L 230.4 242.612641
+L 227.8 237.412641
+" style="fill: none; stroke: #343434; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 230.4 302.340215
+Q 230.4 322.168599 230.4 340.319931
+" style="fill: none; stroke: #343434; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 233 335.119931
+L 230.4 340.319931
+L 227.8 335.119931
+" style="fill: none; stroke: #343434; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'" transform="translate(58.083594 465.603375)">5 MiB; dimension ≤4096; ≤16,000,000 pixels; payload ≤5000 bytes.</text>
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'" transform="translate(99.520312 479.603375)">CRC is not merchant identity or payment legitimacy.</text>
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'" transform="translate(60.515625 493.603375)">Camera cancellation, navigation and deadline release its resources.</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p662928d71f">
+   <rect x="7.2" y="7.2" width="446.4" height="498.96"/>
+  </clipPath>
+ </defs>
+</svg>

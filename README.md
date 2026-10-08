@@ -1,5 +1,12 @@
 # SCAMGUARD
 
+**October release integration:** the baseline and existing Phase 1 improvements are being
+released through the original GitHub → Vercel/Render workflow. Phase 2 is planned only, as
+confirmed by the owner. Fresh checks passed: **355 backend + 164 frontend + 52 browser tests**,
+with one intentional live-AI skip. See the [release integration record](docs/SCAMGUARD_RELEASE_INTEGRATION.md)
+for exact pushed/deployed commits and production verification; historical reports below keep
+their original scope. Generated Word submissions remain local under `output/`.
+
 **SCAMGUARD: Multi-Modal Scam Detection & Reporting Web Application**
 
 A private scam-awareness workspace that helps people inspect suspicious messages, URLs, phone numbers
@@ -9,10 +16,18 @@ The project was generalized following supervisor feedback; the repository/domain
 `-my` suffix. The formal title includes Reporting, but delivered reporting is private analysis/history,
 not a public scam-reporting or moderation network.
 
-**2026-09-12:** Tasks 1–8 are accepted, merged and deployed on main
-`4b327ccf21b59e295622e3b321cec62dc523dbde`. Task 9 final closure is ready for owner review on
-`task-9-final-closure`; feature freeze is active and no automatic merge is authorized.
-The Task 9 QR credential-redaction correction reaches production only after review/merge.
+**2026-09-12:** Tasks 1–9 are accepted, merged and deployed at final main
+`4df277bdf93a2e1424ac533d488cd7ba127b35ce`. The Task 9 QR privacy fixes are included.
+That release and its subsequent academic package are historical snapshots.
+See [final release](docs/FINAL_RELEASE.md) and [academic package](docs/FINAL_ACADEMIC_PACKAGE.md).
+
+**2026-10-08 local engineering review:** strengthened session/rate-limit security, Message
+evidence and uncertainty guards, URL/QR edge cases, result explanations and dashboard guidance.
+Verified 355 backend tests, 164 frontend tests and 52 browser tests; one live-AI test skipped.
+No schema, model, dependency or environment-variable changes. These changes are not deployed;
+release the frontend before the backend. See the [engineering report](docs/ENGINEERING_REVIEW_2026-10-08.md)
+for measured results, remaining limits and exact report/presentation updates.
+
 The production architecture is Vercel → same-origin `/api/v1` rewrite → Render → Neon, with Resend
 for password-reset delivery. Live camera, private searchable history, measured dashboard distributions
 and session/accessibility polish are included. See [documentation index](docs/INDEX.md),
@@ -160,8 +175,8 @@ records. Legacy unowned rows are hidden. See [Authentication](docs/AUTHENTICATIO
 
 Implemented protections include a 64 KiB default request cap (including chunked bodies), a narrow
 multipart allowance for the 5 MiB QR route, server validation, parameterized ORM writes, explicit
-commit/rollback/close, safe errors/request IDs, no-store/nosniff headers, exact-origin CORS and
-content-safe exception logging. React renders decoded payloads as escaped inert text; URLs are not
+commit/rollback/close, generic errors/request IDs, no-store/nosniff headers, exact-origin CORS and
+exception logging that omits raw content. React renders decoded payloads as escaped inert text; URLs are not
 clickable external targets.
 
 Basic PostgreSQL-backed rate limits cover signup, login and analysis; they are not enterprise DDoS
@@ -171,7 +186,7 @@ retrying; idempotency keys are not implemented.
 
 ## GitHub and Vercel
 
-Keep the existing origin and domain. Task 9 remains on its review branch until owner acceptance:
+Keep the existing origin and domain. Task 9 was merged after explicit owner acceptance; the final release is recorded in docs/FINAL_RELEASE.md:
 
 ```sh
 git status

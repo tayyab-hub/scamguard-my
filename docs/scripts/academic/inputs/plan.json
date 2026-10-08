@@ -1,0 +1,342 @@
+{
+  "phases": [
+    [
+      "Task 1 foundation",
+      "Application shell, API foundation and four-mode interfaces",
+      "Implement routes, validation and responsive controls",
+      "Foundation application",
+      "a6b996a \u2192 bd41afa",
+      "2026-09-03",
+      "2026-09-04",
+      "Committed; interfaces alone did not imply engines."
+    ],
+    [
+      "Task 2 persistence",
+      "PostgreSQL intake, history, dashboard and support",
+      "Integrate API/storage and verify real persisted records",
+      "Core platform",
+      "be926fa \u2192 425aab0",
+      "2026-09-04",
+      "2026-09-05",
+      "Merged."
+    ],
+    [
+      "Task 3 Message",
+      "Dataset preparation, model candidates, local inference and results",
+      "Deduplicate/group/split; select on validation; persist evidence",
+      "Message Intelligence",
+      "73d9de2 \u2192 7625a6f",
+      "2026-09-05",
+      "2026-09-05",
+      "Merged; first committed dataset/model evidence."
+    ],
+    [
+      "Task 4 URL",
+      "Raw data processing, domain groups, forest/rules and result integration",
+      "Derive local features; export/reproduce; guard no-fetch",
+      "URL Intelligence",
+      "8e2bec1 \u2192 386e4b7",
+      "2026-09-07",
+      "2026-09-07",
+      "Merged; first committed URL research evidence."
+    ],
+    [
+      "Result refinement",
+      "Explainable result presentation",
+      "Map existing result data into consistent visual components",
+      "Result interface",
+      "c4bcd5e \u2192 080e800",
+      "2026-09-07",
+      "2026-09-07",
+      "Merged; methodology unchanged."
+    ],
+    [
+      "Task 5 accounts/deployment",
+      "Authentication, ownership and managed production",
+      "Implement sessions/CSRF, deploy proxy/API/database",
+      "Private account platform",
+      "0b1f46d \u2192 1409ba2; baa9163 fix",
+      "2026-09-08",
+      "2026-09-09",
+      "Merged; production API-base correction recorded."
+    ],
+    [
+      "Task 6 Phone",
+      "International parsing and conservative metadata",
+      "Pin numbering data; test normalization and no-contact",
+      "Phone Intelligence",
+      "6d87617 \u2192 f24db9f",
+      "2026-09-10",
+      "2026-09-10",
+      "Merged."
+    ],
+    [
+      "Task 6.1 profile/recovery",
+      "Profile and password reset lifecycle",
+      "Validate identity fields; mail/token/session tests",
+      "Account lifecycle",
+      "bcff3dd \u2192 546447f",
+      "2026-09-10",
+      "2026-09-10",
+      "Merged."
+    ],
+    [
+      "Task 7 QR",
+      "Bounded uploads, payload routing, payment subset",
+      "Decode in memory; validate limits; persist private results",
+      "QR Intelligence",
+      "72ad78e \u2192 42a9db1",
+      "2026-09-10",
+      "2026-09-10",
+      "Merged; retention clarification cd14925."
+    ],
+    [
+      "Task 8 camera/polish",
+      "Camera lifecycle, history, reanalysis and final UX",
+      "Implement local scanning; regression and owner acceptance",
+      "Accepted feature-complete app",
+      "b8f1aff \u2192 4b327cc",
+      "2026-09-10",
+      "2026-09-12",
+      "Merged; interval includes review, not continuous work."
+    ],
+    [
+      "Task 9 integration",
+      "Privacy corrections, controlled evaluation and documentation",
+      "Audit/reproduce/test; owner review",
+      "Closure evidence",
+      "afabf5c",
+      "2026-09-12",
+      "2026-09-12",
+      "Accepted; no new model or migration."
+    ],
+    [
+      "Final production release",
+      "Normal merge and complete gate rerun",
+      "Push only after passes; verify both hosts and SELECT-only head",
+      "Final production release",
+      "4df277b",
+      "2026-09-12",
+      "2026-09-12",
+      "Merged/pushed/deployed; dated probes retained."
+    ]
+  ],
+  "risks": [
+    [
+      "RK-01",
+      "False positive/negative",
+      "Intelligence",
+      "3",
+      "3",
+      "9 High",
+      "Separate model/rule evidence; report per-class errors and insufficient cases; prevent ML-only URL High.",
+      "Require independent verification; disclose misclassifications.",
+      "High",
+      "Active; no real-world error guarantee."
+    ],
+    [
+      "RK-02",
+      "Dataset/language/campaign shift",
+      "Research",
+      "3",
+      "3",
+      "9 High",
+      "Freeze hashes/splits; expose historical English and URL homepage bias; do not claim population metrics.",
+      "Treat out-of-scope cases cautiously; future external corpus/version review.",
+      "High",
+      "Active inherent data limit."
+    ],
+    [
+      "RK-03",
+      "Risk output misunderstood",
+      "Human factors",
+      "3",
+      "3",
+      "9 High",
+      "Separate confidence/risk; include limitations and explicit Low versus Insufficient Evidence text.",
+      "Use comprehension prompts in five-task study; document errors.",
+      "High",
+      "Study NOT YET CONDUCTED."
+    ],
+    [
+      "RK-04",
+      "Frontend/backend release mismatch",
+      "Deployment",
+      "2",
+      "3",
+      "6 High",
+      "Match complete commit identities and capabilities after release; preserve deployed evidence.",
+      "Stop release and inspect last known good version; no blind migration rollback.",
+      "Medium",
+      "Final observed release matched."
+    ],
+    [
+      "RK-05",
+      "Cloud outage",
+      "Operations",
+      "2",
+      "3",
+      "6 High",
+      "Show unavailable states; keep documented local run procedure and fixture backup.",
+      "Switch demonstration to labelled local app or authentic captures.",
+      "Medium",
+      "HA and restore not evaluated."
+    ],
+    [
+      "RK-06",
+      "Render cold start",
+      "Performance",
+      "3",
+      "2",
+      "6 High",
+      "Check ready before demo and allow start-up time; never equate health with readiness.",
+      "Explain loading and switch to local/upload fallback within demo budget.",
+      "Medium",
+      "Free instance observed; no latency distribution."
+    ],
+    [
+      "RK-07",
+      "Database outage/drift",
+      "Persistence",
+      "2",
+      "3",
+      "6 High",
+      "Transactions/rollback, explicit Alembic, local migration tests and production SELECT-only head.",
+      "Stop writes/release on readiness failure; follow runbook; restore only via reviewed process.",
+      "Medium",
+      "Backup recovery NOT YET EVIDENCED."
+    ],
+    [
+      "RK-08",
+      "Email provider/inbox failure",
+      "Account access",
+      "2",
+      "3",
+      "6 High",
+      "Generic reset response, expiring digest-only single-use token, rate limits and adapter error tests.",
+      "Use controlled inbox preflight; report delivery failure without exposing token; preserve existing sign-in.",
+      "Medium",
+      "Production delivery check pending."
+    ],
+    [
+      "RK-09",
+      "Camera/browser incompatibility",
+      "Compatibility",
+      "3",
+      "2",
+      "6 High",
+      "Feature detection, local worker fallback, timeout/cleanup tests and upload alternative.",
+      "Use a known image; record device-specific failure and browser version.",
+      "Medium",
+      "Real-device matrix incomplete."
+    ],
+    [
+      "RK-10",
+      "Malicious QR/image payload",
+      "Input security",
+      "2",
+      "3",
+      "6 High",
+      "5 MiB/4096/16M-pixel/5000-byte defaults; validated raster; single symbol; inert rendering; no auto-open.",
+      "Reject unsupported/ambiguous input with bounded error; no persistence after invalid upload.",
+      "Medium",
+      "Selected malformed cases tested; decoder risk remains."
+    ],
+    [
+      "RK-11",
+      "Password/session attack",
+      "Security",
+      "2",
+      "3",
+      "6 High",
+      "Argon2id; digest-only opaque sessions; exact Origin/CSRF; DB rate buckets; expiry/revocation.",
+      "Revoke sessions/reset password; follow account recovery and deployment incident procedure.",
+      "Medium",
+      "No MFA or independent pentest."
+    ],
+    [
+      "RK-12",
+      "Cross-user or credential exposure",
+      "Privacy",
+      "2",
+      "3",
+      "6 High",
+      "Owner-scoped SQL and cache isolation; all-mode A/B tests; Task 9 QR redaction; no raw-content logs.",
+      "Delete affected owned records where appropriate; disclose exposure; investigate scope without logging secrets.",
+      "Medium",
+      "New-record redaction verified; backups/old rows separate."
+    ],
+    [
+      "RK-13",
+      "Dependency vulnerability",
+      "Supply chain",
+      "2",
+      "3",
+      "6 High",
+      "Pinned locks, retained npm audit, checksum-verified non-executable model artifacts and bounded decoders.",
+      "Review advisory and targeted patch/retest before any later deployment.",
+      "Medium",
+      "pip check is compatibility only; no complete Python advisory audit."
+    ],
+    [
+      "RK-14",
+      "Schedule overrun",
+      "Project",
+      "2",
+      "3",
+      "6 High",
+      "Prioritise rubric gaps, maintain evidence index, separate required manual tasks from completed tests.",
+      "Reduce optional demo material; obtain real deadline and allocate rehearsal/editing time.",
+      "Medium",
+      "Institutional deadline NOT YET EVIDENCED."
+    ],
+    [
+      "RK-15",
+      "Scope creep",
+      "Project",
+      "2",
+      "2",
+      "4 Medium",
+      "Enforce feature freeze; documentation-only academic pass; keep future work outside implemented scope.",
+      "Defer proposed features and retain accepted release SHA.",
+      "Low",
+      "Controlled during this pass."
+    ],
+    [
+      "RK-16",
+      "Accessibility failure",
+      "Usability",
+      "2",
+      "3",
+      "6 High",
+      "Semantic labels/focus/dialog/motion controls; responsive and keyboard regression assertions.",
+      "Use accessible alternate interaction; record assistive-technology findings and limitations.",
+      "Medium",
+      "Screen-reader/physical device audit pending."
+    ],
+    [
+      "RK-17",
+      "Payment integrity mistaken for legitimacy",
+      "Intelligence",
+      "3",
+      "3",
+      "9 High",
+      "Label generic subset; retain missing-merchant-field diagnostic; never equate CRC with authenticity.",
+      "Verify recipient through an independent trusted channel; no payment executed by app.",
+      "High",
+      "Inherent scope limit."
+    ],
+    [
+      "RK-18",
+      "Lost response causes duplicate submission",
+      "Reliability",
+      "2",
+      "2",
+      "4 Medium",
+      "Disable pending submission; durable result and clear failure states; explain commit/response boundary.",
+      "Check History before retrying; do not claim idempotency.",
+      "Medium",
+      "No idempotency key implemented."
+    ]
+  ]
+}

@@ -1,5 +1,20 @@
 # Final internal security review
-Date: 2026-09-12. Review the Task 9 branch together with FINAL_AUDIT.md and FINAL_TEST_REPORT.md.
+
+**2026-10-08 local addendum:** account/source login budgets now replace the old combined
+IP/identifier scope. The default account budget is 10 attempts per 15 minutes across username,
+email and source changes; the source budget is five times the configured account limit.
+These count all attempts, including successes. Session replacement revokes the presented old
+session, successful login can rehash Argon2, and account deletion password checks are throttled.
+Sensitive database/engine/mail exception content is excluded from changed logging paths.
+Late frontend 401 responses cannot clear a newer session. Malformed QR payment destinations
+retain credential redaction and cannot erase integrity warnings.
+
+Real PostgreSQL and regression checks passed; see the [October engineering review](ENGINEERING_REVIEW_2026-10-08.md). Remaining risks include
+targeted temporary account lockout, forwarded-IP trust, expired bucket retention and explicit
+signup duplicate-account responses. Online npm audit was blocked by automatic approval review
+for dependency-metadata egress; no fresh zero-vulnerability claim is made. The table below
+records the older release and should be read with this addendum.
+Date: 2026-09-12. Review the accepted Task 9 changes, merged at `4df277bdf93a2e1424ac533d488cd7ba127b35ce`, with FINAL_AUDIT.md, FINAL_TEST_REPORT.md and FINAL_RELEASE.md.
 No formal penetration test or independent certification is claimed.
 
 | Boundary | Implemented control and evidence | Practical limit |
@@ -11,7 +26,7 @@ No formal penetration test or independent certification is claimed.
 | Rate limits | PostgreSQL advisory-lock serialized buckets for signup/login/analysis/reset; Retry-After on 429. | Basic application limits; no enterprise DDoS defense or automatic old-bucket cleanup. |
 | Reset | Random digest-only token; default 30 minutes; locked single-use confirmation; replacement invalidates earlier tokens; all sessions revoked. | Generic body resists direct enumeration, but synchronous mail makes response-time equivalence unproven. Inbox delivery/backup exposure remain operational concerns. |
 | Ownership | Owner-scoped list/search/detail/delete/dashboard and profile mutations; foreign/missing/legacy rows use 404; account cascade. All four modes tested with local A/B accounts. | UUID secrecy and UI hiding are not controls; access must continue through these server paths. |
-| Input/output | Pydantic bounds/extra-field rejection, SQL parameters, escaped React text, safe error envelopes, request IDs, no-store/nosniff, request body cap. | Not a comprehensive XSS/SQLi fuzzing campaign. No independent frontend security-header audit. |
+| Input/output | Pydantic bounds/extra-field rejection, SQL parameters, escaped React text, generic error envelopes, request IDs, no-store/nosniff, request body cap. | Not a comprehensive XSS/SQLi fuzzing campaign. No independent frontend security-header audit. |
 | URL/Phone | Offline local parsing and inference; socket/DNS/request guards in tests. | Metadata/structure cannot identify an owner or prove fraud. |
 | QR | Bounded MIME/content/bytes/dimensions/pixels, one symbol, in-memory decode, no auto-open; explicit camera start/Analyse; track/worker cleanup. | Browser/hardware variability; client-reported camera provenance; dependency/image-parser exposure. |
 | Redaction | Task 9 covers first-field Wi-Fi passwords and embedded payment URL userinfo in new saved records. Upload/camera persistence regressions pass. | Not general secret detection for arbitrary text; does not retroactively rewrite production records. |

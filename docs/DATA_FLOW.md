@@ -1,5 +1,5 @@
 # Data flows and trust boundaries
-Current source: Task 9 branch; production baseline: Task 8 merge. These diagrams describe implemented
+Current source and final production release: `4df277bdf93a2e1424ac533d488cd7ba127b35ce`. These diagrams describe implemented
 flows. Boundaries and labels are conceptual; no unsupported background queue is implied.
 
 ## Authentication and identity
@@ -29,7 +29,7 @@ flowchart TD
   I[User submits bounded Message / URL / Phone] --> G[Origin + CSRF + session + rate limit]
   G --> P[Commit owned intake]
   P --> E[Local selected engine]
-  E --> R[Store immutable completed result or safe failure]
+  E --> R[Store immutable completed result or bounded failure]
   R --> D[(Neon analyses)]
   H[History search JSON body] --> O[Session + CSRF + owner filter]
   O --> Q[Count and page in consistent snapshot]

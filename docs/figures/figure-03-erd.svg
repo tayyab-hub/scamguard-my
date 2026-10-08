@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="460.8pt" height="568.8pt" viewBox="0 0 460.8 568.8" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-09-12T23:08:43.653808</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.2, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 568.8
+L 460.8 568.8
+L 460.8 0
+L 0 0
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 118.8 107.916
+L 342 107.916
+Q 345.5712 107.916 345.5712 104.22
+L 345.5712 21.06
+Q 345.5712 17.364 342 17.364
+L 118.8 17.364
+Q 115.2288 17.364 115.2288 21.06
+L 115.2288 104.22
+Q 115.2288 107.916 118.8 107.916
+z
+" clip-path="url(#p7629d6950d)" style="fill: #f4f3ed; stroke: #333333; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 16.128 274.236
+L 203.616 274.236
+Q 207.1872 274.236 207.1872 270.54
+L 207.1872 178.14
+Q 207.1872 174.444 203.616 174.444
+L 16.128 174.444
+Q 12.5568 174.444 12.5568 178.14
+L 12.5568 270.54
+Q 12.5568 274.236 16.128 274.236
+z
+" clip-path="url(#p7629d6950d)" style="fill: #f4f3ed; stroke: #333333; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 254.952 274.236
+L 442.44 274.236
+Q 446.0112 274.236 446.0112 270.54
+L 446.0112 178.14
+Q 446.0112 174.444 442.44 174.444
+L 254.952 174.444
+Q 251.3808 174.444 251.3808 178.14
+L 251.3808 270.54
+Q 251.3808 274.236 254.952 274.236
+z
+" clip-path="url(#p7629d6950d)" style="fill: #f4f3ed; stroke: #333333; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 74.16 435.936
+L 386.64 435.936
+Q 390.2112 435.936 390.2112 432.24
+L 390.2112 339.84
+Q 390.2112 336.144 386.64 336.144
+L 74.16 336.144
+Q 70.5888 336.144 70.5888 339.84
+L 70.5888 432.24
+Q 70.5888 435.936 74.16 435.936
+z
+" clip-path="url(#p7629d6950d)" style="fill: #f4f3ed; stroke: #333333; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 74.16 505.236
+L 386.64 505.236
+Q 390.2112 505.236 390.2112 501.54
+L 390.2112 446.1
+Q 390.2112 442.404 386.64 442.404
+L 74.16 442.404
+Q 70.5888 442.404 70.5888 446.1
+L 70.5888 501.54
+Q 70.5888 505.236 74.16 505.236
+z
+" clip-path="url(#p7629d6950d)" style="fill: #f4f3ed; stroke: #333333; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_1">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(214.187812 50.914688)">users</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(129.447187 65.95125)">id (PK), email (unique), username</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(143.760937 80.784375)">password_hash, profile fields</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(67.902938 204.984375)">auth_sessions</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(50.904187 219.984375)">id (PK), user_id (FK)</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(23.682938 234.984375)">token_hash, csrf_token_hash</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(42.223875 249.984375)">expires_at, revoked_at</text>
+   </g>
+   <g id="text_3">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(279.110063 204.984375)">password_reset_tokens</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(289.728188 219.984375)">id (PK), user_id (FK)</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(279.901313 234.984375)">token_hash, expires_at</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(325.237875 249.984375)">used_at</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(204.0825 366.85125)">analyses</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(110.090625 381.684375)">id (PK), user_id (nullable FK), input_type</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(102.954375 397.401563)">content, status, evidence, risk, confidence</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(140.10375 412.542188)">model / rules / fusion versions</text>
+   </g>
+   <g id="text_5">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(182.255625 461.964375)">auth_rate_limits</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(119.618437 476.964375)">key_hash (PK), scope, window, count</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(105.31875 492.13125)">Independent buckets: no user foreign key</text>
+   </g>
+   <g id="patch_7">
+    <path d="M 228.696983 105.264463
+Q 170.138473 141.178483 113.009566 176.215726
+" style="fill: none; stroke: #343434; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 118.801609 175.71349
+L 113.009566 176.215726
+L 116.083003 171.28075
+" style="fill: none; stroke: #343434; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="text_6">
+    <g id="patch_8">
+     <path d="M 174.9392 147.18
+L 221.1517 147.18
+L 221.1517 135.18
+L 174.9392 135.18
+z
+" style="fill: #ffffff"/>
+    </g>
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: start" x="175.9392" y="143.777656" transform="rotate(-0 175.9392 143.777656)">1 : many</text>
+   </g>
+   <g id="patch_9">
+    <path d="M 232.09314 105.277998
+Q 289.545883 141.178677 345.576408 176.190651
+" style="fill: none; stroke: #343434; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 342.544362 171.230137
+L 345.576408 176.190651
+L 339.78877 175.63998
+" style="fill: none; stroke: #343434; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="text_7">
+    <g id="patch_10">
+     <path d="M 294.3512 147.18
+L 340.5637 147.18
+L 340.5637 135.18
+L 294.3512 135.18
+z
+" style="fill: #ffffff"/>
+    </g>
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: start" x="295.3512" y="143.777656" transform="rotate(-0 295.3512 143.777656)">1 : many</text>
+   </g>
+   <g id="patch_11">
+    <path d="M 230.4 106.222569
+Q 230.4 222.031381 230.4 336.163142
+" style="fill: none; stroke: #343434; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 233 330.963142
+L 230.4 336.163142
+L 227.8 330.963142
+" style="fill: none; stroke: #343434; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="text_8">
+    <g id="patch_12">
+     <path d="M 235.2032 315.81
+L 281.4157 315.81
+L 281.4157 303.81
+L 235.2032 303.81
+z
+" style="fill: #ffffff"/>
+    </g>
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: start" x="236.2032" y="312.407656" transform="rotate(-0 236.2032 312.407656)">1 : many</text>
+   </g>
+   <g id="text_9">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'" transform="translate(101.878125 534.119375)">Selected fields; source: backend/app/db/models.py.</text>
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'" transform="translate(55.772656 548.119375)">Legacy NULL-owner analyses are inaccessible to authenticated users.</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p7629d6950d">
+   <rect x="7.2" y="7.2" width="446.4" height="554.4"/>
+  </clipPath>
+ </defs>
+</svg>

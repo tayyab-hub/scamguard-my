@@ -1,5 +1,12 @@
 # Final test report — Task 9
 
+**Historical report:** the October implementation has a separate [October engineering review](ENGINEERING_REVIEW_2026-10-08.md) and
+[verification record](evidence/engineering-verification.json): 355 backend, 164 frontend and
+52 browser passes, with one opt-in live-AI skip. Do not use the September counts below as
+verification of the October patch or replace this dated evidence with new numbers.
+
+This is the earlier Task 9 branch run. The later merged-main gate is recorded in [FINAL_RELEASE.md](FINAL_RELEASE.md) and [FINAL_EVALUATION.md](FINAL_EVALUATION.md).
+
 Executed 2026-09-12 on `task-9-final-closure`, starting from main
 `4b327ccf21b59e295622e3b321cec62dc523dbde`. Windows, Node 24.18.0, Python 3.12.14, installed Chrome,
 real local PostgreSQL on loopback. Runtime/package versions are pinned by the repository locks.
@@ -101,7 +108,7 @@ or risk policy was tuned. Final raw JSON records the successful run and the paym
 PRODUCTION: fresh Task 9 GET health/ready/capabilities through Vercel and directly on Render all
 returned 200. Same-day Task 8 closure provider UI recorded Vercel Ready, Render Live/main/On Commit
 at starting main, and Neon head via SELECT. Public route/401/asset checks are separately dated in
-PRODUCTION_ACCEPTANCE.md. Task 9 code is not production code until owner merge/deploy.
+PRODUCTION_ACCEPTANCE.md. Those probes preceded merge; FINAL_RELEASE.md records the subsequent accepted production deployment.
 
 MANUAL OWNER REPORT: Task 8 passed manual acceptance; Task 9 reply was “its working.” This records
 generic acceptance, with no device/version/date/case artifact supplied. Agent screenshot inspection

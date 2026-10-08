@@ -14,8 +14,8 @@ from app.url_intelligence.engine import URLIntelligenceEngine
 from app.url_intelligence.parsing import parse_url
 
 ENGINE_VERSION = "qr-intelligence-v1"
-CLASSIFIER_VERSION = "qr-payload-classifier-v1"
-FUSION_VERSION = "qr-risk-fusion-v1"
+CLASSIFIER_VERSION = "qr-payload-classifier-v2"
+FUSION_VERSION = "qr-risk-fusion-v2"
 
 
 @dataclass(frozen=True)
@@ -52,9 +52,13 @@ def classify_payload(payload: str) -> QRPayload:
     text = payload.strip()
     payment = parse_payment_payload(text)
     if payment is not None:
-        return QRPayload(
-            "PAYMENT", "URL" if payment.embedded_url else None, payment.embedded_url, payment
-        )
+        destination = payment.embedded_url
+        if destination:
+            try:
+                parse_url(destination)
+            except ValueError:
+                destination = None
+        return QRPayload("PAYMENT", "URL" if destination else None, destination, payment)
     if re.match(r"^https?://", text, re.IGNORECASE):
         try:
             parse_url(text)
@@ -96,6 +100,9 @@ def persisted_payload(payload: str) -> str:
     if classified.type == "URL":
         # Match the existing URL submission policy: credentials are never retained.
         return parse_url(payload.strip()).original
+    if re.match(r"^https?://", payload.strip(), re.IGNORECASE):
+        # Malformed URL-shaped payloads still must not retain authority credentials.
+        return re.sub(r"(?i)^(https?://)[^/\s?#]*@", r"\1@", payload.strip())
     if classified.type == "PHONE" and classified.routed_content:
         return classified.routed_content
     if classified.type == "WIFI":
@@ -192,6 +199,17 @@ class QRIntelligenceEngine:
                     "family": "payment-integrity",
                 }
             )
+            if payload.payment.embedded_url and not payload.route:
+                evidence.append(
+                    _qr_evidence(
+                        "PAYMENT_URL_INVALID",
+                        "Embedded URL could not be assessed",
+                        "The embedded destination is malformed or outside the URL input limits. "
+                        "It was not opened.",
+                        "Destination value withheld",
+                        severity="MEANINGFUL",
+                    )
+                )
 
         if underlying is not None:
             risk_level = str(underlying.risk_level)
@@ -243,6 +261,48 @@ class QRIntelligenceEngine:
             if payload.type == "PHONE":
                 actions = ["Verify the number independently and never disclose passwords or OTPs."]
             underlying_components = {}
+
+        if payload.payment:
+            payment_warning = not payload.payment.structurally_valid or (
+                payload.payment.embedded_url is not None and payload.route is None
+            )
+            if payment_warning and risk_level in {"LOW", "INSUFFICIENT_EVIDENCE"}:
+                risk_level = "CAUTION"
+                risk_score = None
+                confidence_score = None
+                confidence_level = "LOW"
+                summary = (
+                    "The payment QR has an integrity issue or an unassessable destination. "
+                    "Verify the payment details independently before acting."
+                )
+            if underlying is not None:
+                actions.append(
+                    "Confirm the recipient, amount and currency independently "
+                    "before authorizing payment."
+                )
+            if payment_warning:
+                actions.insert(
+                    0,
+                    "Do not authorize payment from this code until the integrity "
+                    "or destination issue is resolved.",
+                )
+                basis = underlying_components.get("assessment_basis", {})
+                underlying_components["assessment_basis"] = {
+                    "decision": (
+                        "Payment integrity or destination warnings require at least Caution. "
+                        "Any higher warning from the destination assessment is retained."
+                    ),
+                    "supporting": [
+                        "The payment structure or embedded destination could not be validated.",
+                        *basis.get("supporting", []),
+                    ],
+                    "mitigating": basis.get("mitigating", []),
+                    "uncertainty": [
+                        "Payment formatting and CRC checks cannot authenticate the recipient "
+                        "or establish transaction safety.",
+                        *basis.get("uncertainty", []),
+                    ],
+                }
 
         return QRAssessment(
             risk_level=risk_level,

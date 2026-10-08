@@ -1,5 +1,7 @@
 # Forensic Intelligence visual migration
 
+Historical record: status, permissions, versions and screenshots below apply to the named earlier stage. They do not supersede the accepted final release in [FINAL_RELEASE.md](FINAL_RELEASE.md) or the current [academic package](FINAL_ACADEMIC_PACKAGE.md).
+
 This is the historical visual-migration delivery record from 2026-09-03. The later documentation-only memory handoff is recorded in [PROGRESS.md](../PROGRESS.md); read [CODEX.md](../CODEX.md) before future implementation. Counts and archive references below describe this migration's point-in-time deliverable, not the source inventory after later tasks.
 
 ## Baseline recorded before visual changes

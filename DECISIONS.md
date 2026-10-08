@@ -4,7 +4,7 @@ Recorded: 2026-09-03, Asia/Kuala_Lumpur. These decisions come from the current i
 
 | ID | Decision | Current adoption and reason |
 | --- | --- | --- |
-| D01 | FastAPI backend | Implemented with an application factory, Pydantic schemas/settings and versioned routes. Keep a clear HTTP boundary and centralized safe errors. |
+| D01 | FastAPI backend | Implemented with an application factory, Pydantic schemas/settings and versioned routes. Keep a clear HTTP boundary and centralized generic error responses. |
 | D02 | React + TypeScript frontend | Implemented with strict compiler settings, React Router, TanStack Query, and Zod. Preserve typed presentation and runtime validation at the network boundary. |
 | D03 | PostgreSQL with SQLAlchemy/Psycopg and Alembic | Implemented through additive revision `0006_qr_intelligence`, with real readiness, explicit transactions and isolated PostgreSQL integration/migration tests. Do not substitute an in-memory database for persistence evidence. |
 | D04 | Forensic Intelligence identity | Implemented warm light ivory/charcoal/terracotta/olive theme. Tokens, branding, footer, documentation and screenshot assets agree. Preserve accessibility and professional workspace layout. |
@@ -356,3 +356,40 @@ WCAG certification, high-distinction result or enterprise reliability is claimed
 "its working", with no device/study particulars; generic functional acceptance is recorded, device
 evidence remains unrecorded and volunteer usability is NOT YET CONDUCTED. The final report/deck and
 rehearsal remain owner artifacts; the subjective readiness score is 78/100, not a predicted grade.
+
+## 2026-09-12 — Final release and academic package
+
+The owner accepted Task 9 and explicitly authorized final release. Normal merge `4df277bdf93a2e1424ac533d488cd7ba127b35ce`
+passed the merged-main gates and was pushed, then observed on both production providers.
+The subsequent rubric pass preserves the released application and intelligence methods.
+It fills a copy of the supplied proposal template with four objectives and APA references,
+leaves cover identity fields blank at the owner’s request, and distinguishes technical evidence
+from unrecorded original deadlines, physical-device tests, inbox delivery and human studies.
+See docs/FINAL_ACADEMIC_PACKAGE.md. No new development stage or infrastructure is introduced.
+
+## D60 — Evidence sufficiency and incremental hardening (2026-10-08)
+
+The user authorized application improvements after the September documentation-only pass.
+Keep the deployed topology, schema and frozen trained artifacts; improve demonstrated failure
+paths with versioned rules/fusion and real regression evidence. Message normalization is rules-only
+with source offsets; unsupported vocabulary/ambiguity can abstain; model-only warnings are capped
+at Caution; disagreement lowers confidence rather than erasing strong local warnings. URL neutral
+context is not standalone risk. Payment QR integrity cannot be erased by a benign destination.
+
+Keep all probabilities/confidence explicitly uncalibrated. Record frozen-model probability
+diagnostics and fusion distributions without fitting thresholds to the historical test set.
+Results expose structured evidence balance and applicable actions. Reuse PostgreSQL rate buckets
+for account/source login budgets and revoke replaced sessions; preserve existing ownership/CSRF.
+No new dependency, environment variable, migration or service. Changes are local and undeployed;
+frontend precedes backend because Message confidence may be null. See
+docs/ENGINEERING_REVIEW_2026-10-08.md for executed tests, academic deltas and known limitations.
+
+## D61 — Release implemented work with frontend compatibility first (2026-10-08)
+
+The user authorized ordinary commits, pushes and application deployments using the existing
+GitHub/Vercel/Render/Neon workflow, and clarified that Phase 2 was only planned. Preserve the
+verified baseline plus Phase 1, without inventing an implementation or rewriting historical
+evidence. Deploy nullable-confidence support before releasing the backend. Keep generated Word
+submissions local because they may contain personal cover details. No dependency, model,
+migration, infrastructure or production secret change is required. Record actual hosted checks
+and remaining access limitations in docs/SCAMGUARD_RELEASE_INTEGRATION.md.

@@ -1,5 +1,7 @@
 # Task 1 delivery record
 
+Historical record: status, permissions, versions and screenshots below apply to the named earlier stage. They do not supersede the accepted final release in [FINAL_RELEASE.md](FINAL_RELEASE.md) or the current [academic package](FINAL_ACADEMIC_PACKAGE.md).
+
 Verified on 2026-09-03, Windows, Node 24.18.0, Python 3.12.13, installed Chrome via Playwright.
 
 This record retains the original foundation verification results. The current Forensic Intelligence visual migration and its separate regression results are documented in [REDESIGN.md](REDESIGN.md); current images are indexed in [SCREENSHOTS.md](SCREENSHOTS.md).

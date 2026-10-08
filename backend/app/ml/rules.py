@@ -1,9 +1,13 @@
 from __future__ import annotations
 
 import re
+import unicodedata
 from dataclasses import dataclass
 
-RULES_VERSION = "message-rules-v1"
+RULES_VERSION = "message-rules-v2"
+URGENCY_COMBINATION_WEIGHT = 0.16
+AUTHORITY_COMBINATION_WEIGHT = 0.14
+PRIZE_COMBINATION_WEIGHT = 0.12
 
 
 @dataclass(frozen=True)
@@ -28,6 +32,7 @@ class RuleAssessment:
     indicators: list[Indicator]
     suppressed_matches: int
     version: str = RULES_VERSION
+    normalization_applied: bool = False
 
 
 def rule(category: str, label: str, expression: str, weight: float) -> IndicatorDefinition:
@@ -50,19 +55,19 @@ DEFINITIONS = (
     ),
     rule(
         "CREDENTIAL",
-        "Credential request",
+        "Credential language",
         r"\b(otp|one[- ]time pass(?:word|code)|password|pin|security code|login details)\b",
         0.21,
     ),
     rule(
         "FINANCIAL",
-        "Money or payment request",
+        "Money or payment language",
         r"\b(transfer|send|pay|payment|bank account|card details|crypto|wallet|deposit|fee)\b",
         0.13,
     ),
     rule(
         "IMPERSONATION",
-        "Authority impersonation",
+        "Authority reference",
         r"\b(bank|police|tax department|government|courier|support team|security team)\b",
         0.09,
     ),
@@ -112,11 +117,61 @@ DEFINITIONS = (
     ),
 )
 
+# Negation must describe a protective action in the same clause. Generic words like
+# 'warning' also appear in account-threat scams and must never disable detection.
 SAFETY_CONTEXT = re.compile(
-    r"\b(never|do not|don't|avoid|beware|warning|safety|training|example|education|"
-    r"will not|won't|should not|reporting|reported)\b",
+    r"\b(?:never|do not|don't|avoid|should not|must not|will not|won't)\s+"
+    r"(?:ever\s+)?(?:share|send|provide|give|disclose|enter|click(?:ing)?|open(?:ing)?|"
+    r"follow(?:ing)?|pay(?:ing)?|transfer(?:ring)?|reply(?:ing)?|ask)\b",
     re.IGNORECASE,
 )
+CLAUSE_BREAK = re.compile(r"[.!?;\n]|\b(?:but|however|instead)\b", re.IGNORECASE)
+SPACED_WORD = re.compile(r"(?<!\w)(?:[a-z][ ._-]){2,}[a-z](?!\w)", re.IGNORECASE)
+LEET = str.maketrans("013457", "oieast")
+
+
+def rule_text(text: str) -> tuple[str, list[int]]:
+    """Rules-only normalization with offsets back to original evidence.
+
+    Do not feed this representation to the frozen ML model: its preprocessing is versioned
+    independently. Compatibility glyphs, invisible separators and simple mixed alphanumeric
+    substitutions are treated as spelling variants, never as independent evidence of fraud.
+    """
+    characters: list[str] = []
+    offsets: list[int] = []
+    for index, character in enumerate(text):
+        if character in "\u200b\u200c\u200d\u2060\ufeff":
+            continue
+        normalized = unicodedata.normalize("NFKC", character).casefold().replace("’", "'")
+        characters.extend(normalized)
+        offsets.extend([index] * len(normalized))
+    normalized = "".join(characters)
+    for token in re.finditer(r"\b[a-z0-9]+\b", normalized):
+        if any(c.isalpha() for c in token.group()) and any(c.isdigit() for c in token.group()):
+            characters[token.start() : token.end()] = token.group().translate(LEET)
+    normalized = "".join(characters)
+    removed = {
+        index
+        for match in SPACED_WORD.finditer(normalized)
+        for index in range(match.start(), match.end())
+        if not normalized[index].isalpha()
+    }
+    return (
+        "".join(c for i, c in enumerate(normalized) if i not in removed),
+        [offset for i, offset in enumerate(offsets) if i not in removed],
+    )
+
+
+def protective_context(text: str, start: int, end: int) -> bool:
+    left = 0
+    right = len(text)
+    for separator in CLAUSE_BREAK.finditer(text):
+        if separator.end() <= start:
+            left = separator.end()
+        elif separator.start() >= end:
+            right = separator.start()
+            break
+    return bool(SAFETY_CONTEXT.search(text[left:right]))
 
 
 def _snippet(text: str, start: int, end: int) -> str:
@@ -133,31 +188,33 @@ def _snippet(text: str, start: int, end: int) -> str:
 def assess_rules(text: str) -> RuleAssessment:
     indicators: list[Indicator] = []
     suppressed = 0
+    normalized, offsets = rule_text(text)
     for definition in DEFINITIONS:
-        match = definition.pattern.search(text)
-        if not match:
-            continue
-        context = text[max(0, match.start() - 70) : min(len(text), match.end() + 40)]
-        if SAFETY_CONTEXT.search(context):
-            suppressed += 1
-            continue
-        indicators.append(
-            Indicator(
-                category=definition.category,
-                label=definition.label,
-                snippet=_snippet(text, match.start(), match.end()),
-                weight=definition.weight,
+        for match in definition.pattern.finditer(normalized):
+            if protective_context(normalized, match.start(), match.end()):
+                suppressed += 1
+                continue
+            indicators.append(
+                Indicator(
+                    category=definition.category,
+                    label=definition.label,
+                    snippet=_snippet(text, offsets[match.start()], offsets[match.end() - 1] + 1),
+                    weight=definition.weight,
+                )
             )
-        )
+            break  # Repeated wording cannot inflate a category's contribution.
 
     categories = {indicator.category for indicator in indicators}
     score = sum(indicator.weight for indicator in indicators)
     if "URGENCY" in categories and categories & {"CREDENTIAL", "FINANCIAL", "REDIRECTION"}:
-        score += 0.16
+        score += URGENCY_COMBINATION_WEIGHT
     if "IMPERSONATION" in categories and categories & {"THREAT", "CREDENTIAL", "FINANCIAL"}:
-        score += 0.14
+        score += AUTHORITY_COMBINATION_WEIGHT
     if "PRIZE" in categories and categories & {"FINANCIAL", "REDIRECTION", "SUSPICIOUS_ACTION"}:
-        score += 0.12
+        score += PRIZE_COMBINATION_WEIGHT
     return RuleAssessment(
-        score=min(score, 1.0), indicators=indicators, suppressed_matches=suppressed
+        score=min(score, 1.0),
+        indicators=indicators,
+        suppressed_matches=suppressed,
+        normalization_applied=normalized != text.casefold(),
     )

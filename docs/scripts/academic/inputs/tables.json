@@ -1,0 +1,405 @@
+{
+  "fr": [
+    [
+      "FR-01",
+      "Analyse Message with separate legitimate/spam/scam evidence.",
+      "O1/O2",
+      "backend/app/ml/engine.py",
+      "backend/tests/test_message_intelligence.py",
+      "Verified locally; model limits apply."
+    ],
+    [
+      "FR-02",
+      "Analyse a validated URL string without fetching its destination.",
+      "O1/O2",
+      "backend/app/url_intelligence/engine.py",
+      "backend/tests/test_url_intelligence.py",
+      "Verified locally; no live reputation."
+    ],
+    [
+      "FR-03",
+      "Parse international Phone input and report conservative metadata.",
+      "O1",
+      "backend/app/phone_intelligence/engine.py",
+      "backend/tests/test_phone_intelligence.py",
+      "Verified locally; identity not determined."
+    ],
+    [
+      "FR-04",
+      "Accept bounded raster QR upload and reject missing/multiple/invalid symbols.",
+      "O1",
+      "backend/app/qr_intelligence/decoder.py",
+      "backend/tests/test_qr_intelligence.py",
+      "Verified locally; clean fixtures are not camera accuracy."
+    ],
+    [
+      "FR-05",
+      "Route decoded QR content; report payment TLV/CRC subset and limitations.",
+      "O1/O2",
+      "backend/app/qr_intelligence/payment.py",
+      "docs/evidence/final_evaluation.json",
+      "Verified subset; complete payment compliance out of scope."
+    ],
+    [
+      "FR-06",
+      "Start camera only on action; stop on detection/exit; require separate Analyse.",
+      "O1",
+      "frontend/src/lib/cameraScanner.ts",
+      "frontend/e2e-persistence/camera.spec.ts",
+      "Synthetic-stream regression passed; physical-device record pending."
+    ],
+    [
+      "FR-07",
+      "Register and log in by username/email; restore and revoke server sessions.",
+      "O3",
+      "backend/app/api/auth.py",
+      "backend/tests/test_auth.py",
+      "Verified locally; owner reports production functioning."
+    ],
+    [
+      "FR-08",
+      "Edit only the current profile and reject duplicate normalized username.",
+      "O3",
+      "frontend/src/pages/AccountPage.tsx",
+      "frontend/e2e-persistence/product-polish.spec.ts",
+      "Verified locally."
+    ],
+    [
+      "FR-09",
+      "Issue expiring single-use reset links; replace hash and revoke sessions.",
+      "O3",
+      "backend/app/services/mail.py",
+      "backend/tests/test_auth.py",
+      "Local mail behaviour verified; production inbox pending."
+    ],
+    [
+      "FR-10",
+      "List/reopen only owned saved results and preserve assessment versions.",
+      "O3",
+      "backend/app/services/analyses.py",
+      "backend/tests/test_persistence.py",
+      "Verified on real local PostgreSQL."
+    ],
+    [
+      "FR-11",
+      "Search/filter/sort bounded owned History with deterministic pagination.",
+      "O3",
+      "frontend/src/pages/HistoryPage.tsx",
+      "backend/tests/test_task8.py",
+      "Verified locally; large-history load unmeasured."
+    ],
+    [
+      "FR-12",
+      "Compute dashboard totals and distributions from owned records.",
+      "O3",
+      "backend/app/api/routes.py",
+      "backend/tests/test_final_closure.py",
+      "Verified locally; no fabricated fallback."
+    ],
+    [
+      "FR-13",
+      "Create a new draft from owned Message/URL/Phone results; require fresh QR.",
+      "O3",
+      "frontend/src/components/SubmissionHistory.tsx",
+      "frontend/e2e-persistence/product-polish.spec.ts",
+      "Verified locally; original immutable."
+    ],
+    [
+      "FR-14",
+      "Delete owned records after confirmation; foreign reads/deletes return 404.",
+      "O3",
+      "backend/app/services/analyses.py",
+      "backend/tests/test_final_closure.py",
+      "Four-mode A/B regression passed."
+    ],
+    [
+      "FR-15",
+      "Delete an account after password verification and cascade its owned rows.",
+      "O3",
+      "backend/app/api/auth.py",
+      "backend/tests/test_auth.py",
+      "Verified locally; provider backups are separate."
+    ],
+    [
+      "FR-16",
+      "Expose separate liveness, readiness and advertised capabilities.",
+      "O4",
+      "backend/app/api/routes.py",
+      "docs/evidence/release-production-endpoints.json",
+      "Observed HTTP 200 at final release."
+    ],
+    [
+      "FR-17",
+      "Present evidence, actions and limits without treating confidence as risk.",
+      "O2",
+      "frontend/src/components/analysis/ResultPresentation.tsx",
+      "frontend/e2e-persistence/result-presentation.spec.ts",
+      "Presentation regressions passed; comprehension not yet measured."
+    ],
+    [
+      "FR-18",
+      "Persist credential-redacted QR text while discarding uploaded images.",
+      "O1/O3",
+      "backend/app/qr_intelligence/engine.py",
+      "backend/tests/test_final_closure.py",
+      "Regression passed; fix present in live release; old rows not rewritten."
+    ]
+  ],
+  "nfr": [
+    [
+      "NFR-01",
+      "Security",
+      "Reject missing/invalid session, Origin and CSRF on protected operations; use Argon2id and rate limits.",
+      "backend/app/core/auth.py",
+      "backend/tests/test_auth.py",
+      "Verified controls; no independent penetration test."
+    ],
+    [
+      "NFR-02",
+      "Privacy",
+      "Scope each private operation by authenticated owner; discard QR images/frames; redact specified credentials.",
+      "backend/app/services/analyses.py",
+      "backend/tests/test_final_closure.py",
+      "Verified cases; arbitrary secrets and backups not fully covered."
+    ],
+    [
+      "NFR-03",
+      "Performance",
+      "Bound QR work (5 MiB upload, 4096 dimension, 16 million pixels, 5000-byte payload defaults), paginate history and defer WASM.",
+      "backend/app/core/config.py",
+      "docs/PERFORMANCE_RELIABILITY.md",
+      "Bounds and 30-call warm samples evidenced; no production SLA/load claim."
+    ],
+    [
+      "NFR-04",
+      "Reliability",
+      "Return explicit failure/unavailable states; retain local analysis if optional AI fails; transact/rollback database operations.",
+      "backend/app/ml/engine.py",
+      "backend/tests/test_persistence.py",
+      "Local failure paths evidenced; cloud outage/restore untested."
+    ],
+    [
+      "NFR-05",
+      "Usability",
+      "Provide labelled four-mode entry, evidence/actions, recovery feedback and retrievable history; evaluate five tasks separately.",
+      "frontend/src/pages/AnalysePage.tsx",
+      "docs/USABILITY_TEST_PLAN.md",
+      "UI implemented; user task success/comprehension NOT YET EVIDENCED."
+    ],
+    [
+      "NFR-06",
+      "Accessibility",
+      "Provide labels, keyboard focus, dialogs, reduced motion and non-colour status; check 320\u20131440 CSS px.",
+      "frontend/src/components/ModalDialog.tsx",
+      "frontend/e2e-persistence/final-closure.spec.ts",
+      "Selected automated/visual checks passed; assistive-technology/device coverage incomplete."
+    ],
+    [
+      "NFR-07",
+      "Maintainability",
+      "Preserve typed contracts, modular engines, pinned dependencies and explicit migration revisions.",
+      "backend/app/api/analysis_schemas.py",
+      "docs/evidence/release-verification.json",
+      "Type/lint/test/build/migration gates passed at final release."
+    ],
+    [
+      "NFR-08",
+      "Explainability",
+      "Expose observations, method versions and uncertainty; distinguish Low from Insufficient Evidence.",
+      "backend/app/ml/fusion.py",
+      "docs/EVALUATION.md",
+      "Result content and method traceability evidenced; human interpretation pending."
+    ],
+    [
+      "NFR-09",
+      "Reproducibility",
+      "Verify dataset/artifact hashes and reproduce held-out matrices with frozen runtime inference.",
+      "backend/scripts/evaluate_final.py",
+      "docs/evidence/final_evaluation.json",
+      "Matrices reproduced; no new independent test set implied."
+    ],
+    [
+      "NFR-10",
+      "Deployment consistency",
+      "Serve matching Vercel/Render commit identities with ready database and current Alembic head.",
+      "docs/PRODUCTION_ACCEPTANCE.md (provider API rule); render.yaml",
+      "docs/FINAL_RELEASE.md",
+      "Observed 12 September 2026; continuous monitoring not claimed."
+    ]
+  ],
+  "software": [
+    [
+      "React 19 and TypeScript 5.9",
+      "Typed component UI",
+      "Four input/result workflows need consistent state",
+      "Matches implemented components and strict transport types",
+      "Server templates (analytical alternative)",
+      "More frontend tooling and bundle cost."
+    ],
+    [
+      "React Router 7; TanStack Query 5; Zod 4",
+      "Routing, server state and boundary validation",
+      "Account changes require cache isolation and typed responses",
+      "Already exercised by navigation/identity regressions",
+      "Manual routing/fetch/state (analytical alternative)",
+      "Library complexity; client guards do not authorize API access."
+    ],
+    [
+      "Vite 7; Tailwind 4; lucide-react",
+      "Build, styling and icons",
+      "Produce deployable assets and consistent controls",
+      "Existing build/design tokens and route chunks",
+      "Other bundler/CSS approach (analytical alternative)",
+      "Toolchain size; icon/style consistency still needs review."
+    ],
+    [
+      "Node >=22.12; npm lock",
+      "Frontend build/test runtime",
+      "Required by package engines and locked installation",
+      "Release ran Node 24.18.0",
+      "Other compatible Node runtime",
+      "Version compatibility must be maintained."
+    ],
+    [
+      "Python >=3.12; FastAPI; Uvicorn; Pydantic",
+      "Validated HTTP API",
+      "Central analysis, auth and error contracts",
+      "Matches Python engines and schema-driven routes",
+      "Django or Node API (analytical alternatives)",
+      "Synchronous analysis occupies request workers."
+    ],
+    [
+      "PostgreSQL; SQLAlchemy 2; Psycopg 3",
+      "Relational persistence and transactions",
+      "Ownership, uniqueness, cascades and consistent snapshots",
+      "Matches actual schema and PostgreSQL integration tests",
+      "Document store or SQLite (analytical alternatives)",
+      "Database connectivity and migrations become dependencies."
+    ],
+    [
+      "Alembic",
+      "Versioned schema changes",
+      "Deploy existing data without implicit recreation",
+      "Explicit 0001\u20130006 revision chain",
+      "Manual DDL (analytical alternative)",
+      "Upgrade ordering and recovery require care."
+    ],
+    [
+      "scikit-learn; local JSON artifacts",
+      "Offline model training/export and custom inference",
+      "Reproducible learned Message and URL components",
+      "Selected families won fixed validation comparisons",
+      "Message SVM/NB; URL SVM/logistic (actually evaluated)",
+      "Historical data bias; JSON export requires fidelity checks."
+    ],
+    [
+      "tldextract 5.3.1; IDNA",
+      "Offline suffix and Unicode URL handling",
+      "Parse host/domain consistently without DNS",
+      "Pinned offline PSL and shared parser",
+      "Ad hoc splitting (analytical alternative)",
+      "Bundled suffix data ages; no live ownership evidence."
+    ],
+    [
+      "phonenumbers 9.0.38",
+      "Number parsing and metadata",
+      "International structure without guessing subscribers",
+      "Pinned package, reproducible metadata tests",
+      "Live reputation service (future alternative)",
+      "No identity or fraud detection; metadata can age."
+    ],
+    [
+      "Pillow 12.3.0; zxing-cpp 3.1.1; python-multipart 0.0.32",
+      "Bounded server QR image decode",
+      "Validate raster before decoding one payload",
+      "Existing byte/pixel/payload limits and tests",
+      "Remote decoder (analytical alternative)",
+      "Untrusted decoder inputs need bounds; limited image coverage."
+    ],
+    [
+      "MediaDevices; BarcodeDetector; zxing-wasm 3.1.3",
+      "Browser camera and local fallback decoder",
+      "Explicit on-device capture without frame upload",
+      "Native detector when available; same-origin worker otherwise",
+      "Upload-only workflow",
+      "Permission/browser variation; deferred WASM payload."
+    ],
+    [
+      "argon2-cffi; email-validator",
+      "Password hashes and account input validation",
+      "Protect password verification and normalize account identifiers",
+      "Argon2id parameters are explicit; tests cover validation",
+      "Other password KDF (analytical alternative)",
+      "Hash verification costs memory/CPU; no MFA."
+    ],
+    [
+      "Vercel; Render; Neon",
+      "Frontend, Python service and managed PostgreSQL",
+      "Public delivery with separated service responsibilities",
+      "Verified same-commit final deployment",
+      "Single managed host (analytical alternative)",
+      "More service boundaries; cold starts/network failures."
+    ],
+    [
+      "Resend",
+      "Production password-recovery mail",
+      "Deliver a reset token through a controlled inbox channel",
+      "Implemented backend mail adapter",
+      "Other mail provider (analytical alternative)",
+      "Delivery/domain/provider failure; inbox evidence pending."
+    ],
+    [
+      "Optional OpenAI SDK",
+      "Grounded external Message review",
+      "Not needed for baseline; optional eligible context only",
+      "Existing backend-only disabled-by-default adapter",
+      "Local-only processing (actual evaluation baseline)",
+      "Privacy/cost/network dependency if enabled; no live test claimed."
+    ],
+    [
+      "Vitest; Testing Library; Playwright; Pytest/httpx; ESLint; Ruff; Git",
+      "Verification and revision tracking",
+      "Check contracts, UI, DB boundaries and release identity",
+      "Recorded final gates and reproducible commands",
+      "Manual-only testing (analytical alternative)",
+      "Selected tests are not exhaustive certification."
+    ]
+  ],
+  "hardware": [
+    [
+      "Development computer",
+      "Windows computer running Node, Python, local PostgreSQL and Chrome; sufficient disk/RAM for installed dependencies and retained corpora.",
+      "Matches the observed release test environment. Exact CPU/RAM and minimum spec NOT YET EVIDENCED; no invented benchmark minimum."
+    ],
+    [
+      "Development browser/network",
+      "Chrome used for recorded browser tests; internet needed for dependency setup, research and cloud deployment.",
+      "Tests run on loopback with isolated DBs; network access is not required by local URL/Phone inference."
+    ],
+    [
+      "Development camera",
+      "Camera/webcam and permission needed only for physical live-QR checks.",
+      "Synthetic streams prove selected lifecycle behaviour, not camera compatibility; upload remains available."
+    ],
+    [
+      "Client device",
+      "Phone, tablet or computer with a modern JavaScript browser and internet access.",
+      "Responsive UI checked at 320\u20131440 CSS px in Chromium; hardware/browser compatibility beyond that evidence must be recorded."
+    ],
+    [
+      "Client camera",
+      "Optional camera with browser MediaDevices support on an allowed secure context.",
+      "Needed for live QR only; image upload is the fallback (MDN contributors, n.d.)."
+    ],
+    [
+      "Cloud server",
+      "Vercel delivery infrastructure, a Render Python web service and Neon PostgreSQL; no purchased server hardware is part of the project.",
+      "Roles are verified in release records. Exact allocated CPU/RAM/storage quotas and workload capacity are provider configuration, not inferred from a green badge."
+    ],
+    [
+      "Demo equipment",
+      "Presentation computer, projector/display, internet and optional phone/webcam; local app plus copied QR fixtures as backup.",
+      "Check room readability and the actual device before delivery; neither is established by a development screenshot."
+    ]
+  ]
+}

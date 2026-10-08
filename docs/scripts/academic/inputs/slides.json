@@ -1,0 +1,132 @@
+[
+  [
+    "SCAMGUARD decision support",
+    "Establish the user problem and bounded potential value.",
+    "One unfamiliar-message example and its linked URL/QR context; use inert text.",
+    "Inspect unfamiliar content before acting\nMessage \u00b7 URL \u00b7 Phone \u00b7 QR\nEvidence with explicit limits",
+    60,
+    "Use the 60-second opening below. The important distinction is between inspecting evidence and certifying an identity. Do not claim that the product prevents losses. The opening should make the intended user and decision clear before introducing technology. Pause after the sentence that states the limitation.",
+    "The next question is what existing systems already solve.",
+    "FINAL_PROBLEM_STATEMENT.md"
+  ],
+  [
+    "Related systems and the design gap",
+    "Show research and an honest comparison.",
+    "Table 4 condensed to three rows: evidence source, strength, trade-off.",
+    "VirusTotal: aggregated analysis\nSafe Browsing: threat information\nTruecaller: communication reputation\nSCAMGUARD: local methods and private explanations",
+    60,
+    "Explain that Truecaller already checks phone numbers and URLs and that VirusTotal has a separate private option. Describe each system\u2019s unit of evidence. Then state the bounded gap: a common workflow around the specific local methods and QR consent implemented here. No service was benchmarked against SCAMGUARD, and proprietary internals are unknown.",
+    "That comparison leads to four measurable project outcomes.",
+    "BACKGROUND_OF_STUDY.md"
+  ],
+  [
+    "Four measurable objectives",
+    "Connect the problem to acceptance evidence.",
+    "O1\u2013O4 from Table 1; one short outcome per line.",
+    "Four supported modes\nVersioned explanations and reproduced models\nPrivate account and history lifecycle\nTraceable verified deployment",
+    45,
+    "Name the final-release time boundary and explain that these are retrospective acceptance objectives. Point to one concrete measurement for each: advertised set, held-out matrices, A/B tests and matching deployment SHA. Do not imply that this wording was approved before work began. The original academic schedule remains a separate evidence gap.",
+    "The architecture connects those outcomes through one request path.",
+    "FINAL_SMART_OBJECTIVES.md"
+  ],
+  [
+    "Architecture and trust boundaries",
+    "Explain execution and ownership.",
+    "Figure 1 architecture; include provider-configured API rewrite.",
+    "Browser \u2192 Vercel \u2192 Render \u2192 Neon\nIdentity comes from the server session\nLocal engines return owned assessments",
+    60,
+    "Trace a request from the browser through Vercel\u2019s configured same-origin rewrite to FastAPI on Render. Explain that frontend/vercel.json only contains the SPA catch-all; provider configuration supplies the API rewrite. The API validates identity and content, runs an engine, transacts with Neon and returns a schema-checked result. The browser never receives database credentials.",
+    "Inside that API, learned components and deterministic controls have different roles.",
+    "ARCHITECTURE.md"
+  ],
+  [
+    "Message classification and evidence",
+    "Demonstrate knowledge of the actual ML pipeline.",
+    "Figure 7 Message confusion matrix and a simple TF-IDF \u2192 Logistic Regression \u2192 fusion sequence.",
+    "TF-IDF + Logistic Regression\nLEGITIMATE / SPAM / SCAM\n1,160 held-out rows\nMacro F1 0.895235",
+    65,
+    "Explain training-only text features, grouped duplicate control and validation selection. The final model was refit on train plus validation. Point to 13 SCAM examples classified SPAM and explain why macro F1 and class support matter. Rules expose context and fusion produces a separate advisory risk. Classifier metrics do not validate the final five-level risk policy.",
+    "The URL model uses different inputs and has a different validity problem.",
+    "MODEL_EVALUATION.md"
+  ],
+  [
+    "URL analysis and collection bias",
+    "Explain what URL analysis actually measures.",
+    "URL half of Figure 7 with a prominent dataset-bias note.",
+    "27 URL-string features\n120-tree random forest\nNo destination fetching\nHTTPS-homepage bias limits generalisation",
+    55,
+    "State the 36,901 domain-held-out test denominator and 98.4824% classifier accuracy only alongside the main caveat. All legitimate training URLs were HTTPS homepages without queries. Ordinary benign deep links can be unfamiliar. Rules and fusion therefore limit weak or ML-only evidence to Caution. There is no live webpage or reputation investigation.",
+    "Some modes cannot support a learned fraud score at all.",
+    "URL_MODEL_EVALUATION.md"
+  ],
+  [
+    "Phone and QR boundaries",
+    "Connect deterministic analysis to honest uncertainty.",
+    "Figure 5 QR routing and a Phone Insufficient Evidence result.",
+    "Phone metadata \u2260 caller identity\nQR decode \u2260 safe content\nCRC \u2260 merchant authenticity\nSupported QR payloads reuse existing engines",
+    60,
+    "Explain that a valid number only matches bundled numbering metadata; cost-related categories can justify Caution. A QR is a data carrier. Its payload routes to Message, URL or Phone where supported, while payment parsing is only a generic TLV/CRC subset. Describe the retained missing-merchant-fields limitation. No QR destination is automatically activated.",
+    "Because those inputs may be sensitive, their lifecycle matters as much as their result.",
+    "QR_INTELLIGENCE.md"
+  ],
+  [
+    "Authentication and QR privacy",
+    "Explain the tested security and retention controls.",
+    "Figures 2 and 4 reduced to one data/session path; do not show real tokens.",
+    "Argon2id password hashes\nOpaque sessions + Origin/CSRF\nOwner-scoped records\nFrames/images discarded; specified credentials redacted",
+    60,
+    "Passwords are hashed; token digests live in the database and opaque cookies are HttpOnly. Authenticated mutations check session, Origin and CSRF. All private queries use session-derived ownership. Camera frames remain on-device, upload bytes are transient, and Task 9 redacts specified Wi-Fi/payment credentials before saving. This is tested control evidence, not a penetration-test certificate.",
+    "I will now show how those boundaries appear in the user workflow.",
+    "AUTHENTICATION.md"
+  ],
+  [
+    "Demonstration",
+    "Show one coherent journey rather than every settings screen.",
+    "Live app; authentic local screenshots as fallback.",
+    "Submit \u2192 interpret \u2192 retrieve\nShow one indicator and one limit\nKeep the original assessment unchanged",
+    150,
+    "Follow DEMO_SCRIPT.md exactly. Use a prepared account and inert fixtures. Message is the main assessment; briefly contrast URL and Phone; upload a QR and retrieve its owned History entry. Use camera only if the real device has passed preflight, replacing rather than extending the upload slot. Authentication/profile/reset/isolation are available for questions and manual acceptance, not rushed into this 150-second journey.",
+    "The demonstration is one example; the next slide shows the wider evidence and its limits.",
+    "DEMO_SCRIPT.md"
+  ],
+  [
+    "Evaluation evidence",
+    "Separate tests, model metrics and human outcomes.",
+    "Table 13 counts plus Table 14 evidence-class labels.",
+    "159 Vitest \u00b7 50 Playwright\n310 Pytest + 1 opt-in skip\nMatching production release SHA\nUsability study not yet conducted",
+    70,
+    "Explain what each suite covers, including real local PostgreSQL and built worker assets. State the skipped external provider test and avoid calling mobile emulation physical hardware. The final release had healthy/ready/capabilities HTTP 200 and matching provider commits. These observations do not establish long-term availability, inbox receipt or better user decisions.",
+    "That distinction is essential to the limitations I can defend.",
+    "FINAL_EVALUATION.md"
+  ],
+  [
+    "Limitations and next validation",
+    "Show judgement and external-validity awareness.",
+    "Short ranked list; no decorative success graphic.",
+    "Historical and biased datasets\nNo live reputation or complete payment compliance\nDevice, inbox and human evidence gaps\nNo load or recovery guarantee",
+    50,
+    "Prioritise the limitations that change how an output is interpreted. Explain why a representative external test and user-comprehension study would be more informative than adding another mode. Acknowledge operational cold starts and recovery gaps. Future work is a proposal with prerequisites; nothing is presented as already implemented.",
+    "Within those limits, the implemented contribution is concrete.",
+    "LIMITATIONS.md"
+  ],
+  [
+    "Implemented contribution",
+    "Connect outcomes back to the original problem.",
+    "Objective-to-evidence summary, four rows.",
+    "Reproducible local analysis\nInspectable evidence and uncertainty\nConsent-based QR routing\nPrivate versioned history",
+    35,
+    "Return to the user\u2019s need to inspect an unfamiliar item before acting. The project delivers a working integrated workflow with evidence and limitations, supported by the named tests and release observations. It does not claim a new learning algorithm or proven reduction in scam losses. Keep this conclusion short and specific.",
+    "I can now explain the evidence behind any of these claims.",
+    "FINAL_CONCLUSION.md"
+  ],
+  [
+    "Questions and evidence",
+    "Open a focused defence and make evidence easy to find.",
+    "Plain text cue: architecture, metrics, ownership, QR, release.",
+    "Questions\nArchitecture \u00b7 methods \u00b7 privacy \u00b7 evaluation\nRelease: 4df277bdf93a2e1424ac533d488cd7ba127b35ce",
+    25,
+    "Pause and face the audience. Use direct answer, reasoning, then evidence. The 25 seconds covers the closing invitation, not the examiner\u2019s Q&A period. Open a source only when useful. If asked about a missing experiment, state what is not yet evidenced and describe the planned method without inventing results.",
+    "Thank you.",
+    "EXAMINER_QA.md"
+  ]
+]

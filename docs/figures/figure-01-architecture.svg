@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="460.8pt" height="513.36pt" viewBox="0 0 460.8 513.36" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-09-12T23:08:43.132922</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.2, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 513.36
+L 460.8 513.36
+L 460.8 -0
+L 0 -0
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 74.16 77.0544
+L 386.64 77.0544
+Q 390.2112 77.0544 390.2112 73.728
+L 390.2112 23.832
+Q 390.2112 20.5056 386.64 20.5056
+L 74.16 20.5056
+Q 70.5888 20.5056 70.5888 23.832
+L 70.5888 73.728
+Q 70.5888 77.0544 74.16 77.0544
+z
+" clip-path="url(#pe0ba56fc5e)" style="fill: #f4f3ed; stroke: #333333; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 74.16 172.6884
+L 386.64 172.6884
+Q 390.2112 172.6884 390.2112 169.362
+L 390.2112 119.466
+Q 390.2112 116.1396 386.64 116.1396
+L 74.16 116.1396
+Q 70.5888 116.1396 70.5888 119.466
+L 70.5888 169.362
+Q 70.5888 172.6884 74.16 172.6884
+z
+" clip-path="url(#pe0ba56fc5e)" style="fill: #f4f3ed; stroke: #333333; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 74.16 284.9544
+L 386.64 284.9544
+Q 390.2112 284.9544 390.2112 281.628
+L 390.2112 215.1
+Q 390.2112 211.7736 386.64 211.7736
+L 74.16 211.7736
+Q 70.5888 211.7736 70.5888 215.1
+L 70.5888 281.628
+Q 70.5888 284.9544 74.16 284.9544
+z
+" clip-path="url(#pe0ba56fc5e)" style="fill: #f4f3ed; stroke: #333333; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 29.52 405.5364
+L 217.008 405.5364
+Q 220.5792 405.5364 220.5792 402.21
+L 220.5792 335.682
+Q 220.5792 332.3556 217.008 332.3556
+L 29.52 332.3556
+Q 25.9488 332.3556 25.9488 335.682
+L 25.9488 402.21
+Q 25.9488 405.5364 29.52 405.5364
+z
+" clip-path="url(#pe0ba56fc5e)" style="fill: #f4f3ed; stroke: #333333; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 261.648 405.5364
+L 422.352 405.5364
+Q 425.9232 405.5364 425.9232 402.21
+L 425.9232 335.682
+Q 425.9232 332.3556 422.352 332.3556
+L 261.648 332.3556
+Q 258.0768 332.3556 258.0768 335.682
+L 258.0768 402.21
+Q 258.0768 405.5364 261.648 405.5364
+z
+" clip-path="url(#pe0ba56fc5e)" style="fill: #f4f3ed; stroke: #333333; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_1">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(148.32375 44.59125)">Browser: React / TypeScript</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(101.206875 59.59125)">UI, session cookie, explicit camera consent</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(93.310312 140.22525)">Vercel: frontend assets + provider API rewrite</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(118.170937 155.22525)">Browser requests same-origin /api/v1</text>
+   </g>
+   <g id="text_3">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(183.6675 237.83775)">Render: FastAPI</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(98.499375 251.67525)">Validation · sessions / CSRF · owned queries</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(121.718437 266.67525)">Message / URL / Phone / QR engines</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(71.439 357.151313)">Neon PostgreSQL</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(53.272125 372.807563)">Users, sessions, resets,</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(39.594 387.25725)">private analyses, rate limits</text>
+   </g>
+   <g id="text_5">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(319.979062 358.41975)">Resend</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(281.851875 373.41975)">Password-reset mail</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(279.809062 387.25725)">Inbox check pending</text>
+   </g>
+   <g id="patch_7">
+    <path d="M 230.4 75.729596
+Q 230.4 96.598086 230.4 115.789525
+" style="fill: none; stroke: #343434; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 233 110.589525
+L 230.4 115.789525
+L 227.8 110.589525
+" style="fill: none; stroke: #343434; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="text_6">
+    <g id="patch_8">
+     <path d="M 235.2032 102.597
+L 269.142263 102.597
+L 269.142263 90.597
+L 235.2032 90.597
+z
+" style="fill: #ffffff"/>
+    </g>
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: start" x="236.2032" y="99.194656" transform="rotate(-0 236.2032 99.194656)">HTTPS</text>
+   </g>
+   <g id="patch_9">
+    <path d="M 230.4 171.363596
+Q 230.4 192.232086 230.4 211.423525
+" style="fill: none; stroke: #343434; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 233 206.223525
+L 230.4 211.423525
+L 227.8 206.223525
+" style="fill: none; stroke: #343434; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="text_7">
+    <g id="patch_10">
+     <path d="M 235.2032 198.231
+L 284.089137 198.231
+L 284.089137 186.231
+L 235.2032 186.231
+z
+" style="fill: #ffffff"/>
+    </g>
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: start" x="236.2032" y="194.828656" transform="rotate(-0 236.2032 194.828656)">API proxy</text>
+   </g>
+   <g id="patch_11">
+    <path d="M 228.611566 282.53033
+Q 176.829933 308.656043 126.545572 334.026328
+" style="fill: none; stroke: #343434; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 132.359311 334.005268
+L 126.545572 334.026328
+L 130.016967 329.362701
+" style="fill: none; stroke: #343434; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="text_8">
+    <g id="patch_12">
+     <path d="M 181.6352 314.655
+L 203.427388 314.655
+L 203.427388 302.655
+L 181.6352 302.655
+z
+" style="fill: #ffffff"/>
+    </g>
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: start" x="182.6352" y="311.252656" transform="rotate(-0 182.6352 311.252656)">SQL</text>
+   </g>
+   <g id="patch_13">
+    <path d="M 232.201648 282.500637
+Q 286.20114 308.655552 338.691305 334.079417
+" style="fill: none; stroke: #343434; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 335.144741 329.472696
+L 338.691305 334.079417
+L 332.877989 334.152636
+" style="fill: none; stroke: #343434; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="text_9">
+    <g id="patch_14">
+     <path d="M 291.0032 314.655391
+L 332.314138 314.655391
+L 332.314138 302.654609
+L 291.0032 302.654609
+z
+" style="fill: #ffffff"/>
+    </g>
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: start" x="292.0032" y="311.253047" transform="rotate(-0 292.0032 311.253047)">Mail API</text>
+   </g>
+   <g id="text_10">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'" transform="translate(71.053906 480.572125)">No direct browser database access. Models run on the API host.</text>
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'" transform="translate(29.483594 493.603375)">Optional external AI review is disabled by default and excluded from evaluation.</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pe0ba56fc5e">
+   <rect x="7.2" y="7.2" width="446.4" height="498.96"/>
+  </clipPath>
+ </defs>
+</svg>

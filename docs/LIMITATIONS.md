@@ -24,8 +24,8 @@ These limits are part of the final result, not footnotes to hide in the presenta
   best-effort and cannot make arbitrary sensitive text safe to share.
 - **Authentication/privacy:** No MFA, independently measured timing resistance or comprehensive
   penetration test. Basic application rate limits are not DDoS protection. Analysis content remains
-  private sensitive data; arbitrary secrets cannot all be detected. Task 9 redaction is not deployed
-  until owner review/merge, and does not retroactively rewrite records.
+  private sensitive data; arbitrary secrets cannot all be detected. Task 9 redaction is included in the final
+  production release; it does not retroactively rewrite earlier records.
 - **Operations:** Free Render instance may sleep/cold-start. No HA/failover, enterprise-scale load,
   disaster-recovery exercise, independently verified backup retention/purge or inbox deliverability
   assessment. Resend test sender/domain restrictions must be checked before demonstrating recovery.

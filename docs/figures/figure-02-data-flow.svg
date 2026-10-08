@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="460.8pt" height="513.36pt" viewBox="0 0 460.8 513.36" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-09-12T23:08:43.374014</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.2, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 513.36
+L 460.8 513.36
+L 460.8 -0
+L 0 -0
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 74.16 74.9754
+L 386.64 74.9754
+Q 390.2112 74.9754 390.2112 71.649
+L 390.2112 25.911
+Q 390.2112 22.5846 386.64 22.5846
+L 74.16 22.5846
+Q 70.5888 22.5846 70.5888 25.911
+L 70.5888 71.649
+Q 70.5888 74.9754 74.16 74.9754
+z
+" clip-path="url(#pbeda76955d)" style="fill: #f4f3ed; stroke: #333333; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 74.16 162.2934
+L 386.64 162.2934
+Q 390.2112 162.2934 390.2112 158.967
+L 390.2112 113.229
+Q 390.2112 109.9026 386.64 109.9026
+L 74.16 109.9026
+Q 70.5888 109.9026 70.5888 113.229
+L 70.5888 158.967
+Q 70.5888 162.2934 74.16 162.2934
+z
+" clip-path="url(#pbeda76955d)" style="fill: #f4f3ed; stroke: #333333; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 74.16 252.7299
+L 386.64 252.7299
+Q 390.2112 252.7299 390.2112 249.4035
+L 390.2112 197.4285
+Q 390.2112 194.1021 386.64 194.1021
+L 74.16 194.1021
+Q 70.5888 194.1021 70.5888 197.4285
+L 70.5888 249.4035
+Q 70.5888 252.7299 74.16 252.7299
+z
+" clip-path="url(#pbeda76955d)" style="fill: #f4f3ed; stroke: #333333; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 74.16 351.4824
+L 386.64 351.4824
+Q 390.2112 351.4824 390.2112 348.156
+L 390.2112 294.102
+Q 390.2112 290.7756 386.64 290.7756
+L 74.16 290.7756
+Q 70.5888 290.7756 70.5888 294.102
+L 70.5888 348.156
+Q 70.5888 351.4824 74.16 351.4824
+z
+" clip-path="url(#pbeda76955d)" style="fill: #f4f3ed; stroke: #333333; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 74.16 448.1559
+L 386.64 448.1559
+Q 390.2112 448.1559 390.2112 444.8295
+L 390.2112 392.8545
+Q 390.2112 389.5281 386.64 389.5281
+L 74.16 389.5281
+Q 70.5888 389.5281 70.5888 392.8545
+L 70.5888 444.8295
+Q 70.5888 448.1559 74.16 448.1559
+z
+" clip-path="url(#pbeda76955d)" style="fill: #f4f3ed; stroke: #333333; stroke-width: 1.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_1">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: middle" x="230.4" y="52.09125" transform="rotate(-0 230.4 52.09125)">User selects Message, URL, Phone or QR</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: middle" x="230.4" y="139.40925" transform="rotate(-0 230.4 139.40925)">Session identity + origin / CSRF + input limits</text>
+   </g>
+   <g id="text_3">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(107.90625 219.22725)">Local engine evaluates the original input</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(108.568125 234.701625)">No URL visit, call or automatic QR action</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(114.659062 316.94025)">Create owner-scoped, versioned result</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(89.150625 331.94025)">Redact specified QR credentials before storage</text>
+   </g>
+   <g id="text_5">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(94.950937 415.81575)">Return evidence + risk + confidence + limits</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'" transform="translate(97.090312 429.65325)">History retrieves the immutable assessment</text>
+   </g>
+   <g id="patch_7">
+    <path d="M 230.4 73.651357
+Q 230.4 92.442524 230.4 109.556641
+" style="fill: none; stroke: #343434; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 233 104.356641
+L 230.4 109.556641
+L 227.8 104.356641
+" style="fill: none; stroke: #343434; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 230.4 160.962378
+Q 230.4 178.196093 230.4 193.752757
+" style="fill: none; stroke: #343434; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 233 188.552757
+L 230.4 193.752757
+L 227.8 188.552757
+" style="fill: none; stroke: #343434; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 230.4 251.403256
+Q 230.4 271.753179 230.4 290.426052
+" style="fill: none; stroke: #343434; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 233 285.226052
+L 230.4 290.426052
+L 227.8 285.226052
+" style="fill: none; stroke: #343434; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 230.4 350.155756
+Q 230.4 370.505679 230.4 389.178552
+" style="fill: none; stroke: #343434; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 233 383.978552
+L 230.4 389.178552
+L 227.8 383.978552
+" style="fill: none; stroke: #343434; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'" transform="translate(64.221875 479.603375)">Upload bytes are processed transiently; camera frames stay local.</text>
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'" transform="translate(55.721094 493.603375)">Saved text/results remain sensitive. Legacy records are not rewritten.</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pbeda76955d">
+   <rect x="7.2" y="7.2" width="446.4" height="498.96"/>
+  </clipPath>
+ </defs>
+</svg>

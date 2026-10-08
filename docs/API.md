@@ -1,6 +1,26 @@
 # Current API contract
 
-Base: `/api/v1`. Reconciled with Task 8 source on 2026-09-10; feature branch, not deployed.
+## October 2026 compatibility additions
+
+Message `confidence_score` may now be null when the model lacks usable vocabulary support
+or the fusion policy abstains. Storage already supports null. New frontend schemas accept
+both historical responses and these values; deploy frontend before backend.
+
+New Message and URL components may include `assessment_basis` with `decision: string`,
+`supporting: string[]`, `mitigating: string[]`, and `uncertainty: string[]`. They describe
+actual observations and policy reasoning, not hidden model reasoning. Historical records
+without this object remain valid. Message `local_model.matched_features` counts matched
+vocabulary features; `deterministic_rules.normalization_applied` reports rule normalization.
+Message fusion adds `reason` and `disagreement`. Risk taxonomy and endpoint paths are unchanged.
+
+Capabilities now report initialized engines and explicit degraded reasons (including URL
+rules-only operation). Readiness also requires the Message engine. Login rate limits share
+a resolved account budget across aliases/source addresses, with a separate source budget.
+The browser waits up to 45 seconds for analysis, eight seconds for ordinary reads and
+15 seconds for reset requests. A client timeout does not imply the record was not saved.
+See the [October engineering review](ENGINEERING_REVIEW_2026-10-08.md) for policies and validation. The main contract below remains applicable.
+
+Base: `/api/v1`. Updated for the local engineering review on 2026-10-08; these changes are not deployed.
 
 Responses include `X-Request-ID`, `Cache-Control: no-store`, and
 `X-Content-Type-Options: nosniff`. Production CORS uses an exact HTTPS origin list, credentials,
@@ -11,7 +31,7 @@ Responses include `X-Request-ID`, `Cache-Control: no-store`, and
 | Method/path | Authentication | Contract |
 | --- | --- | --- |
 | `GET /health` | Public | Process liveness: `200 {status:"ok",service:"scamguard-api",version:"0.1.0"}`. |
-| `GET /ready` | Public | Verifies PostgreSQL, required domain/identity tables and required Message/URL/Phone/QR intelligence. Returns safe 503 if unavailable. |
+| `GET /ready` | Public | Verifies PostgreSQL, required domain/identity tables and required Message/URL/Phone/QR intelligence. Returns generic 503 if unavailable. |
 | `GET /capabilities` | Public | Reports database-backed submission and local MESSAGE/URL/PHONE/QR support without exposing user data. |
 | `POST /auth/signup` | Exact Origin | Creates a normalized full-name/username/email account and opaque session. |
 | `POST /auth/login` | Exact Origin | Accepts normalized username or email and returns one generic credentials error for wrong/unknown accounts. |
@@ -27,7 +47,7 @@ Responses include `X-Request-ID`, `Cache-Control: no-store`, and
 | `POST /analyses/search` | Session + Origin + CSRF | Read-only owned history search/filter/sort with bounded pagination; terms stay in the JSON body. |
 | `GET /analyses?page=1&page_size=10` | Session | Returns only the current user's newest-first summaries. |
 | `GET /analyses/{analysis_id}` | Session + ownership | Returns the current user's full stored record; missing/foreign/legacy all use the same 404. |
-| `DELETE /analyses/{analysis_id}` | Session + Origin + CSRF + ownership | Deletes an owned record or returns the same safe 404. |
+| `DELETE /analyses/{analysis_id}` | Session + Origin + CSRF + ownership | Deletes an owned record or returns the same generic 404. |
 | `GET /dashboard` | Session | Returns totals/latest/recent plus grouped type/risk counts and an unassessed count for the current user. |
 
 ### Task 8 payload and search additions
@@ -120,7 +140,7 @@ history before retrying because idempotency keys are not implemented.
 
 ## Errors and limits
 
-Safe failures use the standard envelope:
+Bounded failures use the standard envelope:
 
 ```json
 {"error":{"code":"AUTHENTICATION_REQUIRED","message":"Sign in to continue.","request_id":"..."}}
