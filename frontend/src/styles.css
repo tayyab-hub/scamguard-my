@@ -734,6 +734,26 @@
   border-left: 2px solid var(--risk-color);
   padding-left: 12px;
 }
+.evidence-balance {
+  display: grid;
+  gap: 1.25rem;
+}
+.evidence-balance > div {
+  border-left: 2px solid var(--color-control);
+  padding-left: 1rem;
+  min-width: 0;
+}
+.evidence-balance > div:first-child {
+  border-left-color: var(--color-accent);
+}
+.assessment-basis {
+  background: var(--color-canvas);
+}
+@container (min-width: 460px) {
+  .evidence-balance {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
 @keyframes camera-scan {
   from {
     transform: translateY(12%);

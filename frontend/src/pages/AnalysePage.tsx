@@ -198,7 +198,7 @@ export function AnalysePage() {
               </p>
               <p className="mt-1 text-xs leading-5 text-muted">
                 {availableIntelligence.length
-                  ? 'Local evidence, explained clearly. Links stay unopened and phone numbers are never contacted.'
+                  ? capabilities.data?.reason
                   : canStore
                     ? 'Supported submissions can be recorded. No risk assessment is generated.'
                     : 'You can explore this workspace. No content is submitted and no risk assessment is generated.'}

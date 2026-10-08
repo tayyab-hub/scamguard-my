@@ -1,5 +1,12 @@
 import { describe, expect, it, vi } from 'vitest'
-import { ApiError, analysisSummarySchema, getApi, healthSchema } from './api'
+import {
+  ApiError,
+  analysisSummarySchema,
+  getApi,
+  healthSchema,
+  requestApi,
+  setCsrfToken,
+} from './api'
 import { parseApiBaseUrl, parseSupportEmail } from './env'
 import { healthFixture } from '../test/fixtures'
 
@@ -101,6 +108,70 @@ describe('API transport', () => {
     controller.abort()
     await expect(request).rejects.not.toBeInstanceOf(ApiError)
   })
+
+  it('does not invalidate a new session because an old request returns 401 late', async () => {
+    let resolve!: (response: Response) => void
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(
+        () =>
+          new Promise<Response>((done) => {
+            resolve = done
+          }),
+      ),
+    )
+    const unauthorized = vi.fn()
+    window.addEventListener('scamguard:unauthorized', unauthorized)
+    setCsrfToken('old-test-session')
+    const pending = getApi('/dashboard', healthSchema)
+    setCsrfToken('new-test-session')
+    resolve(
+      Response.json({ error: { code: 'INVALID_SESSION', message: 'Expired' } }, { status: 401 }),
+    )
+    await expect(pending).rejects.toMatchObject({ status: 401 })
+    expect(unauthorized).not.toHaveBeenCalled()
+    window.removeEventListener('scamguard:unauthorized', unauthorized)
+    setCsrfToken(null)
+  })
+
+  it('keeps analysis requests alive beyond the short read timeout and warns about saved results', async () => {
+    vi.useFakeTimers()
+    let aborted = false
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(
+        (_url: string, init: RequestInit) =>
+          new Promise((_resolve, reject) => {
+            init.signal?.addEventListener('abort', () => {
+              aborted = true
+              reject(new DOMException('Aborted', 'AbortError'))
+            })
+          }),
+      ),
+    )
+    const assertion = expect(
+      requestApi('/analyses', healthSchema, { method: 'POST', body: {} }),
+    ).rejects.toThrow('Check your history')
+    await vi.advanceTimersByTimeAsync(8_001)
+    expect(aborted).toBe(false)
+    await vi.advanceTimersByTimeAsync(36_999)
+    await assertion
+  })
+
+  it('retains bounded server retry guidance', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi
+        .fn()
+        .mockResolvedValue(
+          Response.json(
+            { error: { code: 'RATE_LIMITED', message: 'Please wait.' } },
+            { status: 429, headers: { 'Retry-After': '900' } },
+          ),
+        ),
+    )
+    await expect(getApi('/health', healthSchema)).rejects.toMatchObject({ retryAfterSeconds: 900 })
+  })
 })
 
 describe('public environment validation', () => {
@@ -137,7 +208,11 @@ describe('persisted response validation', () => {
   }
 
   it('measures preview limits in Unicode code points like the backend', () => {
-    expect(analysisSummarySchema.safeParse({ ...summary, preview: '😀'.repeat(100) }).success).toBe(true)
-    expect(analysisSummarySchema.safeParse({ ...summary, preview: '😀'.repeat(161) }).success).toBe(false)
+    expect(analysisSummarySchema.safeParse({ ...summary, preview: '😀'.repeat(100) }).success).toBe(
+      true,
+    )
+    expect(analysisSummarySchema.safeParse({ ...summary, preview: '😀'.repeat(161) }).success).toBe(
+      false,
+    )
   })
 })

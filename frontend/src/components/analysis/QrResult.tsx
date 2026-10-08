@@ -3,6 +3,7 @@ import type { QRAssessment } from '../../lib/api'
 import {
   AnalysisMetaPanel,
   AnalysisResultHero,
+  AssessmentBasisPanel,
   EvidencePanel,
   RecommendedActionsPanel,
 } from './ResultPresentation'
@@ -44,6 +45,7 @@ export function QrResult({
       aria-label="QR assessment"
     >
       <AnalysisResultHero assessment={assessment} />
+      <RecommendedActionsPanel actions={assessment.recommended_actions} />
       <section className="result-section" aria-label="QR decoding result">
         <h3 className="flex items-center gap-2 text-sm font-semibold">
           <QrCode size={16} className="text-accent" aria-hidden="true" /> QR decoding
@@ -124,8 +126,8 @@ export function QrResult({
           </p>
         </section>
       )}
+      <AssessmentBasisPanel assessment={assessment} />
       <EvidencePanel assessment={assessment} />
-      <RecommendedActionsPanel actions={assessment.recommended_actions} />
       <AnalysisMetaPanel assessment={assessment} analysisId={analysisId}>
         <div>
           <dt>QR engine</dt>

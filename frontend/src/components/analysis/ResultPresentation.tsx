@@ -10,7 +10,7 @@ import {
   ShieldCheck,
   Signal,
 } from 'lucide-react'
-import type { Assessment } from '../../lib/api'
+import { assessmentBasisSchema, type Assessment } from '../../lib/api'
 import {
   isURLAssessment,
   isPhoneAssessment,
@@ -39,7 +39,9 @@ export function ConfidenceBadge({ assessment }: { assessment: Assessment }) {
             ? 'Local classifier strength, not certainty about the website.'
             : isPhoneAssessment(assessment)
               ? 'Unavailable: numbering metadata cannot measure fraudulent intent.'
-              : 'Model and evidence strength, not a probability of fraud.'}
+              : unavailable
+                ? 'There is not enough supported evidence to report confidence.'
+                : 'Uncalibrated model and evidence strength, not a probability of fraud.'}
       </p>
     </div>
   )
@@ -186,6 +188,62 @@ export function AnalysisResultHero({ assessment }: { assessment: Assessment }) {
           fetched.
         </p>
       )}
+    </section>
+  )
+}
+
+export function AssessmentBasisPanel({ assessment }: { assessment: Assessment }) {
+  const headingId = useId()
+  // Optional for immutable historical records and QR results with an underlying engine.
+  const basis = assessmentBasisSchema.safeParse(
+    'assessment_basis' in assessment.components ? assessment.components.assessment_basis : null,
+  )
+  if (!basis.success) return null
+  return (
+    <section className="result-section assessment-basis" aria-labelledby={headingId}>
+      <h3 id={headingId} className="text-sm font-semibold">
+        Why this verdict
+      </h3>
+      <p className="mt-3 text-sm leading-6 text-body">{basis.data.decision}</p>
+      <div className="evidence-balance mt-5">
+        <div>
+          <h4 className="text-xs font-semibold text-ink">What raises concern</h4>
+          {basis.data.supporting.length ? (
+            <ul className="mt-3 space-y-2 text-xs leading-6 text-body">
+              {basis.data.supporting.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-3 text-xs leading-6 text-muted">
+              No corroborating warning is recorded. Absence of a warning does not establish safety.
+            </p>
+          )}
+        </div>
+        <div>
+          <h4 className="text-xs font-semibold text-ink">What tempers the result</h4>
+          {basis.data.mitigating.length ? (
+            <ul className="mt-3 space-y-2 text-xs leading-6 text-body">
+              {basis.data.mitigating.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-3 text-xs leading-6 text-muted">
+              No specific mitigating evidence is recorded. Sender identity and intent remain
+              unverified.
+            </p>
+          )}
+        </div>
+      </div>
+      <ul
+        className="mt-5 space-y-2 border-t border-line pt-4 text-xs leading-6 text-muted"
+        aria-label="Evidence uncertainty"
+      >
+        {basis.data.uncertainty.map((item) => (
+          <li key={item}>{item}</li>
+        ))}
+      </ul>
     </section>
   )
 }

@@ -6,6 +6,7 @@ import { QrResult } from './QrResult'
 import {
   AnalysisMetaPanel,
   AnalysisResultHero,
+  AssessmentBasisPanel,
   EvidencePanel,
   RecommendedActionsPanel,
 } from './ResultPresentation'
@@ -45,8 +46,9 @@ export function URLResult({
       aria-label="URL assessment"
     >
       <AnalysisResultHero assessment={assessment} />
-      <EvidencePanel assessment={assessment} />
       <RecommendedActionsPanel actions={assessment.recommended_actions} />
+      <AssessmentBasisPanel assessment={assessment} />
+      <EvidencePanel assessment={assessment} />
       <AnalysisMetaPanel assessment={assessment} analysisId={analysisId}>
         <div>
           <dt>Local URL model</dt>
