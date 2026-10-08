@@ -1,10 +1,16 @@
 # Production acceptance and owner checklist
 
-Date: 2026-09-12. Production baseline: main `4b327ccf21b59e295622e3b321cec62dc523dbde`.
-Task 8 passed owner manual acceptance and was merged/deployed before Task 9 began.
-Task 9 is a separate review branch, **not merged or deployed to production**. Its saved-QR privacy
-correction therefore remains pending owner merge. No production accounts, email, data mutations,
-secret changes or provider configuration changes were performed during this closure review.
+Date: 2026-09-12. Final release: `4df277bdf93a2e1424ac533d488cd7ba127b35ce`. Task 9 was accepted,
+merged and deployed. Vercel Ready and Render Live at that SHA, SELECT-only Alembic head
+`0006_qr_intelligence`, and health/ready/capabilities HTTP 200 were recorded in
+[FINAL_RELEASE.md](FINAL_RELEASE.md). The QR privacy correction is present in the deployed source.
+Authenticated production privacy workflows still need the owner-recorded checks below.
+No production accounts, mail or data mutations were performed by the agent.
+
+## Historical pre-merge observations
+
+The table below preserves the Task 8 baseline and pre-merge Task 9 probes at
+`4b327ccf21b59e295622e3b321cec62dc523dbde`; use FINAL_RELEASE.md for the final provider deployments.
 
 ## Recorded evidence
 
@@ -23,7 +29,7 @@ secret changes or provider configuration changes were performed during this clos
 | Resend configuration | Owner previously confirmed Task 6.1 setup. Successful production startup is consistent with required MAIL_PROVIDER=resend, sender, API key and HTTPS frontend configuration checks | Owner report + configuration/startup inference, not inbox delivery |
 | Generic manual function | Owner's Task 9 reply: “its working”; preceding Task 8 acceptance covers owner-reported UI/workflow acceptance | Owner report; devices, exact cases and artifacts unspecified |
 
-Provider observations are a dated baseline, not a claim that Task 9 branch code is deployed.
+These table entries are historical; the final deployment is evidenced separately above.
 Public readiness does not exercise authenticated mutations, send mail, verify the migration revision
 itself or prove persistent availability. The Neon SELECT supplies revision evidence separately.
 Render's free service lacked shell access; no production shell or direct DB mutation was used.
@@ -49,8 +55,8 @@ Owner checklist, using only an account/inbox you control:
 - [ ] Request reset, receive the email, check HTTPS link, change password, reject old password and
   reused link, accept new password and verify prior-session revocation. Record result without token.
 - [ ] Record any provider sender/domain restriction and the presentation fallback.
-- [ ] After reviewing Task 9, authorize merge separately, then verify both providers at that merge
-  commit and repeat health/ready/capabilities and a permitted synthetic QR privacy check.
+- [x] Owner accepted Task 9; final merge, both provider versions and public probes were verified.
+- [ ] Record an authenticated production QR privacy check with permitted synthetic credentials.
 
 Controlled A/B creation and destructive acceptance were executed only in isolated local test DBs.
 No instruction here authorizes the agent to create production accounts or send an email.

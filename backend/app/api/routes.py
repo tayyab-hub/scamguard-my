@@ -37,7 +37,7 @@ def health() -> HealthResponse:
 def readiness(
     request: Request, session: Annotated[Session, Depends(get_session)]
 ) -> ReadinessResponse:
-    if request.app.state.url_engine.classifier is None:
+    if request.app.state.message_engine is None or request.app.state.url_engine.classifier is None:
         raise ApiError(
             503,
             "INTELLIGENCE_UNAVAILABLE",
@@ -116,14 +116,33 @@ def capabilities(
     except SQLAlchemyError:
         session.rollback()
         return CapabilitiesResponse()
+    state = request.app.state
+    supported = [
+        mode
+        for mode, engine in (
+            (InputType.MESSAGE, state.message_engine),
+            (InputType.URL, state.url_engine),
+            (InputType.PHONE, state.phone_engine),
+            (InputType.QR, state.qr_engine),
+        )
+        if engine is not None and (mode != InputType.QR or engine.operational)
+    ]
+    degraded_url = state.url_engine is not None and state.url_engine.classifier is None
     return CapabilitiesResponse(
         submission_available=True,
-        submission_inputs=list(InputType),
-        analysis_available=True,
-        supported_inputs=list(InputType),
+        submission_inputs=supported,
+        analysis_available=bool(supported),
+        supported_inputs=supported,
         reason=(
-            "Local Message, URL, Phone and QR intelligence are available; decoded content is "
-            "never automatically opened, URLs are never fetched and phone numbers are never "
-            "contacted."
+            "Available local engines: "
+            + ", ".join(mode.value for mode in supported)
+            + ". "
+            + (
+                "URL model unavailable; URL assessments use structural rules only. "
+                if degraded_url
+                else ""
+            )
+            + "Decoded content is never opened, URLs are never fetched "
+            "and phone numbers are never contacted."
         ),
     )

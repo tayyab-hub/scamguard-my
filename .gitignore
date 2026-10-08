@@ -33,9 +33,12 @@ htmlcov/
 # Local deployment metadata, generated work files and temporary output
 .vercel/
 .local/
+.tmp/
 .cache/
 /tmp/
 /temp/
+# Generated academic submissions may contain personal cover details; keep local copies.
+/output/
 *.tmp
 *.temp
 *.swp

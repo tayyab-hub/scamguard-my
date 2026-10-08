@@ -1,0 +1,144 @@
+{
+  "frozen_classifier": {
+    "artifact_sha256": "818d99f72c8502fe6ec28849e42c77f4707949366bf014bd5677079dde2c3dd3",
+    "manifest_sha256": "542027e3904e7e132cdf5ebd272c5cd7addd23172ea427dc75bc4f7584aaf714",
+    "checked_manifest_rows": 5797,
+    "split_counts": {
+      "test": 1160,
+      "validation": 1160,
+      "train": 3477
+    },
+    "class_order": [
+      "LEGITIMATE",
+      "SPAM",
+      "SCAM"
+    ],
+    "confusion_matrix": [
+      [
+        960,
+        4,
+        3
+      ],
+      [
+        7,
+        71,
+        9
+      ],
+      [
+        0,
+        13,
+        93
+      ]
+    ],
+    "metrics": {
+      "accuracy": 0.9689655172413794,
+      "LEGITIMATE": {
+        "precision": 0.9927611168562565,
+        "recall": 0.9927611168562565,
+        "f1": 0.9927611168562565,
+        "support": 967
+      },
+      "SPAM": {
+        "precision": 0.8068181818181818,
+        "recall": 0.8160919540229885,
+        "f1": 0.8114285714285714,
+        "support": 87
+      },
+      "SCAM": {
+        "precision": 0.8857142857142857,
+        "recall": 0.8773584905660378,
+        "f1": 0.8815165876777252,
+        "support": 106
+      },
+      "macro_f1": 0.895235425320851,
+      "weighted_f1": 0.9689957275932107
+    },
+    "interpretation": "Frozen runtime reproduction, not a new independent test set or retraining."
+  },
+  "probability_reliability": {
+    "rows": 1160,
+    "multiclass_brier_sum": 0.05049136287556509,
+    "log_loss": 0.12602072650821186,
+    "top_label_ece_10_bins": 0.054495944499283584,
+    "reliability_bins": [
+      {
+        "lower": 0.4,
+        "upper": 0.5,
+        "count": 5,
+        "mean_confidence": 0.4699611422577726,
+        "accuracy": 0.4
+      },
+      {
+        "lower": 0.5,
+        "upper": 0.6,
+        "count": 18,
+        "mean_confidence": 0.5549967134055783,
+        "accuracy": 0.3888888888888889
+      },
+      {
+        "lower": 0.6,
+        "upper": 0.7,
+        "count": 33,
+        "mean_confidence": 0.6480144284017221,
+        "accuracy": 0.696969696969697
+      },
+      {
+        "lower": 0.7,
+        "upper": 0.8,
+        "count": 49,
+        "mean_confidence": 0.7608174542998645,
+        "accuracy": 0.9183673469387755
+      },
+      {
+        "lower": 0.8,
+        "upper": 0.9,
+        "count": 167,
+        "mean_confidence": 0.8609130844191598,
+        "accuracy": 0.9940119760479041
+      },
+      {
+        "lower": 0.9,
+        "upper": 1.0,
+        "count": 888,
+        "mean_confidence": 0.9602335973394938,
+        "accuracy": 0.9921171171171171
+      }
+    ],
+    "interpretation": "Uncalibrated frozen classifier; Brier uses the sum across classes (range 0\u20132). ECE is descriptive and bin-dependent, not evidence of real-world calibration."
+  },
+  "fusion_policy_by_dataset_label": {
+    "LEGITIMATE": {
+      "LOW": 950,
+      "CAUTION": 3,
+      "INSUFFICIENT_EVIDENCE": 14
+    },
+    "SPAM": {
+      "CAUTION": 35,
+      "INSUFFICIENT_EVIDENCE": 6,
+      "LOW": 41,
+      "ELEVATED": 5
+    },
+    "SCAM": {
+      "CAUTION": 41,
+      "ELEVATED": 42,
+      "HIGH": 18,
+      "INSUFFICIENT_EVIDENCE": 2,
+      "LOW": 3
+    }
+  },
+  "fusion_reasons": {
+    "COMBINED_SIGNALS": 1109,
+    "UNCORROBORATED_MODEL": 29,
+    "AMBIGUOUS_MODEL": 12,
+    "LIMITED_TEXT": 8,
+    "OUT_OF_VOCABULARY": 2
+  },
+  "rules_version": "message-rules-v2",
+  "fusion_version": "message-fusion-v2",
+  "limitations": [
+    "This is the existing historical test set, not a new independent evaluation.",
+    "Risk categories are not dataset class labels; the distribution is not fusion accuracy.",
+    "No calibrator or threshold was selected using these test observations.",
+    "Neither model scores nor confidence are real-world fraud probabilities."
+  ]
+}

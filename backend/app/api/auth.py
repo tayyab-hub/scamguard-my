@@ -1,3 +1,4 @@
+import logging
 import re
 import unicodedata
 from datetime import UTC, datetime, timedelta
@@ -12,6 +13,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.core.auth import (
+    PASSWORD_HASHER,
     AuthenticatedSession,
     enforce_rate_limit,
     hash_password,
@@ -31,6 +33,10 @@ from app.services.mail import MailDeliveryError
 
 router = APIRouter(prefix="/api/v1/auth", tags=["Authentication"])
 Database = Annotated[Session, Depends(get_session)]
+logger = logging.getLogger("scamguard.auth")
+LOGIN_WINDOW = timedelta(minutes=15)
+# Allow shared networks some headroom, while bounding password spraying before Argon2 work.
+LOGIN_SOURCE_MULTIPLIER = 5
 
 
 def normalized_email(value: str) -> str:
@@ -171,6 +177,13 @@ def client_discriminator(request: Request) -> str:
 
 def set_auth_cookie(request: Request, response: Response, user: User, session: Session) -> str:
     settings = request.app.state.settings
+    previous = request.cookies.get(settings.session_cookie_name)
+    if previous:
+        session.execute(
+            update(AuthSession)
+            .where(AuthSession.token_hash == secret_hash(request, previous))
+            .values(revoked_at=datetime.now(UTC))
+        )
     raw_session = new_secret()
     raw_csrf = session_csrf_token(request, raw_session)
     expires_at = datetime.now(UTC) + timedelta(hours=settings.session_ttl_hours)
@@ -258,10 +271,10 @@ def login(
     enforce_rate_limit(
         request,
         session,
-        scope="login",
-        discriminator=f"{client_discriminator(request)}:{data.identifier}",
-        limit=settings.login_rate_limit,
-        window=timedelta(minutes=15),
+        scope="login_source",
+        discriminator=client_discriminator(request),
+        limit=settings.login_rate_limit * LOGIN_SOURCE_MULTIPLIER,
+        window=LOGIN_WINDOW,
     )
     if "@" in data.identifier:
         user = session.scalar(select(User).where(User.email == data.identifier))
@@ -269,11 +282,23 @@ def login(
         user = session.scalar(select(User).where(User.username == data.identifier))
     else:
         user = None
+    # The same account shares a budget across source addresses and username/email aliases.
+    # Unknown identifiers receive the same limiter/error contract and dummy password work.
+    enforce_rate_limit(
+        request,
+        session,
+        scope="login_account",
+        discriminator=f"user:{user.id}" if user is not None else f"unknown:{data.identifier}",
+        limit=settings.login_rate_limit,
+        window=LOGIN_WINDOW,
+    )
     password = data.password.get_secret_value()
     if user is None:
         verify_dummy_password(password)
     if user is None or not verify_password(user.password_hash, password):
         raise ApiError(401, "INVALID_CREDENTIALS", "Invalid username/email or password.")
+    if PASSWORD_HASHER.check_needs_rehash(user.password_hash):
+        user.password_hash = hash_password(password)
     csrf_token = set_auth_cookie(request, response, user, session)
     return AuthResponse(user=public_user(user), csrf_token=csrf_token)
 
@@ -387,9 +412,10 @@ def request_password_reset(
         try:
             request.app.state.mail_service.send_password_reset(user.email, reset_url)
         except MailDeliveryError:
-            # Public behavior remains identical; provider failures never expose account existence
-            # or reset secrets. Operational provider monitoring is external to request logs.
-            pass
+            # Keep the public response generic and log no recipient, reset URL or exception text.
+            logger.warning(
+                "event=password_reset_delivery_failed request_id=%s", request.state.request_id
+            )
     return PasswordResetRequestedResponse(message=RESET_REQUEST_MESSAGE)
 
 
@@ -452,6 +478,14 @@ def delete_account(
     session: Database,
     authenticated: Annotated[AuthenticatedSession, Depends(require_csrf)],
 ) -> None:
+    enforce_rate_limit(
+        request,
+        session,
+        scope="account_delete",
+        discriminator=str(authenticated.user.id),
+        limit=request.app.state.settings.login_rate_limit,
+        window=LOGIN_WINDOW,
+    )
     if not verify_password(authenticated.user.password_hash, data.password.get_secret_value()):
         raise ApiError(401, "INVALID_CREDENTIALS", "Invalid username/email or password.")
     user = session.get(User, authenticated.user.id)

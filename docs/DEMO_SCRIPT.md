@@ -1,40 +1,29 @@
-# Controlled live demo script
-Target 3:15 within the presentation; use the extended route for a 6–8 minute standalone demonstration.
-Baseline production URL: https://scamguard-my.vercel.app.
-Task 9 privacy fixes require owner review/merge before claiming the demo uses Task 9.
+# Final demonstration script
 
-## Preparation (before screen sharing)
-Verify ready/capabilities and the deployment commit. Use an existing owner-controlled production
-account only after manual acceptance, or an isolated local demo account. Never display credentials,
-reset links, environment pages, real personal history or incoming notifications.
-Open data/demo/task9/fixtures.json; have url.png, phone.png, message.png and payment.png accessible.
-These are controlled text/QR fixtures, not verified fraud/merchant examples. Do not call any number,
-navigate to fixture destinations, scan payment fixtures with a banking app or authorize payment.
-No real malicious website is needed. Rehearse against the exact release and use observed outputs.
+Use the accepted release recorded in [FINAL_RELEASE.md](FINAL_RELEASE.md). The 150-second demonstration is slide 10 within the 795-second presentation; it is not additional time. Use only your own account and permitted authored examples. Preflight and rehearse; these instructions are not a record of completed production testing.
 
-| Step / time | What to click or supply | What to say | Expected observation / fallback |
+## Preflight
+
+Confirm the displayed provider release SHA and public readiness before the session. Sign in with a controlled account, prepare `data/demo/task9/url.png`, and keep the [local screenshot register](evidence/report-screenshots.json) and report figures available offline. Turn off unrelated notifications. Keep credentials, reset links, provider settings and private records out of view. The stored screenshots are labelled local demonstrations; do not describe them as production acceptance.
+
+## Timed journey
+
+| Time | Action | Explain before clicking | Interpretation |
 | --- | --- | --- | --- |
-| 1 / 0:10 | Sign in privately; show dashboard. | “This is my private analysis workspace.” | Real owned totals. If login fails, use prepared local environment; no fabricated dashboard. |
-| 2 / 0:15 | Show distributions and a History link. | “These counts come from my saved records.” | Filtered History opens; existing activity may differ from screenshots. |
-| 3 / 0:35 | Analyse → Message; paste scam_like from fixtures.json; Analyse content. | “The system combines a local three-class model with explicit evidence.” | Frozen local fixture currently yields ELEVATED; explain evidence, not an absolute scam verdict. If an updated reviewed result differs, report it honestly. |
-| 4 / 0:25 | Expand evidence/actions/technical details. | “Risk and confidence are different; this score is not a fraud probability.” | Recommendations and limits readable; do not promise certainty. |
-| 5 / 0:20 | History; search a unique phrase and open the record. | “This result is stored; Analyse again creates a new assessment.” | Saved result unchanged; no automatic re-analysis on retrieval. |
-| 6 / 0:20 | URL: conventional or brand_structure fixture. | “Only the URL string is checked. The website is not visited.” | Explain visible structural categories and conservative fusion; no clickable destination. |
-| 7 / 0:20 | Phone: fixed fixture. | “Valid numbering metadata cannot establish trust.” | INSUFFICIENT_EVIDENCE. Premium fixture, if time, gives CAUTION for cost metadata only. |
-| 8 / 0:20 | QR → upload url.png or phone.png; Analyse. | “Decoding is separate from the security assessment.” | Routed result; image discarded. Payment extension explains CRC is not merchant verification. |
-| 9 / 0:25 | Scan with camera → Start; present url.png on another device; then Analyse QR. | “Capture stops before I decide whether to analyse; nothing opens automatically.” | Stopped-camera preview, explicit submission. At 10 seconds without detection, cancel and use the same PNG upload. |
-| 10 / 0:05 | Show Account/History briefly. | “Ownership is enforced by the API, with local A/B regression evidence.” | Do not expose another person's data or attempt destructive demo actions. |
+| 0–15 s | Show dashboard and switch to Analyse | “One account connects four forms of evidence and its private records.” | Counts are database-derived and scoped to this account. |
+| 15–45 s | Submit an authored Message requesting an OTP/password | “The local classifier and contextual rules will assess the request, not authenticate its sender.” | Read one indicator; distinguish confidence from categorical risk. |
+| 45–65 s | Submit `https://paypal.com.secure-login.example.net/verify` in URL mode | “This reserved-domain example is parsed without visiting it.” | Explain registrable-domain mismatch and no destination verification. |
+| 65–80 s | Show a prepared Phone result for the inert fixture | “Numbering metadata cannot identify who is calling.” | Insufficient Evidence is the intended ordinary-number result. Do not call it. |
+| 80–120 s | Upload the prepared QR image, then explicitly Analyse | “Decoding reveals content; analysis is a separate decision.” | Interpret the routed URL evidence. Mention local camera preview and separate submission. |
+| 120–140 s | Open History; filter and show the saved detail | “The original assessment stays immutable.” | Show Analyse again for Message/URL/Phone; QR needs fresh input. |
+| 140–150 s | Return to evaluation slide | “The demonstration shows a workflow; the next evidence separates tests from model generalisation.” | Avoid claiming that one sample establishes accuracy. |
 
-Extended demo: compare benign Message LOW with short Message/Phone Insufficient Evidence;
-show search/type/risk/sort, detail, Analyse again; cancel a deletion dialog without deleting valued
-data; show two local test accounts if rehearsed. Password reset is a separate private acceptance task,
-not a public live-email gamble.
+Live camera is an optional substitution within the QR slot only after a successful physical rehearsal. Use an inert QR, explain permission and local preview, demonstrate the explicit Analyse step, and stop the stream. If permission is pending or scanning fails after ten seconds, say what happened and use upload. Do not spend the presentation debugging.
 
-## Backup strategy
-1. Warm production before the session; confirm it is the approved commit, not a branch preview.
-2. If Render sleeps/network fails, explain the operational limitation and switch to the prepared
-   local PostgreSQL/API/frontend. Check readiness before the talk.
-3. If camera fails, cancel and upload the exact controlled QR. Never pretend upload was a live scan.
-4. Keep authentic labelled screenshots and an owner-recorded rehearsal video as a final fallback.
-   Do not generate a fake interface, successful result or participant recording.
-5. Avoid double submission after a timeout; inspect History for a committed result first.
+## Failure and offline fallback
+
+If a public service is asleep, acknowledge the cold start and use the prepared local screenshots while readiness recovers. If internet remains unavailable, walk through the same sequence using Figures 9–11 and the additional screenshots in `docs/figures/`; identify the capture environment and date. A screenshot illustrates recorded behaviour, not current service health. The report and notes work offline. Password reset, profile editing and A/B isolation are supporting Q&A evidence rather than time-consuming live steps.
+
+## Owner acceptance record
+
+Record date, device/browser, release SHA, outcome for each step, actual duration, any failure and the fallback used. Leave unexecuted steps NOT YET EVIDENCED. Use [FINAL_PERSONAL_ACTIONS.md](FINAL_PERSONAL_ACTIONS.md) for the complete production checklist and [FINAL_DELIVERY_TRAINING.md](FINAL_DELIVERY_TRAINING.md) for the four rehearsals.

@@ -55,7 +55,7 @@ test('real PostgreSQL: Message and URL results persist through navigation and re
   await expect(page.getByText('Analysis completed.')).toBeVisible()
   await expect(page.getByText('High risk')).toBeVisible()
   await expect(
-    page.getByRole('region', { name: 'Detected evidence' }).getByText('Credential request'),
+    page.getByRole('region', { name: 'Detected evidence' }).getByText('Credential language'),
   ).toBeVisible()
   await capture(page, testInfo, 'recorded')
   const nav = page.getByRole('navigation', {

@@ -1,0 +1,87 @@
+{
+  "captures": [
+    {
+      "file": "report-login.png",
+      "fixture": "Empty login form",
+      "browser": "152.0.7977.76",
+      "viewport": "1440x1000",
+      "environment": "local real PostgreSQL scamguard_e2e; no production calls",
+      "captured_at_utc": "2026-09-12T14:42:24.435Z",
+      "application_commit": "4df277bdf93a2e1424ac533d488cd7ba127b35ce"
+    },
+    {
+      "file": "report-message.png",
+      "fixture": "Authored bank/OTP request; not a collected scam",
+      "browser": "152.0.7977.76",
+      "viewport": "1440x1000",
+      "environment": "local real PostgreSQL scamguard_e2e; no production calls",
+      "captured_at_utc": "2026-09-12T14:42:26.089Z",
+      "application_commit": "4df277bdf93a2e1424ac533d488cd7ba127b35ce"
+    },
+    {
+      "file": "report-url.png",
+      "fixture": "Reserved example.net brand/subdomain fixture; destination never visited",
+      "browser": "152.0.7977.76",
+      "viewport": "1440x1000",
+      "environment": "local real PostgreSQL scamguard_e2e; no production calls",
+      "captured_at_utc": "2026-09-12T14:42:27.095Z",
+      "application_commit": "4df277bdf93a2e1424ac533d488cd7ba127b35ce"
+    },
+    {
+      "file": "report-phone.png",
+      "fixture": "Inert telephone fixture; no call or message",
+      "browser": "152.0.7977.76",
+      "viewport": "1440x1000",
+      "environment": "local real PostgreSQL scamguard_e2e; no production calls",
+      "captured_at_utc": "2026-09-12T14:42:28.087Z",
+      "application_commit": "4df277bdf93a2e1424ac533d488cd7ba127b35ce"
+    },
+    {
+      "file": "report-qr-upload.png",
+      "fixture": "Generated URL PNG from Task 9 demo fixture",
+      "browser": "152.0.7977.76",
+      "viewport": "1440x1000",
+      "environment": "local real PostgreSQL scamguard_e2e; no production calls",
+      "captured_at_utc": "2026-09-12T14:42:28.892Z",
+      "application_commit": "4df277bdf93a2e1424ac533d488cd7ba127b35ce"
+    },
+    {
+      "file": "report-qr-result.png",
+      "fixture": "Same generated URL PNG; local decoder and real saved result",
+      "browser": "152.0.7977.76",
+      "viewport": "1440x1000",
+      "environment": "local real PostgreSQL scamguard_e2e; no production calls",
+      "captured_at_utc": "2026-09-12T14:42:29.189Z",
+      "application_commit": "4df277bdf93a2e1424ac533d488cd7ba127b35ce"
+    },
+    {
+      "file": "report-history.png",
+      "fixture": "Four records created by this capture session",
+      "browser": "152.0.7977.76",
+      "viewport": "1440x1000",
+      "environment": "local real PostgreSQL scamguard_e2e; no production calls",
+      "captured_at_utc": "2026-09-12T14:42:29.598Z",
+      "application_commit": "4df277bdf93a2e1424ac533d488cd7ba127b35ce"
+    },
+    {
+      "file": "report-dashboard.png",
+      "fixture": "Completed dashboard with four owned records from the original local capture account; loading state excluded",
+      "browser": "152.0.7977.76",
+      "viewport": "1440x1000",
+      "environment": "local real PostgreSQL scamguard_e2e; no production calls",
+      "captured_at_utc": "2026-09-12T15:32:25.924Z",
+      "application_commit": "4df277bdf93a2e1424ac533d488cd7ba127b35ce",
+      "capture_note": "Recaptured after explicit data-ready assertion during visual QA"
+    },
+    {
+      "file": "report-account.png",
+      "fixture": "Synthetic demonstration profile, no password/token visible",
+      "browser": "152.0.7977.76",
+      "viewport": "1440x1000",
+      "environment": "local real PostgreSQL scamguard_e2e; no production calls",
+      "captured_at_utc": "2026-09-12T14:42:30.596Z",
+      "application_commit": "4df277bdf93a2e1424ac533d488cd7ba127b35ce"
+    }
+  ],
+  "page_errors": []
+}

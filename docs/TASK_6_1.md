@@ -1,5 +1,7 @@
 # Task 6.1 — authentication, profile and data-management polish
 
+Historical record: status, permissions, versions and screenshots below apply to the named earlier stage. They do not supersede the accepted final release in [FINAL_RELEASE.md](FINAL_RELEASE.md) or the current [academic package](FINAL_ACADEMIC_PACKAGE.md).
+
 Status: implemented and fully verified on `task-6-1-auth-profile-polish`; manual acceptance and merge
 are pending. QR Intelligence was not started.
 

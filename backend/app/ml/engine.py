@@ -20,7 +20,7 @@ from app.ml.rules import RuleAssessment, assess_rules
 class MessageAssessment:
     risk_level: RiskLevel
     risk_score: float | None
-    confidence_score: float
+    confidence_score: float | None
     confidence_level: str
     summary: str
     evidence: list[dict[str, object]]
@@ -85,7 +85,19 @@ class MessageIntelligenceEngine:
                 for snippet in ai.evidence_snippets
             )
         if result.risk_level == RiskLevel.INSUFFICIENT_EVIDENCE:
-            summary = "The message is too short or context-poor for a meaningful risk assessment."
+            summary = {
+                "OUT_OF_VOCABULARY": (
+                    "The local model has no vocabulary evidence for this text, "
+                    "and local rules are insufficient."
+                ),
+                "AMBIGUOUS_MODEL": (
+                    "The model is uncertain and local rules provide too little corroboration "
+                    "for a meaningful assessment."
+                ),
+            }.get(
+                result.reason,
+                "The message is too short or context-poor for a meaningful risk assessment.",
+            )
             actions = ["Ask for more context before acting on the message."]
         elif result.risk_level == RiskLevel.LOW:
             summary = "No strong social-engineering pattern was found in the available text."
@@ -95,13 +107,76 @@ class MessageIntelligenceEngine:
             actions = ["Pause and verify the sender independently before responding."]
         elif result.risk_level == RiskLevel.ELEVATED:
             summary = "Multiple indicators suggest a meaningful social-engineering risk."
-            actions = ["Do not follow links or share credentials until independently verified."]
+            actions = ["Pause and verify the request through an independent trusted channel."]
         else:
             summary = "Strong combined indicators suggest a high social-engineering risk."
-            actions = [
-                "Do not send money, credentials or verification codes.",
-                "Contact the claimed organisation using an official channel you locate yourself.",
-            ]
+            actions = ["Do not act on this request until independently verified."]
+        categories = {item.category for item in rules.indicators}
+        if "CREDENTIAL" in categories:
+            actions.append("Do not share passwords, PINs or one-time verification codes.")
+        if categories & {"FINANCIAL", "INVESTMENT", "PRIZE"}:
+            actions.append("Do not transfer funds or pay a fee based only on this message.")
+        if "REDIRECTION" in categories:
+            actions.append(
+                "Do not open the supplied link; locate the official website independently."
+            )
+        if "IMPERSONATION" in categories:
+            actions.append(
+                "Contact the claimed organisation using an official channel you locate yourself."
+            )
+        if "SECRECY" in categories:
+            actions.append("Discuss the request with someone you trust before acting.")
+        supporting = [item.label for item in rules.indicators]
+        if classification.label == "SCAM" and classification.matched_features:
+            supporting.append(
+                "The local model favours the SCAM class; this alone cannot establish fraud."
+            )
+        mitigating = []
+        if classification.label == "LEGITIMATE" and classification.matched_features:
+            mitigating.append(
+                "The local model favours LEGITIMATE; this does not verify the sender."
+            )
+        if rules.suppressed_matches:
+            mitigating.append(
+                "Protective wording caused local rule matches to be discounted within their clause."
+            )
+        uncertainty = [
+            "Classifier probabilities and fusion confidence are uncalibrated; "
+            "neither is a probability of fraud."
+        ]
+        if result.disagreement:
+            uncertainty.append(
+                "Model and rule signals disagree. Confidence is capped at low "
+                "while strong warnings remain visible."
+            )
+        if not classification.matched_features:
+            uncertainty.append(
+                "No trained vocabulary features matched. "
+                "The model's prior alone is not usable evidence."
+            )
+        decisions = {
+            "OUT_OF_VOCABULARY": (
+                "Insufficient evidence: no model vocabulary matched and rule evidence is weak."
+            ),
+            "LIMITED_TEXT": (
+                "Insufficient evidence: the text is too short for a contextual assessment."
+            ),
+            "AMBIGUOUS_MODEL": (
+                "Insufficient evidence: an uncertain model is not corroborated by local rules."
+            ),
+            "STRONG_LOCAL_EVIDENCE": (
+                "Several local indicators meet the strong-evidence policy. "
+                "Their risk floor cannot be reduced by optional AI review."
+            ),
+            "UNCORROBORATED_MODEL": (
+                "A model-only warning is capped at Caution because "
+                "no local indicator corroborates it."
+            ),
+            "COMBINED_SIGNALS": (
+                "The versioned policy combines model and local rule signals, "
+                "with bounded optional contextual corroboration."
+            ),
+        }
         probabilities = {
             key: round(value, 4) for key, value in classification.probabilities.items()
         }
@@ -120,6 +195,7 @@ class MessageIntelligenceEngine:
                     "class_estimate": classification.label,
                     "class_probabilities": probabilities,
                     "confidence": round(classification.confidence, 4),
+                    "matched_features": classification.matched_features,
                 },
                 "deterministic_rules": {
                     "used": True,
@@ -127,6 +203,7 @@ class MessageIntelligenceEngine:
                     "score": round(rules.score, 4),
                     "indicator_count": len(rules.indicators),
                     "contextual_suppressions": rules.suppressed_matches,
+                    "normalization_applied": rules.normalization_applied,
                 },
                 "external_ai": {
                     "status": ai.status,
@@ -134,7 +211,17 @@ class MessageIntelligenceEngine:
                     "model": ai.model,
                     "contributed": result.ai_contributed,
                 },
-                "fusion": {"version": result.version},
+                "fusion": {
+                    "version": result.version,
+                    "reason": result.reason,
+                    "disagreement": result.disagreement,
+                },
+                "assessment_basis": {
+                    "decision": decisions[result.reason],
+                    "supporting": supporting,
+                    "mitigating": mitigating,
+                    "uncertainty": uncertainty,
+                },
             },
             limitations=[
                 "This is decision support, not proof that a message or sender is safe or "
@@ -142,6 +229,8 @@ class MessageIntelligenceEngine:
                 "The local model was evaluated on an imbalanced, mainly English historical "
                 "SMS dataset.",
                 "Links, phone numbers, identities and external claims were not checked.",
+                "Model probabilities and fused confidence are uncalibrated evidence-strength "
+                "indicators, not measured fraud probabilities.",
             ],
             model_version=classification.model_version,
             rules_version=rules.version,

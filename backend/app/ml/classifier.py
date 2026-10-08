@@ -17,6 +17,7 @@ class Classification:
     probabilities: dict[str, float]
     confidence: float
     model_version: str
+    matched_features: int = 0
 
 
 class MessageClassifier:
@@ -81,4 +82,5 @@ class MessageClassifier:
             probabilities=probabilities,
             confidence=probabilities[label],
             model_version=self.model_version,
+            matched_features=len(values),
         )

@@ -1,18 +1,49 @@
 # SCAMGUARD — current project state
 
-Updated **2026-09-12, Asia/Kuala_Lumpur** for Task 9 final closure review.
+## Release integration in progress — 2026-10-08
 
-## Current Task 9 closure
+The owner authorized GitHub push and deployment and clarified that Phase 2 was planned only.
+A recoverable local checkpoint preserves all pre-integration work. No conflicts or new migrations.
+Fresh 19-gate verification passed: 355 backend, 164 frontend and 52 browser tests; one live-AI skip.
+The first frontend compatibility merge `ad14e75345f7566df0825a74eecbbd08bb83e108` is pushed;
+Vercel reports a successful production deployment. Backend integration and production smoke
+verification follow. Current release evidence: [integration record](docs/SCAMGUARD_RELEASE_INTEGRATION.md).
+The engineering-review section below describes the earlier local checkpoint.
 
-Starting clean main/origin-main: `4b327ccf21b59e295622e3b321cec62dc523dbde`, with Task 8 accepted,
-merged and deployed. Vercel Ready and Render Live at that commit; Render tracks main with On Commit
-auto-deploy. Neon and local Alembic head: `0006_qr_intelligence`. Public health/ready/capabilities
-pass directly and through Vercel. Dated evidence: `docs/PRODUCTION_ACCEPTANCE.md`.
+Updated **2026-10-08, Asia/Kuala_Lumpur** after the user-authorized local engineering review.
 
-Feature freeze is active. Task 9 lives only on `task-9-final-closure`, ready for owner review;
-commit/push is authorized, automatic main merge/deployment is not. Runtime correction: redact
-first-field Wi-Fi passwords and embedded payment URL userinfo before saving new QR analyses.
-Original-byte assessment is unchanged. The production baseline awaits this correction's merge.
+## Current local engineering review
+
+Implemented account/source login budgets, replacement-session revocation, safe failure logs,
+startup/body-buffer reliability, Message v2 normalization/abstention/conflict guards, URL v2
+context neutrality, QR payment-integrity safeguards, evidence-balanced results, contextual actions,
+inconclusive-history navigation and late-401/timeout handling. No migration, trained-model,
+dependency, secret or hosting change. The schema remains `0006_qr_intelligence` with no drift.
+
+Executed: pytest **355 passed / 1 opt-in live-AI skip**; Vitest **164 passed / 12 files**;
+Playwright **52 passed** (18 foundation + 8 built preview + 26 real PostgreSQL). TypeScript,
+ESLint, Ruff check/format, pip check, build, wheel and Alembic checks passed. Frozen Message and
+URL evaluations reproduced; Message probability diagnostics were measured without retraining.
+The policy still returns Low for 3/106 historical SCAM examples; confidence remains uncalibrated.
+Online npm audit was blocked by automatic approval review for registry metadata egress.
+
+Changes are uncommitted and undeployed. Existing academic work is preserved. Release frontend
+before backend because new Message abstentions may have null confidence. Full findings, exact
+academic deltas and evidence: [engineering review](docs/ENGINEERING_REVIEW_2026-10-08.md).
+
+The following September sections are historical release/academic records.
+
+## September release and academic closure
+
+Task 9 was accepted and normally merged without conflicts. Final main and both deployed providers:
+`4df277bdf93a2e1424ac533d488cd7ba127b35ce`. Vercel Ready, Render Live, database connected,
+head `0006_qr_intelligence`, and all four public capabilities were recorded.
+The first-field Wi-Fi and embedded payment URL credential-redaction fixes are in this release.
+See `docs/FINAL_RELEASE.md` for exact checks and dated observations. No Neon mutation was performed.
+The academic pass prepares the supplied Word template, rubric matrices, evidence and defence notes.
+No application changes, new stage, commit, push or deployment are part of the academic pass.
+
+The following details describe Task 9 implementation and its earlier branch verification.
 Raw Message CSV publisher bytes restored from the verified archive, with a -text attribute;
 normalized content and frozen models unchanged. The disposable migration fixture now clears old
 QR test rows before its pre-QR downgrade. No production migration or infrastructure change.
@@ -63,7 +94,7 @@ The completion commit/push belongs only to the Task 8 feature branch.
 | 8 Peak Enhancement | IMPLEMENTED / MANUAL REVIEW |
 | 9 Final Integration / Evaluation / Closure | NOT STARTED |
 
-## Task 8 implementation
+## Historical Task 8 implementation
 
 - Explicit live QR camera: Start → native QR detector or locally packaged WASM worker → capture
   stops → inert decoded text preview → explicit Analyse. Cancel, navigation, hiding, unmount,

@@ -1,12 +1,25 @@
 # SCAMGUARD — repository working instructions
 
+## Current release authorization — 2026-10-08
+
+The user explicitly authorized integration, ordinary commits/pushes and deployment through the
+existing GitHub/Vercel/Render/Neon workflow. They clarified that Phase 2 was planned only: release
+the verified work present here. This supersedes earlier no-publication boundaries for this release.
+See `docs/SCAMGUARD_RELEASE_INTEGRATION.md` for actual commit/deployment status. Preserve secrets,
+production records and historical evidence; keep personal/generated Word submissions local.
+Frontend compatibility is deployed before the backend's nullable-confidence responses.
+
 SCAMGUARD is a general **Multi-Modal Scam Detection & Reporting Web Application**. Its approved
 visual identity is **Forensic Intelligence**: warm light ivory, charcoal, terracotta and olive with
-restrained editorial motion. Tasks 1–8 (including Task 6.1) are accepted, merged and deployed at main
-`4b327ccf21b59e295622e3b321cec62dc523dbde`. Task 9 final closure is on `task-9-final-closure` for
-owner review. Feature freeze permits justified corrections, tests, evaluation and documentation only.
-Do not automatically merge Task 9 or change production configuration. See `docs/FINAL_TEST_REPORT.md`
-and `docs/PRODUCTION_ACCEPTANCE.md` for dated evidence and remaining manual acceptance.
+restrained editorial motion. Tasks 1–9 are accepted, merged and deployed at main
+`4df277bdf93a2e1424ac533d488cd7ba127b35ce`. User-authorized final release closure is complete.
+On 2026-10-08 the user explicitly authorized a repository-wide engineering improvement pass,
+superseding the earlier documentation-only boundary for this work. The resulting local changes
+strengthen security, evidence sufficiency, explanation and reliability without new infrastructure.
+That pre-release snapshot is recorded in `docs/ENGINEERING_REVIEW_2026-10-08.md`, including
+behavior, verification, limitations and the frontend-before-backend release requirement.
+Use `docs/SCAMGUARD_RELEASE_INTEGRATION.md` for the subsequent authorized release status.
+See `docs/FINAL_RELEASE.md` and `docs/FINAL_ACADEMIC_PACKAGE.md`.
 See `docs/TASK_8_PEAK_ENHANCEMENT.md` for the audit, camera boundary and acceptance instructions. Never infer
 functionality from a planned UI control, roadmap line, screenshot or old conversation.
 
@@ -104,11 +117,11 @@ Current source is authoritative when historical wording conflicts.
   commits, discard user work, expose ignored secrets, or alter the configured remote casually.
 - Keep `node_modules`, `.venv`, `dist`, caches, coverage, logs, `.local`, test output and secrets
   ignored. Dataset source and reviewed model artifacts are intentional versioned research assets.
-- Tasks 1–8 are merged to `main`. Retain prior branches/history. Task 9 must stay on
-  `task-9-final-closure` until owner review; do not merge or deploy it automatically.
-  Production Vercel/Render/Neon/Resend configuration is the stable baseline: do not change secrets
-  or provider settings. Task 9 repository closure is prepared; final report/deck, volunteer study,
-  device-specific evidence and owner deployment acceptance are distinct remaining owner work.
+- Tasks 1–9 are merged to `main`. Retain prior branches/history. The user explicitly authorized
+  the completed final release; do not repeat it or publish academic edits automatically.
+  Preserve the existing production Vercel/Render/Neon/Resend configuration and secrets.
+  Physical-device records, controlled-inbox acceptance and live presentation execution remain
+  distinct from automated technical evidence.
 
 ## Definition of done and completion procedure
 

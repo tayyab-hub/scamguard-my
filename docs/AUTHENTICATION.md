@@ -1,5 +1,14 @@
 # Task 5 authentication and authorization
 
+**2026-10-08 local update:** login allows `LOGIN_RATE_LIMIT` attempts per account per
+15 minutes and five times that limit per source, counting successful and failed attempts.
+Unknown identifiers retain a normalized-identifier budget and generic credential failure.
+Successful signup/login revokes the previously presented session before issuing a new session;
+other devices are not globally logged out. Successful login rehashes an outdated Argon2 hash.
+Account-deletion password checks use a separate per-user attempt budget. Late frontend 401s
+cannot clear a newer identity. Reset-mail failure logging omits recipient, URL and exception text.
+See the [October engineering review](ENGINEERING_REVIEW_2026-10-08.md) for tests and remaining throttling/proxy/account-enumeration limitations.
+
 Status (2026-09-10): **complete and user-verified in the Vercel → Render → Neon production
 architecture.** Task 6 reuses these controls unchanged for Phone analyses.
 
@@ -28,7 +37,7 @@ This protects logout, profile changes, analysis creation/deletion and account de
 exact allowed origin and have PostgreSQL-backed rate limits. Login accepts a normalized username or
 email. Errors deliberately use the same `Invalid username/email or password.` response for an unknown account and a wrong password; a dummy Argon2
 verification reduces user-enumeration timing differences. Email is validated, normalized to lower
-case, unique in PostgreSQL, and duplicate races return a safe conflict response. Passwords are 12–128
+case, unique in PostgreSQL, and duplicate races return a generic conflict response. Passwords are 12–128
 characters without obsolete composition rules. Usernames are 3–30 ASCII letters, numbers or
 underscores, stored lowercase and uniquely indexed. Full names support Unicode letters/marks, spaces,
 apostrophes, periods and hyphens after trimming, and reject controls/markup. Migration
@@ -81,8 +90,8 @@ are invisible to normal accounts and excluded from their dashboard totals. They 
 the first or any later user. Schema nullability exists only for those records; the application always
 sets ownership for new writes.
 
-PostgreSQL-backed fixed-window rate buckets cover signup by client IP, login by IP plus normalized
-identifier, password-reset request/confirmation, and analysis submission by user. Transaction-scoped PostgreSQL advisory locks serialize each
+PostgreSQL-backed fixed-window rate buckets cover signup by client IP, login by canonical account
+(across username/email and source changes) plus a separate source-IP budget, password-reset request/confirmation, and analysis submission by user. Transaction-scoped PostgreSQL advisory locks serialize each
 bucket, so limits are shared across workers. This is basic application abuse protection, not a DDoS
 service or enterprise bot defense.
 
@@ -94,7 +103,7 @@ service or enterprise bot defense.
   the HttpOnly flag reduce—but cannot eliminate—token theft risk.
 - Exact CORS origins are required in production. Wildcards and credentialed `*` are rejected.
 - Authorization is enforced in backend queries, not only through hidden frontend navigation.
-- Safe error envelopes do not expose hashes, tokens, database details, tracebacks or raw content.
+- Generic error envelopes do not expose hashes, tokens, database details, tracebacks or raw content.
 - The raw CSRF token is necessarily present in the authenticated JSON response and frontend memory;
   XSS would still be serious. The existing no-HTML rendering boundary and dependency hygiene remain
   important.

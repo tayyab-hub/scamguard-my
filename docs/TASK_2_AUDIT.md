@@ -1,5 +1,7 @@
 # Task 2 technical audit
 
+Historical record: status, permissions, versions and screenshots below apply to the named earlier stage. They do not supersede the accepted final release in [FINAL_RELEASE.md](FINAL_RELEASE.md) or the current [academic package](FINAL_ACADEMIC_PACKAGE.md).
+
 Audited **2026-09-04** on `task-2-core-platform` using Windows, Node 24.18.0, Python 3.12.13, PostgreSQL 17.11 and installed Chrome. Verdict: **Task 2 verified with minor fixes** and suitable for review/merge within its documented private-development scope. Main was not changed and Task 3 was not started.
 
 ## Defects found and fixed

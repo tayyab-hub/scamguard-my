@@ -1,0 +1,46 @@
+a6b996afb630cb5e14211f668074d6410d10c855|2026-09-03T15:56:54+08:00|2026-09-03T15:56:54+08:00|chore: complete Task 1 application foundation
+6116d47dcc05013c9b1b9a1a823458d514a456c1|2026-09-03T16:03:11+08:00|2026-09-03T16:03:11+08:00|docs: record GitHub publication
+2f03739107d650a9c0883286664dcea90b7fb179|2026-09-03T16:31:10+08:00|2026-09-03T16:31:10+08:00|fix: support frontend preview without deployed API
+055c6adac06ce02da9a1b2897c023f701b82da43|2026-09-03T16:54:10+08:00|2026-09-03T16:54:10+08:00|feat: add refined interface motion and micro-interactions
+c598d6cb0da6c27e9b5e9efe1766f3e8ddb88c6a|2026-09-04T13:38:36+08:00|2026-09-04T13:38:36+08:00|feat: add phone and QR analysis interfaces
+bd41afa9cac7d4291e0ab30ae72e323e940ae448|2026-09-04T15:24:31+08:00|2026-09-04T15:24:31+08:00|chore: generalize ScamGuard branding and close Task 1
+be926fa6a0132ba2afc230d0cacdf36b9bfcb0b9|2026-09-04T15:56:16+08:00|2026-09-04T15:56:16+08:00|feat: add PostgreSQL submission persistence and history API
+164f67684d1bf1067bddb39df1bb87d276d987c1|2026-09-04T16:02:11+08:00|2026-09-04T16:02:11+08:00|feat: connect submission intake and real dashboard history
+b9b1611f48d0810e57194fd463031f52e65bda10|2026-09-04T16:03:42+08:00|2026-09-04T16:03:42+08:00|docs: document Task 2 contracts verification and private deployment boundary
+d19253727ca35a158ff52eebe6508bac9c0f8ab9|2026-09-04T16:05:57+08:00|2026-09-04T16:05:57+08:00|docs: finalize Task 2 publication handoff
+3b13ee9ff5768bddb32129ed2122b88fd0643c01|2026-09-04T18:58:37+08:00|2026-09-04T18:58:37+08:00|fix: resolve Task 2 verification issues
+9a92a44cbc3e32489a3cf7b5707645c822aae60d|2026-09-05T19:15:08+08:00|2026-09-05T19:15:08+08:00|feat: complete support and validation experience
+564145b48165e92434d38cb2b397aa30029991d1|2026-09-05T19:15:28+08:00|2026-09-05T19:16:13+08:00|chore: streamline SCAMGUARD development startup
+425aab01bf3952e30309c619ff584f52c3e800d2|2026-09-05T21:43:55+08:00|2026-09-05T21:43:55+08:00|Merge Task 2 core platform and UI/UX foundation
+73d9de27d83b13b62bd90e2bef8fb78983b3a2d8|2026-09-05T22:34:51+08:00|2026-09-05T22:34:51+08:00|feat: add reproducible message intelligence engine
+417bc5d3cf31f67a8a2739a27a0f2a38105c1cc4|2026-09-05T22:35:02+08:00|2026-09-05T22:35:02+08:00|feat: persist and present message intelligence results
+0f152adeb63fbdf0555fc4a8540dd255f479f0a2|2026-09-05T22:37:20+08:00|2026-09-05T22:37:20+08:00|docs: complete Task 3 verification handoff
+1b1eff3da9a7364afac9a073b471c586138f5a16|2026-09-05T22:56:24+08:00|2026-09-05T22:56:24+08:00|docs: close Task 3 for main merge
+7625a6f54b904532d5cd0273139d429ab1aadcb6|2026-09-05T22:56:47+08:00|2026-09-05T22:56:47+08:00|Merge Task 3 Message Intelligence
+8e2bec1357702054d9082b43dd8fea8ae4bfb7c2|2026-09-07T10:47:51+08:00|2026-09-07T10:47:51+08:00|feat: add offline URL intelligence and reproducible local model
+85a481d3dda1d76cf39188bf1e144b8cfac505e8|2026-09-07T10:48:15+08:00|2026-09-07T10:48:15+08:00|feat: persist and display explainable URL assessments
+adc0a56f8dd1f340a9942f98a425b8cc56ca229f|2026-09-07T10:51:21+08:00|2026-09-07T10:51:21+08:00|docs: close Task 4 verification handoff
+9b82be84e338cf35e4be5e8f907030b51d542a6a|2026-09-07T11:01:46+08:00|2026-09-07T11:01:46+08:00|docs: close Task 4 for main merge
+386e4b743a82a7cb229c58d0557ff6348d258962|2026-09-07T11:02:07+08:00|2026-09-07T11:02:07+08:00|Merge Task 4 URL Intelligence
+c4bcd5ed966527838db461f350d7f576c62a0a6a|2026-09-07T11:36:53+08:00|2026-09-07T11:36:53+08:00|feat: refine forensic UI and explainable result presentation
+6c46ca54fcc94c72333570e70e20c107d53501ce|2026-09-07T11:37:38+08:00|2026-09-07T11:37:38+08:00|docs: record UI refinement scoring and visual verification
+287bad7fb258c4702d69af77472638306a5596be|2026-09-07T11:54:52+08:00|2026-09-07T11:54:52+08:00|docs: close accepted UI refinement
+080e800a9e5a84710f4db4654ea08dee86fbbfea|2026-09-07T11:55:30+08:00|2026-09-07T11:55:30+08:00|Merge completed UI result refinement
+0b1f46da52b99501ee787d3d734405028c1c5643|2026-09-08T16:22:04+08:00|2026-09-08T16:22:04+08:00|feat: add secure authentication and private ownership
+a913f2bf02f4e35b72f21a9126e3849f019a9d2e|2026-09-08T16:22:24+08:00|2026-09-08T16:22:24+08:00|feat: add authenticated privacy experience
+ab888fe6a4ddefdc9f3caca5169a7283400cc11e|2026-09-08T16:22:39+08:00|2026-09-08T16:22:39+08:00|chore: prepare managed production deployment
+c3d44923a151650c2f6bf8d069096f2d7a0a8556|2026-09-08T16:22:53+08:00|2026-09-08T16:22:53+08:00|docs: document Task 5 security and deployment
+a77e01eaf2c46a4609f0b0ef44cdc0344bfcd333|2026-09-09T22:28:13+08:00|2026-09-09T22:28:13+08:00|docs: record verified Task 5 production backend
+1409ba2948021f9f6df6ca18cb7cab513fa788c7|2026-09-09T22:29:19+08:00|2026-09-09T22:29:19+08:00|Merge Task 5 authentication and production infrastructure
+baa9163973571c9bd4458eff949074e805e8604d|2026-09-09T23:27:20+08:00|2026-09-09T23:27:20+08:00|fix production API base and auth route metadata
+6d876176a092741ef92e1039934ab9c46aa0e66a|2026-09-10T11:02:05+08:00|2026-09-10T11:02:05+08:00|feat: add conservative phone intelligence
+f24db9fee97b54bad9c27984f7c56d5f2ac6fd5f|2026-09-10T12:09:55+08:00|2026-09-10T12:09:55+08:00|Merge task-6-phone-intelligence into main
+bcff3dd289d1b3853f2ac91bf3fbf5161dd13467|2026-09-10T13:15:42+08:00|2026-09-10T13:15:42+08:00|Complete Task 6.1 auth and profile polish
+546447fa02072f0a87a5fae90c9f8f8f57aafa07|2026-09-10T13:24:55+08:00|2026-09-10T13:24:55+08:00|Merge task-6-1-auth-profile-polish into main
+72ad78edf4e25846ca6ef5bf3b712a4cf58216fa|2026-09-10T14:47:47+08:00|2026-09-10T14:47:47+08:00|feat: add QR intelligence
+cd149252080fca041ab36d9b1364bbbd3ad39047|2026-09-10T14:51:45+08:00|2026-09-10T14:51:45+08:00|docs: clarify QR upload retention
+42a9db1e1d29ef0c05c248a416f6b90ac341d256|2026-09-10T15:00:38+08:00|2026-09-10T15:00:38+08:00|Merge task-7-qr-intelligence into main
+b8f1aff85cd7765bfcf523e6ec5c147898522529|2026-09-10T17:06:40+08:00|2026-09-10T17:06:40+08:00|feat: add live QR scanning and Task 8 product polish
+4b327ccf21b59e295622e3b321cec62dc523dbde|2026-09-12T19:21:55+08:00|2026-09-12T19:21:55+08:00|Merge task-8-peak-enhancement into main
+afabf5cab42da880e91a07e0d46ea202cd94cf9d|2026-09-12T21:32:39+08:00|2026-09-12T21:32:39+08:00|Close Task 9 with privacy fixes and capstone evidence
+4df277bdf93a2e1424ac533d488cd7ba127b35ce|2026-09-12T21:38:08+08:00|2026-09-12T21:38:08+08:00|Merge task-9-final-closure for final production release

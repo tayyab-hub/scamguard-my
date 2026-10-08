@@ -1,5 +1,5 @@
 # Database design
-PostgreSQL 17; SQLAlchemy 2 / Psycopg 3; explicit Alembic head `0006_qr_intelligence`.
+PostgreSQL (local verification used version 17); SQLAlchemy 2 / Psycopg 3; explicit Alembic head `0006_qr_intelligence`.
 Task 9 adds no migration. Source authority: `backend/app/db/models.py` and `backend/migrations/`.
 
 ```mermaid
@@ -53,7 +53,7 @@ erDiagram
 | Table | Purpose and constraints | Sensitivity/lifecycle |
 | --- | --- | --- |
 | users | Normalized unique email; nullable legacy-safe normalized username with partial unique index; nullable full name; Argon2id hash. | Personal account data. Profile edits only affect the current user; email is read-only in the product. |
-| analyses | MESSAGE/URL/PHONE/QR enum checks; bounded nonempty content; status, risk, separate confidence, explanations/actions/limitations, component/model/rules/fusion versions, timestamps and safe failure code. | Private decoded/text content and derived assessment. Immutable completed results. Individual deletion supported. No original QR image. |
+| analyses | MESSAGE/URL/PHONE/QR enum checks; bounded nonempty content; status, risk, separate confidence, explanations/actions/limitations, component/model/rules/fusion versions, timestamps and bounded failure code. | Private decoded/text content and derived assessment. Immutable completed results. Individual deletion supported. No original QR image. |
 | auth_sessions | User FK, unique HMAC token digest, CSRF digest, expiry/last-use/revocation timestamps. | Security material, never listed in normal user responses. Raw session token is not stored. |
 | password_reset_tokens | User FK, unique digest, expiry/use/creation timestamps. | No raw token stored. Single use; invalidated on replacement/reset. |
 | auth_rate_limits | HMAC key derived from scope/discriminator; window and count. No direct user FK. | Abuse-control state; may outlive an account. Not user analytics. |

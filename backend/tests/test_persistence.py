@@ -620,8 +620,8 @@ def test_url_credentials_removed_and_history_never_reanalyses(persistent, databa
     assert provider.calls == 1
     with Session(database[1]) as session:
         row = session.get(Analysis, result["id"])
-        assert row.model_version == "url_ml_v1" and row.rules_version == "url_rules_v1"
-        assert row.fusion_version == "url_fusion_v1" and row.ai_provider is None
+        assert row.model_version == "url_ml_v1" and row.rules_version == "url_rules_v2"
+        assert row.fusion_version == "url_fusion_v2" and row.ai_provider is None
         assert "secret" not in json.dumps(row.component_details) + row.content
 
     def forbidden(*args):

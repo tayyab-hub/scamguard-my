@@ -1,4 +1,13 @@
 # Final evaluation methodology and findings
+
+**2026-10-08 addendum:** the [October engineering review](ENGINEERING_REVIEW_2026-10-08.md) reproduces the frozen Message classifier metrics
+and URL split/artifact verification. Message test accuracy remains 96.8966%, macro F1 0.895235;
+this is not an accuracy improvement. New diagnostics are Brier sum 0.050491 (0–2 convention),
+log loss 0.126021 and ten-bin top-label ECE 0.054496. Probabilities remain uncalibrated.
+The v2 fusion distribution includes 3/106 SCAM-labelled messages at Low and 2/106 at
+Insufficient Evidence. No model, calibrator or threshold was fit to these observations.
+See [raw diagnostics](evidence/engineering-message-evaluation.json); the dated evaluation below
+remains the September snapshot. Functional tests now total 571 passes and one opt-in skip.
 Date: 2026-09-12. This separates functional correctness from security, model performance, human
 usability and operational reliability. Passing software tests does not prove scam-detection accuracy.
 
@@ -64,7 +73,7 @@ premium/shared-cost metadata yields Caution only. No fraud accuracy metric is ap
 phone metadata cannot identify the subscriber, caller, spoofing or fraud. No number is contacted.
 
 ## QR and payment
-Fifteen controlled QR cases exercise exact decode/classification/routing or safe rejection,
+Fifteen controlled QR cases exercise exact decode/classification/routing or bounded rejection,
 including plain text, unknown/unsafe schemes, no-code and multiple-code images.
 Synthetic PNGs are generated with the same library family used by the decoder: this is controlled
 functional evidence, not an independently sampled image/camera accuracy benchmark.

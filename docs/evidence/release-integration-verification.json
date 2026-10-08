@@ -1,0 +1,312 @@
+{
+  "started_at_utc": "2026-10-08T13:19:53.695424+00:00",
+  "checks": [
+    {
+      "name": "typescript",
+      "command": [
+        "<repository>\\backend\\.venv\\Scripts\\python.exe",
+        "<repository>\\.tmp\\task8_checks.py",
+        "typecheck"
+      ],
+      "exit_code": 0,
+      "seconds": 8.31,
+      "log": "typescript.log",
+      "log_sha256": "1898a3d13f6efea3d5f9203ef348110036350194239bc407f943a699c79dca2e"
+    },
+    {
+      "name": "eslint",
+      "command": [
+        "<repository>\\backend\\.venv\\Scripts\\python.exe",
+        "<repository>\\.tmp\\task8_checks.py",
+        "lint"
+      ],
+      "exit_code": 0,
+      "seconds": 7.83,
+      "log": "eslint.log",
+      "log_sha256": "705da1e5dd71dac779b172034ab821faa0eea406654e0fbe70f73e9b81b0bfde"
+    },
+    {
+      "name": "vitest",
+      "command": [
+        "<repository>\\backend\\.venv\\Scripts\\python.exe",
+        "<repository>\\.tmp\\task8_checks.py",
+        "test"
+      ],
+      "exit_code": 0,
+      "seconds": 18.42,
+      "log": "vitest.log",
+      "log_sha256": "7fcf1644c625f20ed313dc53cc39b26999eb5230098f72f84e5bf75dec0009e1"
+    },
+    {
+      "name": "frontend-build",
+      "command": [
+        "<repository>\\backend\\.venv\\Scripts\\python.exe",
+        "<repository>\\.tmp\\task8_checks.py",
+        "build"
+      ],
+      "exit_code": 0,
+      "seconds": 14.44,
+      "log": "frontend-build.log",
+      "log_sha256": "bdf44a81a097c44d8fa01009b38035048865ddbdae47a082cc61fb55ed116166"
+    },
+    {
+      "name": "pytest",
+      "command": [
+        "<repository>\\backend\\.venv\\Scripts\\python.exe",
+        "<repository>\\.tmp\\task8_checks.py",
+        "backend"
+      ],
+      "exit_code": 0,
+      "seconds": 94.11,
+      "log": "pytest.log",
+      "log_sha256": "465533d332acaa4510fd450296190007bb9d2137994ac78a338fbbe5b33cbae1"
+    },
+    {
+      "name": "ruff-lint",
+      "command": [
+        "<repository>\\backend\\.venv\\Scripts\\python.exe",
+        "-m",
+        "ruff",
+        "check",
+        "backend"
+      ],
+      "exit_code": 0,
+      "seconds": 0.17,
+      "log": "ruff-lint.log",
+      "log_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "name": "ruff-format",
+      "command": [
+        "<repository>\\backend\\.venv\\Scripts\\python.exe",
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "backend"
+      ],
+      "exit_code": 0,
+      "seconds": 0.17,
+      "log": "ruff-format.log",
+      "log_sha256": "3a21445bb7ec5bd865e583bec08d6571c4b3b289821acb041d1505c596e90257"
+    },
+    {
+      "name": "pip-check",
+      "command": [
+        "<repository>\\backend\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pip",
+        "check"
+      ],
+      "exit_code": 0,
+      "seconds": 1.22,
+      "log": "pip-check.log",
+      "log_sha256": "672aec65a45bed50e70229c70934a7eebf0462595c459b83023027645d57cccf"
+    },
+    {
+      "name": "alembic-current",
+      "command": [
+        "<repository>\\backend\\.venv\\Scripts\\python.exe",
+        "<repository>\\.tmp\\task8_checks.py",
+        "db",
+        "current"
+      ],
+      "exit_code": 0,
+      "seconds": 2.55,
+      "log": "alembic-current.log",
+      "log_sha256": "6c5e4eb0fa5f44cd69d252d3ea9392cb1f9bcd569c4fa63489b685fc0e6b041a"
+    },
+    {
+      "name": "alembic-heads",
+      "command": [
+        "<repository>\\backend\\.venv\\Scripts\\python.exe",
+        "<repository>\\.tmp\\task8_checks.py",
+        "db",
+        "heads"
+      ],
+      "exit_code": 0,
+      "seconds": 1.5,
+      "log": "alembic-heads.log",
+      "log_sha256": "27f8b5452aacbeabe7bc3c9dc45ef9f183c0b08549ad3afbdba53ed51d0e5081"
+    },
+    {
+      "name": "alembic-check",
+      "command": [
+        "<repository>\\backend\\.venv\\Scripts\\python.exe",
+        "<repository>\\.tmp\\task8_checks.py",
+        "db",
+        "check"
+      ],
+      "exit_code": 0,
+      "seconds": 2.64,
+      "log": "alembic-check.log",
+      "log_sha256": "764b08c76c2885df34b1eabe955772eb49348598c8c674a3673556e98d0ed1ed"
+    },
+    {
+      "name": "message-evaluation",
+      "command": [
+        "<repository>\\backend\\.venv\\Scripts\\python.exe",
+        "backend/scripts/evaluate_message_reliability.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.75,
+      "log": "message-evaluation.log",
+      "log_sha256": "95b364a5fb4e1a4133598e8ca73a3d319602221540fd104f2b3855cec2a0a496"
+    },
+    {
+      "name": "url-verifier",
+      "command": [
+        "<repository>\\backend\\.venv\\Scripts\\python.exe",
+        "backend/scripts/verify_url_pipeline.py"
+      ],
+      "exit_code": 0,
+      "seconds": 14.16,
+      "log": "url-verifier.log",
+      "log_sha256": "19a54da90e693dd3e2d1046554a1b20c104689ea1fd2c16edfde9ddc76e8025b"
+    },
+    {
+      "name": "backend-wheel",
+      "command": [
+        "<repository>\\backend\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pip",
+        "wheel",
+        "--no-deps",
+        "--no-build-isolation",
+        "--disable-pip-version-check",
+        "./backend",
+        "-w",
+        "<repository>\\.tmp\\release-integration-20261008\\checks\\wheel"
+      ],
+      "exit_code": 0,
+      "seconds": 3.53,
+      "log": "backend-wheel.log",
+      "log_sha256": "930343b47d4ab85957f78699eba01f9b173ddbbe105aeeda1603e26a027fe230"
+    },
+    {
+      "name": "playwright-foundation",
+      "command": [
+        "<repository>\\backend\\.venv\\Scripts\\python.exe",
+        "<repository>\\.tmp\\task8_checks.py",
+        "test:e2e",
+        "--",
+        "--workers=1"
+      ],
+      "exit_code": 0,
+      "seconds": 79.38,
+      "log": "playwright-foundation.log",
+      "log_sha256": "35e64ea435dda0154e1ce184cca8e3b7ee55f3ce2bf362d98e103e8c34276d7f"
+    },
+    {
+      "name": "playwright-preview",
+      "command": [
+        "<repository>\\backend\\.venv\\Scripts\\python.exe",
+        "<repository>\\.tmp\\task8_checks.py",
+        "test:preview",
+        "--",
+        "--workers=1"
+      ],
+      "exit_code": 0,
+      "seconds": 17.88,
+      "log": "playwright-preview.log",
+      "log_sha256": "9b979b0d90af8ebb2661cf7a72a5dcfdfe0180a859317c66a9a308528e228fb0"
+    },
+    {
+      "name": "playwright-postgres",
+      "command": [
+        "<repository>\\backend\\.venv\\Scripts\\python.exe",
+        "<repository>\\.tmp\\task8_checks.py",
+        "test:persistence",
+        "--",
+        "--workers=1"
+      ],
+      "exit_code": 0,
+      "seconds": 302.31,
+      "log": "playwright-postgres.log",
+      "log_sha256": "ad2472dc9a17b58c5a1a1ec048005978f2b2801f04d30aa38d84d257672ac46c"
+    },
+    {
+      "name": "launcher-static",
+      "command": [
+        "powershell.exe",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "scripts/Test-DevScripts.ps1"
+      ],
+      "exit_code": 0,
+      "seconds": 0.64,
+      "log": "launcher-static.log",
+      "log_sha256": "ba9148899530c7af4344c66839879eaf6ea1d8ceacdf412ce0356d5cbe4d7a27"
+    },
+    {
+      "name": "git-whitespace",
+      "command": [
+        "git",
+        "-c",
+        "core.safecrlf=false",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.16,
+      "log": "git-whitespace.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "initial_environment_failures": [
+    {
+      "name": "launcher-static",
+      "command": [
+        "powershell.exe",
+        "-NoProfile",
+        "-File",
+        "scripts/Test-DevScripts.ps1"
+      ],
+      "exit_code": 1,
+      "seconds": 0.55,
+      "log": "launcher-static.log",
+      "reason": "PowerShell default policy blocked the static script before execution. The established per-process invocation passed; no system policy was changed."
+    }
+  ],
+  "completed_at_utc": "2026-10-08T13:38:36.983741+00:00",
+  "result": "PASS",
+  "scope": "Fresh local release gates with real isolated PostgreSQL, before production deployment.",
+  "suite_results": {
+    "pytest": {
+      "passed": 355,
+      "failed": 0,
+      "skipped": 1
+    },
+    "vitest": {
+      "passed": 164,
+      "failed": 0,
+      "skipped": 0
+    },
+    "playwright-foundation": {
+      "passed": 18,
+      "failed": 0,
+      "skipped": 0
+    },
+    "playwright-preview": {
+      "passed": 8,
+      "failed": 0,
+      "skipped": 0
+    },
+    "playwright-postgres": {
+      "passed": 26,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "total_passed": 571,
+  "wheel": {
+    "sha256": "aaa4292393a14e98afa25b5746e66a476121b2f1d1ab84148db4c7a7433a2224",
+    "verified_model_artifacts": [
+      "app/ml/artifacts/message_tfidf_v1.json",
+      "app/url_intelligence/artifacts/url_model_v1.json"
+    ],
+    "environment_file_present": false
+  }
+}

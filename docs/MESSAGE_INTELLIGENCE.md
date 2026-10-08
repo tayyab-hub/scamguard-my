@@ -1,8 +1,10 @@
 # Task 3 message intelligence
 
-Task 3 adds synchronous `MESSAGE` assessment to the existing persisted analysis endpoint. It does
-not add URL, Phone or QR intelligence. URL submissions remain `SUBMITTED`; Phone and QR remain
-local disabled interfaces.
+Synchronous `MESSAGE` assessment uses the existing persisted analysis endpoint. All four modes
+are now implemented; the older Task 3 delivery boundary no longer describes current capabilities.
+The 2026-10-08 local review introduces `message-rules-v2` and `message-fusion-v2` without changing
+the frozen model, tokenization or database schema. See
+[engineering review](ENGINEERING_REVIEW_2026-10-08.md) for exact policy and measured results.
 
 ## Decision pipeline
 
@@ -15,10 +17,15 @@ validated message → durable SUBMITTED record → PROCESSING
 ```
 
 The local classifier always runs. Its three probabilities describe model class uncertainty; they
-are not a risk verdict. Rules emit exact snippets for urgency, threat/fear, credential request,
-financial request, impersonation, prize, investment, job/task, delivery/account, secrecy,
-redirection and suspicious action. Safety/education/negation language suppresses nearby matches,
-and meaningful combinations add bounded weight.
+are not a risk verdict. Rules emit original-text snippets for urgency, threat/fear, credential
+language, payment language, authority references, prize, investment, job/task, delivery/account,
+secrecy, redirection and suspicious action. Rules-only Unicode/substitution/spacing normalization
+preserves offsets; it never changes model input or independently adds risk. Protective-action
+negation discounts matches only within its clause. Generic warning/training wording does not
+disable detection, and later unsuppressed matches remain eligible. Combinations add bounded weight.
+No vocabulary support, short context or ambiguity with weak rules can yield null risk/confidence.
+Model-only warnings are capped at Caution; defined model/rule disagreement caps confidence Low.
+Structured assessment-basis fields and category-specific actions explain these decisions.
 
 Fusion converts independent evidence into `LOW`, `CAUTION`, `ELEVATED`, `HIGH`, or
 `INSUFFICIENT_EVIDENCE`. Risk score and confidence are separate fields. Short context-poor text such
@@ -54,7 +61,7 @@ messages until authentication, consent, retention/deletion and public-backend co
 
 Alembic `0002_message_intelligence` adds nullable result/audit columns so all Task 2 rows remain
 valid and unchanged. It stores risk/confidence, summary, evidence, actions, limitations, local
-component versions, AI provider/model/status/contribution, completion time and a safe failure code.
+component versions, AI provider/model/status/contribution, completion time and a bounded failure code.
 The validated intake commits before analysis. A local pipeline exception produces a durable `FAILED`
 record with `MESSAGE_ANALYSIS_FAILED`; it never returns partial or fabricated intelligence. External
 AI exceptions are contained as component status and local analysis still completes.

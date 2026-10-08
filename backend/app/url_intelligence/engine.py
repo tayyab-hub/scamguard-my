@@ -1,3 +1,4 @@
+import logging
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -116,6 +117,31 @@ class URLIntelligenceEngine:
                 },
                 "reputation": reputation.model_dump(),
                 "fusion": {"version": FUSION_VERSION},
+                "assessment_basis": {
+                    "decision": (
+                        "The URL policy counts independent meaningful evidence families. High risk "
+                        "requires model corroboration or an authoritative reputation result."
+                    ),
+                    "supporting": [e.label for e in evidence if e.severity != "CONTEXT"],
+                    "mitigating": [
+                        "The local model favours LEGITIMATE; the website itself remains unverified."
+                    ]
+                    if classification and classification.label == "LEGITIMATE"
+                    else [],
+                    "uncertainty": [
+                        "Neutral URL metadata does not increase risk by itself.",
+                        "No destination was visited and no live reputation lookup "
+                        "is configured by default.",
+                        *(
+                            [
+                                "The local model is unavailable; "
+                                "this result uses structural rules only."
+                            ]
+                            if not classification
+                            else []
+                        ),
+                    ],
+                },
                 "url_structure": {
                     "parser_version": PARSER_VERSION,
                     "hostname": url.hostname,
@@ -159,6 +185,9 @@ def build_url_engine(settings):
         path = Path(__file__).resolve().parents[3] / path
     try:
         classifier = URLClassifier(path)
-    except (OSError, ValueError, KeyError, TypeError):
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        logging.getLogger("scamguard.intelligence").warning(
+            "event=model_unavailable engine=URL exception_type=%s", type(exc).__name__
+        )
         classifier = None  # Rules remain useful; never invent a model prediction.
     return URLIntelligenceEngine(classifier)

@@ -1,0 +1,136 @@
+{
+  "date": "2026-10-08",
+  "timezone": "Asia/Kuala_Lumpur",
+  "scope": "Local uncommitted engineering review; no production deployment or database mutation",
+  "base_commit": "4df277bdf93a2e1424ac533d488cd7ba127b35ce",
+  "results": [
+    {
+      "command": "pytest -q (isolated local PostgreSQL)",
+      "passed": 355,
+      "failed": 0,
+      "skipped": 1
+    },
+    {
+      "command": "npm run test",
+      "passed": 164,
+      "failed": 0,
+      "skipped": 0,
+      "files": 12
+    },
+    {
+      "command": "npm run test:e2e -- --workers=1",
+      "passed": 18,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "command": "npm run test:preview -- --workers=1",
+      "passed": 8,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "command": "npm run test:persistence -- --workers=1",
+      "passed": 26,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "command": "npm run test:persistence -- qr.spec.ts --workers=1",
+      "passed": 2,
+      "failed": 0,
+      "note": "Targeted rerun after final QR explanation change; not added to the unique test total."
+    }
+  ],
+  "unique_suite_passes": 571,
+  "skipped_reason": "One live external AI provider test requires explicit RUN_OPENAI_INTEGRATION opt-in.",
+  "checks": {
+    "npm run lint": "PASS, zero warnings",
+    "npm run typecheck": "PASS",
+    "npm run build": "PASS",
+    "python -m ruff check backend": "PASS",
+    "python -m ruff format --check backend": "PASS, 75 files",
+    "python -m pip check": "PASS, no broken requirements",
+    "alembic current / heads / check (isolated test database)": "PASS, 0006_qr_intelligence, no drift",
+    "powershell -File scripts/Test-DevScripts.ps1": "PASS, 16 static launcher checks",
+    "git diff --check": "PASS",
+    "python backend/scripts/evaluate_message_reliability.py": "PASS; see engineering-message-evaluation.json",
+    "python backend/scripts/verify_url_pipeline.py": "PASS, 234674 rows, 197700 domain groups; matrix [[19846,89],[471,16495]]",
+    "python -m pip wheel --no-deps --no-build-isolation ./backend": "PASS"
+  },
+  "warnings": [
+    "Two backend test dependency deprecations: Starlette httpx TestClient and AnyIO BlockingPortal alias.",
+    "Existing third-party Rollup annotation warnings in production build.",
+    "Git CRLF-to-LF normalization notices in existing Markdown files."
+  ],
+  "corrected_initial_failures": [
+    "One persistence assertion expected url_rules_v1/url_fusion_v1 instead of the deliberate v2 versions.",
+    "Two browser assertions expected Credential request rather than the corrected Credential language label."
+  ],
+  "not_performed": [
+    "npm audit --omit=dev --json: blocked by automatic approval review because dependency metadata would be sent to npm registry.",
+    "Production deployment, production authenticated smoke tests, physical-device camera tests, live AI call, inbox delivery and human usability study."
+  ],
+  "wheel": {
+    "sha256": "122ecf4d4cdf1fe19f80be52f0fa8c00898d526e22a9e7e8b36a121747d5544a",
+    "verified_source_matches": {
+      "app/ml/artifacts/message_tfidf_v1.json": "818d99f72c8502fe6ec28849e42c77f4707949366bf014bd5677079dde2c3dd3",
+      "app/url_intelligence/artifacts/url_model_v1.json": "87a61a0bbee6921a590b6feeeecdd00335f9dcdb2087ff412958a4d66b16f698",
+      "app/qr_intelligence/engine.py": "4e103783bffc159deafc029ad7e3b734bda1234fba8128a88c015980e064751e",
+      "app/ml/fusion.py": "6a67a3671c299c1fee448d6f9daec4636ba45cfa6038df4ae937000cf61f6b33",
+      "app/api/auth.py": "5e21d30c1a09d7ac3fb5fc8743275c466169a070fdc5d2cf4ab8fe4ce000486a"
+    },
+    "contains_environment_file": false
+  },
+  "changed_application_files_sha256": {
+    "backend/app/api/auth.py": "5e21d30c1a09d7ac3fb5fc8743275c466169a070fdc5d2cf4ab8fe4ce000486a",
+    "backend/app/api/routes.py": "491d4b688b7c2800f6be742e9dcbcfa4ca22e9f46502a32710f525a15f60677d",
+    "backend/app/core/body_limit.py": "cdac19b55564db388e30f74a9d769def73911ea1fe9bf4aa2b0cc0b74e7f496a",
+    "backend/app/core/errors.py": "ce6285c58c2257bfe505d90cbb843e77702fa5ea205a02bed4f0287470fbfacb",
+    "backend/app/main.py": "6902a06eeb91da11450afa3afba2b11eeb087e1786a53a714d1221783e637785",
+    "backend/app/ml/classifier.py": "e5e673fe582647369a32c525126bf5d29f7bfff219d7d479c2803400938fe83a",
+    "backend/app/ml/engine.py": "fcd7a7e1791d0eba06504510d4cf52ffe53d104218d381da18286fead9d5752f",
+    "backend/app/ml/fusion.py": "6a67a3671c299c1fee448d6f9daec4636ba45cfa6038df4ae937000cf61f6b33",
+    "backend/app/ml/rules.py": "1fc1a15a369a38e7b944900e9066dc71ed6848d9b95b045e0fc7daaa0b96ffc8",
+    "backend/app/qr_intelligence/engine.py": "4e103783bffc159deafc029ad7e3b734bda1234fba8128a88c015980e064751e",
+    "backend/app/services/analyses.py": "6938491f1104358b8d75a4f633542b13723d1ea18716278355f5d9b545bd4029",
+    "backend/app/url_intelligence/engine.py": "485e71b44054d5d88591dbbb5f86954b43269cfe3761f3994d8d9ed0fd513945",
+    "backend/app/url_intelligence/fusion.py": "9e79c135c0bc821cc3b78aa3f99a5e7d30631e7fa810823ccb1424a890d40984",
+    "backend/app/url_intelligence/rules.py": "20ae95b805c34a3672e23698d4007a5b782f8e84cc4f610e041dcfccd41f010c",
+    "backend/scripts/evaluate_message_reliability.py": "111c91172e17fb7683a29372991ac34797e75f56c683bb19a1229a1a6a8dd268",
+    "backend/scripts/train_message_model.py": "6ad2389d5ef90b4b76ba80b5d3ee6f873372c1462331a5c53ec8b4964f187285",
+    "backend/tests/test_engine_hardening.py": "0e697784c2273d372f3ba6b3fc022ec89a7d55fcb0847bed4e71469cbeebd3bb",
+    "backend/tests/test_persistence.py": "e67bded699f4db9a15bb559c7aff6ff51c573e86816c45b401d84567f609b9cc",
+    "backend/tests/test_probability_metrics.py": "3d781e91d8b1c9221e8c22548efdbe223fd16c09fac75a2642433adec5566f86",
+    "backend/tests/test_security_hardening.py": "ada1ef9b05d508e559c30c57f81080b505995e75abd15bf38e166466e08f0964",
+    "frontend/e2e-persistence/engineering-review.spec.ts": "14024e30a0f4bbff3bc61cf3a5dc172bbd3ae9c9edd2e6f0a16765380e79c8f4",
+    "frontend/e2e-persistence/submission.spec.ts": "49a1db79b814e3b5f67626d86177b69ab6fbac5428e0c90e86ecd1e3fa48de16",
+    "frontend/src/app/EngineeringReview.test.tsx": "b32f2530f4b98f790cbfebcf1af919e5764beefc08579c65d128c3197198684e",
+    "frontend/src/components/DashboardDistribution.tsx": "f929db85e07421e8d99c36e737c3706325e8366d552fc5d161f175ec52ceb204",
+    "frontend/src/components/States.tsx": "9ccc27b1e521704c6f9001a9ae23c365ab30a61f91339fc6b4bdee3678ccec9f",
+    "frontend/src/components/analysis/MessageResult.tsx": "075de9bd3cb6459bbde8f8b1b95e015797105755f49e69aead1e62fcf601590b",
+    "frontend/src/components/analysis/PhoneResult.tsx": "6116237da8fd74794e42577fe57858af9ffebd047e1743219508cc1695bd7d9f",
+    "frontend/src/components/analysis/QrResult.tsx": "3f30208f717d35e33ee22812535cdbeac2f85fef719b4b20920e6ff132c60380",
+    "frontend/src/components/analysis/ResultPresentation.tsx": "c4eb3218604d9729e07a94c4b8f69f4d6e19ca5064dd1083ad8a0d404bac950b",
+    "frontend/src/components/analysis/URLResult.tsx": "700a705404d2178265dfdfc9c85de98ea264a17b79181cf82e8fd772627ba435",
+    "frontend/src/lib/api.test.ts": "ec5d99d44b9e94683f7bd275cb053faa73f12740e6feda6bebe1bd45b9ecd179",
+    "frontend/src/lib/api.ts": "e97f2d4b9cc9692ab507413ac2a14d2959e80414c1a7177a2045dd23e1549683",
+    "frontend/src/pages/AnalysePage.tsx": "74fea2248b1d6fe09b7f62bc117126211d02a3660c56cf561eee5cdee4ff170c",
+    "frontend/src/pages/DashboardPage.tsx": "0dc8c3c83c1ed0b4829198efc238e9b7fb4c536b47645a141cb68af84ab8b9ed",
+    "frontend/src/pages/HelpPage.tsx": "28b9428cafd1c71e66f8d6b9e683084d4ecc32e5106606118ec464b40114fd0f",
+    "frontend/src/styles.css": "2d13cb28c8d071a0f40f9ec5377b1a4b61e0ee3679395af68213a9ed08c7c177"
+  },
+  "new_dependencies": [],
+  "new_environment_variables": [],
+  "new_migrations": [],
+  "release_order": [
+    "frontend",
+    "backend"
+  ],
+  "browser_evidence": [
+    "engineering-screenshots/result-desktop.png",
+    "engineering-screenshots/result-mobile.png",
+    "engineering-screenshots/overview-mobile.png"
+  ],
+  "evidence_limit": "Structured record of tool-observed local runs, not a CI attestation or production acceptance. Earlier user academic work is excluded from the application-change hash list."
+}

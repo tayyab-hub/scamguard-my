@@ -1,0 +1,27 @@
+{
+  "scope": "Documentation, report and academic support files; no application regression rerun",
+  "claim_occurrences": 320,
+  "claim_counts": {
+    "forensic": 40,
+    "secure": 26,
+    "verified": 136,
+    "safe": 89,
+    "real time": 8,
+    "detects scams": 1,
+    "prevents scams": 2,
+    "accurate": 5,
+    "ai powered": 2,
+    "guaranteed": 4,
+    "trusted": 7
+  },
+  "markdown_files": 83,
+  "local_links_checked": 519,
+  "missing_link_targets": [],
+  "functional_requirements": 18,
+  "nonfunctional_requirements": 10,
+  "missing_requirement_evidence_paths": [],
+  "defence_questions": 68,
+  "slides": 13,
+  "allocated_seconds": 795,
+  "footer_and_note_semantics_preserved": true
+}

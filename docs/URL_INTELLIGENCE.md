@@ -1,5 +1,12 @@
 # URL Intelligence — Task 4
 
+**2026-10-08 local update:** v2 rules test mixed Greek/Cyrillic and Latin script within
+individual labels, not across a label and its suffix. CONTEXT-only IDN/fragment metadata remains
+visible but does not alone cause Caution. Structured assessment basis explains the real policy,
+mitigating observations and uncertainty. The frozen model, parser, suffix snapshot and features
+are unchanged. URL source/split/artifact checks reproduced 234,674 rows and 197,700 isolated domain
+groups. See the [October engineering review](ENGINEERING_REVIEW_2026-10-08.md); no remote fetching or new reputation service was introduced.
+
 Task 4 analyses URL strings locally. It does not open, resolve, request, render or crawl submitted destinations. This avoids an SSRF-capable destination-fetching path and accidental contact with malicious infrastructure. A browser request to SCAMGUARD's own API is separate from accessing the submitted URL.
 
 ## Pipeline and components
@@ -8,7 +15,7 @@ Task 4 analyses URL strings locally. It does not open, resolve, request, render 
 
 The domain is `backend/app/url_intelligence/`. Parsing, feature extraction, classifier, rules, reputation and fusion are separate modules. MESSAGE retains its Task 3 classifier/rules/fusion and optional AI path. URL never enters that classifier or AI adapter.
 
-Versions: `url_parser_v1`, `url_features_v1`, `url_ml_v1`, `url_rules_v1`, `url_fusion_v1`. The shared per-record model/rules/fusion columns identify the appropriate input's components; historical Message metadata is untouched. Model details and reputation status/provider/version live in the existing component JSON.
+Versions: `url_parser_v1`, `url_features_v1`, `url_ml_v1`, `url_rules_v2`, `url_fusion_v2`. The shared per-record model/rules/fusion columns identify the appropriate input's components; historical Message metadata is untouched. Model details and reputation status/provider/version live in the existing component JSON.
 
 ## Validation, normalization and privacy
 
@@ -74,7 +81,7 @@ Actions follow evidence: independently verify a brand's official app/site, avoid
 
 ## Optional reputation and no-fetch boundary
 
-`URLReputationProvider` is an injectable protocol with a validated `ReputationSignal`. No live adapter, network client, API key configuration or provider request is implemented. The production builder supplies no provider, yielding DISABLED. Tests inject only mocks and verify malicious success, invalid output, timeout and safe failure statuses. Historical GET paths read stored JSON and never invoke providers or classifiers.
+`URLReputationProvider` is an injectable protocol with a validated `ReputationSignal`. No live adapter, network client, API key configuration or provider request is implemented. The production builder supplies no provider, yielding DISABLED. Tests inject only mocks and verify malicious success, invalid output, timeout and bounded failure statuses. Historical GET paths read stored JSON and never invoke providers or classifiers.
 
 Any future adapter must use a fixed reviewed provider endpoint, backend-only environment secret, strict transport timeout, no implicit retries, response validation, source/version attribution and explicit operator consent to transmit URLs. Full paths/queries may disclose secrets or personal data to a provider; stripping userinfo is not sufficient anonymization. Until a concrete reviewed adapter exists, no live reputation verification is claimed.
 
@@ -82,8 +89,8 @@ Future webpage inspection needs a separately authorized isolation design: allowl
 
 ## Persistence and deployment
 
-No new database columns are needed: Task 3 already added neutral assessment, status, audit JSON and completion fields. Alembic remains `0002_message_intelligence`; no historical migration was edited. URL rows now follow SUBMITTED → PROCESSING → COMPLETED or a safe URL_ANALYSIS_FAILED result. Old Message and URL intake/history remain readable. Tests cover real PostgreSQL, a fresh app and no provider re-run on GET.
+No new database columns are needed: Task 3 already added neutral assessment, status, audit JSON and completion fields. Task 4 used head `0002_message_intelligence` without a URL-specific migration; the final application head is `0006_qr_intelligence`. No historical migration was edited. URL rows now follow SUBMITTED → PROCESSING → COMPLETED or a bounded URL_ANALYSIS_FAILED result. Old Message and URL intake/history remain readable. Tests cover real PostgreSQL, a fresh app and no provider re-run on GET.
 
-Models load from a package-relative default with configurable `URL_MODEL_PATH`; the artifact is checksum-verified JSON, never executable pickle. A missing/corrupt URL model is explicitly unavailable while rules still operate. Normal operation does not require sklearn or a third-party key. Development Start/Stop tooling stays development-only. Production needs independently hosted infrastructure and the existing access/privacy gate; do not expose the unauthenticated shared backend publicly.
+Models load from a package-relative default with configurable `URL_MODEL_PATH`; the artifact is checksum-verified JSON, never executable pickle. A missing/corrupt URL model is explicitly unavailable while rules still operate. Normal operation does not require sklearn or a third-party key. Development Start/Stop tooling stays development-only. The final authenticated production path is Vercel → Render → Neon; see FINAL_RELEASE.md. The earlier Task 4 unauthenticated backend was private and is historical.
 
 See [datasets](URL_DATASETS.md), [model evaluation](URL_MODEL_EVALUATION.md), [testing](TESTING.md), and [Task 4 report](TASK_4_REPORT.md).

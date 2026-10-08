@@ -1,13 +1,29 @@
 # Testing and verification
 
+## Current engineering verification (2026-10-08)
+
+Executed: **355 pytest passed / one opt-in live-AI skip**, **164 Vitest passed (12 files)**,
+**52 Playwright passed (18 foundation + 8 built preview + 26 real PostgreSQL)**. No final
+test failures. Ruff check/format, pip check, TypeScript, ESLint, build, wheel and Alembic
+current/heads/check passed. See the [October engineering review](ENGINEERING_REVIEW_2026-10-08.md) and
+[verification evidence](evidence/engineering-verification.json) for warnings and audit limits.
+The counts below are historical Task 9 results.
+
+Reproduce the additional frozen-model diagnostics from the repository root with the backend
+Python environment: `python backend/scripts/evaluate_message_reliability.py --output docs/evidence/engineering-message-evaluation.json`.
+This requires the existing source CSV and split manifest, fits nothing and makes no external
+AI call. New regression modules cover security budgets/session replacement/log privacy,
+adversarial rules and abstention, URL/QR edge cases, probability metrics, late 401s, confidence
+rendering and persisted responsive browser workflows. Keep DB tests on isolated databases.
+
 ## Current Task 9 verification (2026-09-12)
 
-The authoritative final counts and evidence distinctions are in [FINAL_TEST_REPORT.md](FINAL_TEST_REPORT.md):
+The authoritative merged-main counts are in [FINAL_RELEASE.md](FINAL_RELEASE.md); [FINAL_TEST_REPORT.md](FINAL_TEST_REPORT.md) records the earlier Task 9 branch run:
 159 Vitest, 310 Pytest passes plus one opt-in skip, and 50 Playwright passes (18 + 8 + 24).
 The existing commands below still apply, with isolated `_test`/`_e2e` PostgreSQL only.
 Task 9 expands broad camera/product loops to 320px and adds all-width auth, four-mode persisted-result
 and dialog checks. Its security regressions cover QR credential redaction and all-mode A/B isolation.
-Feature freeze and owner review apply to `task-9-final-closure`; Task 8 is already merged/deployed.
+Task 9 is accepted, merged and deployed at the final release SHA. Feature freeze continues for the academic documentation pass.
 
 ## Historical Task 8 verification (2026-09-10)
 
@@ -204,7 +220,7 @@ npm.cmd run test:e2e -- --workers=2
 npm.cmd run test:preview -- --workers=2
 ```
 
-Build before test:preview with blank/unset VITE_API_BASE_URL. The eighteen existing foundation/motion/visual cases use a dedicated FastAPI on 8001 with PERSISTENCE_ENABLED=false and Vite on 5174, without reusing developer servers. They retain navigation, keyboard, four modes, no draft submission, safe errors/retry, immediate reduced motion, contrast checks and 320/768/1024/1280/1440px layouts. The six built-preview cases on 4173 read the actual vercel.json and serve dist without FastAPI or mock API data. Normal HTML API fallback must have no console/page errors; explicit network-failure fixtures allow expected network errors but no uncaught page errors.
+Build before test:preview with blank/unset VITE_API_BASE_URL. The eighteen existing foundation/motion/visual cases use a dedicated FastAPI on 8001 with PERSISTENCE_ENABLED=false and Vite on 5174, without reusing developer servers. They retain navigation, keyboard, four modes, no draft submission, generic errors/retry, immediate reduced motion, contrast checks and 320/768/1024/1280/1440px layouts. The eight current built-preview cases on 4173 read the actual vercel.json and serve dist without FastAPI or mock API data. Normal HTML API fallback must have no console/page errors; explicit network-failure fixtures allow expected network errors but no uncaught page errors.
 
 For bundled Chromium, install with npx.cmd playwright install chromium and unset PLAYWRIGHT_CHANNEL. CI installs Chromium with --with-deps. E2E_PYTHON overrides the default backend .venv executable when necessary. Mobile is Chromium emulation, not physical iPhone/Safari verification.
 
@@ -216,7 +232,7 @@ For bundled Chromium, install with npx.cmd playwright install chromium and unset
 .\.venv\Scripts\python.exe -m pytest -q
 ```
 
-Without TEST_DATABASE_URL, real integration cases explicitly skip; that is not a pass for database behavior. Unit cases cover configuration, health/readiness failure, safe errors, CORS, rollback/close, disabled storage, chunked size limits, every indicator family, contextual suppression, three-class local inference, insufficient evidence, fusion and mocked external-review redaction/grounding/failure. Normal tests make no paid provider call.
+Without TEST_DATABASE_URL, real integration cases explicitly skip; that is not a pass for database behavior. Unit cases cover configuration, health/readiness failure, generic errors, CORS, rollback/close, disabled storage, chunked size limits, every indicator family, contextual suppression, three-class local inference, insufficient evidence, fusion and mocked external-review redaction/grounding/failure. Normal tests make no paid provider call.
 
 ### Reproducible model evaluation (from repository root)
 
@@ -260,7 +276,7 @@ cd backend
 .\.venv\Scripts\python.exe -m pytest -q -m integration
 ```
 
-`tests/test_persistence.py` requires the database name to end in `_test`. Its module fixture applies Alembic head, checks schema drift, downgrades to base, verifies the table is removed and reapplies head. Cases truncate only that dedicated analyses table before/after tests. This is intentionally destructive to test data. They cover real Message completion and result retrieval across a fresh app, completed offline URL assessments, historical-row compatibility, invalid/oversized/unsupported input, pagination/order, a deterministic concurrent-write snapshot, safe detail, measured dashboard/flagged counts, constraints/rollback, request bounds and capability separation. Unit coverage verifies that unknown user-controlled JSON keys are not reflected in validation errors. The original real readiness integration runs with the same configured URL.
+`tests/test_persistence.py` requires the database name to end in `_test`. Its module fixture applies Alembic head, checks schema drift, downgrades to base, verifies the table is removed and reapplies head. Cases truncate only that dedicated analyses table before/after tests. This is intentionally destructive to test data. They cover real Message completion and result retrieval across a fresh app, completed offline URL assessments, historical-row compatibility, invalid/oversized/unsupported input, pagination/order, a deterministic concurrent-write snapshot, bounded detail errors, measured dashboard/flagged counts, constraints/rollback, request bounds and capability separation. Unit coverage verifies that unknown user-controlled JSON keys are not reflected in validation errors. The original real readiness integration runs with the same configured URL.
 
 For development schema migration (from backend/):
 
@@ -336,7 +352,7 @@ Backend gates (from backend):
 .\.venv\Scripts\python.exe scripts/verify_url_pipeline.py
 ```
 
-Set TEST_DATABASE_URL privately to the existing disposable *_test database to enable integration. URL unit tests replace socket.connect, DNS getaddrinfo, requests Session.request and httpx Client.request with raising guards, including cold suffix parsing and hostile local/private/metadata/IP/Unicode/userinfo/encoding examples. No live reputation adapter exists; protocol tests inject mocks only. Real PostgreSQL tests verify URL versions, redaction before persistence, safe pipeline failure, historical rows, fresh-app retrieval and zero re-analysis/provider calls on GET.
+Set TEST_DATABASE_URL privately to the existing disposable *_test database to enable integration. URL unit tests replace socket.connect, DNS getaddrinfo, requests Session.request and httpx Client.request with raising guards, including cold suffix parsing and hostile local/private/metadata/IP/Unicode/userinfo/encoding examples. No live reputation adapter exists; protocol tests inject mocks only. Real PostgreSQL tests verify URL versions, redaction before persistence, bounded pipeline failure, historical rows, fresh-app retrieval and zero re-analysis/provider calls on GET.
 
 Dataset reproduction uses `prepare_url_dataset.py`, `train_url_model.py --verify`, and `verify_url_pipeline.py` from backend/scripts. The latter checks all 234,674 processed URL hashes, 197,700 isolated domain groups and exported inference on all 36,901 held-out test rows. The training verification asserts identical model bytes and 512-row confidence parity against sklearn. Source/download provenance is in URL_DATASETS.md. No destination URL from the dataset is accessed.
 

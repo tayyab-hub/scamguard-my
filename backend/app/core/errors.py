@@ -57,6 +57,11 @@ def install_error_handlers(app: FastAPI) -> None:
     @app.exception_handler(SQLAlchemyError)
     async def handle_database_error(request: Request, exc: SQLAlchemyError) -> JSONResponse:
         # Never log SQL, parameters or connection details.
+        logger.error(
+            "event=database_failure request_id=%s exception_type=%s",
+            getattr(request.state, "request_id", "unavailable"),
+            type(exc).__name__,
+        )
         return error_response(
             request, 503, "DATABASE_UNAVAILABLE", "Submission storage is unavailable."
         )

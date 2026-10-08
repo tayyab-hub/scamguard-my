@@ -1,5 +1,7 @@
 # Post-Task 4 UI/UX refinement
 
+Historical record: status, permissions, versions and screenshots below apply to the named earlier stage. They do not supersede the accepted final release in [FINAL_RELEASE.md](FINAL_RELEASE.md) or the current [academic package](FINAL_ACADEMIC_PACKAGE.md).
+
 This frontend-only refinement preserves the Forensic Intelligence identity, routes, contracts, stored assessments, local models, rules, fusion and capability boundaries. It follows the accepted Task 4 merge `386e4b7`, is COMPLETE on `codex/ui-ux-result-refinement`, and is authorized for its closure merge before Task 5 begins.
 
 ## Advisory score presentation: risk-presentation-v1

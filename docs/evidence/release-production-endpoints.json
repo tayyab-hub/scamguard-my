@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://scamguard-my.vercel.app/api/v1/health",
+    "status": 200,
+    "observed_at_utc": "2026-09-12T13:52:55.6151390Z",
+    "body": {
+      "status": "ok",
+      "service": "scamguard-api",
+      "version": "0.1.0"
+    }
+  },
+  {
+    "url": "https://scamguard-my.vercel.app/api/v1/ready",
+    "status": 200,
+    "observed_at_utc": "2026-09-12T13:52:57.7627728Z",
+    "body": {
+      "status": "ready",
+      "database": "connected",
+      "message_intelligence": "ready",
+      "url_intelligence": "ready",
+      "phone_intelligence": "ready",
+      "qr_intelligence": "ready"
+    }
+  },
+  {
+    "url": "https://scamguard-my.vercel.app/api/v1/capabilities",
+    "status": 200,
+    "observed_at_utc": "2026-09-12T13:52:58.9364280Z",
+    "body": {
+      "submission_available": true,
+      "submission_inputs": [
+        "MESSAGE",
+        "URL",
+        "PHONE",
+        "QR"
+      ],
+      "analysis_available": true,
+      "supported_inputs": [
+        "MESSAGE",
+        "URL",
+        "PHONE",
+        "QR"
+      ],
+      "reason": "Local Message, URL, Phone and QR intelligence are available; decoded content is never automatically opened, URLs are never fetched and phone numbers are never contacted."
+    }
+  },
+  {
+    "url": "https://scamguard-capstone-api.onrender.com/api/v1/health",
+    "status": 200,
+    "observed_at_utc": "2026-09-12T13:52:59.9457896Z",
+    "body": {
+      "status": "ok",
+      "service": "scamguard-api",
+      "version": "0.1.0"
+    }
+  },
+  {
+    "url": "https://scamguard-capstone-api.onrender.com/api/v1/ready",
+    "status": 200,
+    "observed_at_utc": "2026-09-12T13:53:01.8165711Z",
+    "body": {
+      "status": "ready",
+      "database": "connected",
+      "message_intelligence": "ready",
+      "url_intelligence": "ready",
+      "phone_intelligence": "ready",
+      "qr_intelligence": "ready"
+    }
+  },
+  {
+    "url": "https://scamguard-capstone-api.onrender.com/api/v1/capabilities",
+    "status": 200,
+    "observed_at_utc": "2026-09-12T13:53:02.7492707Z",
+    "body": {
+      "submission_available": true,
+      "submission_inputs": [
+        "MESSAGE",
+        "URL",
+        "PHONE",
+        "QR"
+      ],
+      "analysis_available": true,
+      "supported_inputs": [
+        "MESSAGE",
+        "URL",
+        "PHONE",
+        "QR"
+      ],
+      "reason": "Local Message, URL, Phone and QR intelligence are available; decoded content is never automatically opened, URLs are never fetched and phone numbers are never contacted."
+    }
+  }
+]

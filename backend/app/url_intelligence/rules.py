@@ -8,7 +8,7 @@ from urllib.parse import unquote, urlsplit
 from app.url_intelligence.features import KEYWORDS, REDIRECT_KEYS, entropy, features
 from app.url_intelligence.parsing import ParsedURL
 
-RULES_VERSION = "url_rules_v1"
+RULES_VERSION = "url_rules_v2"
 BRANDS = {
     "paypal": {"paypal.com"},
     "microsoft": {"microsoft.com", "microsoftonline.com", "live.com"},
@@ -98,8 +98,12 @@ def host_evidence(u, f):
                 "unicode",
             )
         )
-    scripts = {unicodedata.name(c, "").split(" ")[0] for c in u.unicode_hostname if c.isalpha()}
-    if ("CYRILLIC" in scripts or "GREEK" in scripts) and "LATIN" in scripts:
+    # Latin suffixes do not make an otherwise single-script label a look-alike.
+    label_scripts = [
+        {unicodedata.name(c, "").split(" ")[0] for c in label if c.isalpha()}
+        for label in u.unicode_hostname.split(".")
+    ]
+    if any(scripts & {"CYRILLIC", "GREEK"} and "LATIN" in scripts for scripts in label_scripts):
         out.append(
             item(
                 "UNICODE_HOMOGLYPH_RISK",

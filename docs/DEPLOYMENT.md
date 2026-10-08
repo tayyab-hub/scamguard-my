@@ -1,5 +1,7 @@
 # Task 1 — GitHub and Vercel frontend preview
 
+Historical record: status, permissions, versions and screenshots below apply to the named earlier stage. They do not supersede the accepted final release in [FINAL_RELEASE.md](FINAL_RELEASE.md) or the current [academic package](FINAL_ACADEMIC_PACKAGE.md).
+
 ## Current Task 5 production path (2026-09-08)
 
 The authoritative current plan is [Task 5 production deployment](PRODUCTION_DEPLOYMENT.md): Vercel

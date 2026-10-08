@@ -1,7 +1,11 @@
 # SCAMGUARD architecture
 
-Audited 2026-09-12. Read `PROGRESS.md` for executed verification and `DECISIONS.md` for constraints.
-Tasks 1–8 are deployed; Task 9 is a review branch under feature freeze, with no new migration.
+Reviewed again 2026-10-08. Read `PROGRESS.md` and [engineering review](ENGINEERING_REVIEW_2026-10-08.md)
+for local verification. Tasks 1–9 describe the September deployed snapshot at
+`4df277bdf93a2e1424ac533d488cd7ba127b35ce`; October changes are uncommitted and undeployed.
+Hosting, schema and frozen models are unchanged. Message now adds rules-only normalization and
+evidence-sufficiency/conflict guards; QR adds payment-integrity safeguards. Existing result JSON
+carries structured explanations. Frontend must be released before the backend for nullable confidence.
 The product uses the warm-light Forensic Intelligence identity and a general international scope.
 
 ```mermaid
@@ -9,10 +13,10 @@ flowchart TD
   U[User browser] --> F[Vercel React frontend]
   F -->|same-origin HTTPS /api/v1 rewrite| A[Render FastAPI: validation / auth / Origin / CSRF]
   A --> O[Owned analysis orchestration]
-  O --> M[Message: local model / rules / fusion]
+  O --> M[Message: frozen model / normalized rules / evidence guards / fusion]
   O --> L[URL: offline parser / model / rules / fusion]
   O --> P[Phone: offline metadata / conservative rules]
-  O --> Q[QR: bounded decoding / classification / payment TLV and CRC]
+  O --> Q[QR: bounded decoding / classification / payment TLV and CRC integrity floor]
   Q -->|supported route| M
   Q -->|supported route| L
   Q -->|supported route| P
@@ -51,7 +55,7 @@ React Router → AuthProvider → public Sign In / Sign Up / Help
                             → protected AppShell / Overview / Analyse / History / Account
   TanStack Query + Zod credentialed transport + in-memory CSRF token
     /api/v1
-      FastAPI → safe request/error middleware → typed routes
+      FastAPI → request/error middleware with generic responses → typed routes
         auth service → Argon2id + opaque PostgreSQL sessions + DB rate limits
         owned analysis service → local Message intelligence engine
           checksum-verified TF-IDF Logistic Regression artifact
@@ -97,7 +101,7 @@ allows confirmed deletion and renders submitted URLs as inert text. Help and pri
 ### Backend and local Message intelligence
 
 FastAPI owns the `/api/v1` contract, request IDs, no-store/nosniff headers, credentialed exact-origin
-CORS, safe error envelopes and bounded bodies. Argon2id protects passwords. Opaque session/CSRF
+CORS, generic error envelopes and bounded bodies. Argon2id protects passwords. Opaque session/CSRF
 secrets are HMAC-digested in PostgreSQL, sessions expire/revoke, and Origin plus synchronizer-token
 checks protect state changes. SQLAlchemy sessions use explicit commits and rollback/close handling.
 PostgreSQL readiness checks connectivity and required domain/identity tables; startup verifies

@@ -1,47 +1,22 @@
-# Written Capstone report guide
-Use the course's actual template, word limits and marking rubric when supplied. This repository
-provides evidence and planning; it is not a finished institution-formatted dissertation.
-Cite measured results with version/date and distinguish local, production, owner-reported and unperformed work.
+# Supplied-template report guide
 
-| Section | Include evidence / argument | Repository support | Suggested figure/table |
-| --- | --- | --- | --- |
-| 1 Introduction | Decision-support problem, target user, cautious project claim | README; LIMITATIONS | One-paragraph scope |
-| 2 Background/problem | Social-engineering context, false certainty risk, fragmented checking | Literature sources you actually read; EXAMINER_QA | Problem-to-objective mapping |
-| 3 Objectives | Four modalities, explainability, private history, safe interaction | REQUIREMENTS_TRACEABILITY | Measurable objectives and evidence |
-| 4 Scope | Implemented/local/optional/out-of-scope boundaries | README; LIMITATIONS | Scope table; no community-report claim |
-| 5 Literature/context | SMS classification, URL-string analysis, number metadata, QR/TLV/CRC, usable security | DATASETS; URL_DATASETS; official sources listed below | Comparison by data, method, evaluation and limits |
-| 6 Requirements | Functional/non-functional requirements; owner privacy and uncertainty | REQUIREMENTS_TRACEABILITY; API | Traceability matrix |
-| 7 Methodology | Iterative tasks, feature freeze, reproducible datasets, validation selection, test separation | DECISIONS; FINAL_AUDIT; EVALUATION | Development timeline and evaluation design |
-| 8 System design | Components, trust boundaries, session and data flows, database ownership | ARCHITECTURE; DATA_FLOW; DATABASE | Architecture + selected sequence + ER diagram |
-| 9 Implementation | Nontrivial orchestration, inference export/integrity, safe QR capture, history snapshots | Module docs; code references in traceability | One readable screenshot per major flow |
-| 10 Security | Threats, controls, H1 fix, residual risk | SECURITY_REVIEW; PRIVACY_MODEL | Threat/control/evidence/limit table |
-| 11 Testing | Exact commands/counts/environment; initial failures and corrections | FINAL_TEST_REPORT; TESTING | Automated/manual/production/not-performed matrix |
-| 12 Evaluation | Five dimensions, held-out metrics vs controlled fixtures vs study plan | EVALUATION; CONTROLLED_EVALUATION; USABILITY_TEST_PLAN | Per-class metrics, confusion matrices, fixture matrix |
-| 13 Results | Measured facts only; version and denominators | docs/evidence; model reports; final test report | Compact results dashboard/table |
-| 14 Discussion | Interpret bias, tradeoffs, uncertainty, gaps between tests and real-world claims | EXAMINER_REVIEW; LIMITATIONS | Evidence strength / validity threats |
-| 15 Limitations | Dataset, standard subset, operational, device, usability and audit limits | LIMITATIONS | Ranked limitations |
-| 16 Future work | Prioritized, realistic extensions with prerequisites | FUTURE_WORK | Priority/validation roadmap |
-| 17 Conclusion | Which objectives the evidence supports; remaining owner acceptance | REQUIREMENTS_TRACEABILITY; PRODUCTION_ACCEPTANCE | Objective completion with qualifications |
+**Implementation update, 2026-10-08:** the generated Word report below remains a September
+snapshot. Before submitting it against the newer local code, apply the exact deltas in section
+13 of the [October engineering review](ENGINEERING_REVIEW_2026-10-08.md): rules-only normalization, abstention/conflict guards, URL context handling,
+payment integrity, auth/session changes, measured probability diagnostics, current test counts
+and refreshed screenshots. No ER-schema or hosting-topology change is required. Do not claim
+new model accuracy, calibrated fraud probabilities or deployment of the local patch.
 
-## Academic accuracy rules
-Message and URL have trained models; Phone/QR classification/payment structure are deterministic.
-Reported classifier metrics do not validate final five-level fused risk or current scam prevalence.
-Do not call fixtures a representative accuracy benchmark, automated tests a usability study,
-owner acceptance independent device evidence, or this review a penetration test/WCAG certification.
-“Reporting” in the formal title must not imply unimplemented public reporting/moderation.
-Explain the URL collection bias prominently, not only in an appendix.
+Use the populated copy at `output/documents/SCAMGUARD_CSC1250_REPORT.docx`. The user's original Downloads template is unchanged. Its four-chapter structure, three-to-four-objective rule (four used), APA style, Times New Roman 12-point double-spaced justified body, source geometry and footer numbering govern the prepared document. The cover identity fields are deliberately empty at the user's request.
 
-## Sources and attribution
-Credit Mishra & Soni's [Mendeley v1 dataset](https://data.mendeley.com/datasets/f45bkkt8pr/1)
-and Prasad & Chandra's [UCI PhiUSIIL record](https://archive.ics.uci.edu/dataset/967/phiusiil+phishing+url+dataset),
-including CC BY attribution and SCAMGUARD's cleaning/splitting/feature changes. Their collection
-and publication dates do not establish every row's age. Use the primary papers linked by those records
-only after reading them; do not invent a literature review or cite a paper based solely on its title.
-The presentation/report bibliography must follow your institution's citation style.
+| Template location | Prepared content |
+| --- | --- |
+| Cover / front matter | Project title, blank personal fields, refreshed contents/figure/table lists |
+| Chapter 1 Introduction | Problem, four SMART objectives, scope, 15 deliverables and chapter organisation; Tables 1–3 |
+| Chapter 2 Background of study | Critical VirusTotal/Safe Browsing/Truecaller review; Tables 4–5 |
+| Chapter 3 Resource approach | Solution, Figures 1–5, 18 FR/10 NFR, software/hardware justifications and development method; Tables 6–9 |
+| Chapter 4 Project planning | Recorded chronology, Gantt/table, 18-risk register; Figure 6, Tables 10–12; missing original deadlines explicit |
+| 5 References | 19 verified primary-source APA entries |
+| Appendices A–D | Trust boundaries; release/tests/model evaluation/traceability; genuine local screenshots/user guide; limitations, future work, conclusion and human-evidence boundary |
 
-## Owner work before submission
-Supply course rubric/template; complete approved volunteer sessions and populate actual observations;
-record device/browser versions and reset inbox evidence; approve/merge Task 9 and recheck production;
-capture privacy-safe final screenshots; author the final report and slides; verify citations,
-figure captions, page limits, authorship/AI-assistance declaration and archive requirements.
-Do not insert placeholder results as if collected.
+The complete wide companion matrices preserve the requested audit columns; report tables reflow them into readable portrait layouts with labelled dimensions. Do not turn NE (not evidenced) into “absent”, local cases into production observations, or classifier metrics into fused-risk accuracy. No final submission page/word limit or declaration requirement was supplied. Confirm applicability of the proposal template/rubrics with the supervisor; complete the actions in FINAL_PERSONAL_ACTIONS.md before submission.

@@ -1,5 +1,7 @@
 # Forensic Intelligence screenshots
 
+Historical record: status, permissions, versions and screenshots below apply to the named earlier stage. They do not supersede the accepted final release in [FINAL_RELEASE.md](FINAL_RELEASE.md) or the current [academic package](FINAL_ACADEMIC_PACKAGE.md).
+
 Captured from the running Task 1 application with real FastAPI responses. Unavailable metrics and analysis notices are the actual release state; no demo records or fabricated analytics are used.
 
 ## Overview — desktop

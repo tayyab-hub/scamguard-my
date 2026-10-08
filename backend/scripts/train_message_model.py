@@ -190,7 +190,7 @@ def main() -> None:
         model.fit(train_matrix, labels["train"])
         validation[name] = metrics(labels["validation"], model.predict(validation_matrix).tolist())
 
-    # The JSON runtime supports calibrated class probabilities. Logistic regression is selected
+    # The JSON runtime exposes uncalibrated class probabilities. Logistic regression is selected
     # when it is within two macro-F1 points of the highest validation score; otherwise training
     # fails so a reviewer must explicitly approve a different deployable model family.
     macro_scores = {

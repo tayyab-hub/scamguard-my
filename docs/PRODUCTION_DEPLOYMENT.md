@@ -1,10 +1,21 @@
 # Production deployment runbook
 
-Current status (2026-09-12): Tasks 1–8 are accepted, merged and deployed at main
-`4b327ccf21b59e295622e3b321cec62dc523dbde`. Vercel Ready, Render Live/main/On Commit and Neon
-`0006_qr_intelligence` were observed during same-day Task 8 closure; fresh Task 9 public endpoints pass.
-See [PRODUCTION_ACCEPTANCE.md](PRODUCTION_ACCEPTANCE.md) for evidence classes and remaining owner checks.
-Task 9 remains a separate review branch; its QR privacy fix is not in production yet.
+## October local patch — release ordering
+
+The [October engineering review](ENGINEERING_REVIEW_2026-10-08.md) is verified locally but is not deployed. **Release the frontend first, then
+the backend**: new Message abstention responses may have null confidence, which the older
+frontend rejects. The updated frontend accepts old and new records. Do not roll back only the
+frontend while retaining the newer backend. No Vercel, Render or Neon configuration, dependency,
+environment variable or schema change is required. Keep existing API rewrites, cookie/origin
+settings and explicit Alembic startup. `LOGIN_RATE_LIMIT` now applies across account aliases
+and sources, with a derived source budget of five times that value. Validate real production
+flows after an authorized release; the September observations below do not validate this patch.
+
+Current status (2026-09-12): Tasks 1–9 are accepted, merged and deployed at main
+`4df277bdf93a2e1424ac533d488cd7ba127b35ce`. Vercel Ready, Render Live and Neon head
+`0006_qr_intelligence` were observed after the final release; all public endpoints passed.
+The Task 9 QR privacy fixes are included. See [FINAL_RELEASE.md](FINAL_RELEASE.md) for dated
+release evidence and [PRODUCTION_ACCEPTANCE.md](PRODUCTION_ACCEPTANCE.md) for remaining human checks.
 The sections below retain the original setup guidance. A build badge is not full workflow acceptance.
 
 | Production checkpoint | Status |
@@ -88,7 +99,7 @@ Vercel public build configuration: optional `VITE_SUPPORT_EMAIL`. The checked-in
 architecture uses the relative rewrite and requires no API URL variable. Never place a
 secret in `VITE_*`. Local Vite alone may use `API_PROXY_TARGET`; it is not a production variable.
 
-Task 7 adds no required environment variable and no OS package. Its four optional QR limits have safe
+Task 7 adds no required environment variable and no OS package. Its four optional QR limits have bounded
 checked-in defaults. After an approved merge, Render must
 rebuild to install the locked Pillow, python-multipart and zxing-cpp wheels, then its existing start
 path applies Alembic `0006_qr_intelligence`. Vercel must rebuild the frontend. Neon needs only that

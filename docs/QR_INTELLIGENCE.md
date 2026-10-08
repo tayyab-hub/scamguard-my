@@ -1,9 +1,13 @@
 # Task 7 QR Intelligence
 
-Status: Task 7 accepted, merged and deployed as confirmed by the user. Task 8 adds a separate live
-camera input on `task-8-peak-enhancement`, for manual review before merge/deploy. The upload engine,
-classifier and risk methodology described here remain unchanged. See
-[Task 8 camera architecture and acceptance](TASK_8_PEAK_ENHANCEMENT.md).
+Tasks 7–9 including local camera are part of the recorded September release. The October local
+review adds a payment-integrity floor, validates embedded URL destinations before routing, and
+redacts malformed URL-shaped authority credentials. Invalid integrity/destination cannot inherit
+Low from a benign destination result; higher risks remain intact, and invalid destinations become
+explicit evidence instead of failing the whole analysis. Recipient/amount/currency checks are
+always recommended for routed payments. The decoder and camera architecture are unchanged. See
+[engineering review](ENGINEERING_REVIEW_2026-10-08.md) for current local verification and
+[Task 8 camera architecture](TASK_8_PEAK_ENHANCEMENT.md) for the existing camera boundary.
 
 ## Objective
 
@@ -35,7 +39,7 @@ Accepted files are single-frame PNG, JPEG or WebP raster images, at most 5 MiB, 
 on either axis and at most 16 million decoded pixels. The backend verifies actual container format
 against the declared MIME type, rejects SVG, empty/corrupt/animated/disguised images, decompression
 bombs, no-symbol and multiple-symbol images, and accepts one valid QR symbol only. Decoded content
-must be non-empty UTF-8, at most 5,000 bytes, with no unsupported control characters. Errors are safe
+must be non-empty UTF-8, at most 5,000 bytes, with no unsupported control characters. Errors use bounded generic messages
 422 envelopes and invalid uploads create no analysis record.
 
 The browser provides click selection, drag/drop, an image preview, replace/remove controls and
@@ -94,7 +98,7 @@ assessment and QR metadata.
 
 The route preserves authentication, opaque HttpOnly session validation, exact Origin,
 synchronizer-token CSRF, PostgreSQL per-user analysis rate limiting, server-derived ownership,
-foreign/missing safe 404s, transactional persistence, account cascade and bounded safe errors. The
+indistinguishable foreign/missing 404s, transactional persistence, account cascade and bounded generic errors. The
 global 64 KiB request limit remains for ordinary routes; only the exact QR path receives enough
 multipart allowance for one 5 MiB file. Filenames, MIME, pixels and payload are all untrusted.
 
@@ -104,7 +108,7 @@ Programmatically generated fixtures cover PNG/JPEG/WebP, corrupt/disguised/SVG/M
 empty/oversized/excessive-dimension/no-code/multiple-code files, hostile names and payload controls.
 Classification covers URL, suspicious URL, phone/tel, ordinary and scam-like text, email, SMS,
 Wi-Fi, geo, unknown schemes, markup/SQL-like text and valid/malformed/embedded-URL payment payloads.
-API/database tests cover auth, CSRF, owner derivation, A/B isolation, safe 404/delete, account cascade,
+API/database tests cover auth, CSRF, owner derivation, A/B isolation, indistinguishable 404/delete rejection, account cascade,
 rate limits, redaction, readiness, capability, dashboard/history and invalid-upload non-persistence.
 Frontend unit and desktop/mobile browser tests cover selection/drop/preview/remove, errors, escaped
 rendering, payment fields/limitations, history/refresh, responsive layout, keyboard/reduced motion and
@@ -114,8 +118,8 @@ the no-off-origin-request guarantee. Exact observed counts are recorded in `PROG
 
 - engine: `qr-intelligence-v1`
 - decoder: `zxing-cpp` plus its installed version
-- classifier: `qr-payload-classifier-v1`
-- fusion: `qr-risk-fusion-v1`
+- classifier: `qr-payload-classifier-v2`
+- fusion: `qr-risk-fusion-v2`
 
 Limitations include damaged/obscured/stylized codes, unsupported image/payload encodings, payloads
 whose meaning depends on an external application, and payment formats outside the conservative
