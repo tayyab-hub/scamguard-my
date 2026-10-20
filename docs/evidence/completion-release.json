@@ -1,0 +1,47 @@
+{
+  "application_commit": "6d68b8978183e374e406985480b6fce8cf2e1126",
+  "application_merge_sha": "0208efdd23c41d1665b28459b4e8b9d461168d33",
+  "application_pr_url": "https://github.com/tayyab-hub/scamguard-my/pull/1",
+  "application_ci_url": "https://github.com/tayyab-hub/scamguard-my/actions/runs/39452527771",
+  "application_ci_result": "success",
+  "application_ci_counts": {
+    "pytest_passed": 365,
+    "pytest_skipped": 1,
+    "vitest_passed": 164,
+    "playwright_foundation_passed": 18,
+    "playwright_postgresql_passed": 26,
+    "playwright_preview_passed": 8
+  },
+  "merge_tree_equals_tested_branch": true,
+  "vercel_status": "Ready, Latest, Current Production at application merge 0208efdd23c41d1665b28459b4e8b9d461168d33",
+  "vercel_deployment_id": "8xHYmDUj4UYWsEzT9zcToKLBqaij",
+  "vercel_deployment_url": "https://vercel.com/tayyab-d919/scamguard-my/8xHYmDUj4UYWsEzT9zcToKLBqaij",
+  "render_status": "Deploy succeeded / Live at application merge 0208efdd23c41d1665b28459b4e8b9d461168d33",
+  "render_deployment_id": "dep-dbbp1htg1s2s73b49o8g",
+  "render_deployment_url": "https://dashboard.render.com/web/srv-dafsk1740ujc73cpn0ng/deploys/dep-dbbp1htg1s2s73b49o8g",
+  "render_build_observation": "urllib3-2.8.0 installed successfully",
+  "render_startup_observation": {
+    "timezone": "Asia/Kuala_Lumpur",
+    "date": "2026-10-21",
+    "alembic_postgresql_initialization": "00:04:36",
+    "application_startup_complete": "00:04:50",
+    "service_live": "00:04:58",
+    "traceback_or_error_in_inspected_startup_range": false
+  },
+  "neon": {
+    "branch": "production",
+    "database": "neondb",
+    "query": "SELECT version_num FROM alembic_version;",
+    "returned_rows": 1,
+    "version_num": "0006_qr_intelligence",
+    "observed_date": "2026-10-21",
+    "timezone": "Asia/Kuala_Lumpur",
+    "writes_performed": false
+  },
+  "limits": [
+    "Point-in-time provider observations, not an uptime guarantee.",
+    "Older Render logs outside retention were unavailable.",
+    "No physical camera or controlled-inbox delivery test.",
+    "The following documentation-only release is separately recorded; it does not modify the tested runtime."
+  ]
+}

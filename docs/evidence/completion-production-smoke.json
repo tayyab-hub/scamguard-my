@@ -1,0 +1,89 @@
+{
+  "started_at_utc": "2026-10-20T16:05:43.970Z",
+  "origin": "https://scamguard-my.vercel.app",
+  "checks": [
+    {
+      "name": "Unauthenticated private API requests return 401",
+      "status": "PASS"
+    },
+    {
+      "name": "Reset request remains generic and invalid reset token is rejected",
+      "status": "PASS",
+      "inbox_delivery_tested": false
+    },
+    {
+      "name": "Browser signup, secure cookie and session restoration through Vercel proxy",
+      "status": "PASS"
+    },
+    {
+      "name": "Missing CSRF and untrusted Origin are rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "Message v2 obfuscation, evidence explanation and applicable actions",
+      "status": "PASS"
+    },
+    {
+      "name": "Nullable confidence and Insufficient Evidence render without a numeric meter",
+      "status": "PASS"
+    },
+    {
+      "name": "URL v2 offline assessment and explanation",
+      "status": "PASS"
+    },
+    {
+      "name": "Phone numbering assessment without an identity claim",
+      "status": "PASS"
+    },
+    {
+      "name": "QR image decoding, routed assessment and no retained image",
+      "status": "PASS"
+    },
+    {
+      "name": "QR payment integrity warning appears in the verdict explanation",
+      "status": "PASS"
+    },
+    {
+      "name": "Six owned analyses persist, reopen after refresh and drive dashboard counts",
+      "status": "PASS"
+    },
+    {
+      "name": "A second synthetic account cannot list, search, read or delete any first-account mode",
+      "status": "PASS"
+    },
+    {
+      "name": "Profile update and five main routes fit desktop, tablet and mobile widths",
+      "status": "PASS"
+    },
+    {
+      "name": "Deletion removes only the selected owned synthetic analysis",
+      "status": "PASS"
+    },
+    {
+      "name": "Browser logout/login and invalidated-session handling protect private navigation",
+      "status": "PASS"
+    },
+    {
+      "name": "No uncaught page errors or requests to submitted/external destinations",
+      "status": "PASS"
+    }
+  ],
+  "cleanup": [
+    {
+      "account": "synthetic release account",
+      "deleted": true
+    },
+    {
+      "account": "synthetic release account",
+      "deleted": true
+    }
+  ],
+  "limitations": [
+    "Synthetic accounts and authored fixtures only.",
+    "No real-device camera or inbox-delivery test."
+  ],
+  "completed_at_utc": "2026-10-20T16:07:57.753Z",
+  "passed": 16,
+  "failed": 0,
+  "result": "PASS"
+}

@@ -1,0 +1,14 @@
+{
+  "verified_rows": 234674,
+  "isolated_domains": 197700,
+  "deployed_test_confusion_matrix": [
+    [
+      19846,
+      89
+    ],
+    [
+      471,
+      16495
+    ]
+  ]
+}

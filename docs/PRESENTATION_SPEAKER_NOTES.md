@@ -1,107 +1,55 @@
-# Presentation speaker notes
+# Speaker notes — October final candidate
 
-Use the slide text as cues. The notes give the reasoning to explain in your own words; they are not evidence of a completed rehearsal. The 13-slide plan totals 795 seconds. The cover identity fields can be completed by the owner.
+These notes match the editable deck. Sources, transitions and suggested prompts are included; the proposed allocation is not an observed performance. Use [EXAMINER_QA.md](EXAMINER_QA.md) for follow-up preparation.
 
-## Slide 1 SCAMGUARD decision support — 60 seconds
+## 1. SCAMGUARD
 
-Use the 60-second opening in PRESENTATION_PLAN.md. The important distinction is between inspecting evidence and certifying an identity. Do not claim that the product prevents losses. The opening should make the intended user and decision clear before introducing technology. Pause after the sentence that states the limitation.
+60 seconds. Open with the user decision: unfamiliar content can look plausible without being trustworthy. Explain that Reporting means private explainable analysis history. This is an October final candidate derived from the user-supplied proposal; confirm the official presentation duration. Transition: what existing services already provide. Source: proposal PDF pp7â€“9; FINAL_PROBLEM_STATEMENT.md.
 
-**Transition:** The next question is what existing systems already solve.
+## 2. Related systems inform the design
 
-**Evidence to open on request:** [FINAL_PROBLEM_STATEMENT.md](FINAL_PROBLEM_STATEMENT.md)
+60 seconds. These are documented capability comparisons, not a head-to-head accuracy experiment. VirusTotal offers aggregated analysis and a separate private-scanning product; Safe Browsing supplies threat information; Truecaller supplies communication reputation. Do not claim unsupported proprietary internals or absolute absence of features. Transition: the project objectives. Sources: BACKGROUND_OF_STUDY.md and FINAL_SOURCE_REGISTER.md; https://docs.virustotal.com/docs/how-it-works ; https://developers.google.com/safe-browsing ; https://www.truecaller.com/ .
 
-## Slide 2 Related systems and the design gap — 60 seconds
+## 3. Four proposal objectives; one study remains
 
-Explain that Truecaller already checks phone numbers and URLs and that VirusTotal has a separate private option. Describe each system’s unit of evidence. Then state the bounded gap: a common workflow around the specific local methods and QR consent implemented here. No service was benchmarked against SCAMGUARD, and proprietary internals are unknown.
+45 seconds. Preserve the proposal wording in the report. O1 desk research and requirements, O2 design, O3 implementation and deployment, O4 functional/model/human evaluation. O4 cannot be reported fully met until real volunteer observations are recorded. Proposed classifier macro-F1 target is at least 0.85 on the defined held-out sets; this is not a population guarantee. Transition: the architecture. Source: user-designated proposal PDF pp7â€“9; FINAL_SMART_OBJECTIVES.md.
 
-**Transition:** That comparison leads to four measurable project outcomes.
+## 4. One request path, four local engines
 
-**Evidence to open on request:** [BACKGROUND_OF_STUDY.md](BACKGROUND_OF_STUDY.md)
+60 seconds. Trace browser to same-origin Vercel API rewrite, Render validation/session/Origin/CSRF, selected local engine and owned Neon records. Explain that the provider rewrite and repository SPA fallback have separate roles. Optional external AI is disabled in this evaluation. Transition: Message classification versus policy. Source: ARCHITECTURE.md; frontend/vercel.json; backend/app/services/analyses.py; render.yaml.
 
-## Slide 3 Four measurable objectives — 45 seconds
+## 5. Message: learned labels and advisory risk differ
 
-Name the final-release time boundary and explain that these are retrospective acceptance objectives. Point to one concrete measurement for each: advertised set, held-out matrices, A/B tests and matching deployment SHA. Do not imply that this wording was approved before work began. The original academic schedule remains a separate evidence gap.
+65 seconds. 5,971 source rows become 5,797 cleaned rows. Near-duplicate grouping precedes 3,477/1,160/1,160 train/validation/test splits. TFâ€“IDF and Logistic Regression were selected on validation; final fit uses train plus validation. Reported test metrics are classifier outputs, not five-level fusion accuracy. The v2 policy uses normalized rules, sufficiency/conflict guards and ceilings; 13/106 SCAM examples were classified SPAM. Transition: URL has a different collection bias. Sources: MODEL_EVALUATION.md; completion-message-evaluation.json; https://data.mendeley.com/datasets/f45bkkt8pr/1 .
 
-**Transition:** The architecture connects those outcomes through one request path.
+## 6. URL: strong test results, substantial collection bias
 
-**Evidence to open on request:** [FINAL_SMART_OBJECTIVES.md](FINAL_SMART_OBJECTIVES.md)
+55 seconds. 234,674 processed rows grouped by 197,700 registrable domains; train 164,074, validation 33,699, test 36,901. A 120-tree forest uses 27 local string features. All legitimate training URLs are HTTPS homepages without queries. Ordinary deep links can be out of distribution. No fetch, DNS lookup or threat feed establishes present legitimacy. Transition: the non-learned modes. Sources: URL_MODEL_EVALUATION.md; backend/scripts/verify_url_pipeline.py; https://archive.ics.uci.edu/dataset/967/phiusiil+phishing+url+dataset .
 
-## Slide 4 Architecture and trust boundaries — 60 seconds
+## 7. Phone and QR have different evidence limits
 
-Trace a request from the browser through Vercel’s configured same-origin rewrite to FastAPI on Render. Explain that frontend/vercel.json only contains the SPA catch-all; provider configuration supplies the API rewrite. The API validates identity and content, runs an engine, transacts with Neon and returns a schema-checked result. The browser never receives database credentials.
+55 seconds. Phone uses phonenumbers metadata and conservative rules, not a learned scam classifier. A valid number is not a verified subscriber. QR validates bounded raster inputs or locally decoded camera text, classifies supported payloads and routes them; image/frame retention is absent. TLV/CRC is a structural subset; payment warnings enforce at least Caution. Physical device performance and complete scheme compliance are not claimed. Transition: private storage and security. Sources: PHONE_INTELLIGENCE.md; QR_INTELLIGENCE.md; https://github.com/google/libphonenumber/blob/master/FAQ.md ; https://www.emvco.com/emv-technologies/qr-codes/ .
 
-**Transition:** Inside that API, learned components and deterministic controls have different roles.
+## 8. Privacy is enforced by the API and database queries
 
-**Evidence to open on request:** [ARCHITECTURE.md](ARCHITECTURE.md)
+55 seconds. Passwords use Argon2id; raw session/reset tokens are not stored, sessions are opaque cookies, mutations require exact Origin and CSRF. Ownership predicates are independent of UI navigation. Reset token consumption locks rows and revokes sessions. QR images/frames are discarded; specified credentials are redacted before storage. Remaining risks include no independent penetration test, no backup-restore evidence, signup enumeration, and no processing recovery/idempotency. Transition: demonstration. Sources: backend/app/core/auth.py; backend/app/services/analyses.py; FINAL_COMPLETION_AUDIT_2026-10-20.md.
 
-## Slide 5 Message classification and evidence — 65 seconds
+## 9. Demonstration: inspect, explain, revisit
 
-Explain training-only text features, grouped duplicate control and validation selection. The final model was refit on train plus validation. Point to 13 SCAM examples classified SPAM and explain why macro F1 and class support matter. Rules expose context and fusion produces a separate advisory risk. Classifier metrics do not validate the final five-level risk policy.
+150 seconds. Use the synthetic OTP request, an inert example.com URL, a reserved example phone number and generated QR. Show why the verdict was reached, what tempers it, actions and limits; then retrieve the original result in private History. Show unknown-vocabulary input with unavailable confidence if time permits. Do not contact or open destinations. If hosting or camera fails, use these real captured screenshots and QR upload; explain the fallback honestly. Transition: what testing establishes. Sources: DEMO_SCRIPT.md; completion-production-smoke.json. Screenshot is a real production result from the controlled completion run; synthetic accounts are removed afterward.
 
-**Transition:** The URL model uses different inputs and has a different validity problem.
+## 10. Verification establishes specific behaviours
 
-**Evidence to open on request:** [MODEL_EVALUATION.md](MODEL_EVALUATION.md)
+60 seconds. Distinguish test suites from classifier evaluation. Final local gates have 365 backend, 164 frontend, 18 foundation +8 preview +26 persisted browser =52. One optional paid external-AI test was deliberately skipped; two dependency deprecations are documented. npm audit and pip-audit show no known advisories after three narrow dependency fixes, not proof of no vulnerabilities. State exact release/CI evidence from the audit rather than guessing. Transition: remaining false negatives. Sources: completion-verification.json; completion-dependency-audit.json; FINAL_COMPLETION_AUDIT_2026-10-20.md.
 
-## Slide 6 URL analysis and collection bias — 55 seconds
+## 11. Residual errors remain visible
 
-State the 36,901 domain-held-out test denominator and 98.4824% classifier accuracy only alongside the main caveat. All legitimate training URLs were HTTPS homepages without queries. Ordinary benign deep links can be unfamiliar. Rules and fusion therefore limit weak or ML-only evidence to Caution. There is no live webpage or reputation investigation.
+55 seconds. Five historical SCAM rows receive Low or Insufficient fused output: three Low and two insufficient. They resemble promotions, shopping/prize/loan offers or opt-out wording. Labels remain unchanged; no independent sender truth is available. We diagnosed frozen outputs without tuning to these test examples. Model confidence is neither the probability of fraud nor proof of safety. Human evaluation has not been conducted. Transition: planned versus completed work. Sources: completion-message-residuals.json; EVALUATION.md; FINAL_SMART_OBJECTIVES.md.
 
-**Transition:** Some modes cannot support a learned fraud score at all.
+## 12. The proposal plan and actual evidence stay separate
 
-**Evidence to open on request:** [URL_MODEL_EVALUATION.md](URL_MODEL_EVALUATION.md)
+50 seconds. Proposal runs 1 Septemberâ€“20 November, O1 W1â€“3, O2 W2â€“3, O3 W3â€“9, O4 W9â€“11. Report planned by 18 November, presentation by 20 November, subject to the official timetable. Git dates are evidence of commits rather than work duration. The required volunteer study, physical-camera and controlled-inbox acceptance, final rules and rehearsal remain owner tasks. Transition: contribution and questions. Sources: user-designated proposal PDF pp43â€“47; PROJECT_PLAN.md; FINAL_PERSONAL_ACTIONS.md.
 
-## Slide 7 Phone and QR boundaries — 60 seconds
+## 13. A working decision-support system with explicit limits
 
-Explain that a valid number only matches bundled numbering metadata; cost-related categories can justify Caution. A QR is a data carrier. Its payload routes to Message, URL or Phone where supported, while payment parsing is only a generic TLV/CRC subset. Describe the retained missing-merchant-fields limitation. No QR destination is automatically activated.
-
-**Transition:** Because those inputs may be sensitive, their lifecycle matters as much as their result.
-
-**Evidence to open on request:** [QR_INTELLIGENCE.md](QR_INTELLIGENCE.md)
-
-## Slide 8 Authentication and QR privacy — 60 seconds
-
-Passwords are hashed; token digests live in the database and opaque cookies are HttpOnly. Authenticated mutations check session, Origin and CSRF. All private queries use session-derived ownership. Camera frames remain on-device, upload bytes are transient, and Task 9 redacts specified Wi-Fi/payment credentials before saving. This is tested control evidence, not a penetration-test certificate.
-
-**Transition:** I will now show how those boundaries appear in the user workflow.
-
-**Evidence to open on request:** [AUTHENTICATION.md](AUTHENTICATION.md)
-
-## Slide 9 Demonstration — 150 seconds
-
-Follow DEMO_SCRIPT.md exactly. Use a prepared account and inert fixtures. Message is the main assessment; briefly contrast URL and Phone; upload a QR and retrieve its owned History entry. Use camera only if the real device has passed preflight, replacing rather than extending the upload slot. Authentication/profile/reset/isolation are available for questions and manual acceptance, not rushed into this 150-second journey.
-
-**Transition:** The demonstration is one example; the next slide shows the wider evidence and its limits.
-
-**Evidence to open on request:** [DEMO_SCRIPT.md](DEMO_SCRIPT.md)
-
-## Slide 10 Evaluation evidence — 70 seconds
-
-Explain what each suite covers, including real local PostgreSQL and built worker assets. State the skipped external provider test and avoid calling mobile emulation physical hardware. The final release had healthy/ready/capabilities HTTP 200 and matching provider commits. These observations do not establish long-term availability, inbox receipt or better user decisions.
-
-**Transition:** That distinction is essential to the limitations I can defend.
-
-**Evidence to open on request:** [FINAL_EVALUATION.md](FINAL_EVALUATION.md)
-
-## Slide 11 Limitations and next validation — 50 seconds
-
-Prioritise the limitations that change how an output is interpreted. Explain why a representative external test and user-comprehension study would be more informative than adding another mode. Acknowledge operational cold starts and recovery gaps. Future work is a proposal with prerequisites; nothing is presented as already implemented.
-
-**Transition:** Within those limits, the implemented contribution is concrete.
-
-**Evidence to open on request:** [LIMITATIONS.md](LIMITATIONS.md)
-
-## Slide 12 Implemented contribution — 35 seconds
-
-Return to the user’s need to inspect an unfamiliar item before acting. The project delivers a working integrated workflow with evidence and limitations, supported by the named tests and release observations. It does not claim a new learning algorithm or proven reduction in scam losses. Keep this conclusion short and specific.
-
-**Transition:** I can now explain the evidence behind any of these claims.
-
-**Evidence to open on request:** [FINAL_CONCLUSION.md](FINAL_CONCLUSION.md)
-
-## Slide 13 Questions and evidence — 25 seconds
-
-Pause and face the audience. Use direct answer, reasoning, then evidence. The 25 seconds covers the closing invitation, not the examiner’s Q&A period. Open a source only when useful. If asked about a missing experiment, state what is not yet evidenced and describe the planned method without inventing results.
-
-**Transition:** Thank you.
-
-**Evidence to open on request:** [EXAMINER_QA.md](EXAMINER_QA.md)
+25 seconds. Close on the concrete contribution: four local methods in a private explainable workflow, reproducible classifiers, testable ownership boundaries. Technical readiness does not complete the proposed usability study or the final assessment. Invite questions. Anticipated questions: Why high accuracy and missed scams? Class imbalance and fusion differ; explain 93/106 recall. Why no live URL or caller lookup? Bounded privacy/cost scope, limited evidence explicitly stated. Does CRC prove legitimacy? No. What remains for O4? Actual consented volunteer observations. Use EXAMINER_QA.md for further defence; do not invent performance. Source: FINAL_CONCLUSION.md; FINAL_PERSONAL_ACTIONS.md.

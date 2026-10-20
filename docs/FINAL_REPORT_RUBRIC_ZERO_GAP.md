@@ -1,5 +1,11 @@
 # Official report rubric matrix
 
+**Historical September academic review.** Current objectives, proposed dates, release evidence,
+editable candidates and owner gaps are in [the completion audit](FINAL_COMPLETION_AUDIT_2026-10-20.md)
+and [academic package](FINAL_ACADEMIC_PACKAGE.md). The newly supplied proposal resolves the
+previously missing original objective/calendar evidence. It also confirms that a volunteer study
+is required and remains unfinished. Historical self-marks are not reassigned or guaranteed here.
+
 Authority: supplied **CSC1250 Proposal Marking Scheme — Report**, pages 1–3. Seven criteria total **70**, not seven differently weighted invented categories. Excellent is **9–10**, Good is **7–8**. The title “zero-gap” is the requested filename, not a claim that missing evidence has disappeared. Assessment applies to the completed report and companion evidence; it is a strict self-assessment, not an examiner's mark.
 
 | Criterion | Excellent descriptor | Evidence location | Current gap | Fix | Manual action | Final confidence | Expected mark |

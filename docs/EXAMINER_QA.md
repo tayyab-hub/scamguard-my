@@ -24,9 +24,9 @@
 
 ## Q03 Objectives — Are the objectives genuinely SMART?
 
-**10-second answer:** There are four objectives, each with an output, measurement, evidence and the recorded final-release time boundary.
+**10-second answer:** The proposal has four objectives: identify, design, develop/deploy and evaluate. Each now maps to evidence and the proposed phase.
 
-**30-second deeper answer:** The template permits three to four objectives. My table maps each one to source and verification. They are retrospective acceptance objectives, not a claim that identical targets were approved before development. The original approved proposal schedule is missing and is explicitly requested as a manual action.
+**30-second deeper answer:** The user-designated proposal supplies the wording and a 1 September–20 November plan. I preserve those commitments and distinguish planned milestones from observed results. O4 includes a volunteer usability study; technical evaluation is complete, but the study has not yet been conducted. The official final timetable and rubric still need confirmation.
 
 **Technical evidence:** [docs/FINAL_SMART_OBJECTIVES.md](FINAL_SMART_OBJECTIVES.md)
 
@@ -36,7 +36,7 @@
 
 **10-second answer:** I use the evidence named in its acceptance row and retain any narrower manual or evaluation gap.
 
-**30-second deeper answer:** For example, four advertised ready modes and integration tests support implementation. They do not prove physical camera compatibility on every phone. Likewise, a password-reset test with local mail capture supports its code path but does not establish delivery to a production inbox. Completion is scoped to the measurement.
+**30-second deeper answer:** For example, four advertised ready modes and integration tests support implementation. They do not prove physical camera compatibility on every phone. Likewise, a password-reset test with local mail capture supports its code path but does not establish delivery to a production inbox. Completion is scoped to the measurement. O4 cannot be fully met until the proposed volunteer study has actual observations.
 
 **Technical evidence:** [docs/FINAL_SMART_OBJECTIVES.md](FINAL_SMART_OBJECTIVES.md)
 
@@ -556,7 +556,7 @@
 
 **10-second answer:** Source-linked tests, frozen evaluation, real PostgreSQL/browser workflows and dated production observations support specific behaviours.
 
-**30-second deeper answer:** The final merged-main gates recorded 159 Vitest, 50 Playwright and 310 Pytest passes, with one opt-in live AI skip. Provider identities and public probes establish the observed production version and readiness. Human usability, physical cameras and inbox receipt remain separate evidence categories.
+**30-second deeper answer:** The October completion gates recorded 164 Vitest, 52 Playwright and 365 Pytest passes, with one opt-in live-AI skip. Provider identities and public probes establish the observed production version and readiness. Human usability, physical cameras and inbox receipt remain separate evidence categories.
 
 **Technical evidence:** [docs/FINAL_EVALUATION.md](FINAL_EVALUATION.md)
 
@@ -572,9 +572,9 @@
 
 **Common mistake to avoid:** Do not claim every first run passed or that production data was reset.
 
-## Q58 Testing — Do 50 browser tests mean 50 real devices?
+## Q58 Testing — Do 52 browser tests mean 52 real devices?
 
-**10-second answer:** No. They are 18 foundation, 8 built-preview and 24 PostgreSQL tests using Chromium desktop/mobile configurations.
+**10-second answer:** No. They are 18 foundation, 8 built-preview and 26 PostgreSQL tests using desktop/mobile browser configurations.
 
 **30-second deeper answer:** Some transport states are mocked, while persistence tests use the real local API/database. Built-preview tests exercise the actual emitted QR worker/WASM. Synthetic camera streams validate lifecycle and decoding cases. None of that is a physical Safari device lab or a comprehensive accessibility certification.
 
@@ -586,7 +586,7 @@
 
 **10-second answer:** No. It checks installed dependency compatibility; the secret scan and npm advisory audit have different scopes.
 
-**30-second deeper answer:** The final release secret scan found zero eligible findings across 228 current files and 734 historical blobs. It excludes corpora/models/locks/media and does not retrieve production secrets. The earlier npm audit reported zero advisories at its date. There is no claim of a complete Python vulnerability audit.
+**30-second deeper answer:** The completion audit records a fresh bounded secret scan plus npm audit and pip-audit. Three narrow dependency updates removed the reported known advisories; both advisory audits were clear afterward. The secret scan excludes corpora/models/locks/media and does not retrieve production secrets. None of these checks proves the absence of every vulnerability or secret.
 
 **Technical evidence:** [docs/FINAL_TEST_REPORT.md](FINAL_TEST_REPORT.md)
 
@@ -594,9 +594,9 @@
 
 ## Q60 Deployment — What is the final release SHA?
 
-**10-second answer:** The final main and merge SHA is 4df277bdf93a2e1424ac533d488cd7ba127b35ce, observed on both production providers.
+**10-second answer:** Use the full application merge SHA and provider source identities in completion-release.json; September's 4df277b is historical.
 
-**30-second deeper answer:** It merges accepted Task 9 commit afabf5c into main without conflicts. The full verification gates ran on merged main before the successful push. Vercel was Ready/Current and Render Live at that commit. Later academic documentation edits do not silently constitute a different application deployment.
+**30-second deeper answer:** The October completion dependency/regression change uses a normal pull request, passing CI and normal merge. The subsequent academic/evidence commit is separately identified. A provider may skip builds for changes outside its root directory; compare relevant source paths instead of assuming that every different SHA is drift.
 
 **Technical evidence:** [docs/FINAL_RELEASE.md](FINAL_RELEASE.md)
 
@@ -634,7 +634,7 @@
 
 ## Q64 Evaluation — Have you conducted usability testing?
 
-**10-second answer:** A five-task formative protocol is prepared, but participant observations and scores are not yet evidenced.
+**10-second answer:** The proposal requires a small volunteer study under O4. Its five-task protocol is prepared, but the study has not yet been conducted.
 
 **30-second deeper answer:** The plan records unassisted/assisted completion, time, errors, ease and comprehension using consenting participants and synthetic fixtures. It is not a SUS study. The owner’s informal acceptance is recorded separately. Until sessions occur, I cannot give participant counts, averages, quotations or statistical conclusions.
 
@@ -666,7 +666,7 @@
 
 **10-second answer:** I show the Git timestamps and distinguish recorded commits from actual work starts, planned deadlines and review intervals.
 
-**30-second deeper answer:** The repository first records a completed foundation on 3 September 2026 and ends in the final release on 12 September. That does not prove the entire capstone lasted ten days or that earlier planning did not happen. Original approved dates must come from the owner’s retained schedule, not my inference.
+**30-second deeper answer:** The September Git chronology begins with a completed foundation on 3 September and reaches a release on 12 September; October work is recorded separately. This does not establish work duration. The supplied proposal plans 1 September–20 November, with report/presentation milestones by 18/20 November subject to the official timetable. Planned dates, commits and actual study/rehearsal dates remain distinct.
 
 **Technical evidence:** [docs/PROJECT_PLAN.md](PROJECT_PLAN.md)
 

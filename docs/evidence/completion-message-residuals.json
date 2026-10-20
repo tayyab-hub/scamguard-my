@@ -1,0 +1,155 @@
+{
+  "method": "Frozen inference only. No training, policy or threshold change. Text excluded from exported diagnostic.",
+  "rows": [
+    {
+      "source_row": "2157",
+      "sha256": "c744d92f44df8cae80f7a0e356e94ba7892c53c44a653d4e3d9dc4ceb2ea3242",
+      "risk": "INSUFFICIENT_EVIDENCE",
+      "model": {
+        "used": true,
+        "version": "message-tfidf-logreg-v1",
+        "class_estimate": "SPAM",
+        "class_probabilities": {
+          "LEGITIMATE": 0.0772,
+          "SCAM": 0.4113,
+          "SPAM": 0.5115
+        },
+        "confidence": 0.5115,
+        "matched_features": 17
+      },
+      "rules": {
+        "used": true,
+        "version": "message-rules-v2",
+        "score": 0.13,
+        "indicator_count": 1,
+        "contextual_suppressions": 0,
+        "normalization_applied": false
+      },
+      "fusion": {
+        "version": "message-fusion-v2",
+        "reason": "AMBIGUOUS_MODEL",
+        "disagreement": false
+      }
+    },
+    {
+      "source_row": "3421",
+      "sha256": "b6d9210d05a35ffb794e1450e73206c9ada6a075b4329f4a4f11a80cf4709b76",
+      "risk": "LOW",
+      "model": {
+        "used": true,
+        "version": "message-tfidf-logreg-v1",
+        "class_estimate": "SPAM",
+        "class_probabilities": {
+          "LEGITIMATE": 0.0445,
+          "SCAM": 0.0465,
+          "SPAM": 0.909
+        },
+        "confidence": 0.909,
+        "matched_features": 18
+      },
+      "rules": {
+        "used": true,
+        "version": "message-rules-v2",
+        "score": 0,
+        "indicator_count": 0,
+        "contextual_suppressions": 0,
+        "normalization_applied": true
+      },
+      "fusion": {
+        "version": "message-fusion-v2",
+        "reason": "COMBINED_SIGNALS",
+        "disagreement": false
+      }
+    },
+    {
+      "source_row": "3811",
+      "sha256": "617c65a0cd4206fc179e971ac22ff7be092213d2a4578db1e904a79c854ce964",
+      "risk": "LOW",
+      "model": {
+        "used": true,
+        "version": "message-tfidf-logreg-v1",
+        "class_estimate": "SPAM",
+        "class_probabilities": {
+          "LEGITIMATE": 0.0236,
+          "SCAM": 0.0307,
+          "SPAM": 0.9457
+        },
+        "confidence": 0.9457,
+        "matched_features": 22
+      },
+      "rules": {
+        "used": true,
+        "version": "message-rules-v2",
+        "score": 0,
+        "indicator_count": 0,
+        "contextual_suppressions": 0,
+        "normalization_applied": true
+      },
+      "fusion": {
+        "version": "message-fusion-v2",
+        "reason": "COMBINED_SIGNALS",
+        "disagreement": false
+      }
+    },
+    {
+      "source_row": "4621",
+      "sha256": "29325369aa3b35447206d98c9b6fffafc78e1005e4afb81427f8437e3db85878",
+      "risk": "LOW",
+      "model": {
+        "used": true,
+        "version": "message-tfidf-logreg-v1",
+        "class_estimate": "SPAM",
+        "class_probabilities": {
+          "LEGITIMATE": 0.0196,
+          "SCAM": 0.0532,
+          "SPAM": 0.9271
+        },
+        "confidence": 0.9271,
+        "matched_features": 23
+      },
+      "rules": {
+        "used": true,
+        "version": "message-rules-v2",
+        "score": 0,
+        "indicator_count": 0,
+        "contextual_suppressions": 0,
+        "normalization_applied": true
+      },
+      "fusion": {
+        "version": "message-fusion-v2",
+        "reason": "COMBINED_SIGNALS",
+        "disagreement": false
+      }
+    },
+    {
+      "source_row": "4794",
+      "sha256": "2f680043068634c1567e1dc7a2f8c04e2369d7a05db767d3fa8ae6c176bfa396",
+      "risk": "INSUFFICIENT_EVIDENCE",
+      "model": {
+        "used": true,
+        "version": "message-tfidf-logreg-v1",
+        "class_estimate": "SPAM",
+        "class_probabilities": {
+          "LEGITIMATE": 0.085,
+          "SCAM": 0.4449,
+          "SPAM": 0.4702
+        },
+        "confidence": 0.4702,
+        "matched_features": 22
+      },
+      "rules": {
+        "used": true,
+        "version": "message-rules-v2",
+        "score": 0,
+        "indicator_count": 0,
+        "contextual_suppressions": 0,
+        "normalization_applied": false
+      },
+      "fusion": {
+        "version": "message-fusion-v2",
+        "reason": "AMBIGUOUS_MODEL",
+        "disagreement": false
+      }
+    }
+  ]
+}

@@ -1,5 +1,14 @@
 # Source register and reference verification
 
+## Completion-pass primary input
+
+The owner supplied `CSC1250_MuhammadTayyab_ProposalReport_Aug26.pdf` (56 pages) during this pass.
+PDF pages 7–9 establish the four original objectives and private-reporting scope; pages 43–47
+establish the proposed 12-week calendar and milestones. Page 40 specifies five core usability
+tasks. The file is source evidence, not permission to invent study outcomes or signed approval.
+It stays local. Earlier online-source retrieval dates below remain historical; no fresh retrieval
+date or final-assessment rubric is inferred.
+
 Checked 12 September 2026. The supplied PDFs are **proposal** marking schemes: their totals are 70 and 40, with Excellent at 9–10. They are the authority for this review; a different final-dissertation scheme is not assumed. The supplied Word file is a blank template, not an existing authored report. It requires 3–4 objectives, APA, four main chapters, references, alphabetical appendices, table captions above, figure captions below, and Times New Roman 12-point double-spaced justified body text. Cover details are intentionally blank at the owner's request.
 
 | Source | Type | Authority | Claim supported | Citation location |

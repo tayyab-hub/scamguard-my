@@ -1,5 +1,13 @@
 # Final documentation index
 
+## Current completion package
+
+- [Engineering and academic completion audit](FINAL_COMPLETION_AUDIT_2026-10-20.md)
+- [Current academic candidates](FINAL_ACADEMIC_PACKAGE.md)
+- [Exact owner actions](FINAL_PERSONAL_ACTIONS.md)
+- [Proposal objectives](FINAL_SMART_OBJECTIVES.md) and [planned calendar](FINAL_GANTT.md)
+- [Fresh verification](evidence/completion-verification.json), [provider release](evidence/completion-release.json), [live smoke](evidence/completion-production-smoke.json)
+
 **Release integration:** [SCAMGUARD_RELEASE_INTEGRATION.md](SCAMGUARD_RELEASE_INTEGRATION.md)
 records the authorized October GitHub/provider release, including the owner's clarification that
 Phase 2 is planned only. Use its live status rather than treating historical reports as current.

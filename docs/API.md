@@ -20,7 +20,7 @@ The browser waits up to 45 seconds for analysis, eight seconds for ordinary read
 15 seconds for reset requests. A client timeout does not imply the record was not saved.
 See the [October engineering review](ENGINEERING_REVIEW_2026-10-08.md) for policies and validation. The main contract below remains applicable.
 
-Base: `/api/v1`. Updated for the local engineering review on 2026-10-08; these changes are not deployed.
+Base: `/api/v1`. Contract rechecked on 2026-10-20 against the deployed October implementation. See [final completion audit](FINAL_COMPLETION_AUDIT_2026-10-20.md) for current verification and release identities.
 
 Responses include `X-Request-ID`, `Cache-Control: no-store`, and
 `X-Content-Type-Options: nosniff`. Production CORS uses an exact HTTPS origin list, credentials,
@@ -72,12 +72,21 @@ without fabricating distributions. Counts and recent rows use one consistent dat
 
 ## Auth payloads
 
-Signup accepts a structurally valid email and a 12–128 character password. Login accepts the same
-email normalization and a password up to 128 characters. Extra fields are rejected.
+Signup requires full name, username, structurally valid email and a 12–128 character password.
+Login uses `identifier` for username or email and a password up to 128 characters.
+Extra fields are rejected. Examples use invented data:
 
 ```json
-{"email":"student@example.com","password":"a long private passphrase"}
+{"full_name":"Example User","username":"example_user","email":"student@example.com","password":"a long private passphrase"}
 ```
+
+```json
+{"identifier":"example_user","password":"a long private passphrase"}
+```
+
+Profile update accepts `{"full_name":"Example User","username":"example_user"}`.
+Reset request accepts `{"email":"student@example.com"}`; reset confirmation accepts
+`{"token":"received-one-time-token","password":"a new private passphrase"}`.
 
 A successful signup/login/me response contains only the public user and a CSRF token:
 
@@ -86,6 +95,8 @@ A successful signup/login/me response contains only the public user and a CSRF t
   "user": {
     "id": "1aa45614-64be-4f35-8fc8-3f35301d4992",
     "email": "student@example.com",
+    "full_name": "Example User",
+    "username": "example_user",
     "created_at": "2026-09-08T10:00:00Z"
   },
   "csrf_token": "opaque-response-secret"

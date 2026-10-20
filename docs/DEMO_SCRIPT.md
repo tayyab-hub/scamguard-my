@@ -1,10 +1,10 @@
 # Final demonstration script
 
-Use the accepted release recorded in [FINAL_RELEASE.md](FINAL_RELEASE.md). The 150-second demonstration is slide 10 within the 795-second presentation; it is not additional time. Use only your own account and permitted authored examples. Preflight and rehearse; these instructions are not a record of completed production testing.
+Use the application release recorded in [the completion audit](FINAL_COMPLETION_AUDIT_2026-10-20.md). The 150-second demonstration is slide 9 within the 795-second presentation; it is not additional time. Use only your own account and permitted authored examples. Preflight and rehearse; these instructions are not a record of completed production testing.
 
 ## Preflight
 
-Confirm the displayed provider release SHA and public readiness before the session. Sign in with a controlled account, prepare `data/demo/task9/url.png`, and keep the [local screenshot register](evidence/report-screenshots.json) and report figures available offline. Turn off unrelated notifications. Keep credentials, reset links, provider settings and private records out of view. The stored screenshots are labelled local demonstrations; do not describe them as production acceptance.
+Confirm the displayed provider release SHA and public readiness before the session. Sign in with a controlled account, prepare `data/demo/task9/url.png`, and keep the [completion smoke record](evidence/completion-production-smoke.json) and report figures available offline. Turn off unrelated notifications. Keep credentials, reset links, provider settings and private records out of view. Use completion-message.png, completion-qr.png and completion-history.png for the fresh synthetic production captures. Older report-*.png images remain historical local demonstrations. A capture is not a study or proof of current availability.
 
 ## Timed journey
 
@@ -22,7 +22,7 @@ Live camera is an optional substitution within the QR slot only after a successf
 
 ## Failure and offline fallback
 
-If a public service is asleep, acknowledge the cold start and use the prepared local screenshots while readiness recovers. If internet remains unavailable, walk through the same sequence using Figures 9–11 and the additional screenshots in `docs/figures/`; identify the capture environment and date. A screenshot illustrates recorded behaviour, not current service health. The report and notes work offline. Password reset, profile editing and A/B isolation are supporting Q&A evidence rather than time-consuming live steps.
+If a public service is asleep, acknowledge the cold start and use the prepared dated screenshots while readiness recovers. If internet remains unavailable, walk through the same sequence using Figures 9–11 and the additional screenshots in `docs/figures/`; identify the capture environment and date. A screenshot illustrates recorded behaviour, not current service health. The report and notes work offline. Password reset, profile editing and A/B isolation are supporting Q&A evidence rather than time-consuming live steps.
 
 ## Owner acceptance record
 

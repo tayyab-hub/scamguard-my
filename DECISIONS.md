@@ -1,5 +1,15 @@
 # Accepted decisions
 
+## Completion decisions — 20–21 October 2026
+
+- Retain frozen models, policy thresholds, scope, providers and schema. Ten independently authored adversarial regressions guard existing behaviour without held-out tuning.
+- Patch only urllib3 2.8.0, brace-expansion 5.0.12 and source-map-js 1.2.2 for the identified advisories.
+- Preserve the supplied proposal's original objectives and planned calendar; do not replace human evaluation with automated tests.
+- Record deployed runtime identity separately from later documentation-only commits, using source-path equivalence when provider build filters skip a commit.
+- Keep personal report/deck files local and earlier outputs intact; publish only generic documentation and sanitized evidence.
+
+See [completion audit](docs/FINAL_COMPLETION_AUDIT_2026-10-20.md).
+
 Recorded: 2026-09-03, Asia/Kuala_Lumpur. These decisions come from the current implementation and the accepted project requirements. “Planned” means a binding direction for future work, not a working component. Changes need an explicit task, rationale, affected contracts/data, migration plan, and updated verification; do not reverse them casually.
 
 | ID | Decision | Current adoption and reason |

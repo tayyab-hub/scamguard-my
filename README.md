@@ -1,12 +1,16 @@
 # SCAMGUARD
 
-**October release integration:** the baseline and existing Phase 1 improvements are pushed
-and serving through the original GitHub → Vercel/Render workflow. Phase 2 is planned only, as
-confirmed by the owner. Fresh checks passed: **355 backend + 164 frontend + 52 browser tests**,
-with one intentional live-AI skip. See the [release integration record](docs/SCAMGUARD_RELEASE_INTEGRATION.md)
-for exact pushed/deployed commits, 16 passing live smoke checks and provider-access limitations;
-historical reports below keep
-their original scope. Generated Word submissions remain local under `output/`.
+**Current completion pass, 20–21 October 2026:** technical release
+`0208efdd23c41d1665b28459b4e8b9d461168d33` was merged through PR #1 after successful CI.
+Fresh verification: **365 backend + 164 frontend + 52 browser tests passed**, with one intentional
+live-AI skip. Dependency audits found zero known advisories after three narrow patches.
+Vercel and Render source identities/startup and Neon revision `0006_qr_intelligence` were verified
+with authenticated provider access. Live smoke passed 16 checks; a separate screenshot capture
+passed three checks. All three synthetic accounts were deleted. The proposal supplies the original
+four objectives and 12-week plan; its required volunteer study is unfinished.
+**TECHNICALLY READY, OWNER ACCEPTANCE PENDING.** Phase 2 remains planned only.
+
+See the [completion audit](docs/FINAL_COMPLETION_AUDIT_2026-10-20.md) for commands, limitations, release identity and evidence. Editable academic candidates stay local under `output/`.
 
 **SCAMGUARD: Multi-Modal Scam Detection & Reporting Web Application**
 
@@ -17,7 +21,7 @@ The project was generalized following supervisor feedback; the repository/domain
 `-my` suffix. The formal title includes Reporting, but delivered reporting is private analysis/history,
 not a public scam-reporting or moderation network.
 
-**2026-09-12:** Tasks 1–9 are accepted, merged and deployed at final main
+**2026-09-12:** Tasks 1â€“9 are accepted, merged and deployed at final main
 `4df277bdf93a2e1424ac533d488cd7ba127b35ce`. The Task 9 QR privacy fixes are included.
 That release and its subsequent academic package are historical snapshots.
 See [final release](docs/FINAL_RELEASE.md) and [academic package](docs/FINAL_ACADEMIC_PACKAGE.md).
@@ -29,7 +33,7 @@ No schema, model, dependency or environment-variable changes. The subsequent rel
 the required frontend-before-backend order. See the [engineering report](docs/ENGINEERING_REVIEW_2026-10-08.md)
 for measured results, remaining limits and exact report/presentation updates.
 
-The production architecture is Vercel → same-origin `/api/v1` rewrite → Render → Neon, with Resend
+The production architecture is Vercel â†’ same-origin `/api/v1` rewrite â†’ Render â†’ Neon, with Resend
 for password-reset delivery. Live camera, private searchable history, measured dashboard distributions
 and session/accessibility polish are included. See [documentation index](docs/INDEX.md),
 [final tests](docs/FINAL_TEST_REPORT.md), [evaluation](docs/EVALUATION.md),
@@ -44,7 +48,7 @@ Python/FastAPI/Pydantic, SQLAlchemy/Psycopg, PostgreSQL and Alembic. Training us
 runtime models are JSON, Phone uses offline phonenumbers, and QR uses Pillow/zxing-cpp plus a browser
 zxing-wasm fallback. [Architecture diagram](docs/ARCHITECTURE.md) shows the browser/API/DB/mail boundaries.
 
-Before code changes, read [CODEX](CODEX.md) → [PROGRESS](PROGRESS.md) → [ROADMAP](ROADMAP.md) → [DECISIONS](DECISIONS.md) → README → [ARCHITECTURE](docs/ARCHITECTURE.md) → [DESIGN_SYSTEM](docs/DESIGN_SYSTEM.md) → [API](docs/API.md) → [TESTING](docs/TESTING.md). Historical Task 1/redesign reports remain in docs and are not current feature claims.
+Before code changes, read [CODEX](CODEX.md) â†’ [PROGRESS](PROGRESS.md) â†’ [ROADMAP](ROADMAP.md) â†’ [DECISIONS](DECISIONS.md) â†’ README â†’ [ARCHITECTURE](docs/ARCHITECTURE.md) â†’ [DESIGN_SYSTEM](docs/DESIGN_SYSTEM.md) â†’ [API](docs/API.md) â†’ [TESTING](docs/TESTING.md). Historical Task 1/redesign reports remain in docs and are not current feature claims.
 
 ## Frontend quick start
 
@@ -67,7 +71,7 @@ substituted when the API is unavailable.
 After the one-time setup below, choose one workflow from the repository root:
 
 1. Double-click `Start-SCAMGUARD.cmd` and use `Stop-SCAMGUARD.cmd` when finished.
-2. In a trusted VS Code workspace, allow the **SCAMGUARD: Start Development** folder-open task; run **SCAMGUARD: Stop Development** from **Terminal → Run Task** when finished.
+2. In a trusted VS Code workspace, allow the **SCAMGUARD: Start Development** folder-open task; run **SCAMGUARD: Stop Development** from **Terminal â†’ Run Task** when finished.
 3. In PowerShell, run `.\dev.ps1` and `.\stop-dev.ps1`. Add `-NoBrowser` when you do not want the launcher to open a browser tab.
 
 The launcher checks the portable PostgreSQL runtime/data, backend `.venv` and `.env`, frontend dependencies, and persistence setting; starts the isolated database on `127.0.0.1:55432`; applies Alembic through the current head; and starts the backend and frontend in visible terminals. It reuses healthy SCAMGUARD services and refuses unknown processes on ports 8000, 5173, or 55432 without killing them. Shutdown verifies recorded process identity and stops only launcher-owned app processes, then cleanly stops this repository's PostgreSQL cluster. It never deletes the database. Final URLs are `http://127.0.0.1:5173` and `http://127.0.0.1:8000/api/v1/health`.
@@ -122,7 +126,7 @@ Alembic `0001_analysis_intake` creates intake; `0002_message_intelligence` adds 
 `0004_phone_intelligence` adds the PHONE input/content constraints without rewriting Message/URL
 rows, and `0005_auth_profile_polish` adds nullable legacy-safe profiles and digest-only reset tokens.
 `0006_qr_intelligence` adds QR input/content constraints without rewriting existing records.
-Upgrade → downgrade → upgrade and drift checks pass against a disposable real PostgreSQL
+Upgrade â†’ downgrade â†’ upgrade and drift checks pass against a disposable real PostgreSQL
 database. Downgrade is destructive test activity and must never target development or production.
 
 ## Implemented behavior

@@ -2,23 +2,24 @@
 
 SCAMGUARD was evaluated across functional behaviour, security boundaries, learned-model performance, usability preparation and operational observations. These dimensions answer different questions. Table 13 summarises the final release gates; Table 14 summarises intelligence and performance evidence. The complete methods, per-class results and controlled cases remain in [EVALUATION.md](EVALUATION.md), [MODEL_EVALUATION.md](MODEL_EVALUATION.md), [URL_MODEL_EVALUATION.md](URL_MODEL_EVALUATION.md) and [CONTROLLED_EVALUATION.md](CONTROLLED_EVALUATION.md).
 
-**Table 13. Final release verification.** Source: [FINAL_RELEASE.md](FINAL_RELEASE.md) and [machine record](evidence/release-verification.json), merged main `4df277bdf93a2e1424ac533d488cd7ba127b35ce`, 12 September 2026.
+**Table 13. October completion verification.** Source: completion-verification.json and the completion audit. These are fresh execution records; the September totals remain in the historical release documents.
 
 | Check | Recorded result | Interpretation |
 | --- | --- | --- |
-| TypeScript / ESLint | Pass / zero warnings | Selected type and lint checks pass. |
-| Vitest | 159 passed, 11 files | Unit/component regressions. |
-| Playwright | 18 foundation + 8 built preview + 24 PostgreSQL = 50 passed | Mocked transport states and real local persisted workflows; Chromium mobile emulation, not physical phones. |
-| Pytest | 310 passed, 1 skipped, 2 dependency warnings | Real isolated local PostgreSQL; optional live OpenAI test deliberately not run. |
-| Frontend build / Ruff / pip check | Pass / lint and 71-file format pass / no broken requirements | Build/style/compatibility; not proof of zero dependency vulnerabilities. |
-| Alembic current/head/check | Single head 0006_qr_intelligence; no new operations | Local drift check; production head separately observed using SELECT only. |
-| Secret scan | 0 findings; 228 current files; 734 historical blobs | Bounded patterns/known local private values; excludes corpora/models/locks/media. |
-| Production release | Vercel Ready and Render Live at same complete final SHA | Version agreement at observation time. |
-| Public production probes | Health/ready/capabilities HTTP 200 through both hosts | Database connected; four engines ready and advertised. No authenticated production workflow inference. |
+| TypeScript / ESLint | Pass / zero warnings | Selected type and lint checks. |
+| Vitest | 164 passed in 12 files | Unit/component regressions. |
+| Playwright | 18 foundation + 8 built preview + 26 PostgreSQL = 52 passed | Desktop/mobile emulation and real local persistence; not physical phones. |
+| Pytest | 365 passed; one intentional live-AI skip; two deprecation warnings | Real isolated PostgreSQL and engine/security regressions. |
+| Build / Ruff / pip check | All passed | Packaging, style and installed compatibility. |
+| Alembic current/head/check | 0006_qr_intelligence; no new operations | Local drift checks; production version separately read using SELECT only. |
+| Frozen inference | Both held-out confusion matrices reproduced | Same frozen data and artifacts; no training or independent new sample. |
+| Dependency audits | npm audit and pip-audit: zero known advisories after three narrow patches | Known advisory coverage at scan time; not a security guarantee. |
+| Post-patch validation | Backend, pip check, both inference verifiers, wheel and 26 persisted browser tests passed again | Verifies the patched urllib3 environment. |
+| Production | Dated provider identities, public probes and synthetic-account results in completion audit | Point-in-time evidence; no inbox or physical-camera inference. |
 
-The release records predate this academic edit. No software test rerun or new production observation is claimed merely because text was rewritten. Task 9's earlier npm audit, model reproduction and wheel inspection remain separately dated evidence in FINAL_TEST_REPORT.md; they were not all repeated by the merge runner.
+The final audit records the exact GitHub CI/release identities and bounded secret-scan result. Initial sandbox and local database-port failures were corrected and rerun; they are not counted as passing tests.
 
-**Table 14. Intelligence and narrow performance evidence.** Sources: frozen JSON reports, controlled evaluation and PERFORMANCE_RELIABILITY.md.
+**Table 14. Intelligence and narrow performance evidence.** The Message and URL matrices were freshly reproduced without changing them. Authored URL/Phone/QR/payment case totals and the 30-call latency sample below are historical September measurements, retained with that date; they are not new October benchmarks.
 
 | Evaluation | Sample / method | Recorded result | Valid conclusion and limit |
 | --- | --- | --- | --- |

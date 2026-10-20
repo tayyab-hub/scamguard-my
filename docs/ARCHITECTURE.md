@@ -1,8 +1,8 @@
 # SCAMGUARD architecture
 
-Reviewed again 2026-10-08. Read `PROGRESS.md` and [engineering review](ENGINEERING_REVIEW_2026-10-08.md)
-for local verification. Tasks 1–9 describe the September deployed snapshot at
-`4df277bdf93a2e1424ac533d488cd7ba127b35ce`; October changes are uncommitted and undeployed.
+Reviewed again 2026-10-20. Read [final completion audit](FINAL_COMPLETION_AUDIT_2026-10-20.md)
+for current verification. Tasks 1–9 below retain the development history.
+The September `4df277b` release is historical; the October v2 policies are deployed.
 Hosting, schema and frozen models are unchanged. Message now adds rules-only normalization and
 evidence-sufficiency/conflict guards; QR adds payment-integrity safeguards. Existing result JSON
 carries structured explanations. Frontend must be released before the backend for nullable confidence.
@@ -169,7 +169,7 @@ Task 3 fusion applies only to Message evidence; it is not the planned cross-moda
 
 ## Task 4 URL domain
 
-The service routes URL to `app/url_intelligence` and MESSAGE to the unchanged `app/ml` domain. URL parsing uses strict validation and pinned offline tldextract/IDNA; userinfo is removed before durable intake. The JSON random forest consumes 27 freshly derived local features; four detector groups produce explainable evidence. Separate `url_fusion_v1` prevents weak indicators or ML alone from producing High. An optional injectable reputation protocol defaults disabled; no network adapter exists.
+The service routes URL to `app/url_intelligence` and MESSAGE to the unchanged `app/ml` domain. URL parsing uses strict validation and pinned offline tldextract/IDNA; userinfo is removed before durable intake. The JSON random forest consumes 27 freshly derived local features; four detector groups produce explainable evidence. Separate `url_fusion_v2` prevents weak indicators or ML alone from producing High. An optional injectable reputation protocol defaults disabled; no network adapter exists.
 
 Task 3 already added neutral persisted status/risk/summary/evidence/actions/component/version/completion fields, so no Task 4 schema migration is necessary. URL model/rules/fusion versions occupy the current row's audit columns; reputation and minimal analytical metadata use component JSON. No Message rows are rewritten. History reads stored results without re-running models/providers. Refer to URL_INTELLIGENCE.md for the exact parsing, privacy, no-fetch and future SSRF boundary.
 
@@ -178,8 +178,10 @@ Task 3 already added neutral persisted status/risk/summary/evidence/actions/comp
 `POST /api/v1/analyses/qr` is a dedicated multipart route because the generic endpoint remains typed
 JSON. `Pillow` validates actual raster content/dimensions and creates a metadata-free grayscale pixel
 buffer; `zxing-cpp` decodes exactly one QR symbol. The payload classifier routes only supported
-content into the unchanged Message, URL or Phone engine, so QR adds no independent severity. A
-bounded EMV-style TLV/CRC parser reports payment integrity without asserting legitimacy.
+content into the corresponding Message, URL or Phone engine. The current QR v2 policy also
+applies a minimum Caution for payment integrity or destination warnings. A bounded EMV-style
+TLV/CRC parser reports structural integrity without asserting recipient legitimacy or full
+payment-scheme compliance.
 
 The image exists only during request processing. PostgreSQL retains private decoded content and
 derived assessment/audit metadata; URL credentials and Wi-Fi passwords are redacted first. QR rows
