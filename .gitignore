@@ -39,6 +39,8 @@ htmlcov/
 /temp/
 # Generated academic submissions may contain personal cover details; keep local copies.
 /output/
+# Temporary chart workbooks and presentation candidates are local academic artifacts.
+/.chart-data-*/
 *.tmp
 *.temp
 *.swp
