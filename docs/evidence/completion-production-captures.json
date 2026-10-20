@@ -1,0 +1,32 @@
+{
+  "started_at_utc": "2026-10-20T16:08:36.474Z",
+  "origin": "https://scamguard-my.vercel.app",
+  "checks": [
+    {
+      "name": "Stable reduced-motion Message and explanation captures",
+      "status": "PASS"
+    },
+    {
+      "name": "Stable QR result capture",
+      "status": "PASS"
+    },
+    {
+      "name": "Loaded private four-mode History capture",
+      "status": "PASS"
+    }
+  ],
+  "cleanup": [
+    {
+      "account": "synthetic release account",
+      "deleted": true
+    }
+  ],
+  "limitations": [
+    "Synthetic accounts and authored fixtures only.",
+    "No real-device camera or inbox-delivery test."
+  ],
+  "completed_at_utc": "2026-10-20T16:09:22.831Z",
+  "passed": 3,
+  "failed": 0,
+  "result": "PASS"
+}

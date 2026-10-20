@@ -1,5 +1,11 @@
 # Three-pass examiner deduction attack
 
+**Historical September academic review.** Current objectives, proposed dates, release evidence,
+editable candidates and owner gaps are in [the completion audit](FINAL_COMPLETION_AUDIT_2026-10-20.md)
+and [academic package](FINAL_ACADEMIC_PACKAGE.md). The newly supplied proposal resolves the
+previously missing original objective/calendar evidence. It also confirms that a volunteer study
+is required and remains unfinished. Historical self-marks are not reassigned or guaranteed here.
+
 Classification: **A FIXED**, **B USER ACTION REQUIRED**, **C INHERENT LIMITATION**, **D EXAMINER SUBJECTIVITY**. Severity refers to a plausible academic deduction, not a measured security vulnerability. “Fixed” means the specified document/evidence defect has been corrected; it does not turn an unperformed test into a pass. Official criteria are the supplied proposal rubrics, Excellent 9–10.
 
 ## Pass 1 — Report examiner

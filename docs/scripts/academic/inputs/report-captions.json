@@ -1,0 +1,152 @@
+[
+  [
+    "Table",
+    1,
+    "SMART objectives and acceptance criteria",
+    "Project source and evidence at final release; see Appendix B."
+  ],
+  [
+    "Table",
+    2,
+    "Objective-to-evidence traceability",
+    "Project source and evidence at final release; see Appendix B."
+  ],
+  [
+    "Table",
+    3,
+    "Deliverables and problem contributions",
+    "Project source and evidence at final release; see Appendix B."
+  ],
+  [
+    "Table",
+    4,
+    "Related-system scope, design and implementation",
+    "VirusTotal (n.d.-a, n.d.-b, n.d.-c), Google (2026a, 2026b), Truecaller (n.d.-a, n.d.-b, n.d.-c); SCAMGUARD release source."
+  ],
+  [
+    "Table",
+    5,
+    "Documented capability evidence",
+    "Same primary sources as Table 4. Y = documented; NE = NOT YET EVIDENCED in reviewed scope, not absent."
+  ],
+  [
+    "Figure",
+    1,
+    "Production architecture and service responsibilities",
+    "Final release architecture; provider routing evidence in PRODUCTION_ACCEPTANCE.md."
+  ],
+  [
+    "Figure",
+    2,
+    "Analysis data flow and retention boundary",
+    "Analysis services and privacy model at final release."
+  ],
+  [
+    "Figure",
+    3,
+    "Selected database entities and ownership relationships",
+    "backend/app/db/models.py; Alembic head 0006_qr_intelligence."
+  ],
+  [
+    "Figure",
+    4,
+    "Authentication, protected access and recovery",
+    "backend/app/core/auth.py, auth API and password-reset services."
+  ],
+  [
+    "Figure",
+    5,
+    "QR upload, camera consent and payload routing",
+    "QR engine/decoder/payment modules and frontend cameraScanner.ts."
+  ],
+  [
+    "Table",
+    6,
+    "Functional requirements",
+    "Project source and evidence at final release; see Appendix B."
+  ],
+  [
+    "Table",
+    7,
+    "Non-functional requirements",
+    "Project source and evidence at final release; see Appendix B."
+  ],
+  [
+    "Table",
+    8,
+    "Software purposes, selection reasons and trade-offs",
+    "Release dependency declarations and locks; Google (n.d.), MDN contributors (n.d.), OWASP Foundation (n.d.-a, n.d.-b), Render (n.d.), Vercel (n.d.)."
+  ],
+  [
+    "Table",
+    9,
+    "Hardware and environment roles",
+    "Project source and evidence at final release; see Appendix B."
+  ],
+  [
+    "Table",
+    10,
+    "Recorded phases, activities and milestones",
+    "evidence/project-git-chronology.txt; complete commit identities are retained in that record."
+  ],
+  [
+    "Figure",
+    6,
+    "Proposed objective phases and current evidence",
+    "User-designated proposal, PDF pages 7 and 43\u201347; planned dates are not actual completion."
+  ],
+  [
+    "Table",
+    11,
+    "Proposed milestones and evidence boundary",
+    "User-designated proposal, Table 14, PDF page 45. All dates are 2026."
+  ],
+  [
+    "Table",
+    12,
+    "Risk register and contingencies",
+    "Project risk judgement tied to recorded controls; full ten-column register in FINAL_RISK_REGISTER.md."
+  ],
+  [
+    "Table",
+    13,
+    "October completion verification",
+    "Project source and evidence at final release; see Appendix B."
+  ],
+  [
+    "Table",
+    14,
+    "Intelligence evaluation and interpretation",
+    "Project source and evidence at final release; see Appendix B."
+  ],
+  [
+    "Figure",
+    7,
+    "Frozen Message and URL confusion matrices",
+    "MODEL_EVALUATION.md, URL_MODEL_EVALUATION.md and frozen reproduction records."
+  ],
+  [
+    "Figure",
+    8,
+    "October automated test counts",
+    "completion-verification.json; 365 backend, 164 frontend and 52 browser tests; one live-AI skip."
+  ],
+  [
+    "Figure",
+    9,
+    "Message assessment with separate risk and confidence",
+    "Completion production smoke; authored password/OTP-request fixture."
+  ],
+  [
+    "Figure",
+    10,
+    "QR analysis after an explicit upload submission",
+    "Completion production smoke; generated reserved-domain QR fixture."
+  ],
+  [
+    "Figure",
+    11,
+    "Private History with search, type and risk filters",
+    "Completion production smoke; synthetic records created in the same session."
+  ]
+]

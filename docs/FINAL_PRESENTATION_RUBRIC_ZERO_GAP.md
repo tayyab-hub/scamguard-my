@@ -1,5 +1,11 @@
 # Official presentation rubric matrix
 
+**Historical September academic review.** Current objectives, proposed dates, release evidence,
+editable candidates and owner gaps are in [the completion audit](FINAL_COMPLETION_AUDIT_2026-10-20.md)
+and [academic package](FINAL_ACADEMIC_PACKAGE.md). The newly supplied proposal resolves the
+previously missing original objective/calendar evidence. It also confirms that a volunteer study
+is required and remains unfinished. Historical self-marks are not reassigned or guaranteed here.
+
 Authority: supplied **CSC1250 Proposal Marking Scheme — Presentation**, pages 1–2. Four criteria total **40**; Excellent is **9–10**. This is a preparation score for the written slide plan, notes, demonstration and defence pack. It does not award or predict an observed live mark. No actual rehearsal, audience assessment or oral defence record was supplied.
 
 | Criterion | Excellent requirement | Prepared evidence | User-dependent requirement | Remaining risk | Action | Expected mark |

@@ -2,6 +2,8 @@
 Status: **NOT YET CONDUCTED**. Owner-reported “it's working” (2026-09-12) is informal acceptance,
 not participant evidence, a timed study or device-specific proof. Use USABILITY_RESULTS_TEMPLATE.md.
 
+The five core tasks follow the user-designated proposal (PDF page 40). The study is a required part of O4; the optional QR/Phone/payment probe extends coverage without replacing those tasks.
+
 ## Research questions
 Can a first-time user finish the five core tasks? Can they locate evidence and distinguish Low
 from Insufficient Evidence? Do they understand that structural checks do not verify identity or safety?
@@ -25,8 +27,9 @@ record timeout/abandonment rather than inventing a completion time.
 | 1 | Create a test account or sign in with the supplied demo identity. | Private dashboard reached. Can they explain which data belongs to them? |
 | 2 | Review this supplied suspicious message and explain what you would do next. | Result reached; identifies evidence and an independent verification action, without treating a score as certainty. |
 | 3 | Review the supplied URL without visiting it. | URL assessment reached; explains why structural evidence cannot prove site legitimacy. |
-| 4 | Find your earlier message in History. | Correct saved record opened using search/filter; can distinguish Analyse again from editing the original. |
-| 5 | Scan the supplied QR or use upload; interpret this Phone/plain-text or payment result. | Explicit scan/Analyse or upload completed; explains Insufficient Evidence and no-auto-open. Valid CRC must not be described as a safe merchant. |
+| 4 | Explain the displayed risk, confidence, evidence and recommended action. | Distinguishes Low from Insufficient Evidence and confidence from probability of fraud; identifies a suitable independent verification step. |
+| 5 | Find your earlier message in History. | Correct saved record opened using search/filter; can distinguish Analyse again from editing the original. |
+| Optional probe | Scan the supplied QR or use upload; interpret a Phone or payment result. | Explicit Analyse; no-auto-open understood; valid number/CRC is not described as a verified identity/merchant. |
 
 Measure per task: unassisted/assisted/failed, elapsed seconds, recoverable errors, assistance,
 participant's own risk interpretation, and a 1–5 ease rating. Predefine error categories:

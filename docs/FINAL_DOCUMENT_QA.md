@@ -1,4 +1,30 @@
-# Final report document quality record
+# Final report and presentation quality record
+
+## October completion candidates
+
+The [report candidate](../output/documents/SCAMGUARD_CSC1250_FINAL_CANDIDATE_2026-10-20.docx)
+has **67 pages, 13 sections, 14 tables and 11 figures**. All pages were rendered and individually
+inspected; changed pages were checked again after repairs. The source template's section geometry
+and logo bytes are preserved. Native Word refreshed contents, figure/table lists and fields.
+No unresolved reference error, clipped table or blank spill page was found. The cover label is
+intentionally changed to Final Report; personal fields remain blank for the owner.
+
+The [presentation candidate](../output/presentations/SCAMGUARD_CSC1250_FINAL_CANDIDATE_2026-10-20.pptx)
+has **13 editable slides**, three native tables, an editable architecture diagram, 13 speaker-note
+parts and two embedded evidence images. All slides were rendered and individually checked.
+Package/layout validators found zero issues; first-party reimport passed. Source-derived
+Calibri/Cambria fonts were verified in the package. Native projector/PowerPoint behaviour and
+actual delivery timing are not established by these checks.
+
+Corrections during QA included the final-report cover label, slide font property and missing
+image embedding, stale risk-audit wording and explicit dates for September case/latency evidence.
+The packaged DOCX renderer was unavailable because LibreOffice was missing; installed Word
+and bundled Poppler provided the fallback. Exact hashes and validation scope are in
+[completion-academic-qa.json](evidence/completion-academic-qa.json). Previous reports and supplied
+templates/deck remain intact. The report follows the proposal's four original objectives; the
+volunteer study remains pending under O4. Final institutional rules still need confirmation.
+
+## Historical September QA
 
 The editable deliverable is [SCAMGUARD_CSC1250_REPORT.docx](../output/documents/SCAMGUARD_CSC1250_REPORT.docx). All **69 physical pages** were visually inspected after the final native Word refresh/export. No clipping, overlapping labels, orphan captions, blank spill pages or unresolved field errors were identified. The report has **14 tables, 11 numbered figures and 19 APA references**. Three authentic local application screenshots are embedded; all nine supporting captures were visually checked. The dashboard capture was replaced after its first version caught the loading state.
 

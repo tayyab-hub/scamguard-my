@@ -21,8 +21,8 @@ Duplicate rows for actual observations only.
 | 1 Account | | | | | | | |
 | 2 Message | | | | | | | |
 | 3 URL | | | | | | | |
-| 4 History | | | | | | | |
-| 5 QR / interpretation | | | | | | | |
+| 4 Risk interpretation | | | | | | | |
+| 5 History | | | | | | | |
 
 | Probe | Correct n / attempted n | Partial n | Incorrect n | Anonymized supporting evidence |
 | --- | --- | --- | --- | --- |

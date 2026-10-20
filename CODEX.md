@@ -1,5 +1,19 @@
 # SCAMGUARD — repository working instructions
 
+**Current completion pass, 20–21 October 2026:** technical release
+`0208efdd23c41d1665b28459b4e8b9d461168d33` was merged through PR #1 after successful CI.
+Fresh verification: **365 backend + 164 frontend + 52 browser tests passed**, with one intentional
+live-AI skip. Dependency audits found zero known advisories after three narrow patches.
+Vercel and Render source identities/startup and Neon revision `0006_qr_intelligence` were verified
+with authenticated provider access. Live smoke passed 16 checks; a separate screenshot capture
+passed three checks. All three synthetic accounts were deleted. The proposal supplies the original
+four objectives and 12-week plan; its required volunteer study is unfinished.
+**TECHNICALLY READY, OWNER ACCEPTANCE PENDING.** Phase 2 remains planned only.
+
+Use [the completion audit](docs/FINAL_COMPLETION_AUDIT_2026-10-20.md) and [owner actions](docs/FINAL_PERSONAL_ACTIONS.md) as current authority. Earlier release sections below are historical; their counts, access limits and unfinished integration statements are superseded.
+
+## Earlier release record
+
 ## Current release authorization — 2026-10-08
 
 The user explicitly authorized integration, ordinary commits/pushes and deployment through the

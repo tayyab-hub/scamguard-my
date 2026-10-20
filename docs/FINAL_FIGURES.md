@@ -1,5 +1,20 @@
 # Figure and table register
 
+## Current candidate figures
+
+Figures 1–5 and 7 retain their existing source-derived architecture/workflow/model content.
+Figure 6 now uses [completion-plan.png](figures/completion-plan.png), distinguishing the original
+proposal calendar from actual evidence. Figure 8 uses [completion-tests.png](figures/completion-tests.png)
+for 365/164/52 fresh passes. Figures 9–11 use [Message](figures/completion-message.png),
+[QR](figures/completion-qr.png) and [History](figures/completion-history.png).
+The slide demo also embeds the [explanation panel](figures/completion-message-explanation.png).
+
+These are actual production views at runtime merge `0208efdd23c41d1665b28459b4e8b9d461168d33`,
+captured with authored synthetic inputs. The account was removed after capture.
+[Capture record](evidence/completion-production-captures.json) contains actual timestamps and checks.
+They are viewport/element captures, not a user study or physical-camera evidence.
+The September screenshot register below is retained as historical provenance.
+
 The Word report uses Figures 1–11 and Tables 1–14 in order of first appearance. Every figure/table has a caption, source and in-text reference. Word's contents and figure/table lists are refreshed from fields. PNGs are the embedded figures; SVGs preserve the editable text/vector diagrams and plots. Sources describe the final application commit `4df277bdf93a2e1424ac533d488cd7ba127b35ce`. Diagrams are authored explanatory views, not screenshots or independent measurements.
 
 | Figure | Caption / file | Source and interpretation | Report reference |

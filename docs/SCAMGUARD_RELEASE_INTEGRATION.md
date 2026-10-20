@@ -1,5 +1,19 @@
 # SCAMGUARD release integration — 8 October 2026
 
+**Current completion pass, 20–21 October 2026:** technical release
+`0208efdd23c41d1665b28459b4e8b9d461168d33` was merged through PR #1 after successful CI.
+Fresh verification: **365 backend + 164 frontend + 52 browser tests passed**, with one intentional
+live-AI skip. Dependency audits found zero known advisories after three narrow patches.
+Vercel and Render source identities/startup and Neon revision `0006_qr_intelligence` were verified
+with authenticated provider access. Live smoke passed 16 checks; a separate screenshot capture
+passed three checks. All three synthetic accounts were deleted. The proposal supplies the original
+four objectives and 12-week plan; its required volunteer study is unfinished.
+**TECHNICALLY READY, OWNER ACCEPTANCE PENDING.** Phase 2 remains planned only.
+
+Current evidence: [FINAL_COMPLETION_AUDIT_2026-10-20.md](FINAL_COMPLETION_AUDIT_2026-10-20.md). The October 8 record below remains historical; its provider-access gaps were resolved in this completion pass.
+
+## Historical October 8 integration
+
 Status: implemented baseline + Phase 1 pushed and serving in production; 16 live smoke checks passed.
 The camera correction's final hosted CI passed all 571 tests. Provider-level Render commit/log and fresh
 Neon migration-head verification remain access-limited; they are not claimed as complete.

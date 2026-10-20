@@ -7,8 +7,8 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 R=Path.cwd();D=R/'docs';tmp=Path(__file__).resolve().parent/'inputs'
-src=Path(r'C:\Users\User\Downloads\2 - CSC1250 Proposal Template.docx')
-out=R/'output/documents/SCAMGUARD_CSC1250_REPORT.docx';out.parent.mkdir(parents=True,exist_ok=True)
+src=Path(json.loads((tmp/'template-contract.json').read_text())['path'])
+out=R/'output/documents/SCAMGUARD_CSC1250_FINAL_CANDIDATE_2026-10-20.docx';out.parent.mkdir(parents=True,exist_ok=True)
 contract=json.loads((tmp/'template-contract.json').read_text())
 assert hashlib.sha256(src.read_bytes()).hexdigest()==contract['sha256']
 shutil.copy2(src,out);doc=Document(out);body=doc._element.body
@@ -24,6 +24,8 @@ for p in doc.paragraphs[:22]:
  if p.text=='<Proposal Title>':
   p.text='SCAMGUARD: Multi-Modal Scam Detection\nand Reporting Web Application'
   for r in p.runs:r.font.size=Pt(18)
+ elif p.text=='PROPOSAL REPORT':
+  for r in p.runs:r.text=r.text.replace('PROPOSAL','FINAL')
  elif p.text in ['<Student Name>','<Admission Number>','< DCS or DIT in full>','August 2026']:p.text=''
  elif p.text.startswith('Supervisor :'):p.text='Supervisor : '
 cover=[]
@@ -110,11 +112,11 @@ front('Table of Contents','TOC \\o "1-2" \\h \\z \\u',1)
 front('List of Figures','TOC \\h \\z \\c "Figure"',2)
 front('List of Tables','TOC \\h \\z \\c "Table"',3)
 h('1 Introduction',1)
-p('SCAMGUARD is an authenticated web application for inspecting unfamiliar messages, URLs, telephone numbers and QR payloads. The formal project title retains “Reporting”; the implemented reporting scope is private assessment history. The application provides decision support with explicit evidence limits. This chapter establishes the user problem and translates it into four acceptance objectives and bounded deliverables.')
+p('SCAMGUARD is an authenticated web application for inspecting unfamiliar messages, URLs, telephone numbers and QR payloads. The formal project title retains “Reporting”; the implemented reporting scope is private assessment history. The application provides decision support with explicit evidence limits. This chapter establishes the user problem and translates it into the four proposal objectives and bounded deliverables.')
 h('1.1 Problem statement')
 for para in re.split(r'\n\s*\n',(D/'FINAL_PROBLEM_STATEMENT.md').read_text(encoding='utf-8'))[1:5]:p(para)
 h('1.2 Objectives')
-p('The four objectives below are retrospective acceptance objectives for the implementation released on 12 September 2026. They are achievable within the implemented scope, relevant to evidence inspection and private review, and measured by named checks. They are not presented as the wording or deadlines of an original approved proposal. The earlier approved schedule is NOT YET EVIDENCED.')
+p('The user-designated proposal supplies four objectives: identify requirements, design the system, develop and deploy, and evaluate through functional tests, classifier evaluation and a volunteer usability study. Table 1 preserves that wording and the proposed phases while distinguishing present evidence from planned work. O4 is partially complete: the study has not yet been conducted. The proposal is evidence of intended scope and dates; signed approval and the final assessment timetable are separate.')
 objectives=mdtable('FINAL_SMART_OBJECTIVES.md')
 table(1,'SMART objectives and acceptance criteria',['ID','Specific outcome, measurement and status'],[[r[0],r[1]+'\nOutcome: '+r[2]+'\nMeasure: '+r[3]+'\nEvidence: '+r[4]+'\nPhase: '+r[5]+'\nStatus: '+r[6]] for r in objectives],[.65,5.62])
 trace=mdtable('FINAL_SMART_OBJECTIVES.md',1)
@@ -126,7 +128,7 @@ h('1.4 Deliverables')
 scope=mdtable('FINAL_SCOPE_DELIVERABLES.md')
 table(3,'Deliverables and problem contributions',['Deliverable','Description, contribution and verification'],[[r[0],r[1]+'\nContribution: '+r[2]+'\nEvidence: '+r[3]+'\nStatus: '+r[4]] for r in scope],[1.35,4.92])
 h('1.5 Chapter organisation')
-p('Chapter 2 compares three related systems. Chapter 3 explains the solution and justifies its requirements and resources. Chapter 4 reconstructs milestones and risks. Appendices A–D connect design, evaluation and the illustrated user workflow to limitations and the conclusion. Unperformed human validation remains distinct from technical results.')
+p('Chapter 2 compares three related systems. Chapter 3 explains the solution and justifies its requirements and resources. Chapter 4 separates the proposal plan from observed Git milestones and risks. Appendices A–D connect design, evaluation and the illustrated user workflow to limitations and the conclusion. Unperformed human validation remains distinct from technical results.')
 endsec(4)
 h('2 Background of study',1)
 for c in re.split(r'\n\s*\n',(D/'BACKGROUND_OF_STUDY.md').read_text(encoding='utf-8'))[1:]:
@@ -149,6 +151,15 @@ fig(5,'QR upload, camera consent and payload routing','figure-05-qr-workflow.png
 h('3.2 Software and hardware requirements')
 p('Tables 6–7 assign acceptance IDs to the implemented requirements. Each requirement maps to an objective, implementation path and verification path in REQUIREMENTS.md. The compact report tables retain the behaviour and evidence boundary; the companion matrix contains the full paths. A status of locally verified does not establish unmeasured production or human outcomes.')
 data=json.loads((tmp/'tables.json').read_text())
+for row in data['fr']:row[2]='O2/O3; evaluated under O4'
+for row in data['nfr']:
+ if row[0]=='NFR-06':row[2]=row[2].replace('320\uFFFD1440','320–1440')
+ if row[0]=='NFR-07':row[4]='docs/evidence/completion-verification.json'
+ if row[0]=='NFR-09':row[4]='docs/evidence/completion-message-evaluation.json'
+ if row[0]=='NFR-10':
+  row[2]='Serve the verified runtime source on Vercel/Render with ready database and current Alembic head; path-scoped source equivalence may explain later documentation-only commits.'
+  row[4]='docs/FINAL_COMPLETION_AUDIT_2026-10-20.md'
+  row[5]='Observed 20–21 October 2026; point-in-time evidence, not continuous monitoring.'
 table(6,'Functional requirements',['ID / objective','Requirement and verification boundary'],[[r[0]+'\n'+r[2],r[1]+'\nEvidence: '+Path(r[4]).name+'\n'+r[5]] for r in data['fr']],[1,5.27])
 table(7,'Non-functional requirements',['ID / quality','Acceptance and evidence boundary'],[[r[0]+'\n'+r[1],r[2]+'\nImplementation: '+r[3]+'\nVerification: '+r[4]+'\n'+r[5]] for r in data['nfr']],[1.25,5.02])
 p('All technologies in Table 8 are represented by repository dependencies or deployed services. Versions refer to the release, not upgrade recommendations. Alternatives are retrospective engineering comparisons except the Message/URL candidates actually evaluated. Hardware roles in Table 9 distinguish developer, client and managed server resources; no purchased-server specification or unsupported minimum device is invented.')
@@ -156,16 +167,16 @@ table(8,'Software purposes, selection reasons and trade-offs',['Technology','Jus
 table(9,'Hardware and environment roles',['Role','Requirement and justification'],[[r[0],'\n'.join(r[1:])] for r in data['hardware']],[1.4,4.87])
 h('3.3 Detailed development planning')
 p('Development proceeded through bounded tasks: establish the application and persistence first, then add reproducible local intelligence, account ownership and QR routing. Later tasks integrated camera lifecycle and retrieval controls. Each phase produced a reviewable deliverable with regressions. The final freeze permitted integration corrections and evaluation, including two QR credential-redaction edge cases, while preserving model methodology and the migration head.')
-p('Model work separated preparation, validation selection and held-out reporting. Security work used isolated local PostgreSQL databases and synthetic accounts. Deployment closure gated the normal main merge on a full verification rerun, followed by matching provider identities and read-only production probes. Chapter 4 records the observed milestones and risk mitigations; the original approved deadlines remain a separate evidence requirement.')
+p('Model work separated preparation, validation selection and held-out reporting. Security work used isolated local PostgreSQL databases and synthetic accounts. Deployment closure gated the normal main merge on a full verification rerun, followed by matching provider identities and read-only production probes. Chapter 4 records the proposed 1 September–20 November calendar and observed milestones separately. Proposed report/presentation dates are 18/20 November, subject to the official timetable.')
 endsec(6)
-h('4 Project planning and risk assessment',1);h('4.1 Recorded project chronology')
+h('4 Project planning and risk assessment',1);h('4.1 Observed development chronology')
 p('The chronology below uses Git timestamps in Asia/Kuala_Lumpur. A first commit records an artifact, not necessarily the day work began. The repository starts with a completed foundation on 3 September 2026. Dates therefore establish observed commit coverage only; they do not establish labour duration, original approval dates or whether a milestone met an earlier deadline.')
 plan=json.loads((tmp/'plan.json').read_text());phases=plan['phases']
 table(10,'Recorded phases, activities and milestones',['Phase / dates','Tasks, deliverable and milestone'],[[r[0]+'\n'+r[5]+' to '+r[6],r[1]+'\nActivities: '+r[2]+'\nDeliverable: '+r[3]+'\nMilestone: '+r[4]+'\nStatus: '+r[7]] for r in phases],[1.65,4.62],source='evidence/project-git-chronology.txt; complete commit identities are retained in that record.')
 h('4.2 Gantt chart and deadlines')
-fig(6,'Recorded Git chronology','figure-06-gantt.png','Commit dates, 3–12 September 2026; calendar coverage is not measured duration.',6.15)
-table(11,'Gantt table equivalent',['Phase','September 2026 coverage'],[[r[0],r[5]+' to '+r[6]] for r in phases],[3.9,2.37],source='Same commit record as Figure 6; FINAL_GANTT.md also supplies Mermaid source.')
-p('MANUAL ACTION REQUIRED: add the approved project start, original milestone deadlines, submission deadline and actual dates of literature review, report preparation and rehearsal from institutional or personal records. Earlier planning and research dates are NOT YET EVIDENCED. The template’s August 2026 text is not treated as a submission deadline. No volunteer study date or completion is invented.')
+fig(6,'Proposed objective phases and current evidence','completion-plan.png','User-designated proposal, PDF pages 7 and 43–47; planned dates are not actual completion.',6.15)
+table(11,'Proposed milestones and evidence boundary',['Milestone','Planned date / present qualification'],[['M1 proposal acceptance','11 September; approval event not independently evidenced'],['M2 design review','18 September; design artifacts available, review date not inferred'],['M3 deployment','16 October; separate September/October deployment records exist'],['M4 feature freeze','2 November; planned checkpoint, no new feature phase'],['M5 report','By 18 November; official deadline to confirm'],['M6 presentation','By 20 November; official date and duration to confirm']],[2.2,4.07],source='User-designated proposal, Table 14, PDF page 45. All dates are 2026.')
+p('The proposal supplies a 12-week plan from 1 September to 20 November 2026. O1 spans Weeks 1–3, O2 Weeks 2–3, O3 Weeks 3–9 and O4 Weeks 9–11. Table 10 is historical Git evidence, while Figure 6 and Table 11 are planned dates. Git intervals are not labour duration or proof of supervisor approval. Actual study, literature-review and rehearsal dates must come from real records; no study completion is invented.')
 h('4.3 Risk assessment')
 p('Risk likelihood and impact use a project judgement scale from 1 (low) to 3 (high). Their product gives low 1–2, medium 3–4 and high 6–9. These are prioritisation judgements, not measured incident probabilities. Table 12 links each risk to a specific implemented mitigation, contingency and residual limitation.')
 table(12,'Risk register and contingencies',['Risk / category / level','Mitigation, contingency and residual status'],[[r[0]+' '+r[1]+'\n'+r[2]+'\nL='+r[3]+'; I='+r[4]+'\n'+r[5],'Mitigation: '+r[6]+'\nContingency: '+r[7]+'\nResidual: '+r[8]+'\nStatus: '+r[9]] for r in plan['risks']],[1.65,4.62],source='Project risk judgement tied to recorded controls; full ten-column register in FINAL_RISK_REGISTER.md.')
@@ -184,30 +195,33 @@ p('EMVCo (n.d.) distinguishes merchant-presented and consumer-presented payment 
 p('Production origin/CSRF guards and session-derived user identity protect mutation paths; owner-scoped database queries protect records independently of interface routing. Original uploads and camera frames are not retained. Specified QR credentials are removed before new stored records are created, while original-byte assessment remains unchanged. No retroactive rewrite of old production rows is claimed.')
 endsec(9)
 h('Appendix B — Verification and evaluation',1);h('B.1 Release identity and evidence')
-p('Accepted Task 9 commit: afabf5cab42da880e91a07e0d46ea202cd94cf9d. Final normal merge, main and observed production release: 4df277bdf93a2e1424ac533d488cd7ba127b35ce. The full gate ran on merged main before the successful GitHub push. Vercel was Ready/Current and Render Live at the same full SHA. Health, readiness and capabilities returned HTTP 200 directly and through the frontend proxy on 12 September 2026 at 13:52:55–13:53:02 UTC. Readiness reported the connected database and four ready engines; capabilities advertised MESSAGE, URL, PHONE and QR. A separate SELECT-only observation confirmed production Alembic head 0006_qr_intelligence. No manual Neon modification was performed.')
-p('The academic edits do not constitute a new application release. Machine records are retained in docs/evidence/release-verification.json, release-production-endpoints.json and release-secret-scan.json; provider deployment links and observation limits are in FINAL_RELEASE.md.')
+release=json.loads((D/'evidence/completion-release.json').read_text())
+p('This candidate incorporates the October v2 implementation and the 20 October completion checks. Application merge: '+release['application_merge_sha']+'. Vercel and Render source identities and dated production observations are recorded in FINAL_COMPLETION_AUDIT_2026-10-20.md. The expected migration head remains 0006_qr_intelligence, confirmed by a SELECT-only production observation. This pass changes dependency pins and adds authored regressions; trained artifacts, data splits, scoring policies and migrations remain unchanged.')
+p('The complete local gate recorded 365 Pytest passes, 164 Vitest passes and 52 Playwright passes. One paid/live external-AI test is intentionally skipped. Backend compatibility and persisted browser checks were repeated after the urllib3 security patch. Machine records distinguish these runs and preserve warnings and initial environment failures. They do not establish continuous availability or independent penetration testing.')
+
 tests=mdtable('FINAL_EVALUATION.md')
-table(13,'Final merged-main verification',['Check','Recorded result and interpretation'],[[r[0],r[1]+'\n'+r[2]] for r in tests],[1.45,4.82])
+table(13,'October completion verification',['Check','Recorded result and interpretation'],[[r[0],r[1]+'\n'+r[2]] for r in tests],[1.45,4.82])
 h('B.2 Learned components and controlled cases')
 p('Message data originate from Mishra and Soni (2022), and URL data from Prasad and Chandra (2024), both published under CC BY 4.0. The Message source has 5,971 rows; cleaning retains 5,797 after duplicate/conflicting rows are removed. Near-duplicate grouping precedes the 3,477/1,160/1,160 train/validation/test split. Word unigram/bigram TF–IDF and Logistic Regression were selected on validation macro F1 against SVM and Naive Bayes. The selected model was refitted on train plus validation before the frozen test was evaluated.')
 p('The URL source has 235,795 rows and the processed corpus 234,674. Registrable-domain grouping produces 164,074 training, 33,699 validation and 36,901 held-out rows. The exported 120-tree forest uses 27 features derived locally from URL text. All legitimate training URLs are HTTPS homepages without queries; this strong collection bias restricts the apparent held-out performance. Domain separation does not establish temporal or campaign independence.')
 evals=mdtable('FINAL_EVALUATION.md',1)
+p('The Message and URL matrices were reproduced during the October completion checks. The controlled URL, Phone, QR/payment cases and warm-latency values in Table 14 are historical measurements from 12 September 2026; they were not remeasured for this candidate.')
 table(14,'Intelligence evaluation and interpretation',['Evaluation / sample','Result and boundary'],[[r[0]+'\n'+r[1],r[2]+'\n'+r[3]] for r in evals],[2,4.27])
 fig(7,'Frozen Message and URL confusion matrices','figure-07-confusion-matrices.png','MODEL_EVALUATION.md, URL_MODEL_EVALUATION.md and frozen reproduction records.',6.15)
-fig(8,'Recorded automated test counts','figure-11-testing.png','Merged-main release-verification.json; test scopes differ.',6.1)
+fig(8,'October automated test counts','completion-tests.png','completion-verification.json; 365 backend, 164 frontend and 52 browser tests; one live-AI skip.',6.1)
 p('Accuracy measures the proportion of all test predictions that match their labels. Precision is the fraction of predictions for a class that are correct; recall is the fraction of actual class members recovered. F1 is their harmonic mean, and macro F1 weights each class equally (scikit-learn developers, n.d.). For Message, 13 of 106 SCAM test examples were predicted SPAM. Its SCAM recall is 93/106 = 87.7358%, despite overall accuracy of 96.8966%. URL phishing recall is 16,495/16,966 = 97.2239%. These are classifier metrics, not measurements of the final rules/model fusion or real-world fraud prevention.')
-p('The four objectives have concrete evidence mappings in Table 2. All 18 functional and 10 non-functional requirements have implementation and verification references in REQUIREMENTS.md. Requirements involving physical cameras, human usability/accessibility or inbox delivery retain qualified statuses. A recorded test is evidence for its asserted behaviour, not automatic completion of every real-world outcome.')
+p('The four proposal objectives have concrete evidence mappings in Table 2. O4 remains partial until the proposed volunteer study is performed. All 18 functional and 10 non-functional requirements have implementation and verification references in REQUIREMENTS.md. Requirements involving physical cameras, human usability/accessibility or inbox delivery retain qualified statuses. A recorded test is evidence for its asserted behaviour, not automatic completion of every real-world outcome.')
 h('B.3 Human evaluation protocol')
-p('No formal volunteer study has been conducted. The five-task formative protocol covers account access, Message interpretation, URL interpretation, History retrieval, and QR scanning/upload with a Phone/text/payment interpretation probe. With appropriate institutional approval and participant consent, record pseudonym, device, date, unassisted completion, errors, time, explanation of risk versus confidence and optional ease comments. Do not include credentials or sensitive submissions. Report actual sample size, recruitment limits and failures. Blank forms and the protocol are in USABILITY_TEST_PLAN.md and USABILITY_RESULTS_TEMPLATE.md; no participant count or score is claimed here.')
+p('No formal volunteer study has been conducted. The five core tasks follow the proposal: account access, Message analysis, URL analysis, risk/explanation interpretation and History retrieval. QR, Phone and payment interpretation are optional supplementary probes. With appropriate institutional approval and participant consent, record pseudonym, device, date, unassisted completion, errors, time, explanation of risk versus confidence and optional ease comments. Do not include credentials or sensitive submissions. Report actual sample size, recruitment limits and failures. Blank forms and the protocol are in USABILITY_TEST_PLAN.md and USABILITY_RESULTS_TEMPLATE.md; no participant count or score is claimed here.')
 endsec(10)
 h('Appendix C — User workflow and screenshots',1)
-p('Figures 9–11 are authentic local browser captures of the final application commit using a real isolated PostgreSQL test database and synthetic demonstration account. They illustrate the interface; they are not authenticated production acceptance or a usability study. Capture times, Chrome version 152.0.7977.76, viewport 1440 × 1000 and authored fixtures are recorded in docs/evidence/report-screenshots.json. Additional login, URL, Phone, upload, dashboard and account captures are supplied in docs/figures/.')
-fig(9,'Message assessment with separate risk and confidence','report-message.png','Local capture, 12 September 2026; authored OTP/password-request fixture.',6.15)
+p('Figures 9–11 are fresh authenticated production captures from the supplementary completion capture run using only synthetic accounts and authored fixtures. They illustrate the deployed interface; they are not a usability study. Capture provenance, source identity and cleanup are recorded in completion-production-captures.json, completion-production-smoke.json and the final audit. Captured views remain available as the offline demonstration fallback. No existing user data were accessed.')
+fig(9,'Message assessment with separate risk and confidence','completion-message.png','Completion production smoke; authored password/OTP-request fixture.',6.15)
 p('Enter permitted message text, select Analyse and inspect the indicators and limitations. The displayed fusion score is not a probability of fraud. URL mode analyses the supplied string without visiting its destination. Phone mode reports numbering metadata and leaves ordinary valid numbers at Insufficient Evidence.')
-fig(10,'QR analysis after an explicit upload submission','report-qr-result.png','Local capture, 12 September 2026; generated example.com URL QR fixture.',6.15)
+fig(10,'QR analysis after an explicit upload submission','completion-qr.png','Completion production smoke; generated reserved-domain QR fixture.',6.15)
 p('Choose one supported image and select Analyse QR. For camera input, explicitly start the camera, allow local detection and review the stopped preview before selecting Analyse. Cancellation and navigation stop camera resources. A decodable payload or valid payment CRC does not establish a legitimate destination or recipient; use upload if camera access is unavailable.')
-fig(11,'Private History with search, type and risk filters','report-history.png','Local capture, 12 September 2026; owned records created in the same session.',6.15)
-p('History supports owner-scoped retrieval and deterministic ordering. Open a result to revisit its original evidence. Analyse again copies owned Message/URL/Phone content into a new draft; the earlier result remains immutable. QR requires fresh input. Account controls edit profile fields, and recovery uses a single-use expiring link. The final owner checklist separately verifies inbox delivery and production A/B isolation.')
+fig(11,'Private History with search, type and risk filters','completion-history.png','Completion production smoke; synthetic records created in the same session.',6.15)
+p('History supports owner-scoped retrieval and deterministic ordering. Open a result to revisit its original evidence. Analyse again copies owned Message/URL/Phone content into a new draft; the earlier result remains immutable. QR requires fresh input. Account controls edit profile fields, and recovery uses a single-use expiring link. Production A/B isolation was exercised with two synthetic accounts; the owner checklist still requires controlled-inbox delivery and physical-camera evidence.')
 endsec(11)
 h('Appendix D — Limitations, further work and conclusion',1);h('D.1 Limitations')
 for c in re.split(r'\n\s*\n',(D/'LIMITATIONS.md').read_text(encoding='utf-8')):
@@ -219,9 +233,9 @@ p('Further validation should precede expansion. Priorities are independent user 
 h('D.3 Conclusion')
 blocks('FINAL_CONCLUSION.md')
 h('D.4 Evidence completion record')
-p('MANUAL ACTION REQUIRED: complete the blank cover fields, insert substantiated original planning/deadline records, confirm that these supplied proposal rubrics and template govern the intended final submission, record physical-device and controlled-inbox acceptance, and perform the four rehearsals. The owner’s “its working” response is informal acceptance; it does not establish a named device, study or measured delivery performance. The dedicated FINAL_PERSONAL_ACTIONS.md checklist records these remaining actions without inventing completion.')
+p('MANUAL ACTION REQUIRED: complete the cover identity fields; confirm the final rubric, official timetable and presentation duration; conduct and report the proposed volunteer study; record physical-device and controlled-inbox acceptance; and perform the rehearsals. The proposal resolves the intended scope and planned calendar. Technical checks cannot substitute for human evaluation or oral performance. FINAL_PERSONAL_ACTIONS.md lists the exact remaining owner work. Verdict: TECHNICALLY READY, OWNER ACCEPTANCE PENDING; this is a submission candidate, not a claim of completed assessment requirements.')
 p('Abbreviations: API, application programming interface; CRC, cyclic redundancy check; CSRF, cross-site request forgery; ERD, entity-relationship diagram; FR/NFR, functional/non-functional requirement; ML, machine learning; QR, quick response; SHA, commit identifier; TF–IDF, term frequency–inverse document frequency; TLV, tag-length-value; URL, uniform resource locator.')
-body.append(deepcopy(sections[12]));doc.core_properties.title='SCAMGUARD — CSC1250 Report';doc.core_properties.subject='Report prepared in the supplied CSC1250 proposal template';doc.core_properties.author='';doc.core_properties.last_modified_by=''
+body.append(deepcopy(sections[12]));doc.core_properties.title='SCAMGUARD — CSC1250 Final Candidate, October 2026';doc.core_properties.subject='Updated final candidate using the supplied proposal template; final applicability requires confirmation';doc.core_properties.author='';doc.core_properties.last_modified_by=''
 settings=doc.settings.element;upd=OxmlElement('w:updateFields');upd.set(qn('w:val'),'true');settings.append(upd)
 doc.save(out)
 # Preserve unaffected source package parts byte-for-byte before native field refresh.

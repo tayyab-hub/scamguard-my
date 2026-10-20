@@ -1,5 +1,11 @@
 # Final academic files created or updated
 
+**Historical September academic review.** Current objectives, proposed dates, release evidence,
+editable candidates and owner gaps are in [the completion audit](FINAL_COMPLETION_AUDIT_2026-10-20.md)
+and [academic package](FINAL_ACADEMIC_PACKAGE.md). The newly supplied proposal resolves the
+previously missing original objective/calendar evidence. It also confirms that a volunteer study
+is required and remains unfinished. Historical self-marks are not reassigned or guaranteed here.
+
 Inventory relative to accepted application commit `4df277bdf93a2e1424ac533d488cd7ba127b35ce`. This is an academic documentation/artifact pass. There are **37 updated tracked files** and **75 newly created files**, including the editable report. Application source, tests, dependency manifests, migrations and deployment configuration are unchanged. No commit, push or deployment was performed for this pass.
 
 The original files in Downloads remain unchanged. `.tmp/` work files, temporary rendering PDFs/PNGs and local dependency tooling are excluded from this deliverable inventory. Figure PNG/SVG pairs are the report-ready visuals and editable vector equivalents, not duplicate competing content. Historical task documents received contextual supersession/wording corrections while retaining their original evidence.

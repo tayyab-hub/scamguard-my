@@ -1,5 +1,16 @@
 # Testing and verification
 
+## Latest executed verification
+
+The completion pass ran the documented gates against real isolated PostgreSQL: 365 Pytest passes,
+one intentional external-AI skip, two upstream deprecation warnings; 164 Vitest passes; 52 browser
+passes (18 foundation, 8 built preview, 26 persistence). No final failed tests. Type/lint/build,
+Alembic current/single-head/check, frozen-model reproduction, wheel and secret checks passed.
+After the urllib3 patch, all affected backend/model/wheel/persisted-browser gates passed again.
+See [exact commands and environment](evidence/completion-verification.json),
+[dependency audits](evidence/completion-dependency-audit.json) and
+[completion audit](FINAL_COMPLETION_AUDIT_2026-10-20.md). Historical counts below retain their dates.
+
 ## Current engineering verification (2026-10-08)
 
 Executed: **355 pytest passed / one opt-in live-AI skip**, **164 Vitest passed (12 files)**,

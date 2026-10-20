@@ -1,5 +1,11 @@
 # Claim audit and corrected meanings
 
+**Historical September academic review.** Current objectives, proposed dates, release evidence,
+editable candidates and owner gaps are in [the completion audit](FINAL_COMPLETION_AUDIT_2026-10-20.md)
+and [academic package](FINAL_ACADEMIC_PACKAGE.md). The newly supplied proposal resolves the
+previously missing original objective/calendar evidence. It also confirms that a volunteer study
+is required and remains unfinished. Historical self-marks are not reassigned or guaranteed here.
+
 The audit searched report-support Markdown and root project-state documents for all eleven requested expressions: “detects scams”, “prevents scams”, “accurate”, “safe”, “secure”, “AI powered”, “real time”, “forensic”, “guaranteed”, “verified” and “trusted”, including common case/hyphen variants. It also checked the final Word text. The occurrence register records each match, location, context, disposition and evidence pointer: [claim-audit.csv](evidence/claim-audit.csv). This is an occurrence audit, not a claim that a word filter can establish scientific validity.
 
 | Claim attacked | Defensible final meaning / correction | Evidence |

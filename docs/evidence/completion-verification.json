@@ -1,0 +1,378 @@
+{
+  "recorded_at_utc": "2026-10-20T15:55:08.846182+00:00",
+  "base_sha": "ca65ab29c3762947c8db97186156a53802713d48",
+  "code_commit": "6d68b8978183e374e406985480b6fce8cf2e1126",
+  "environment": {
+    "os": "Windows",
+    "node": "24.18.0",
+    "python": "3.12.14",
+    "postgresql": "17.11",
+    "browser": "installed Chrome"
+  },
+  "counts": {
+    "pytest_passed": 365,
+    "pytest_skipped": 1,
+    "vitest_passed": 164,
+    "playwright_foundation": 18,
+    "playwright_preview": 8,
+    "playwright_postgresql": 26
+  },
+  "complete_gate": {
+    "started_at_utc": "2026-10-20T15:35:51.702651+00:00",
+    "checks": [
+      {
+        "name": "typescript",
+        "command": [
+          "$REPO\\backend\\.venv\\Scripts\\python.exe",
+          "$REPO\\.tmp\\task8_checks.py",
+          "typecheck"
+        ],
+        "exit_code": 0,
+        "seconds": 6.22,
+        "log": "typescript.log",
+        "log_sha256": "1898a3d13f6efea3d5f9203ef348110036350194239bc407f943a699c79dca2e"
+      },
+      {
+        "name": "eslint",
+        "command": [
+          "$REPO\\backend\\.venv\\Scripts\\python.exe",
+          "$REPO\\.tmp\\task8_checks.py",
+          "lint"
+        ],
+        "exit_code": 0,
+        "seconds": 5.83,
+        "log": "eslint.log",
+        "log_sha256": "705da1e5dd71dac779b172034ab821faa0eea406654e0fbe70f73e9b81b0bfde"
+      },
+      {
+        "name": "vitest",
+        "command": [
+          "$REPO\\backend\\.venv\\Scripts\\python.exe",
+          "$REPO\\.tmp\\task8_checks.py",
+          "test"
+        ],
+        "exit_code": 0,
+        "seconds": 14.92,
+        "log": "vitest.log",
+        "log_sha256": "b83540ff73c5a070ba1ac590156f10c7033d94e9a653ffc126e586be71a9e494"
+      },
+      {
+        "name": "frontend-build",
+        "command": [
+          "$REPO\\backend\\.venv\\Scripts\\python.exe",
+          "$REPO\\.tmp\\task8_checks.py",
+          "build"
+        ],
+        "exit_code": 0,
+        "seconds": 11.17,
+        "log": "frontend-build.log",
+        "log_sha256": "82bb6f235ee8cd90425cb4a40fe598212cb3ab36607b3ed2183c2aa95ee29e35"
+      },
+      {
+        "name": "pytest",
+        "command": [
+          "$REPO\\backend\\.venv\\Scripts\\python.exe",
+          "$REPO\\.tmp\\task8_checks.py",
+          "backend"
+        ],
+        "exit_code": 0,
+        "seconds": 72.2,
+        "log": "pytest.log",
+        "log_sha256": "fb72283a4ff59af6fc9bc0515720e8573c4f93296be27c67483394e5e8538c09"
+      },
+      {
+        "name": "ruff-lint",
+        "command": [
+          "$REPO\\backend\\.venv\\Scripts\\python.exe",
+          "-m",
+          "ruff",
+          "check",
+          "backend"
+        ],
+        "exit_code": 0,
+        "seconds": 0.17,
+        "log": "ruff-lint.log",
+        "log_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+      },
+      {
+        "name": "ruff-format",
+        "command": [
+          "$REPO\\backend\\.venv\\Scripts\\python.exe",
+          "-m",
+          "ruff",
+          "format",
+          "--check",
+          "backend"
+        ],
+        "exit_code": 0,
+        "seconds": 0.16,
+        "log": "ruff-format.log",
+        "log_sha256": "363910bec9208f1bd80af852c16d0262b268cf6f523e2c5e0f1ccef8ecd55e9d"
+      },
+      {
+        "name": "pip-check",
+        "command": [
+          "$REPO\\backend\\.venv\\Scripts\\python.exe",
+          "-m",
+          "pip",
+          "check"
+        ],
+        "exit_code": 0,
+        "seconds": 0.83,
+        "log": "pip-check.log",
+        "log_sha256": "672aec65a45bed50e70229c70934a7eebf0462595c459b83023027645d57cccf"
+      },
+      {
+        "name": "alembic-current",
+        "command": [
+          "$REPO\\backend\\.venv\\Scripts\\python.exe",
+          "$REPO\\.tmp\\task8_checks.py",
+          "db",
+          "current"
+        ],
+        "exit_code": 0,
+        "seconds": 2.0,
+        "log": "alembic-current.log",
+        "log_sha256": "6c5e4eb0fa5f44cd69d252d3ea9392cb1f9bcd569c4fa63489b685fc0e6b041a"
+      },
+      {
+        "name": "alembic-heads",
+        "command": [
+          "$REPO\\backend\\.venv\\Scripts\\python.exe",
+          "$REPO\\.tmp\\task8_checks.py",
+          "db",
+          "heads"
+        ],
+        "exit_code": 0,
+        "seconds": 1.19,
+        "log": "alembic-heads.log",
+        "log_sha256": "27f8b5452aacbeabe7bc3c9dc45ef9f183c0b08549ad3afbdba53ed51d0e5081"
+      },
+      {
+        "name": "alembic-check",
+        "command": [
+          "$REPO\\backend\\.venv\\Scripts\\python.exe",
+          "$REPO\\.tmp\\task8_checks.py",
+          "db",
+          "check"
+        ],
+        "exit_code": 0,
+        "seconds": 2.09,
+        "log": "alembic-check.log",
+        "log_sha256": "764b08c76c2885df34b1eabe955772eb49348598c8c674a3673556e98d0ed1ed"
+      },
+      {
+        "name": "message-evaluation",
+        "command": [
+          "$REPO\\backend\\.venv\\Scripts\\python.exe",
+          "backend/scripts/evaluate_message_reliability.py"
+        ],
+        "exit_code": 0,
+        "seconds": 1.44,
+        "log": "message-evaluation.log",
+        "log_sha256": "95b364a5fb4e1a4133598e8ca73a3d319602221540fd104f2b3855cec2a0a496"
+      },
+      {
+        "name": "url-verifier",
+        "command": [
+          "$REPO\\backend\\.venv\\Scripts\\python.exe",
+          "backend/scripts/verify_url_pipeline.py"
+        ],
+        "exit_code": 0,
+        "seconds": 11.28,
+        "log": "url-verifier.log",
+        "log_sha256": "19a54da90e693dd3e2d1046554a1b20c104689ea1fd2c16edfde9ddc76e8025b"
+      },
+      {
+        "name": "backend-wheel",
+        "command": [
+          "$REPO\\backend\\.venv\\Scripts\\python.exe",
+          "-m",
+          "pip",
+          "wheel",
+          "--no-deps",
+          "--no-build-isolation",
+          "--disable-pip-version-check",
+          "./backend",
+          "-w",
+          "$REPO\\.tmp\\final-completion-20261020\\final-checks\\wheel"
+        ],
+        "exit_code": 0,
+        "seconds": 2.59,
+        "log": "backend-wheel.log",
+        "log_sha256": "f7e23cd20922da22df85ba018afe4c76856a835963317ef25c610ad555bde41c"
+      },
+      {
+        "name": "playwright-foundation",
+        "command": [
+          "$REPO\\backend\\.venv\\Scripts\\python.exe",
+          "$REPO\\.tmp\\task8_checks.py",
+          "test:e2e",
+          "--",
+          "--workers=1"
+        ],
+        "exit_code": 0,
+        "seconds": 70.14,
+        "log": "playwright-foundation.log",
+        "log_sha256": "885cfdd3ee3725f426a20dcdc1192092a3b8a17741615b60bc1bf48c7bcd8e00"
+      },
+      {
+        "name": "playwright-preview",
+        "command": [
+          "$REPO\\backend\\.venv\\Scripts\\python.exe",
+          "$REPO\\.tmp\\task8_checks.py",
+          "test:preview",
+          "--",
+          "--workers=1"
+        ],
+        "exit_code": 0,
+        "seconds": 15.23,
+        "log": "playwright-preview.log",
+        "log_sha256": "74a4c15e56e64da43b4235236031ca0f0d83dc97338102e3d0ad3356072d3aed"
+      },
+      {
+        "name": "playwright-postgres",
+        "command": [
+          "$REPO\\backend\\.venv\\Scripts\\python.exe",
+          "$REPO\\.tmp\\task8_checks.py",
+          "test:persistence",
+          "--",
+          "--workers=1"
+        ],
+        "exit_code": 0,
+        "seconds": 266.56,
+        "log": "playwright-postgres.log",
+        "log_sha256": "4ec8fffaa6bca2e3e086fb440804964015c61e0c1871dfff9b2a41a5eda73f64"
+      },
+      {
+        "name": "launcher-static",
+        "command": [
+          "powershell.exe",
+          "-NoProfile",
+          "-ExecutionPolicy",
+          "Bypass",
+          "-File",
+          "scripts/Test-DevScripts.ps1"
+        ],
+        "exit_code": 0,
+        "seconds": 0.45,
+        "log": "launcher-static.log",
+        "log_sha256": "ba9148899530c7af4344c66839879eaf6ea1d8ceacdf412ce0356d5cbe4d7a27"
+      },
+      {
+        "name": "git-whitespace",
+        "command": [
+          "git",
+          "-c",
+          "core.safecrlf=false",
+          "diff",
+          "--check"
+        ],
+        "exit_code": 0,
+        "seconds": 0.09,
+        "log": "git-whitespace.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "completed_at_utc": "2026-10-20T15:43:56.274548+00:00",
+    "result": "PASS"
+  },
+  "post_urllib3_patch_affected_gates": {
+    "started_at_utc": "2026-10-20T15:44:41.600919+00:00",
+    "checks": [
+      {
+        "name": "pytest",
+        "command": [
+          "$REPO\\backend\\.venv\\Scripts\\python.exe",
+          "$REPO\\.tmp\\task8_checks.py",
+          "backend"
+        ],
+        "exit_code": 0,
+        "seconds": 79.38,
+        "log": "pytest.log",
+        "log_sha256": "f3f3037d0e3fcb792ca4dd7c016d57b49eccf60de44f2027eba3be3c271d296b"
+      },
+      {
+        "name": "pip-check",
+        "command": [
+          "$REPO\\backend\\.venv\\Scripts\\python.exe",
+          "-m",
+          "pip",
+          "check"
+        ],
+        "exit_code": 0,
+        "seconds": 0.84,
+        "log": "pip-check.log",
+        "log_sha256": "672aec65a45bed50e70229c70934a7eebf0462595c459b83023027645d57cccf"
+      },
+      {
+        "name": "message-evaluation",
+        "command": [
+          "$REPO\\backend\\.venv\\Scripts\\python.exe",
+          "backend/scripts/evaluate_message_reliability.py"
+        ],
+        "exit_code": 0,
+        "seconds": 1.42,
+        "log": "message-evaluation.log",
+        "log_sha256": "95b364a5fb4e1a4133598e8ca73a3d319602221540fd104f2b3855cec2a0a496"
+      },
+      {
+        "name": "url-verifier",
+        "command": [
+          "$REPO\\backend\\.venv\\Scripts\\python.exe",
+          "backend/scripts/verify_url_pipeline.py"
+        ],
+        "exit_code": 0,
+        "seconds": 12.45,
+        "log": "url-verifier.log",
+        "log_sha256": "19a54da90e693dd3e2d1046554a1b20c104689ea1fd2c16edfde9ddc76e8025b"
+      },
+      {
+        "name": "backend-wheel",
+        "command": [
+          "$REPO\\backend\\.venv\\Scripts\\python.exe",
+          "-m",
+          "pip",
+          "wheel",
+          "--no-deps",
+          "--no-build-isolation",
+          "--disable-pip-version-check",
+          "./backend",
+          "-w",
+          "$REPO\\.tmp\\final-completion-20261020\\security-patch-checks\\wheel"
+        ],
+        "exit_code": 0,
+        "seconds": 2.58,
+        "log": "backend-wheel.log",
+        "log_sha256": "2d1a07623da716234a95aa85644830388ac0fa0f4bad748e629c76b499ef21d0"
+      },
+      {
+        "name": "playwright-postgres",
+        "command": [
+          "$REPO\\backend\\.venv\\Scripts\\python.exe",
+          "$REPO\\.tmp\\task8_checks.py",
+          "test:persistence",
+          "--",
+          "--workers=1"
+        ],
+        "exit_code": 0,
+        "seconds": 266.62,
+        "log": "playwright-postgres.log",
+        "log_sha256": "6dd6cb1a5d6b4e9c86da6a6aa18e4cae282e21f2f359630a56fcd5afa0858594"
+      }
+    ],
+    "completed_at_utc": "2026-10-20T15:50:44.901264+00:00",
+    "result": "PASS"
+  },
+  "warnings": [
+    "Optional live external-AI test intentionally not enabled.",
+    "Starlette httpx test-client deprecation.",
+    "AnyIO BlockingPortal alias deprecation.",
+    "Browser runner NO_COLOR/FORCE_COLOR warning."
+  ],
+  "initial_environment_failures": [
+    "Sandbox prevented esbuild reading configuration directories; authorized rerun passed.",
+    "Local PostgreSQL initially listened on 5432 rather than configured 55432; connection failures were resolved by restarting only the owned local cluster on 55432."
+  ],
+  "scope": "Only isolated loopback scamguard_test and scamguard_e2e databases; frozen inference, no retraining."
+}
