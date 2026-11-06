@@ -1,3 +1,7 @@
+// Shared component-test harness: create a fresh query cache, an in-memory route and a
+// controlled authentication context. AuthProvider-specific tests mount the real provider
+// separately.
+
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
@@ -17,6 +21,7 @@ export function renderApp(path = '/', authOverrides: Partial<AuthContextValue> =
   const auth: AuthContextValue = {
     user: testUser,
     loading: false,
+    waking: false,
     error: null,
     signIn: async () => undefined,
     signUp: async () => undefined,

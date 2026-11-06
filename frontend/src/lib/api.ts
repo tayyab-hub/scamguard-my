@@ -1,6 +1,12 @@
+// Typed API contracts and credentialed transport for the whole frontend. Zod validates actual
+// server JSON at runtime and z.infer derives compile-time types from it. HttpOnly cookies
+// authenticate requests; the separate CSRF token exists only in this module's memory.
+
 import { z } from 'zod'
 import { getApiBaseUrl } from './env'
 
+// Public request failure carrying optional HTTP status, correlation ID, stable code and retry
+// delay. Components can show actionable errors without exposing raw server internals.
 export class ApiError extends Error {
   constructor(
     message: string,
@@ -47,6 +53,8 @@ export const assessmentBasisSchema = z.object({
   mitigating: z.array(z.string()),
   uncertainty: z.array(z.string()),
 })
+// Schemas preserve null scores and component provenance. A missing confidence value must remain
+// unavailable rather than becoming zero or a fabricated percentage.
 export const messageAssessmentSchema = z.object({
   risk_level: z.enum(['LOW', 'CAUTION', 'ELEVATED', 'HIGH', 'INSUFFICIENT_EVIDENCE']),
   risk_score: z.number().min(0).max(1).nullable(),
@@ -176,6 +184,9 @@ export const phoneAssessmentSchema = z.object({
   limitations: z.array(z.string()),
   completed_at: z.iso.datetime({ offset: true }),
 })
+// QR can contain a routed engine's component fields as well as its own provenance. catchall
+// preserves these fields for rendering without confusing QR with direct Message/URL/Phone
+// output.
 export const qrAssessmentSchema = z.object({
   risk_level: z.enum(['LOW', 'CAUTION', 'ELEVATED', 'HIGH', 'INSUFFICIENT_EVIDENCE']),
   risk_score: z.number().min(0).max(1).nullable(),
@@ -327,6 +338,8 @@ export const capabilitiesSchema = z.object({
   reason: z.string(),
 })
 
+// GET helper: return a Promise of schema-validated data, forwarding an optional cancellation
+// signal to requestApi.
 export async function getApi<T>(
   path: string,
   schema: z.ZodType<T>,
@@ -335,6 +348,8 @@ export async function getApi<T>(
   return requestApi(path, schema, { signal })
 }
 
+// Choose the shared text, image-upload or decoded-camera endpoint from the discriminated input.
+// FormData lets the browser generate the multipart boundary; camera requests contain text only.
 export async function postSubmission(input: SubmissionRequest) {
   if (input.input_type === 'QR') {
     if ('payload' in input)
@@ -352,9 +367,62 @@ export async function postSubmission(input: SubmissionRequest) {
 let csrfToken: string | null = null
 let sessionRevision = 0
 
+// Replace/clear the in-memory synchronizer token and advance the revision so late 401s from an
+// earlier session cannot clear a newer identity.
 export function setCsrfToken(value: string | null) {
   sessionRevision++
   csrfToken = value
+}
+
+// Hosted API wake-up handling. The free Render instance sleeps when idle and can take about a
+// minute to start, so the first reads time out or receive a gateway error from the Vercel
+// rewrite. Only those transport-level failures are retried; an application answer such as 503
+// readiness, 401 or validation stays explicit and is never retried here.
+export const SERVICE_TIMEOUT = 'SERVICE_TIMEOUT'
+export const SERVICE_UNREACHABLE = 'SERVICE_UNREACHABLE'
+
+const wakeRetry = { attempts: 6, baseDelayMs: 2_000, maxDelayMs: 10_000 }
+
+// Override the wake-up policy (tests disable it so offline states appear immediately).
+export function configureWakeRetry(policy: Partial<typeof wakeRetry>) {
+  Object.assign(wakeRetry, policy)
+}
+
+// True for failures that look like a sleeping or still-starting host rather than an answer.
+export function isWakingServiceError(error: unknown) {
+  return (
+    error instanceof ApiError &&
+    (error.code === SERVICE_TIMEOUT ||
+      error.code === SERVICE_UNREACHABLE ||
+      error.status === 502 ||
+      error.status === 504)
+  )
+}
+
+// TanStack Query retry predicate for idempotent reads during a cold start.
+export function shouldRetryWhileWaking(failureCount: number, error: unknown) {
+  return failureCount < wakeRetry.attempts && isWakingServiceError(error)
+}
+
+// Exponential delay between wake-up attempts, capped so recovery is noticed promptly.
+export function wakeRetryDelay(attempt: number) {
+  return Math.min(wakeRetry.baseDelayMs * 2 ** attempt, wakeRetry.maxDelayMs)
+}
+
+// Repeat an idempotent read while the host is waking. onRetry lets the UI explain the wait.
+export async function retryWhileWaking<T>(
+  read: () => Promise<T>,
+  onRetry?: (attempt: number) => void,
+): Promise<T> {
+  for (let attempt = 0; ; attempt++) {
+    try {
+      return await read()
+    } catch (error) {
+      if (!shouldRetryWhileWaking(attempt, error)) throw error
+      onRetry?.(attempt + 1)
+      await new Promise((resolve) => setTimeout(resolve, wakeRetryDelay(attempt)))
+    }
+  }
 }
 
 type RequestOptions = {
@@ -373,6 +441,9 @@ const apiErrorSchema = z.object({
   }),
 })
 
+// Send one bounded credentialed request and return data only after Zod validation. Combine
+// caller cancellation with a timeout, translate HTTP/transport failures, and clean up
+// timer/listener resources in finally.
 export async function requestApi<T>(
   path: string,
   schema: z.ZodType<T>,
@@ -396,6 +467,9 @@ export async function requestApi<T>(
   )
   try {
     const method = options.method || 'GET'
+    // Do not set multipart Content-Type manually: the browser must include its generated
+    // boundary. JSON requests set their own type and non-GET requests attach CSRF when
+    // available.
     const formData = options.body instanceof FormData
     const requestBody: BodyInit | undefined =
       options.body === undefined
@@ -435,6 +509,9 @@ export async function requestApi<T>(
           ? Math.min(Number(response.headers.get('Retry-After')), 86_400)
           : undefined,
       )
+      // Only an expiry belonging to the current session can trigger sign-out. A wrong login
+      // password and a late request from a previous identity must not clear an unrelated
+      // current session.
       if (
         response.status === 401 &&
         requestRevision === sessionRevision &&
@@ -446,27 +523,44 @@ export async function requestApi<T>(
       }
       throw error
     }
+    // A static host may return HTML for an API path, or a backend may return an unexpected
+    // shape. Validate before treating it as application data; 204 deliberately bypasses JSON
+    // parsing.
     const result = schema.safeParse(response.status === 204 ? undefined : await response.json())
     if (!result.success) throw new ApiError('The service returned an unexpected response.')
     return result.data
   } catch (error) {
     if (error instanceof ApiError) throw error
     if (options.signal?.aborted) throw error
+    // Transport codes let read paths recognise a sleeping/waking host. An analysis-write timeout
+    // deliberately carries no code because its result may already have been committed.
     if (controller.signal.aborted)
-      throw new ApiError(
-        isAnalysisWrite
-          ? 'The analysis response took too long. Check your history before submitting again; the result may already be saved.'
-          : 'The service took too long to respond. Please try again.',
-      )
+      throw isAnalysisWrite
+        ? new ApiError(
+            'The analysis response took too long. Check your history before submitting again; the result may already be saved.',
+          )
+        : new ApiError(
+            'The service took too long to respond. Please try again.',
+            undefined,
+            undefined,
+            SERVICE_TIMEOUT,
+          )
     if (error instanceof SyntaxError)
       throw new ApiError('The service returned an unexpected response.')
-    throw new ApiError('We could not reach the service. Check your connection and try again.')
+    throw new ApiError(
+      'We could not reach the service. Check your connection and try again.',
+      undefined,
+      undefined,
+      SERVICE_UNREACHABLE,
+    )
   } finally {
     clearTimeout(timeout)
     options.signal?.removeEventListener('abort', abort)
   }
 }
 
+// Submit profile/email/password to signup; return the validated user/CSRF envelope for
+// AuthProvider to install.
 export async function signup(fullName: string, username: string, email: string, password: string) {
   return requestApi('/auth/signup', authResponseSchema, {
     method: 'POST',
@@ -474,6 +568,8 @@ export async function signup(fullName: string, username: string, email: string, 
   })
 }
 
+// Submit username-or-email credentials; return the new session's user/CSRF envelope or reject
+// with a safe ApiError.
 export async function login(identifier: string, password: string) {
   return requestApi('/auth/login', authResponseSchema, {
     method: 'POST',
@@ -481,19 +577,27 @@ export async function login(identifier: string, password: string) {
   })
 }
 
+// Restore the existing cookie session. AuthProvider handles 401/restoration races itself rather
+// than the generic expiry event.
 export async function currentUser(signal?: AbortSignal) {
   // The provider guards this restoration response against later identity changes.
   return requestApi('/auth/me', authResponseSchema, { signal, handlesSessionExpiry: true })
 }
 
+// Ask the backend to revoke the session and expire its cookie. HTTP 204 has no JSON body;
+// rejection remains visible to the caller.
 export async function logout() {
   return requestApi('/auth/logout', z.unknown(), { method: 'POST' })
 }
 
+// Send password reauthentication in a CSRF-protected DELETE body; the server performs owner
+// deletion and cascades.
 export async function deleteAccount(password: string) {
   return requestApi('/auth/account', z.unknown(), { method: 'DELETE', body: { password } })
 }
 
+// PATCH editable name/username only and validate the returned user. Email changes are not part
+// of this contract.
 export async function updateProfile(fullName: string, username: string) {
   return requestApi('/auth/profile', z.object({ user: userSchema }), {
     method: 'PATCH',
@@ -501,6 +605,8 @@ export async function updateProfile(fullName: string, username: string) {
   })
 }
 
+// Request recovery with a generic public response and a longer mail-request timeout. A
+// successful request does not reveal account existence or prove inbox delivery.
 export async function requestPasswordReset(email: string) {
   return requestApi('/auth/password-reset/request', z.object({ message: z.string() }), {
     method: 'POST',
@@ -509,6 +615,8 @@ export async function requestPasswordReset(email: string) {
   })
 }
 
+// Submit the one-time token and new password; the backend validates/consumes it and revokes
+// existing sessions.
 export async function confirmPasswordReset(token: string, password: string) {
   return requestApi('/auth/password-reset/confirm', z.unknown(), {
     method: 'POST',
@@ -516,6 +624,8 @@ export async function confirmPasswordReset(token: string, password: string) {
   })
 }
 
+// Delete one UUID through the owner-checked backend endpoint; return no response data on HTTP
+// 204.
 export async function deleteAnalysis(id: string) {
   return requestApi(`/analyses/${id}`, z.unknown(), { method: 'DELETE' })
 }

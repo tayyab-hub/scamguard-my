@@ -49,6 +49,17 @@ checked-in `render.yaml` builds the backend, generates the auth pepper, uses `/a
 health check, and starts through `scripts/start_production.py`. That script applies additive Alembic
 migrations and only then binds Uvicorn to `0.0.0.0:$PORT`.
 
+**Cold-start handling (6 November 2026):** a sleeping instance needs roughly a minute to start,
+which previously exceeded the frontend's 8-second read timeout and left Vercel showing
+"API unavailable" until a manual redeploy or later refresh. Idempotent reads and session
+restoration now retry only timeouts, unreachable-host errors and 502/504 gateway responses
+(up to six retries, 2–10 s backoff) while showing a waking message; 503 readiness answers,
+401s and all writes/submissions are never retried. `.github/workflows/keep-api-awake.yml` also
+requests `/api/v1/health` through Vercel every 10 minutes so the instance normally stays awake
+(about 744 instance-hours a month, within the 750 free hours only if no other free Render
+service uses them; GitHub may delay schedules and pauses them after 60 days of repository
+inactivity).
+
 Render's free web service currently sleeps after inactivity and can cold-start slowly; its filesystem
 is ephemeral and free services have limited compute/hours. SCAMGUARD stores operational data only in
 Neon, not that filesystem. A Render pre-deploy command is a paid feature, so the free single-instance

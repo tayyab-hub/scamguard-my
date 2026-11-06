@@ -1,10 +1,18 @@
+// API liveness badge using useHealth. A successful response means the API process responded,
+// not that every engine/database/mail path is ready.
+
 import { RefreshCw } from 'lucide-react'
 import { useHealth } from '../lib/queries'
 
+// Render connecting, unavailable or connected text and offer an explicit retry after failure;
+// color is accompanied by words.
 export function ApiStatus() {
   const health = useHealth()
+  // failureCount rises while the query retries a sleeping host, before any final error.
   const label = health.isPending
-    ? 'Connecting to API'
+    ? health.failureCount > 0
+      ? 'Waking up API'
+      : 'Connecting to API'
     : health.isError
       ? 'API unavailable'
       : 'API connected'

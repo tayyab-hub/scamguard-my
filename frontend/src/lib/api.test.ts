@@ -1,11 +1,20 @@
+// Transport boundary tests for runtime schemas, safe errors, credentials/CSRF, timeouts,
+// cancellation and late unauthorized responses. Fake timers advance stalled requests without
+// real waiting; controlled fetch promises reproduce races.
+
 import { describe, expect, it, vi } from 'vitest'
 import {
   ApiError,
   analysisSummarySchema,
+  configureWakeRetry,
   getApi,
   healthSchema,
+  isWakingServiceError,
   requestApi,
+  retryWhileWaking,
   setCsrfToken,
+  shouldRetryWhileWaking,
+  wakeRetryDelay,
 } from './api'
 import { parseApiBaseUrl, parseSupportEmail } from './env'
 import { healthFixture } from '../test/fixtures'
@@ -214,5 +223,74 @@ describe('persisted response validation', () => {
     expect(analysisSummarySchema.safeParse({ ...summary, preview: '😀'.repeat(161) }).success).toBe(
       false,
     )
+  })
+})
+
+describe('hosted API wake-up retries', () => {
+  it('treats only transport failures and gateway errors as a waking host', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new TypeError('fetch failed')))
+    const unreachable = await getApi('/health', healthSchema).catch((error: unknown) => error)
+    expect(isWakingServiceError(unreachable)).toBe(true)
+    for (const status of [502, 504])
+      expect(isWakingServiceError(new ApiError('gateway', status))).toBe(true)
+    for (const status of [401, 422, 500, 503])
+      expect(isWakingServiceError(new ApiError('answer', status))).toBe(false)
+    expect(isWakingServiceError(new ApiError('The service returned an unexpected response.'))).toBe(
+      false,
+    )
+  })
+
+  it('marks a stalled read, but not a stalled analysis write, as retryable', async () => {
+    vi.useFakeTimers()
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(
+        (_url: string, init: RequestInit) =>
+          new Promise((_resolve, reject) => {
+            init.signal?.addEventListener('abort', () =>
+              reject(new DOMException('Aborted', 'AbortError')),
+            )
+          }),
+      ),
+    )
+    const read = getApi('/health', healthSchema).catch((error: unknown) => error)
+    const write = requestApi('/analyses', healthSchema, { method: 'POST', body: {} }).catch(
+      (error: unknown) => error,
+    )
+    await vi.advanceTimersByTimeAsync(45_000)
+    expect(isWakingServiceError(await read)).toBe(true)
+    expect(isWakingServiceError(await write)).toBe(false)
+  })
+
+  it('bounds attempts and backs off with a cap', () => {
+    configureWakeRetry({ attempts: 6, baseDelayMs: 2_000, maxDelayMs: 10_000 })
+    const waking = new ApiError('gateway', 504)
+    expect(shouldRetryWhileWaking(5, waking)).toBe(true)
+    expect(shouldRetryWhileWaking(6, waking)).toBe(false)
+    expect(shouldRetryWhileWaking(0, new ApiError('down', 503))).toBe(false)
+    expect([0, 1, 2, 3, 4].map(wakeRetryDelay)).toEqual([2_000, 4_000, 8_000, 10_000, 10_000])
+  })
+
+  it('keeps reading until a waking host answers', async () => {
+    vi.useFakeTimers()
+    configureWakeRetry({ attempts: 6, baseDelayMs: 2_000, maxDelayMs: 10_000 })
+    const read = vi
+      .fn()
+      .mockRejectedValueOnce(new ApiError('gateway', 502))
+      .mockRejectedValueOnce(new ApiError('slow', undefined, undefined, 'SERVICE_TIMEOUT'))
+      .mockResolvedValue('ready')
+    const onRetry = vi.fn()
+    const result = retryWhileWaking(read, onRetry)
+    await vi.advanceTimersByTimeAsync(6_000)
+    await expect(result).resolves.toBe('ready')
+    expect(read).toHaveBeenCalledTimes(3)
+    expect(onRetry).toHaveBeenNthCalledWith(2, 2)
+  })
+
+  it('does not retry an application answer', async () => {
+    configureWakeRetry({ attempts: 6 })
+    const read = vi.fn().mockRejectedValue(new ApiError('down', 503))
+    await expect(retryWhileWaking(read)).rejects.toThrow('down')
+    expect(read).toHaveBeenCalledTimes(1)
   })
 })
