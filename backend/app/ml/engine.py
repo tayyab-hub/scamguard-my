@@ -16,7 +16,7 @@ from app.ml.ai_review import (
     perform_ai_review,
 )
 from app.ml.classifier import MessageClassifier
-from app.ml.fusion import FusionResult, RiskLevel, fuse
+from app.ml.fusion import FusionResult, RiskLevel, calibrator, fuse
 from app.ml.rules import RuleAssessment, assess_rules
 
 
@@ -337,6 +337,9 @@ def build_message_engine(settings: Settings) -> MessageIntelligenceEngine:
     if settings.message_model_path and not artifact_path.is_absolute():
         artifact_path = Path(__file__).resolve().parents[3] / artifact_path
     classifier = MessageClassifier(artifact_path)
+    # Verify the checksum-pinned fusion calibrator at startup, not on the first analysis: a bad
+    # artifact must stop the deploy at the health check instead of failing every submission.
+    calibrator()
     provider = None
     if settings.ai_review_enabled and settings.openai_api_key:
         provider = OpenAIReviewProvider(

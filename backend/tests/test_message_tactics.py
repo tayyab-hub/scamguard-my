@@ -81,3 +81,17 @@ def test_calibrator_artifact_is_checksum_pinned_and_ordered():
     bands = artifact["thresholds"]
     assert bands["CAUTION"] < bands["ELEVATED"] < bands["HIGH"]
     assert artifact["rules_version"] == "message-rules-v3"
+
+
+def test_engine_startup_rejects_a_tampered_calibrator(monkeypatch):
+    # A checksum mismatch must fail at startup (blocking the deploy health check) rather than
+    # turning every later Message submission into MESSAGE_ANALYSIS_FAILED.
+    from app.ml import fusion
+
+    fusion.calibrator.cache_clear()
+    monkeypatch.setattr(fusion, "EXPECTED_CALIBRATOR_SHA256", "0" * 64)
+    try:
+        with pytest.raises(ValueError, match="checksum"):
+            build_message_engine(Settings(persistence_enabled=False, ai_review_enabled=False))
+    finally:
+        fusion.calibrator.cache_clear()
