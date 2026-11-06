@@ -10,15 +10,16 @@ test.beforeEach(async ({ page }, info) => createAuthenticatedAccount(page.reques
 const scenarios = [
   ['https://paypal.example.net/%252f/file.exe', 'High risk', 'Encoded URL structure'],
   ['https://www.example.com/', 'Low observed risk', 'No structural warning was found.'],
-  ['http://192.0.2.10/login', 'Caution advised', 'IP address host'],
+  // url_rules_v3: a numeric host with login wording is meaningful evidence on its own.
+  ['http://192.0.2.10/login', 'High risk', 'Numeric address with login or brand wording'],
   [
     'https://paypal.com.secure-login.example.net/verify',
     'Elevated risk',
-    'Brand-like token outside its domain',
+    'Official domain used as a disguise',
   ],
   [
     'https://example.net/login?redirect=https%3A%2F%2Fother.example',
-    'Caution advised',
+    'Elevated risk',
     'Destination parameter',
   ],
 ] as const

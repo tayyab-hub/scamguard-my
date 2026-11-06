@@ -442,7 +442,7 @@ def test_phone_history_dashboard_deletion_and_persisted_metadata(persistent, dat
     with Session(database[1]) as session:
         row = session.get(Analysis, record["id"])
         assert row.model_version is None
-        assert row.rules_version == "phone-rules-v1"
+        assert row.rules_version == "phone-rules-v2"
         assert row.fusion_version == "phone-fusion-v1"
     assert persistent.delete(f"/api/v1/analyses/{record['id']}").status_code == 204
     assert persistent.get("/api/v1/analyses").json()["total"] == 0
@@ -630,8 +630,8 @@ def test_url_credentials_removed_and_history_never_reanalyses(persistent, databa
     assert provider.calls == 1
     with Session(database[1]) as session:
         row = session.get(Analysis, result["id"])
-        assert row.model_version == "url_ml_v1" and row.rules_version == "url_rules_v2"
-        assert row.fusion_version == "url_fusion_v2" and row.ai_provider is None
+        assert row.model_version == "url_ml_v1" and row.rules_version == "url_rules_v3"
+        assert row.fusion_version == "url_fusion_v3" and row.ai_provider is None
         assert "secret" not in json.dumps(row.component_details) + row.content
 
     def forbidden(*args):

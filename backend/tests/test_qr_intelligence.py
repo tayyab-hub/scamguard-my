@@ -95,7 +95,8 @@ def test_decoded_payload_limits_and_controls(payload, code):
         ("This is a normal controlled message payload", "TEXT", "MESSAGE"),
         ("Welcome", "TEXT", None),
         ("mailto:security@example.com", "EMAIL", None),
-        ("SMSTO:+60123456789:Hello", "SMS", None),
+        # qr-payload-classifier-v3: a short SMS body routes the recipient number to Phone.
+        ("SMSTO:+60123456789:Hello", "SMS", "PHONE"),
         ("WIFI:T:WPA;S:Example;P:not-a-real-secret;;", "WIFI", None),
         ("geo:3.1390,101.6869", "GEO", None),
         ("javascript:alert(1)", "OTHER", None),

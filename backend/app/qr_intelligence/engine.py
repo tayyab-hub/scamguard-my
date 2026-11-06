@@ -15,12 +15,33 @@ from app.phone_intelligence.engine import PhoneIntelligenceEngine
 from app.phone_intelligence.parsing import parse_phone_number
 from app.qr_intelligence.decoder import DecodedQR, decoder_operational
 from app.qr_intelligence.payment import PaymentResult, parse_payment_payload
+from app.url_intelligence.brands import BRANDS
 from app.url_intelligence.engine import URLIntelligenceEngine
 from app.url_intelligence.parsing import parse_url
 
+RISK_ORDER = ["INSUFFICIENT_EVIDENCE", "LOW", "CAUTION", "ELEVATED", "HIGH"]
+# Payment recipients named after authorities, refunds or fines are a common Malaysian QR lure:
+# a sticker or message asks the reader to "settle" a summons or claim a refund by paying.
+AUTHORITY_LURE = re.compile(
+    r"\b(lhdn|hasil|pdrm|polis|police|mahkamah|court|bank negara|bnm|kastam|customs|jpj|"
+    r"imigresen|immigration|refund|tax|cukai|saman|summons|fine|denda|penalty|kerajaan|"
+    r"government)\b",
+    re.IGNORECASE,
+)
+
+
+def _brand_in_name(name: str) -> tuple[str, frozenset[str]] | None:
+    words = set(re.findall(r"[a-z0-9]+", name.casefold()))
+    compact = re.sub(r"[^a-z0-9]", "", name.casefold())
+    for display, tokens, domains in BRANDS.values():
+        if any(token in words or (len(token) >= 5 and token in compact) for token in tokens):
+            return display, domains
+    return None
+
+
 ENGINE_VERSION = "qr-intelligence-v1"
-CLASSIFIER_VERSION = "qr-payload-classifier-v2"
-FUSION_VERSION = "qr-risk-fusion-v2"
+CLASSIFIER_VERSION = "qr-payload-classifier-v3"
+FUSION_VERSION = "qr-risk-fusion-v3"
 
 
 # Classified payload type, optional engine route/content and payment findings. Recognizing
@@ -96,7 +117,21 @@ def classify_payload(payload: str) -> QRPayload:
     if lowered.startswith("mailto:"):
         return QRPayload("EMAIL", None, None)
     if lowered.startswith(("sms:", "smsto:")):
-        return QRPayload("SMS", None, None)
+        # sms:+60123456789?body=... or SMSTO:+60123456789:body. The body is the message the
+        # reader is nudged to send, so it is assessed as text; otherwise the number is.
+        rest = text.split(":", 1)[1]
+        number, _, body = re.split(r"[?:]", rest, maxsplit=1)[0], None, ""
+        match = re.search(r"(?:\?|&)body=([^&]*)|^[^:?]*:(.*)$", rest, re.IGNORECASE)
+        if match:
+            from urllib.parse import unquote
+
+            body = unquote(match.group(1) or match.group(2) or "").strip()
+        if len(body) >= 20 or len(body.split()) >= 3:
+            return QRPayload("SMS", "MESSAGE", body)
+        try:
+            return QRPayload("SMS", "PHONE", parse_phone_number(number.strip()).e164)
+        except ValueError:
+            return QRPayload("SMS", None, None)
     if text.upper().startswith("WIFI:"):
         return QRPayload("WIFI", None, None)
     if lowered.startswith("geo:"):
@@ -335,6 +370,66 @@ class QRIntelligenceEngine:
                         *basis.get("uncertainty", []),
                     ],
                 }
+
+        # qr-risk-fusion-v3: the recipient name is what the payer sees. A brand name whose
+        # embedded link is not on that brand's official domains, or a recipient named after an
+        # authority/refund/fine, raises the floor without lowering any routed warning.
+        if payload.payment:
+            name = str(payload.payment.metadata.get("merchant_name") or "")
+            floor = None
+            brand = _brand_in_name(name) if name else None
+            if brand and payload.payment.embedded_url:
+                try:
+                    domain = parse_url(payload.payment.embedded_url).registrable_domain
+                except ValueError:
+                    domain = None
+                if domain not in brand[1]:
+                    floor = "ELEVATED"
+                    evidence.append(
+                        {
+                            "category": "MERCHANT_BRAND_MISMATCH",
+                            "label": "Recipient name and link do not match",
+                            "explanation": (
+                                f"The recipient is named after {brand[0]}, but the embedded link "
+                                "is not on one of its official domains."
+                            ),
+                            "snippet": f"{name[:60]} · {domain or 'unparseable link'}",
+                            "source": "PAYMENT_STRUCTURE",
+                            "severity": "MEANINGFUL",
+                            "family": "payment-recipient",
+                        }
+                    )
+            if name and AUTHORITY_LURE.search(name):
+                floor = floor or "CAUTION"
+                evidence.append(
+                    {
+                        "category": "AUTHORITY_NAMED_RECIPIENT",
+                        "label": "Recipient named after an authority, refund or fine",
+                        "explanation": (
+                            "Government agencies and banks do not collect fines or release "
+                            "refunds through QR codes sent by message or stuck in public places."
+                        ),
+                        "snippet": name[:80],
+                        "source": "PAYMENT_STRUCTURE",
+                        "severity": "MEANINGFUL",
+                        "family": "payment-recipient",
+                    }
+                )
+            if floor and RISK_ORDER.index(risk_level) < RISK_ORDER.index(floor):
+                risk_level = floor
+                risk_score = None
+                confidence_score = None
+                confidence_level = "LOW"
+                summary = (
+                    "The payment recipient's name suggests impersonation. Confirm who you are "
+                    "paying through an official channel before authorizing payment."
+                )
+            if floor:
+                actions.insert(
+                    0,
+                    "Check the recipient name shown by your banking app; do not pay a QR that "
+                    "claims to settle a fine, tax or refund.",
+                )
 
         return QRAssessment(
             risk_level=risk_level,

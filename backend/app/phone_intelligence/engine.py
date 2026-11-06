@@ -1,6 +1,8 @@
 # Conservative Phone assessment from offline numbering metadata, with no trained classifier or
-# external lookup. Valid premium/shared-cost types warrant CAUTION; other parseable numbers
-# remain INSUFFICIENT_EVIDENCE. Numeric fraud/confidence estimates are deliberately absent.
+# external lookup. phone-rules-v2: premium/shared-cost services and number types commonly abused
+# to hide a caller (VoIP, personal-forwarding, pager, universal-access and satellite/international
+# network codes) warrant CAUTION; other parseable numbers remain INSUFFICIENT_EVIDENCE with
+# guidance. Numeric fraud/confidence estimates are deliberately absent.
 
 from __future__ import annotations
 
@@ -9,9 +11,15 @@ from dataclasses import dataclass
 from app.phone_intelligence.parsing import ParsedPhoneNumber, parse_phone_number
 
 ENGINE_VERSION = "phone-intelligence-v1"
-RULES_VERSION = "phone-rules-v1"
+RULES_VERSION = "phone-rules-v2"
 FUSION_VERSION = "phone-fusion-v1"
 HIGH_COST_TYPES = {"PREMIUM_RATE", "SHARED_COST"}
+# Types that are not tied to a fixed location or a named mobile subscriber and are favoured for
+# spoofed or forwarded scam calls. Legitimate services use them too, so this is Caution only.
+CONCEALING_TYPES = {"VOIP", "PERSONAL_NUMBER", "PAGER", "UAN"}
+# ITU global codes without a country: satellite (870, 881) and international networks (882,
+# 883), plus the premium international code 979.
+NON_GEOGRAPHIC_CODES = {870, 881, 882, 883, 979}
 
 
 # Shared service-compatible result object whose model_version, risk_score and confidence_score
@@ -64,11 +72,26 @@ class PhoneIntelligenceEngine:
         phone = parse_phone_number(text)
         evidence = self._present_evidence(phone)
         high_cost = phone.valid and phone.number_type in HIGH_COST_TYPES
+        concealing = (
+            phone.valid
+            and not high_cost
+            and (
+                phone.number_type in CONCEALING_TYPES
+                or phone.country_calling_code in NON_GEOGRAPHIC_CODES
+            )
+        )
         if high_cost:
             risk_level = "CAUTION"
             summary = (
                 "Numbering-plan metadata identifies a potentially higher-cost service. "
                 "This does not establish who operates the number or whether the call is fraudulent."
+            )
+        elif concealing:
+            risk_level = "CAUTION"
+            summary = (
+                "This number type can be used without a fixed location or a named mobile "
+                "subscriber, which makes it convenient for forwarded or disguised calls. Many "
+                "legitimate services use it too."
             )
         elif not phone.possible or not phone.valid:
             risk_level = "INSUFFICIENT_EVIDENCE"
@@ -91,6 +114,22 @@ class PhoneIntelligenceEngine:
             "Contact a claimed organisation through its official website or published contact "
             "information.",
         ]
+        if concealing:
+            actions.insert(
+                0,
+                "Be cautious if this caller claims to be a local bank, courier or government "
+                "office; verify through that organisation's published number.",
+            )
+        if phone.region_code == "MY" and phone.number_type in {
+            "FIXED_LINE",
+            "FIXED_LINE_OR_MOBILE",
+        }:
+            actions.insert(
+                0,
+                "Caller ID can be faked. Police, courts, LHDN and banks will not ask you to "
+                "transfer money or install an app during a call; hang up and call the official "
+                "number yourself.",
+            )
         if high_cost:
             actions.insert(
                 0,
@@ -120,6 +159,7 @@ class PhoneIntelligenceEngine:
                 "phone_rules": {
                     "version": RULES_VERSION,
                     "high_cost_indicator": high_cost,
+                    "concealing_type_indicator": concealing,
                 },
                 "fusion": {"version": FUSION_VERSION},
             },
@@ -174,7 +214,9 @@ class PhoneIntelligenceEngine:
             )
 
         label = phone.number_type.replace("_", " ").title()
-        risk_relevant = phone.valid and phone.number_type in HIGH_COST_TYPES
+        high_cost = phone.valid and phone.number_type in HIGH_COST_TYPES
+        concealing = phone.valid and not high_cost and phone.number_type in CONCEALING_TYPES
+        risk_relevant = high_cost or concealing
         evidence.append(
             _evidence(
                 "NUMBER_TYPE",
@@ -182,7 +224,10 @@ class PhoneIntelligenceEngine:
                 (
                     "The numbering plan classifies this as a potentially higher-cost service, "
                     "which can justify extra caution before calling back."
-                    if risk_relevant
+                    if high_cost
+                    else "This type is not tied to a fixed location or named mobile subscriber "
+                    "and is often used to forward or disguise calls; it is also used legitimately."
+                    if concealing
                     else "This service classification is descriptive metadata and does not "
                     "indicate whether the caller is honest or fraudulent."
                 ),
@@ -191,6 +236,34 @@ class PhoneIntelligenceEngine:
                 family="service_type",
             )
         )
+        if phone.valid and phone.country_calling_code in NON_GEOGRAPHIC_CODES:
+            evidence.append(
+                _evidence(
+                    "NON_GEOGRAPHIC_NETWORK",
+                    "Satellite or international network code",
+                    f"The +{phone.country_calling_code} code belongs to a global satellite or "
+                    "international network rather than a country. Unexpected calls from such "
+                    "numbers are uncommon and can be costly to return.",
+                    f"+{phone.country_calling_code}",
+                    severity="MEANINGFUL",
+                    family="network",
+                )
+            )
+        if phone.region_code == "MY" and phone.number_type in {
+            "FIXED_LINE",
+            "FIXED_LINE_OR_MOBILE",
+        }:
+            evidence.append(
+                _evidence(
+                    "SPOOFABLE_LANDLINE_CONTEXT",
+                    "Malaysian landline format",
+                    "Scam calls claiming to be police, courts or banks often display Malaysian "
+                    "landline numbers because caller ID can be spoofed. The format alone does not "
+                    "show who is calling.",
+                    phone.international_format,
+                    family="context",
+                )
+            )
         return evidence
 
 

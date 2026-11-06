@@ -79,6 +79,16 @@ def parse_phone_number(value: str) -> ParsedPhoneNumber:
     if not normalized_input:
         raise ValueError("Phone number must be non-empty")
     if not normalized_input.startswith("+"):
+        # Offer the likely Malaysian form instead of a bare rejection, without guessing silently:
+        # the user still has to resubmit with an explicit country code.
+        local = "".join(c for c in normalized_input if c.isascii() and c.isdigit())
+        if local.startswith("60") and 10 <= len(local) <= 12:
+            raise ValueError(f"Add a + before the country code, for example +{local}")
+        if local.startswith("0") and 9 <= len(local) <= 11:
+            raise ValueError(
+                "Use an international number beginning with + and a country calling code. "
+                f"For a Malaysian number, try +60{local[1:]}"
+            )
         raise ValueError("Use an international number beginning with + and a country calling code")
     if not _ALLOWED_INPUT.fullmatch(normalized_input) or not _balanced_parentheses(
         normalized_input

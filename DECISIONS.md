@@ -1,5 +1,22 @@
 # Accepted decisions
 
+## D62 — Calibrated Message score and tactic-based detection (6 November 2026)
+
+Supervisor feedback: keyword dependence let conversational scams score Low, and the score was not
+meaningful. Decision: keep the frozen `message-tfidf-logreg-v1` model; add `message-rules-v3`
+scam-tactic families and `message-fusion-v3`, a checksum-pinned logistic calibrator fitted on
+out-of-fold train+validation predictions with fixed pre-declared bands (5/35/70). High needs rule or
+review corroboration; documented playbooks set band floors; genuine protective or service notices
+are capped at Caution; Low wording never claims safety. URL keeps `url_ml_v1` but feeds it only
+`scheme://host/` (its legitimate training URLs had no paths) and adds an offline brand list;
+`url_fusion_v3` allows Elevated for weak evidence on a strongly phishing-like host, measured at
++49 points of phishing detection for 0.1% of legitimate links with paths. Phone v2 flags
+concealing number types at Caution only. QR v3 checks the payment recipient name. All choices and
+trade-offs, including the remaining false Cautions on genuine conversational messages, are recorded
+with reproducible evaluations in `docs/ACCURACY_UPGRADE_2026-11-06.md`. Free and local only; an
+optional meaning-based model or AI reviewer is the next candidate, to be judged on the same
+challenge holdout half.
+
 ## Documentation conventions — 28 October 2026
 
 The requested beginner documentation uses ordinary source comments so existing Python docstrings,

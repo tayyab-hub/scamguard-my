@@ -79,12 +79,17 @@ def test_valid_ordinary_number_is_not_called_legitimate_or_safe():
     assert "safe" not in result.summary.lower()
 
 
-def test_foreign_mobile_and_voip_are_not_treated_as_scam():
+def test_foreign_mobile_is_not_treated_as_scam_and_voip_is_caution_only():
     engine = PhoneIntelligenceEngine()
-    for value in ["+61 412 345 678", "+44 56 1234 5678"]:
-        result = engine.analyse(value)
-        assert result.risk_level == "INSUFFICIENT_EVIDENCE"
-        assert result.components["phone_metadata"]["number_type"] in {"MOBILE", "VOIP"}
+    mobile = engine.analyse("+61 412 345 678")
+    assert mobile.risk_level == "INSUFFICIENT_EVIDENCE"
+    assert mobile.components["phone_metadata"]["number_type"] == "MOBILE"
+    # phone-rules-v2: VoIP can hide a caller's location, so it is Caution (never higher) with
+    # an explanation that legitimate services use it too.
+    voip = engine.analyse("+44 56 1234 5678")
+    assert voip.risk_level == "CAUTION"
+    assert voip.components["phone_rules"]["concealing_type_indicator"] is True
+    for result in (mobile, voip):
         assert "fraudulent" in " ".join(result.limitations).lower()
 
 

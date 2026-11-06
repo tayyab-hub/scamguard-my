@@ -19,6 +19,7 @@ import {
 } from 'lucide-react'
 import { assessmentBasisSchema, type Assessment } from '../../lib/api'
 import {
+  isCalibratedMessageScore,
   isURLAssessment,
   isPhoneAssessment,
   isQRAssessment,
@@ -166,7 +167,9 @@ export function RiskScoreDisplay({ assessment }: { assessment: Assessment }) {
           ? 'Category position, not a scam percentage.'
           : isPhoneAssessment(assessment)
             ? 'No invented probability or category-to-number conversion.'
-            : 'Combined indicator strength, not a scam percentage.'}
+            : isCalibratedMessageScore(assessment)
+              ? 'Calibrated on historical SMS; not a guarantee for this message.'
+              : 'Combined indicator strength, not a scam percentage.'}
       </p>
       <details className="score-method mt-3 text-[11px]">
         <summary className="inline-flex min-h-8 cursor-pointer items-center gap-2 rounded font-semibold text-body">

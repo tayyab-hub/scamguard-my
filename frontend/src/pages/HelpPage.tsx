@@ -11,7 +11,7 @@ import { getSupportEmail } from '../lib/env'
 const faqs = [
   [
     'How is the risk score calculated?',
-    'Message shows its existing fusion score multiplied by 100 and rounded. URL shows an ordinal category index. Phone and unsupported or payment-only QR results show no numeric score. A QR routed to Message or URL preserves that engine’s presentation. No displayed scale is a scam percentage; use the risk level and evidence.',
+    'Message shows a calibrated score from 0 to 100: on held-out historical SMS, roughly that many in 100 similarly scored messages were scams (Caution from 5, Elevated from 35, High from 70). Recognised scam tactics such as a new-number money request can raise it to a band minimum. Results saved before November 2026 show the older uncalibrated fusion score. URL shows an ordinal category index. Phone and unsupported or payment-only QR results show no numeric score. A QR routed to Message or URL preserves that engine’s presentation. No score is a guarantee for a particular message; use the risk level and evidence.',
   ],
   [
     'How is confidence different from risk?',

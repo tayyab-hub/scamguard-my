@@ -2,6 +2,7 @@
 
 ## Learn the implementation
 
+- [Accuracy upgrade — calibrated Message score, scam tactics, URL brand impersonation, Phone and QR checks (6 November 2026)](ACCURACY_UPGRADE_2026-11-06.md)
 - [Beginner code walkthrough, presentation navigation, 30 viva questions and 10 exercises](SCAMGUARD_CODE_WALKTHROUGH_FOR_BEGINNERS.md)
 - [Source-comment coverage and local verification — 28 October 2026](CODE_COMMENT_COVERAGE.md)
 

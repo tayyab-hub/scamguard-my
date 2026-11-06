@@ -91,6 +91,6 @@ test('result presentation: real scores, keyboard metadata, pending and live redu
   await page.goto('/help')
   await page.getByLabel('Search help').fill('risk score calculated')
   await page.locator('summary').filter({ hasText: 'How is the risk score calculated?' }).click()
-  await expect(page.getByText(/No displayed scale is a scam percentage/)).toBeVisible()
+  await expect(page.getByText(/No score is a guarantee for a particular message/)).toBeVisible()
   expect(errors).toEqual([])
 })

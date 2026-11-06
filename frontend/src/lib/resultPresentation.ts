@@ -21,7 +21,7 @@ export const riskGuidance = {
     'Available evidence is not sufficient to determine whether this content is trustworthy or malicious. This is not a low-risk or safe result.',
 } as const
 
-export const SCORE_PRESENTATION_VERSION = 'risk-presentation-v1'
+export const SCORE_PRESENTATION_VERSION = 'risk-presentation-v2'
 const urlRanks = { LOW: 0, CAUTION: 1, ELEVATED: 2, HIGH: 3 } as const
 
 // Narrow the TypeScript union to a direct URL result, excluding QR wrappers with url_model
@@ -41,7 +41,16 @@ export function isQRAssessment(assessment: Assessment): assessment is QRAssessme
 }
 
 /** Display transformation only. Never changes a stored score, category or confidence. */
+/** message-fusion-v3 stores a calibrated score; earlier saved results keep their original
+ * fusion-score wording because they were produced by a different, uncalibrated policy. */
+export function isCalibratedMessageScore(assessment: Assessment) {
+  if (isURLAssessment(assessment) || isPhoneAssessment(assessment)) return false
+  const fusion = (assessment.components as { fusion?: { version?: unknown } }).fusion
+  return fusion?.version === 'message-fusion-v3'
+}
+
 export function riskScorePresentation(assessment: Assessment) {
+  const calibrated = isCalibratedMessageScore(assessment)
   const url = isURLAssessment(assessment)
   const phone = isPhoneAssessment(assessment)
   const qr = isQRAssessment(assessment)
@@ -64,9 +73,13 @@ export function riskScorePresentation(assessment: Assessment) {
           ? 'URL category index'
           : qr && qrRoute !== 'MESSAGE'
             ? 'No numeric QR risk score'
-            : qr
-              ? 'Routed Message fusion score'
-              : 'Message fusion score',
+            : calibrated
+              ? qr
+                ? 'Routed calibrated risk score'
+                : 'Calibrated risk score'
+              : qr
+                ? 'Routed Message fusion score'
+                : 'Message fusion score',
     explanation:
       phone || (qr && qrRoute === 'PHONE')
         ? 'Phone numbering metadata has no defensible mapping to a probability or numeric fraud score. ScamGuard therefore reports an evidence-based category without inventing numerical precision.'
@@ -74,7 +87,9 @@ export function riskScorePresentation(assessment: Assessment) {
           ? 'The four ordered URL risk categories map to 0, 33, 67 and 100: Low, Caution, Elevated and High. This ordinal index adds no precision within a category. 0 does not mean safe; 100 does not mean certain fraud.'
           : qr && qrRoute !== 'MESSAGE'
             ? 'QR decoding and structural metadata do not have a defensible numeric fraud score. The result therefore avoids invented precision.'
-            : 'The stored Message fusion score is multiplied by 100 and rounded to a whole number. It combines local model and rule signals, with bounded contextual review when available. Rounding never changes the risk level.',
+            : calibrated
+              ? 'The score is calibrated on held-out historical SMS: among test messages that scored around this value, roughly this many in 100 were scams. Bands: Caution from 5, Elevated from 35, High from 70. A documented scam tactic can raise the score to its band minimum. It is not a guarantee for this message, and new scam styles may differ.'
+              : 'The stored Message fusion score is multiplied by 100 and rounded to a whole number. It combines local model and rule signals, with bounded contextual review when available. Rounding never changes the risk level.',
   }
 }
 

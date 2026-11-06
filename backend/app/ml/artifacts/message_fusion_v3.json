@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "fusion_version": "message-fusion-v3",
+  "created_by": "backend/scripts/calibrate_message_fusion.py",
+  "random_seed": 20261106,
+  "model_artifact_sha256": "818d99f72c8502fe6ec28849e42c77f4707949366bf014bd5677079dde2c3dd3",
+  "rules_version": "message-rules-v3",
+  "target": "SCAM",
+  "features": [
+    "logit_scam",
+    "logit_spam",
+    "rule_score"
+  ],
+  "coefficients": [
+    1.59507238,
+    0.63282594,
+    1.27323683
+  ],
+  "intercept": 0.53400777,
+  "thresholds": {
+    "HIGH": 0.7,
+    "ELEVATED": 0.35,
+    "CAUTION": 0.05
+  },
+  "band_meaning": "Calibrated share of similar historical messages that were scams: HIGH >= 0.70, ELEVATED >= 0.35, CAUTION >= 0.05.",
+  "calibration_rows": 4637
+}

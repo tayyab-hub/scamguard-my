@@ -18,6 +18,8 @@ technology and tests. Below a 420px panel width, each hint moves under its title
 
 ## Advisory score presentation: risk-presentation-v1
 
+Superseded for new Message results by `risk-presentation-v2` (6 November 2026): `message-fusion-v3` scores are calibrated and labelled "Calibrated risk score"; results saved earlier keep the wording below. See [accuracy upgrade](ACCURACY_UPGRADE_2026-11-06.md).
+
 The categorical risk level is authoritative. Neither displayed number is a probability of fraud, calibrated confidence, measured detection accuracy or a new intelligence prediction. There is no invented within-category precision or per-indicator weight. The two modalities have different score meanings and must not be compared numerically.
 
 | Input | Display derivation | Meaning |

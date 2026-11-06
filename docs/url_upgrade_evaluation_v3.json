@@ -1,0 +1,83 @@
+{
+  "title": "URL intelligence upgrade evaluation (url_rules_v3 + url_fusion_v3 + host-only model input)",
+  "date": "2026-11-06",
+  "baseline": {
+    "rules": "url_rules_v2",
+    "fusion": "url_fusion_v2",
+    "model_input": "full URL",
+    "source": "git HEAD f83b6c1"
+  },
+  "upgrade": {
+    "rules": "url_rules_v3",
+    "fusion": "url_fusion_v3",
+    "model_input": "scheme://host/ only",
+    "model": "url_ml_v1 (unchanged artifact)"
+  },
+  "baseline_results": {
+    "label": "baseline",
+    "test_rows": 36901,
+    "test_categories_by_label": {
+      "LEGITIMATE": {
+        "LOW": 19434,
+        "CAUTION": 501
+      },
+      "PHISHING": {
+        "CAUTION": 16597,
+        "LOW": 336,
+        "ELEVATED": 33
+      }
+    },
+    "phishing_warned": 0.9802,
+    "phishing_elevated_or_high": 0.0019,
+    "phishing_high": 0.0,
+    "legitimate_warned": 0.0251,
+    "legitimate_elevated_or_high": 0.0,
+    "legitimate_with_path_rows": 2000,
+    "legitimate_with_path_categories": {
+      "CAUTION": 2000
+    },
+    "legitimate_with_path_warned": 1.0,
+    "legitimate_with_path_elevated_or_high": 0.0
+  },
+  "upgrade_results": {
+    "label": "upgrade",
+    "test_rows": 36901,
+    "test_categories_by_label": {
+      "LEGITIMATE": {
+        "LOW": 19805,
+        "CAUTION": 119,
+        "ELEVATED": 11
+      },
+      "PHISHING": {
+        "ELEVATED": 8403,
+        "CAUTION": 7556,
+        "LOW": 612,
+        "HIGH": 395
+      }
+    },
+    "phishing_warned": 0.9639,
+    "phishing_elevated_or_high": 0.5186,
+    "phishing_high": 0.0233,
+    "legitimate_warned": 0.0065,
+    "legitimate_elevated_or_high": 0.0006,
+    "legitimate_with_path_rows": 2000,
+    "legitimate_with_path_categories": {
+      "CAUTION": 441,
+      "LOW": 1557,
+      "ELEVATED": 2
+    },
+    "legitimate_with_path_warned": 0.2215,
+    "legitimate_with_path_elevated_or_high": 0.001
+  },
+  "method_notes": [
+    "Untouched PhiUSIIL test split (36,901 URLs); nothing fitted or tuned on it.",
+    "Legitimate-with-path robustness slice: 2,000 legitimate test hosts with one of eight ordinary paths appended (seed 20261106). The original legitimate rows are all bare homepages, so they cannot reveal path-based false alarms.",
+    "No URL was requested or opened; all checks are offline string analysis."
+  ],
+  "honest_reading": [
+    "Phishing URLs reaching Elevated or High rose from 0.2% to 51.9%; High from 0% to 2.3% (brand impersonation, look-alike, free hosting, risky endings).",
+    "Legitimate links with ordinary paths: warned 22.1% (was 100%), Elevated or High 0.1%. Paths with account words such as /login keep a Caution by design.",
+    "Policy choice made with these measurements: without the rule 'weak evidence on a strongly phishing-like host is Elevated', phishing at Elevated or above was 3.0% instead of the figure above, with the same legitimate-with-path false-alarm rate within 0.1 points. Known false alarm: a popular site the host model misjudges (for example github.com/login) can reach Elevated.",
+    "PhiUSIIL phishing URLs are mostly not Malaysian-brand impersonations; the brand list mainly helps on local lures, which this dataset under-represents."
+  ]
+}

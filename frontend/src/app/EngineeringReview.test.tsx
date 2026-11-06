@@ -96,4 +96,26 @@ describe('Reviewed evidence presentation', () => {
     await userEvent.click(within(limitations).getByRole('button'))
     expect(within(limitations).getByRole('list')).toBeVisible()
   })
+
+  it('labels calibrated v3 scores and keeps historical v2 wording', () => {
+    const calibrated = messageAssessmentSchema.parse({
+      ...historical,
+      risk_level: 'CAUTION',
+      risk_score: 0.23,
+      components: {
+        ...historical.components,
+        fusion: { version: 'message-fusion-v3', reason: 'CALIBRATED_SIGNALS' },
+      },
+    })
+    const { unmount } = render(<MessageResult assessment={calibrated} />)
+    expect(screen.getByText('Calibrated risk score')).toBeInTheDocument()
+    expect(screen.getByRole('meter')).toHaveAttribute('aria-valuenow', '23')
+    expect(
+      screen.getByText('Calibrated on historical SMS; not a guarantee for this message.'),
+    ).toBeInTheDocument()
+    unmount()
+    render(<MessageResult assessment={messageAssessmentSchema.parse(historical)} />)
+    expect(screen.getByText('Message fusion score')).toBeInTheDocument()
+    expect(screen.queryByText('Calibrated risk score')).not.toBeInTheDocument()
+  })
 })

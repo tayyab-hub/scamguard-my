@@ -100,7 +100,7 @@ Current source is authoritative when historical wording conflicts.
 - Risk and confidence are separate. Use `LOW`, `CAUTION`, `ELEVATED`, `HIGH` and
   `INSUFFICIENT_EVIDENCE`; never present an absolute SAFE/SCAM verdict or certainty unsupported by
   evidence.
-- Result presentation uses `risk-presentation-v1`: scale the stored Message score to points out of 100; map URL categories to the documented ordinal index 0/33/67/100. These methods are advisory and not comparable across modalities. Never infer within-category precision or a fraud probability. Preserve missing scores, separate confidence and the stored categorical decision. See `docs/UI_UX_REFINEMENT.md`.
+- Result presentation uses `risk-presentation-v2`: a `message-fusion-v3` score is a calibrated share of similar held-out historical SMS that were scams (bands Caution 5, Elevated 35, High 70) and must be described that way, never as a real-world fraud probability for one sender; older stored Message scores keep the uncalibrated fusion-score wording. Map URL categories to the documented ordinal index 0/33/67/100. Methods are advisory and not comparable across modalities. Preserve missing scores, separate confidence and the stored categorical decision. Any change to Message rules or the calibrator requires re-running `backend/scripts/calibrate_message_fusion.py`, updating the pinned checksum, and re-evaluating with `evaluate_message_upgrade.py`; the challenge set's even-numbered rows stay uninspected. See `docs/ACCURACY_UPGRADE_2026-11-06.md`.
 - Adaptive learning remains unimplemented. Community input may never directly retrain or promote a
   model. Future learning requires moderation, provenance, offline evaluation, explicit promotion,
   rollback and audit history.

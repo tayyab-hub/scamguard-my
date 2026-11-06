@@ -34,7 +34,9 @@ def multiple_qr_image_bytes() -> bytes:
 
 # Construct a controlled TLV payment payload and calculate its CRC independently of the
 # production parser. Optional variations create valid and deliberately broken integrity cases.
-def emv_payment_payload(*, corrupt_crc: bool = False, embedded_url: str | None = None) -> str:
+def emv_payment_payload(
+    *, corrupt_crc: bool = False, embedded_url: str | None = None, merchant_name: str = "SCAMGUARD"
+) -> str:
     fields = [
         ("00", "01"),
         ("01", "11"),
@@ -43,7 +45,7 @@ def emv_payment_payload(*, corrupt_crc: bool = False, embedded_url: str | None =
         ("53", "458"),
         ("54", "12.34"),
         ("58", "MY"),
-        ("59", "SCAMGUARD"),
+        ("59", merchant_name),
         ("60", "KUALA LUMPUR"),
     ]
     if embedded_url:

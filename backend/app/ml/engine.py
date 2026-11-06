@@ -116,10 +116,25 @@ class MessageIntelligenceEngine:
             )
             actions = ["Ask for more context before acting on the message."]
         elif result.risk_level == RiskLevel.LOW:
-            summary = "No strong social-engineering pattern was found in the available text."
-            actions = ["Confirm unexpected requests through an independent contact channel."]
+            # Absence of known patterns is not proof of safety: many scams read like ordinary
+            # chat, so the wording says what was (not) found rather than calling it safe.
+            summary = (
+                "No known scam pattern was found in this text. That does not confirm the "
+                "message or sender is genuine."
+            )
+            actions = [
+                "If it asks for money, codes, personal details or a move to another app, "
+                "verify the sender through a contact you already trust."
+            ]
         elif result.risk_level == RiskLevel.CAUTION:
-            summary = "Some patterns warrant caution, but the evidence is limited or mixed."
+            summary = (
+                "A common scam tactic or limited warning evidence was found. Verify before "
+                "you reply."
+                if result.reason in {"SOCIAL_ENGINEERING_CUE", "LIKELY_SPAM"}
+                else "Some patterns warrant caution, but the evidence is limited or mixed."
+            )
+            if result.reason == "LIKELY_SPAM":
+                summary = "This looks like unsolicited marketing. Treat offers and links with care."
             actions = ["Pause and verify the sender independently before responding."]
         elif result.risk_level == RiskLevel.ELEVATED:
             summary = "Multiple indicators suggest a meaningful social-engineering risk."
@@ -140,8 +155,32 @@ class MessageIntelligenceEngine:
             actions.append(
                 "Contact the claimed organisation using an official channel you locate yourself."
             )
-        if "SECRECY" in categories:
+        if "SECRECY" in categories or "DISCREET_REQUEST" in categories:
             actions.append("Discuss the request with someone you trust before acting.")
+        if "IDENTITY_CHANGE" in categories:
+            actions.append(
+                "Call the person on the number you already have saved before replying or "
+                "sending anything."
+            )
+        if "UNSOLICITED_CONTACT" in categories:
+            actions.append(
+                "Do not continue a chat with an unknown contact who starts a friendly "
+                "conversation out of nowhere."
+            )
+        if "PLATFORM_SHIFT" in categories:
+            actions.append("Be wary of anyone who asks to move the conversation to another app.")
+        if categories & {"IRREVERSIBLE_PAYMENT", "MONEY_REQUEST"}:
+            actions.append(
+                "Gift cards, crypto and transfers to new accounts are hard to recover; "
+                "never pay based only on a message."
+            )
+        if "UNSOLICITED_OFFER" in categories:
+            actions.append(
+                "Genuine employers and investments do not recruit by unsolicited messages "
+                "promising daily pay or guaranteed profit."
+            )
+        if "PERSONAL_DATA" in categories:
+            actions.append("Do not send IC, bank or card details in reply to a message.")
         supporting = [item.label for item in rules.indicators]
         if classification.label == "SCAM" and classification.matched_features:
             supporting.append(
@@ -157,9 +196,15 @@ class MessageIntelligenceEngine:
                 "Protective wording caused local rule matches to be discounted within their clause."
             )
         uncertainty = [
-            "Classifier probabilities and fusion confidence are uncalibrated; "
-            "neither is a probability of fraud."
+            "The risk score is calibrated on held-out historical SMS data: it estimates how "
+            "often similar messages there were scams. It is not a guarantee for this message.",
+            "Model confidence is a separate, uncalibrated signal strength.",
         ]
+        if result.reason in {"TACTIC_PLAYBOOK", "SOCIAL_ENGINEERING_CUE", "STRONG_LOCAL_EVIDENCE"}:
+            uncertainty.append(
+                "A documented scam tactic raised the score to its category minimum; that "
+                "minimum is a policy floor, not a measured rate."
+            )
         if result.disagreement:
             uncertainty.append(
                 "Model and rule signals disagree. Confidence is capped at low "
@@ -180,13 +225,36 @@ class MessageIntelligenceEngine:
             "AMBIGUOUS_MODEL": (
                 "Insufficient evidence: an uncertain model is not corroborated by local rules."
             ),
+            "CALIBRATED_SIGNALS": (
+                "A calibrator learned from held-out data combines the model's class estimates "
+                "with local rule evidence; fixed score bands set the category."
+            ),
+            "TACTIC_PLAYBOOK": (
+                "A documented scam playbook was detected (for example a new-number claim with a "
+                "money request, or an unsolicited offer that moves to another app)."
+            ),
+            "SOCIAL_ENGINEERING_CUE": (
+                "A conversational scam tactic was detected. Messages like this are not treated "
+                "as safe even without classic warning words."
+            ),
+            "PROTECTIVE_NOTICE": (
+                "The text warns the reader not to share or act and asks for nothing, which is "
+                "typical of genuine notices; the warning is capped at Caution."
+            ),
+            "SERVICE_NOTICE": (
+                "The text reads like a service notice that points to a channel you already "
+                "have and asks for no link, details or payment; the warning is capped at Caution."
+            ),
+            "LIKELY_SPAM": (
+                "The model considers this unsolicited marketing; spam is not the same as fraud."
+            ),
             "STRONG_LOCAL_EVIDENCE": (
                 "Several local indicators meet the strong-evidence policy. "
                 "Their risk floor cannot be reduced by optional AI review."
             ),
             "UNCORROBORATED_MODEL": (
-                "A model-only warning is capped at Caution because "
-                "no local indicator corroborates it."
+                "A model-only warning is capped below High because no local indicator "
+                "corroborates it."
             ),
             "COMBINED_SIGNALS": (
                 "The versioned policy combines model and local rule signals, "
@@ -245,8 +313,10 @@ class MessageIntelligenceEngine:
                 "The local model was evaluated on an imbalanced, mainly English historical "
                 "SMS dataset.",
                 "Links, phone numbers, identities and external claims were not checked.",
-                "Model probabilities and fused confidence are uncalibrated evidence-strength "
-                "indicators, not measured fraud probabilities.",
+                "The risk score is calibrated on historical SMS data, not on this sender; "
+                "new scam styles may differ.",
+                "Some scams read exactly like a genuine message. Without knowing the sender, "
+                "text alone cannot prove a message is safe.",
             ],
             model_version=classification.model_version,
             rules_version=rules.version,

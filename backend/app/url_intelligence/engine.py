@@ -33,6 +33,12 @@ class URLAssessment:
 
 # Shared classifier/provider container. A missing classifier permits degraded structural
 # analysis without inventing a model prediction.
+def host_only_url(url):
+    host = f"[{url.hostname}]" if url.ip_version == 6 else url.hostname
+    port = f":{url.port}" if url.port else ""
+    return parse_url(f"{url.scheme}://{host}{port}/")
+
+
 class URLIntelligenceEngine:
     # Accept a loaded classifier or None and an optional reputation interface, enabling
     # controlled tests and explicit degraded operation.
@@ -47,7 +53,10 @@ class URLIntelligenceEngine:
     def analyse(self, text: str) -> URLAssessment:
         url = parse_url(text)
         evidence = assess_rules(url)
-        classification = self.classifier.predict(url) if self.classifier else None
+        # url_ml_v1 learned from legitimate URLs that were all bare homepages, so any path looked
+        # suspicious to it. Judging only scheme://host/ compares like with like; the path is left
+        # to the structural rules.
+        classification = self.classifier.predict(host_only_url(url)) if self.classifier else None
         reputation = review(self.provider, url.normalized)
         risk = fuse(classification, evidence, reputation)
         summaries = {
@@ -65,7 +74,12 @@ class URLIntelligenceEngine:
             summaries["HIGH"] = "The configured reputation provider reports this URL as malicious."
         categories = {e.category for e in evidence}
         actions = ["Verify the destination through an independent trusted source before acting."]
-        if categories & {"SUSPICIOUS_SUBDOMAIN_BRANDING", "BRAND_LIKE_TOKEN_MISMATCH"}:
+        if categories & {
+            "BRAND_IN_UNOFFICIAL_DOMAIN",
+            "BRAND_IN_SUBDOMAIN",
+            "LOOKALIKE_DOMAIN",
+            "OFFICIAL_DOMAIN_IN_SUBDOMAIN",
+        }:
             actions.append(
                 "Access the service through its official website or app instead of this link."
             )
@@ -122,6 +136,7 @@ class URLIntelligenceEngine:
                     "version": classification.model_version if classification else None,
                     "class_estimate": classification.label if classification else None,
                     "confidence": confidence,
+                    "input": "host_only",
                 },
                 "url_rules": {
                     "version": RULES_VERSION,
@@ -132,8 +147,10 @@ class URLIntelligenceEngine:
                 "fusion": {"version": FUSION_VERSION},
                 "assessment_basis": {
                     "decision": (
-                        "The URL policy counts independent meaningful evidence families. High risk "
-                        "requires model corroboration or an authoritative reputation result."
+                        "The URL policy counts independent meaningful evidence families, such as "
+                        "brand impersonation, free hosting with account wording or embedded "
+                        "credentials. High risk needs two families, one family confirmed by a "
+                        "strongly phishing-like host, or an authoritative reputation result."
                     ),
                     "supporting": [e.label for e in evidence if e.severity != "CONTEXT"],
                     "mitigating": [

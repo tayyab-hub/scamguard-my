@@ -118,7 +118,7 @@ def test_idna_and_mixed_script_context():
         ("https://[2001:db8::1]/", "NONSTANDARD_HOST_REPRESENTATION"),
         ("http://0x7f000001/", "NONSTANDARD_HOST_REPRESENTATION"),
         ("https://a.b.c.d.example.com/", "EXCESSIVE_SUBDOMAINS"),
-        ("https://paypal.com.secure-login.example.net/verify", "SUSPICIOUS_SUBDOMAIN_BRANDING"),
+        ("https://paypal.com.secure-login.example.net/verify", "OFFICIAL_DOMAIN_IN_SUBDOMAIN"),
         ("https://example.org/microsoft/login", "BRAND_LIKE_TOKEN_MISMATCH"),
         ("https://example.com:8088/", "UNUSUAL_PORT"),
         ("https://bit.ly/inert", "URL_SHORTENER"),
@@ -180,11 +180,13 @@ def test_hostile_host_analysis_never_connects(host, classifier):
     ],
 )
 def test_weak_signals_do_not_dominate_even_strong_ml(value):
+    # url_fusion_v3: weak evidence on a strongly phishing-like host may be Elevated, but weak
+    # evidence can never produce High, and without any weak evidence the model alone is Caution.
     evidence = assess_rules(parse_url(value))
-    assert (
-        fuse(Classification("PHISHING", 0.99), evidence, ReputationSignal(status="DISABLED"))
-        == "CAUTION"
-    )
+    result = fuse(Classification("PHISHING", 0.99), evidence, ReputationSignal(status="DISABLED"))
+    assert result != "HIGH"
+    if not any(e.severity == "WEAK" for e in evidence):
+        assert result == "CAUTION"
 
 
 def test_fusion_exact_table_and_disagreement():
@@ -193,10 +195,12 @@ def test_fusion_exact_table_and_disagreement():
     u = parse_url("https://paypal.example.net/%252f/file.exe")
     ev = assess_rules(u)
     assert fuse(ml, ev, disabled) == "HIGH"
-    assert fuse(Classification("LEGITIMATE", 0.99), ev, disabled) == "ELEVATED"
+    # url_fusion_v3: two independent meaningful families are High without model agreement.
+    assert fuse(Classification("LEGITIMATE", 0.99), ev, disabled) == "HIGH"
     one = assess_rules(parse_url("https://paypal.example.net/login"))
-    assert fuse(ml, one, disabled) == "ELEVATED"
-    assert fuse(Classification("LEGITIMATE", 0.99), one, disabled) == "CAUTION"
+    assert fuse(ml, one, disabled) == "HIGH"
+    # One meaningful family (brand in a subdomain) is Elevated even when the host looks benign.
+    assert fuse(Classification("LEGITIMATE", 0.99), one, disabled) == "ELEVATED"
     assert fuse(Classification("LEGITIMATE", 0.99), [], disabled) == "LOW"
     assert fuse(None, [], disabled) == "INSUFFICIENT_EVIDENCE"
     assert fuse(ml, ev, ReputationSignal(status="ERROR")) == "HIGH"
@@ -300,4 +304,7 @@ def test_original_spelling_and_max_length_userinfo_survive_redaction():
 def test_many_empty_query_fields_remain_bounded_and_analysable(classifier):
     value = "https://example.com/?" + "&" * 1500
     result = URLIntelligenceEngine(classifier).analyse(value)
-    assert result.risk_level in {"LOW", "CAUTION"}
+    # Empty fields are bounded complexity, never meaningful evidence; under url_fusion_v3 weak
+    # evidence alone can be at most Elevated (when the host itself looks phishing-like).
+    assert result.risk_level != "HIGH"
+    assert not any(e["severity"] == "MEANINGFUL" for e in result.evidence)

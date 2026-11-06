@@ -9,16 +9,32 @@ import unicodedata
 from dataclasses import asdict, dataclass
 from urllib.parse import unquote, urlsplit
 
+from app.url_intelligence.brands import BRANDS, brand_findings, is_official
 from app.url_intelligence.features import KEYWORDS, REDIRECT_KEYS, entropy, features
 from app.url_intelligence.parsing import ParsedURL
 
-RULES_VERSION = "url_rules_v2"
-BRANDS = {
-    "paypal": {"paypal.com"},
-    "microsoft": {"microsoft.com", "microsoftonline.com", "live.com"},
-    "apple": {"apple.com", "icloud.com"},
-    "google": {"google.com"},
-}
+RULES_VERSION = "url_rules_v3"
+# v3 lists. Free hosting and dynamic DNS let anyone publish under a reputable parent domain;
+# these TLDs are cheap and over-represented in phishing reports. Both are weak alone and become
+# meaningful only with a brand or account/payment wording. Shorteners extend the model's v1 list
+# here so the frozen model inputs do not change.
+FREE_HOSTING = frozenset(
+    (
+        "000webhostapp.com weebly.com weeblysite.com wixsite.com wix.com github.io vercel.app "
+        "netlify.app pages.dev workers.dev firebaseapp.com web.app blogspot.com glitch.me "
+        "repl.co replit.app herokuapp.com onrender.com duckdns.org ngrok.io ngrok-free.app "
+        "ngrok.app trycloudflare.com azurewebsites.net square.site webflow.io godaddysites.com "
+        "sites.google.com forms.gle carrd.co mystrikingly.com jimdosite.com"
+    ).split()
+)
+RISKY_TLDS = frozenset(
+    "xyz top icu click shop buzz cyou rest cfd sbs bond quest monster online site live vip "
+    "cc tk ml ga cf gq work support loan win bid".split()
+)
+EXTRA_SHORTENERS = frozenset(
+    "s.id shorturl.at rb.gy t.ly tiny.cc linktr.ee bit.do cutt.us v.gd qrco.de shorturl.asia "
+    "short.gy tinyurl.is urlz.fr t.me".split()
+)
 
 
 # One bounded observation with severity, explanation, source and family. Fusion counts
@@ -127,28 +143,125 @@ def host_evidence(u, f):
                 "unicode",
             )
         )
-    outside = unquote(u.subdomain + "/" + u.path).lower()
-    tokens = set(re.findall(r"[a-z]+", outside))
-    for brand, domains in BRANDS.items():
-        if brand in tokens and u.registrable_domain not in domains:
-            category = (
-                "SUSPICIOUS_SUBDOMAIN_BRANDING"
-                if brand in re.findall(r"[a-z]+", u.subdomain)
-                else "BRAND_LIKE_TOKEN_MISMATCH"
+    labels = {
+        "BRAND_IN_UNOFFICIAL_DOMAIN": (
+            "Brand name in an unofficial domain",
+            "names a known brand, but its registrable domain is not one of that brand's "
+            "official domains",
+        ),
+        "BRAND_IN_SUBDOMAIN": (
+            "Brand name in a subdomain",
+            "places a known brand in a subdomain of an unrelated domain",
+        ),
+        "LOOKALIKE_DOMAIN": (
+            "Look-alike domain",
+            "is spelled one or two characters away from, or with characters that look like, "
+            "a known brand",
+        ),
+        "OFFICIAL_DOMAIN_IN_SUBDOMAIN": (
+            "Official domain used as a disguise",
+            "starts with a real brand domain, but the actual destination is the domain at the end",
+        ),
+    }
+    for finding in brand_findings(
+        u.hostname, u.unicode_hostname, u.registrable_domain, u.subdomain
+    ):
+        title, explanation = labels[finding.category]
+        out.append(
+            item(
+                finding.category,
+                "MEANINGFUL",
+                title,
+                f"This hostname {explanation}. Affiliation is unverified.",
+                f"{finding.brand} ({finding.detail}); actual domain: "
+                f"{u.registrable_domain or u.hostname}",
+                "branding",
             )
+        )
+    # A brand named only in the path ("example.org/microsoft/login") of an unofficial domain.
+    # News and reference pages mention brands in paths too, so it is weak unless account or
+    # payment wording is present.
+    if not is_official(u.registrable_domain) and not any(e.family == "branding" for e in out):
+        path_tokens = set(re.findall(r"[a-z0-9]+", unquote(u.path).lower()))
+        named = next(
+            (
+                (display, token)
+                for display, tokens, _ in BRANDS.values()
+                for token in tokens
+                if len(token) >= 5 and token in path_tokens
+            ),
+            None,
+        )
+        if named:
+            account_path = bool(path_tokens & KEYWORDS)
             out.append(
                 item(
-                    category,
-                    "MEANINGFUL",
-                    "Brand-like token outside its domain",
-                    (
-                        "A limited known brand token appears outside its listed "
-                        "registrable domains; affiliation is unverified."
-                    ),
-                    f"{brand}; actual domain: {u.registrable_domain or u.hostname}",
+                    "BRAND_LIKE_TOKEN_MISMATCH",
+                    "MEANINGFUL" if account_path else "WEAK",
+                    "Brand name in the path of an unrelated site",
+                    "A known brand appears in the path of a domain that is not one of its official "
+                    "domains; affiliation is unverified.",
+                    f"{named[0]} ({named[1]}); actual domain: {u.registrable_domain or u.hostname}",
                     "branding",
                 )
             )
+    host = u.hostname.lower()
+    hosting = next(
+        (domain for domain in FREE_HOSTING if host == domain or host.endswith("." + domain)),
+        None,
+    )
+    tld = host.rsplit(".", 1)[-1] if "." in host and not u.ip_version else ""
+    account_words = bool(
+        set(re.findall(r"[a-z]+", unquote(u.hostname + u.path).lower())) & KEYWORDS
+    )
+    branded = any(e.family == "branding" for e in out)
+    if hosting:
+        out.append(
+            item(
+                "FREE_HOSTING",
+                "MEANINGFUL" if branded or account_words else "WEAK",
+                "Free hosting or tunnelling service",
+                "Anyone can publish a page under this shared service; the parent domain's "
+                "reputation does not cover this page.",
+                hosting,
+                "hosting",
+            )
+        )
+    if tld in RISKY_TLDS:
+        out.append(
+            item(
+                "HIGH_RISK_TLD",
+                "MEANINGFUL" if branded or account_words else "WEAK",
+                "Frequently abused domain ending",
+                "This low-cost ending is over-represented in phishing reports; many sites using "
+                "it are legitimate.",
+                "." + tld,
+                "hosting",
+            )
+        )
+    if u.ip_version and (branded or account_words):
+        out.append(
+            item(
+                "IP_HOST_WITH_ACCOUNT_CONTEXT",
+                "MEANINGFUL",
+                "Numeric address with login or brand wording",
+                "Genuine banks and services use named domains for sign-in pages.",
+                u.hostname,
+                "authority",
+            )
+        )
+    if is_official(u.registrable_domain):
+        out.append(
+            item(
+                "KNOWN_OFFICIAL_DOMAIN",
+                "CONTEXT",
+                "Listed official domain",
+                "The registrable domain is on the reviewed list of official brand domains. "
+                "Pages on official domains can still be misused.",
+                u.registrable_domain,
+                "branding",
+            )
+        )
     return out
 
 
@@ -289,7 +402,7 @@ def destination_evidence(u, f):
                 "language",
             )
         )
-    if f["shortener"]:
+    if f["shortener"] or u.hostname.lower() in EXTRA_SHORTENERS:
         out.append(
             item(
                 "URL_SHORTENER",

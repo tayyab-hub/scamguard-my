@@ -1,0 +1,272 @@
+{
+  "title": "Message intelligence upgrade evaluation (rules v3 + calibrated fusion v3)",
+  "date": "2026-11-06",
+  "baseline": {
+    "rules": "message-rules-v2",
+    "fusion": "message-fusion-v2",
+    "source": "git HEAD f83b6c1"
+  },
+  "upgrade": {
+    "rules": "message-rules-v3",
+    "fusion": "message-fusion-v3"
+  },
+  "model": "message-tfidf-logreg-v1 (unchanged)",
+  "challenge_set_sha256": "08886baae3a61d1d8176d5b7cefdeb3cc2f5f5102f25e8bef4beabc7c6245aa1",
+  "historical_test": {
+    "baseline": {
+      "rows": 1160,
+      "categories_by_label": {
+        "LEGITIMATE": {
+          "LOW": 950,
+          "CAUTION": 3,
+          "INSUFFICIENT_EVIDENCE": 14
+        },
+        "SPAM": {
+          "CAUTION": 35,
+          "INSUFFICIENT_EVIDENCE": 6,
+          "LOW": 41,
+          "ELEVATED": 5
+        },
+        "SCAM": {
+          "CAUTION": 41,
+          "ELEVATED": 42,
+          "HIGH": 18,
+          "INSUFFICIENT_EVIDENCE": 2,
+          "LOW": 3
+        }
+      },
+      "scam_warned_caution_or_above": 0.9528,
+      "scam_elevated_or_high": 0.566,
+      "scam_high": 0.1698,
+      "scam_low": 0.0283,
+      "legitimate_warned_caution_or_above": 0.0031,
+      "legitimate_elevated_or_high": 0.0,
+      "spam_warned_caution_or_above": 0.4598,
+      "versions": {
+        "rules": "message-rules-v2",
+        "fusion": "message-fusion-v2"
+      }
+    },
+    "upgrade": {
+      "rows": 1160,
+      "categories_by_label": {
+        "LEGITIMATE": {
+          "LOW": 944,
+          "CAUTION": 11,
+          "INSUFFICIENT_EVIDENCE": 10,
+          "ELEVATED": 2
+        },
+        "SPAM": {
+          "CAUTION": 69,
+          "LOW": 5,
+          "ELEVATED": 11,
+          "HIGH": 2
+        },
+        "SCAM": {
+          "ELEVATED": 41,
+          "HIGH": 57,
+          "CAUTION": 8
+        }
+      },
+      "scam_warned_caution_or_above": 1.0,
+      "scam_elevated_or_high": 0.9245,
+      "scam_high": 0.5377,
+      "scam_low": 0.0,
+      "legitimate_warned_caution_or_above": 0.0134,
+      "legitimate_elevated_or_high": 0.0021,
+      "spam_warned_caution_or_above": 0.9425,
+      "versions": {
+        "rules": "message-rules-v3",
+        "fusion": "message-fusion-v3"
+      }
+    }
+  },
+  "challenge_v1_by_half": {
+    "development_half_odd_ids": {
+      "v2": {
+        "scam_rows": 45,
+        "legitimate_rows": 46,
+        "scam_warned": 0.3333,
+        "scam_elevated_or_high": 0.1333,
+        "scam_high": 0.0,
+        "legitimate_warned": 0.1739,
+        "legitimate_elevated_or_high": 0.0435,
+        "spam_warned": 0.1
+      },
+      "v3": {
+        "scam_rows": 45,
+        "legitimate_rows": 46,
+        "scam_warned": 0.9556,
+        "scam_elevated_or_high": 0.4444,
+        "scam_high": 0.2222,
+        "legitimate_warned": 0.3913,
+        "legitimate_elevated_or_high": 0.0,
+        "spam_warned": 0.7
+      }
+    },
+    "holdout_half_even_ids": {
+      "v2": {
+        "scam_rows": 45,
+        "legitimate_rows": 46,
+        "scam_warned": 0.2667,
+        "scam_elevated_or_high": 0.1333,
+        "scam_high": 0.0444,
+        "legitimate_warned": 0.1087,
+        "legitimate_elevated_or_high": 0.0,
+        "spam_warned": 0.1
+      },
+      "v3": {
+        "scam_rows": 45,
+        "legitimate_rows": 46,
+        "scam_warned": 0.5333,
+        "scam_elevated_or_high": 0.2,
+        "scam_high": 0.1111,
+        "legitimate_warned": 0.5,
+        "legitimate_elevated_or_high": 0.0652,
+        "spam_warned": 0.7
+      }
+    }
+  },
+  "challenge_v1_full": {
+    "baseline": {
+      "rows": 202,
+      "categories_by_label": {
+        "SCAM": {
+          "LOW": 43,
+          "CAUTION": 15,
+          "INSUFFICIENT_EVIDENCE": 20,
+          "ELEVATED": 10,
+          "HIGH": 2
+        },
+        "SPAM": {
+          "INSUFFICIENT_EVIDENCE": 8,
+          "CAUTION": 2,
+          "LOW": 10
+        },
+        "LEGITIMATE": {
+          "LOW": 60,
+          "CAUTION": 11,
+          "ELEVATED": 2,
+          "INSUFFICIENT_EVIDENCE": 19
+        }
+      },
+      "scam_warned_caution_or_above": 0.3,
+      "scam_elevated_or_high": 0.1333,
+      "scam_high": 0.0222,
+      "scam_low": 0.4778,
+      "legitimate_warned_caution_or_above": 0.1413,
+      "legitimate_elevated_or_high": 0.0217,
+      "spam_warned_caution_or_above": 0.1,
+      "versions": {
+        "rules": "message-rules-v2",
+        "fusion": "message-fusion-v2"
+      },
+      "excluding_ambiguous": {
+        "rows": 194,
+        "categories_by_label": {
+          "SCAM": {
+            "LOW": 40,
+            "CAUTION": 15,
+            "INSUFFICIENT_EVIDENCE": 20,
+            "ELEVATED": 10,
+            "HIGH": 2
+          },
+          "SPAM": {
+            "INSUFFICIENT_EVIDENCE": 8,
+            "CAUTION": 2,
+            "LOW": 10
+          },
+          "LEGITIMATE": {
+            "LOW": 55,
+            "CAUTION": 11,
+            "ELEVATED": 2,
+            "INSUFFICIENT_EVIDENCE": 19
+          }
+        },
+        "scam_warned_caution_or_above": 0.3103,
+        "scam_elevated_or_high": 0.1379,
+        "scam_high": 0.023,
+        "scam_low": 0.4598,
+        "legitimate_warned_caution_or_above": 0.1494,
+        "legitimate_elevated_or_high": 0.023,
+        "spam_warned_caution_or_above": 0.1
+      }
+    },
+    "upgrade": {
+      "rows": 202,
+      "categories_by_label": {
+        "SCAM": {
+          "CAUTION": 38,
+          "LOW": 22,
+          "HIGH": 15,
+          "ELEVATED": 14,
+          "INSUFFICIENT_EVIDENCE": 1
+        },
+        "SPAM": {
+          "CAUTION": 13,
+          "LOW": 5,
+          "INSUFFICIENT_EVIDENCE": 1,
+          "ELEVATED": 1
+        },
+        "LEGITIMATE": {
+          "LOW": 49,
+          "CAUTION": 38,
+          "ELEVATED": 3,
+          "INSUFFICIENT_EVIDENCE": 2
+        }
+      },
+      "scam_warned_caution_or_above": 0.7444,
+      "scam_elevated_or_high": 0.3222,
+      "scam_high": 0.1667,
+      "scam_low": 0.2444,
+      "legitimate_warned_caution_or_above": 0.4457,
+      "legitimate_elevated_or_high": 0.0326,
+      "spam_warned_caution_or_above": 0.7,
+      "versions": {
+        "rules": "message-rules-v3",
+        "fusion": "message-fusion-v3"
+      },
+      "excluding_ambiguous": {
+        "rows": 194,
+        "categories_by_label": {
+          "SCAM": {
+            "CAUTION": 36,
+            "LOW": 21,
+            "HIGH": 15,
+            "ELEVATED": 14,
+            "INSUFFICIENT_EVIDENCE": 1
+          },
+          "SPAM": {
+            "CAUTION": 13,
+            "LOW": 5,
+            "INSUFFICIENT_EVIDENCE": 1,
+            "ELEVATED": 1
+          },
+          "LEGITIMATE": {
+            "LOW": 48,
+            "CAUTION": 34,
+            "ELEVATED": 3,
+            "INSUFFICIENT_EVIDENCE": 2
+          }
+        },
+        "scam_warned_caution_or_above": 0.7471,
+        "scam_elevated_or_high": 0.3333,
+        "scam_high": 0.1724,
+        "scam_low": 0.2414,
+        "legitimate_warned_caution_or_above": 0.4253,
+        "legitimate_elevated_or_high": 0.0345,
+        "spam_warned_caution_or_above": 0.7
+      }
+    }
+  },
+  "method_notes": [
+    "Historical test: the untouched 1,160-row split; never used for fitting, thresholds or rule design.",
+    "Challenge set: written independently by a separate assistant without access to the rules; synthetic, evaluation-only.",
+    "Rules v3 errors were inspected only on odd-numbered challenge rows (development half). Even-numbered rows (holdout half) were not inspected; the holdout half is the fair generalisation estimate.",
+    "AI review disabled in all runs."
+  ],
+  "honest_reading": [
+    "On historical SMS (full runtime engine), scams warned rose from 95.3% to 100.0%, Elevated or High from 56.6% to 92.5% and High from 17.0% to 53.8%; genuine messages warned 1.3%. High requires corroborating rule evidence.",
+    "On unseen conversational scams (holdout half), warnings roughly doubled but about half of such scams still score Low, and many genuine conversational or service messages receive a Caution. Word-pattern rules generalise only partly; a meaning-based model or reviewer is the next improvement."
+  ]
+}

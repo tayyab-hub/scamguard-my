@@ -104,18 +104,23 @@ def test_model_only_scam_estimate_is_not_multiple_indicators():
         RuleAssessment(0, [], 0),
         AIReview(AIStatus.DISABLED),
     )
-    assert result.risk_level == "CAUTION"
+    # fusion v3: a confident model may reach Elevated, but High needs corroborating evidence.
+    assert result.risk_level == "ELEVATED"
     assert result.reason == "UNCORROBORATED_MODEL"
 
 
-def test_ambiguous_model_with_weak_rules_abstains():
+def test_ambiguous_model_without_rules_reports_calibrated_uncertainty():
+    # fusion v3 no longer abstains on an uncertain model: the calibrated score expresses the
+    # uncertainty, and without corroboration it cannot reach High.
     model = Classification(
         "LEGITIMATE", {"LEGITIMATE": 0.36, "SPAM": 0.32, "SCAM": 0.32}, 0.36, "test", 4
     )
     result = fuse(
         "Some unclear wording here", model, RuleAssessment(0, [], 0), AIReview(AIStatus.DISABLED)
     )
-    assert result.risk_level == "INSUFFICIENT_EVIDENCE"
+    assert result.risk_level in {"CAUTION", "ELEVATED"}
+    assert result.risk_score is not None and 0 < result.risk_score < 0.7
+    assert result.confidence_level == "LOW"
 
 
 def test_unusable_model_prior_does_not_contribute():
