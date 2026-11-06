@@ -213,7 +213,7 @@ describe('persistent submission UI', () => {
     expect(
       screen.getByText('Do not send money, credentials or verification codes.'),
     ).toBeInTheDocument()
-    await userEvent.click(screen.getByText('Technical details'))
+    await userEvent.click(screen.getByRole('button', { name: 'Technical details' }))
     expect(screen.getByText(/SCAM · message-tfidf-logreg-v1/)).toBeInTheDocument()
     expect(screen.getByText('disabled · no contribution')).toBeInTheDocument()
     expect(screen.getByRole('meter')).toHaveAttribute('aria-valuenow', '86')

@@ -4,6 +4,18 @@ Historical record: status, permissions, versions and screenshots below apply to 
 
 This frontend-only refinement preserves the Forensic Intelligence identity, routes, contracts, stored assessments, local models, rules, fusion and capability boundaries. It follows the accepted Task 4 merge `386e4b7`, is COMPLETE on `codex/ui-ux-result-refinement`, and is authorized for its closure merge before Task 5 begins.
 
+## Compact result layout (6 November 2026)
+
+Results were long enough that most people would not scroll to the end. The decision now stays
+visible: risk level, guidance, summary, score, separate confidence, key indicators, the advisory
+note and recommended actions. Supporting sections are collapsed rows that use the accordion
+pattern (a heading containing a button with `aria-expanded`). Each row shows a short hint before it
+is opened: Why this verdict (concern/tempering counts), Evidence (item count), What this assessment
+cannot tell you (note count) and Technical details. Phone numbering metadata and QR payment
+structure use the same rows; decoded QR content stays visible. Nothing was removed; the stored
+assessment, contracts and score method are unchanged. Region labels are preserved for assistive
+technology and tests. Below a 420px panel width, each hint moves under its title.
+
 ## Advisory score presentation: risk-presentation-v1
 
 The categorical risk level is authoritative. Neither displayed number is a probability of fraud, calibrated confidence, measured detection accuracy or a new intelligence prediction. There is no invented within-category precision or per-indicator weight. The two modalities have different score meanings and must not be compared numerically.

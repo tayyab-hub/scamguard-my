@@ -2,12 +2,15 @@
 // validated assessment props; scores are display transformations only, confidence remains
 // separate and evidence stays inert text.
 
-import { useId } from 'react'
+import { useId, useState } from 'react'
 import type { CSSProperties, ReactNode } from 'react'
 import {
-  ArrowUpRight,
   Check,
+  ChevronDown,
   CircleHelp,
+  FileCog,
+  Info,
+  Scale,
   Fingerprint,
   ListChecks,
   ShieldAlert,
@@ -26,6 +29,63 @@ import {
   SCORE_PRESENTATION_VERSION,
   topSignals,
 } from '../../lib/resultPresentation'
+
+// Collapsible result section (WAI-ARIA accordion pattern: a heading containing a button). The
+// summary row stays visible with a short hint so people can see what is inside before opening it;
+// supporting detail is kept out of the way rather than removed.
+export function ResultDisclosure({
+  title,
+  label,
+  icon,
+  hint,
+  className = '',
+  children,
+}: {
+  title: string
+  label?: string
+  icon?: ReactNode
+  hint?: string
+  className?: string
+  children: ReactNode
+}) {
+  const [open, setOpen] = useState(false)
+  const id = useId()
+  return (
+    <section
+      className={`result-section result-disclosure ${className}`}
+      aria-label={label ?? title}
+      data-open={open}
+    >
+      <h3 className="text-sm font-semibold">
+        <button
+          type="button"
+          className="disclosure-trigger"
+          aria-expanded={open}
+          aria-controls={`${id}-panel`}
+          aria-describedby={hint ? `${id}-hint` : undefined}
+          onClick={() => setOpen((value) => !value)}
+        >
+          {icon}
+          <span className="disclosure-title">{title}</span>
+          {hint && (
+            <span id={`${id}-hint`} aria-hidden="true" className="disclosure-hint">
+              {hint}
+            </span>
+          )}
+          <ChevronDown size={16} className="disclosure-chevron" aria-hidden="true" />
+        </button>
+      </h3>
+      <div id={`${id}-panel`} hidden={!open} className="disclosure-content mt-4">
+        {children}
+      </div>
+    </section>
+  )
+}
+
+// Pluralise a count for disclosure hints.
+function count(value: number, noun: string) {
+  return `${value} ${noun}${value === 1 ? '' : 's'}`
+}
 
 // Show unavailable when confidence_score is null; otherwise display the stored strength label
 // with the relevant modality limitation.
@@ -145,26 +205,25 @@ export function AnalysisResultHero({ assessment }: { assessment: Assessment }) {
               : isPhoneAssessment(assessment)
                 ? 'PHONE'
                 : 'MESSAGE'}{' '}
-          / ASSESSMENT
+          · ADVISORY RISK LEVEL
         </p>
         <span className="risk-icon">
           <Icon size={22} strokeWidth={1.6} aria-hidden="true" />
         </span>
       </div>
-      <span className="risk-chip motion-fade mt-3">Advisory risk level</span>
-      <h3 className="mt-3 font-display text-[30px] leading-tight tracking-tight text-ink">
+      <h3 className="mt-2 font-display text-[30px] leading-tight tracking-tight text-ink">
         {riskCopy[assessment.risk_level]}
       </h3>
-      <p className="risk-guidance mt-3 text-xs font-medium leading-6 text-body">
+      <p className="risk-guidance mt-2 text-xs font-medium leading-6 text-body">
         {riskGuidance[assessment.risk_level]}
       </p>
-      <p className="mt-3 text-xs leading-6 text-body">{assessment.summary}</p>
-      <div className="result-summary-grid mt-5">
+      <p className="mt-2 text-xs leading-6 text-muted">{assessment.summary}</p>
+      <div className="result-summary-grid mt-4">
         <RiskScoreDisplay assessment={assessment} />
         <ConfidenceBadge assessment={assessment} />
       </div>
       {signals.length > 0 && (
-        <div className="mt-5" aria-label="Key indicators">
+        <div className="mt-4" aria-label="Key indicators">
           <p className="eyebrow !text-[9px]">KEY INDICATORS</p>
           <p className="mt-2 text-xs leading-6 text-body">
             {signals.map((item) => item.label).join(' · ')}
@@ -205,18 +264,24 @@ export function AnalysisResultHero({ assessment }: { assessment: Assessment }) {
 // Validate optional decision/support/mitigation/uncertainty data before rendering. Older
 // immutable records without this field simply omit the panel.
 export function AssessmentBasisPanel({ assessment }: { assessment: Assessment }) {
-  const headingId = useId()
   // Optional for immutable historical records and QR results with an underlying engine.
   const basis = assessmentBasisSchema.safeParse(
     'assessment_basis' in assessment.components ? assessment.components.assessment_basis : null,
   )
   if (!basis.success) return null
+  const { supporting, mitigating } = basis.data
   return (
-    <section className="result-section assessment-basis" aria-labelledby={headingId}>
-      <h3 id={headingId} className="text-sm font-semibold">
-        Why this verdict
-      </h3>
-      <p className="mt-3 text-sm leading-6 text-body">{basis.data.decision}</p>
+    <ResultDisclosure
+      title="Why this verdict"
+      className="assessment-basis"
+      icon={<Scale size={16} className="text-accent" aria-hidden="true" />}
+      hint={
+        supporting.length || mitigating.length
+          ? `${count(supporting.length, 'concern')} · ${mitigating.length} tempering`
+          : 'No warning recorded'
+      }
+    >
+      <p className="text-sm leading-6 text-body">{basis.data.decision}</p>
       <div className="evidence-balance mt-5">
         <div>
           <h4 className="text-xs font-semibold text-ink">What raises concern</h4>
@@ -256,7 +321,7 @@ export function AssessmentBasisPanel({ assessment }: { assessment: Assessment })
           <li key={item}>{item}</li>
         ))}
       </ul>
-    </section>
+    </ResultDisclosure>
   )
 }
 
@@ -302,35 +367,36 @@ export function EvidenceCard({
 export function EvidencePanel({ assessment }: { assessment: Assessment }) {
   const url = isURLAssessment(assessment)
   const phone = isPhoneAssessment(assessment)
+  const items = assessment.evidence.length
   return (
-    <section
-      className="result-section"
-      aria-label={
+    <ResultDisclosure
+      label={
         isQRAssessment(assessment)
           ? 'QR decoding and security evidence'
-          : isPhoneAssessment(assessment)
+          : phone
             ? 'Phone numbering evidence'
             : 'Detected evidence'
       }
-    >
-      <h3 className="flex items-center gap-2 text-sm font-semibold">
-        <Fingerprint size={16} className="text-accent" aria-hidden="true" />
-        {isQRAssessment(assessment)
+      title={
+        isQRAssessment(assessment)
           ? 'QR decoding and routed intelligence evidence'
           : url
             ? 'URL evidence and structural indicators'
             : phone
               ? 'Phone numbering evidence'
-              : 'Detected evidence'}
-      </h3>
+              : 'Detected evidence'
+      }
+      icon={<Fingerprint size={16} className="text-accent" aria-hidden="true" />}
+      hint={items ? count(items, 'item') : 'None found'}
+    >
       {assessment.evidence.length > 0 ? (
-        <ul className="mt-4 space-y-3">
+        <ul className="space-y-3">
           {orderedEvidence(assessment).map((item, index) => (
             <EvidenceCard key={`${item.category}-${index}`} item={item} index={index} />
           ))}
         </ul>
       ) : (
-        <p className="mt-4 rounded-lg border border-dashed border-control p-4 text-xs leading-6 text-muted">
+        <p className="rounded-lg border border-dashed border-control p-4 text-xs leading-6 text-muted">
           {url
             ? 'No structural warning was found. This does not verify the destination.'
             : phone
@@ -338,7 +404,7 @@ export function EvidencePanel({ assessment }: { assessment: Assessment }) {
               : 'No deterministic or grounded contextual indicator was found.'}
         </p>
       )}
-    </section>
+    </ResultDisclosure>
   )
 }
 
@@ -376,43 +442,45 @@ export function AnalysisMetaPanel({
 }) {
   return (
     <>
-      <section className="result-section" aria-label="Assessment limitations">
-        <h3 className="text-sm font-semibold">What this assessment cannot tell you</h3>
-        <ul className="mt-3 list-disc space-y-2 pl-4 text-xs leading-6 text-muted">
+      <ResultDisclosure
+        title="What this assessment cannot tell you"
+        label="Assessment limitations"
+        icon={<Info size={16} className="text-accent" aria-hidden="true" />}
+        hint={count(assessment.limitations.length, 'note')}
+      >
+        <ul className="list-disc space-y-2 pl-4 text-xs leading-6 text-muted">
           {assessment.limitations.map((limitation) => (
             <li key={limitation}>{limitation}</li>
           ))}
         </ul>
-      </section>
-      <details className="analysis-meta result-section text-[11px]">
-        <summary className="flex min-h-8 cursor-pointer items-center justify-between gap-3 rounded font-semibold text-body">
-          Technical details
-          <ArrowUpRight size={15} aria-hidden="true" />
-        </summary>
-        <div className="disclosure-content">
-          <dl className="metadata-grid mt-4">
-            {analysisId && (
-              <div>
-                <dt>Analysis ID</dt>
-                <dd className="font-mono">{analysisId}</dd>
-              </div>
-            )}
+      </ResultDisclosure>
+      <ResultDisclosure
+        title="Technical details"
+        className="analysis-meta"
+        icon={<FileCog size={16} className="text-accent" aria-hidden="true" />}
+      >
+        <dl className="metadata-grid">
+          {analysisId && (
             <div>
-              <dt>Completed</dt>
-              <dd>
-                <time dateTime={assessment.completed_at}>
-                  {new Date(assessment.completed_at).toLocaleString()}
-                </time>
-              </dd>
+              <dt>Analysis ID</dt>
+              <dd className="font-mono">{analysisId}</dd>
             </div>
-            {children}
-            <div>
-              <dt>Score presentation</dt>
-              <dd>{SCORE_PRESENTATION_VERSION}</dd>
-            </div>
-          </dl>
-        </div>
-      </details>
+          )}
+          <div>
+            <dt>Completed</dt>
+            <dd>
+              <time dateTime={assessment.completed_at}>
+                {new Date(assessment.completed_at).toLocaleString()}
+              </time>
+            </dd>
+          </div>
+          {children}
+          <div>
+            <dt>Score presentation</dt>
+            <dd>{SCORE_PRESENTATION_VERSION}</dd>
+          </div>
+        </dl>
+      </ResultDisclosure>
     </>
   )
 }

@@ -7,6 +7,7 @@ import {
   AnalysisResultHero,
   EvidencePanel,
   RecommendedActionsPanel,
+  ResultDisclosure,
 } from './ResultPresentation'
 
 // Convert stored enum spelling to a readable label; this changes display text only.
@@ -32,9 +33,12 @@ export function PhoneResult({
     >
       <AnalysisResultHero assessment={assessment} />
       <RecommendedActionsPanel actions={assessment.recommended_actions} />
-      <section className="result-section" aria-label="Phone intelligence details">
-        <h3 className="text-sm font-semibold">Phone Intelligence</h3>
-        <dl className="metadata-grid mt-4">
+      <ResultDisclosure
+        title="Phone Intelligence"
+        label="Phone intelligence details"
+        hint={`${metadata.region_code ?? 'Unknown region'} · ${displayType(metadata.number_type)}`}
+      >
+        <dl className="metadata-grid">
           <div>
             <dt>Normalized number</dt>
             <dd className="font-mono">{metadata.normalized_e164}</dd>
@@ -63,7 +67,7 @@ export function PhoneResult({
             </dd>
           </div>
         </dl>
-      </section>
+      </ResultDisclosure>
       <EvidencePanel assessment={assessment} />
       <AnalysisMetaPanel assessment={assessment} analysisId={analysisId}>
         <div>

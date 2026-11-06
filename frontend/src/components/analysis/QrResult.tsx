@@ -10,6 +10,7 @@ import {
   AssessmentBasisPanel,
   EvidencePanel,
   RecommendedActionsPanel,
+  ResultDisclosure,
 } from './ResultPresentation'
 
 // Render only recognized string payment fields and safely typed account-ID lists, expose long
@@ -101,9 +102,17 @@ export function QrResult({
         </div>
       </section>
       {payment && (
-        <section className="result-section" aria-label="Payment QR structure">
-          <h3 className="text-sm font-semibold">Payment QR structure</h3>
-          <dl className="metadata-grid mt-4">
+        <ResultDisclosure
+          title="Payment QR structure"
+          hint={
+            payment.crc_valid === true
+              ? 'CRC valid'
+              : payment.crc_valid === false
+                ? 'CRC invalid'
+                : 'CRC unavailable'
+          }
+        >
+          <dl className="metadata-grid">
             <div>
               <dt>CRC integrity</dt>
               <dd>
@@ -131,7 +140,7 @@ export function QrResult({
             Structural consistency and CRC validity do not prove recipient identity, merchant
             legitimacy, or transaction safety.
           </p>
-        </section>
+        </ResultDisclosure>
       )}
       <AssessmentBasisPanel assessment={assessment} />
       <EvidencePanel assessment={assessment} />

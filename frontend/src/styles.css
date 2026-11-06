@@ -502,23 +502,13 @@
   .risk-icon {
     color: var(--risk-color);
   }
-  .risk-chip {
-    display: inline-flex;
-    padding: 0.3rem 0.55rem;
-    border: 1px solid currentColor;
-    border-radius: 4px;
-    color: var(--risk-color);
-    background: var(--color-surface);
-    font-size: 10px;
-    font-weight: 600;
-  }
   .result-summary-grid {
     display: grid;
     gap: 0.75rem;
   }
   .score-block,
   .confidence-block {
-    padding: 1rem;
+    padding: 0.875rem 1rem;
     border: 1px solid var(--color-line);
     border-radius: 8px;
     background: var(--color-surface);
@@ -585,6 +575,65 @@
   .actions-panel {
     background: linear-gradient(120deg, var(--color-canvas), var(--color-surface));
   }
+  /* Collapsed supporting sections: a compact tappable row that expands in place. */
+  .result-disclosure {
+    padding-block: 0.25rem;
+  }
+  .result-disclosure[data-open='true'] {
+    padding-bottom: 1.25rem;
+  }
+  .disclosure-trigger {
+    display: flex;
+    width: 100%;
+    min-height: 3rem;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 4px;
+    text-align: left;
+    color: var(--color-ink);
+  }
+  .disclosure-trigger:hover .disclosure-chevron {
+    color: var(--color-ink);
+  }
+  .disclosure-title {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+  .disclosure-hint {
+    flex: 0 1 auto;
+    max-width: 45%;
+    padding-left: 0.75rem;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.4;
+    text-align: right;
+    color: var(--color-muted);
+  }
+  .disclosure-trigger > svg:first-child {
+    flex-shrink: 0;
+  }
+  /* Narrow result panels: the hint moves to its own line under the title. */
+  @container (max-width: 420px) {
+    .disclosure-trigger {
+      flex-wrap: wrap;
+      row-gap: 0.125rem;
+      padding-block: 0.5rem;
+    }
+    .disclosure-hint {
+      order: 1;
+      flex-basis: 100%;
+      max-width: none;
+      padding-left: 1.5rem;
+      text-align: left;
+    }
+  }
+  .disclosure-chevron {
+    flex-shrink: 0;
+    color: var(--color-muted);
+  }
+  .result-disclosure[data-open='true'] .disclosure-chevron {
+    transform: rotate(180deg);
+  }
   .analysis-meta {
     background: var(--color-canvas);
   }
@@ -626,6 +675,9 @@
     .result-section {
       padding: 1.125rem;
     }
+    .result-disclosure {
+      padding-block: 0.125rem;
+    }
     .evidence-card {
       padding: 0.75rem;
     }
@@ -639,12 +691,14 @@
   .faq-disclosure[open] > p {
     animation: workspace-fade var(--motion-standard) var(--ease-standard);
   }
-  .analysis-meta summary > svg,
   .faq-disclosure summary > span {
     transition: transform var(--motion-fast) var(--ease-standard);
   }
-  .analysis-meta[open] summary > svg {
-    transform: rotate(90deg);
+  .disclosure-chevron {
+    transition: transform var(--motion-fast) var(--ease-standard);
+  }
+  .result-disclosure[data-open='true'] > .disclosure-content {
+    animation: workspace-fade var(--motion-standard) var(--ease-standard);
   }
   .validation-feedback {
     animation: workspace-fade var(--motion-fast) var(--ease-standard);

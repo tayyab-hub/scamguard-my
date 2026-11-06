@@ -45,13 +45,15 @@ test('real PostgreSQL: login, Phone assessment, history and refreshed result per
   await expect(result).toContainText('Insufficient evidence')
   await page.screenshot({ path: info.outputPath('task8-phone-result.png'), fullPage: true })
   await expect(result.getByRole('meter')).toHaveCount(0)
+  await result.getByRole('button', { name: 'Phone numbering evidence' }).click()
   await expect(
     result
       .getByRole('region', { name: 'Phone numbering evidence' })
       .getByText('Valid international numbering format'),
   ).toBeVisible()
-  await result.getByText('Technical details').focus()
+  await result.getByRole('button', { name: 'Technical details' }).focus()
   await page.keyboard.press('Enter')
+  await result.getByRole('button', { name: 'What this assessment cannot tell you' }).click()
   await expect(
     result.getByText(/cannot by itself establish whether the caller is fraudulent/),
   ).toBeVisible()

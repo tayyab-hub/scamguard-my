@@ -125,7 +125,7 @@ describe('URL intelligence results', () => {
       ),
     ).toBeInTheDocument()
     expect(screen.getByText('Verify the destination independently.')).toBeInTheDocument()
-    await userEvent.click(screen.getByText('Technical details'))
+    await userEvent.click(screen.getByRole('button', { name: 'Technical details' }))
     expect(screen.getByText('Optional reputation review')).toBeInTheDocument()
     expect(screen.getByText('disabled')).toBeInTheDocument()
     expect(screen.getByText(/uncalibrated; not a scam probability/)).toBeInTheDocument()

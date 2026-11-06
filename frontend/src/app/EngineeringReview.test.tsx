@@ -2,6 +2,7 @@
 // trace, and abstention keeps confidence unavailable. Hostile text remains inert React content.
 
 import { render, screen, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 import { MessageResult } from '../components/analysis/MessageResult'
 import { messageAssessmentSchema } from '../lib/api'
@@ -43,7 +44,7 @@ describe('Reviewed evidence presentation', () => {
     expect(screen.queryByText('Why this verdict')).not.toBeInTheDocument()
   })
 
-  it('accepts abstention with unavailable confidence and shows actual evidence balance', () => {
+  it('accepts abstention with unavailable confidence and shows actual evidence balance', async () => {
     const assessment = messageAssessmentSchema.parse({
       ...historical,
       risk_level: 'INSUFFICIENT_EVIDENCE',
@@ -67,8 +68,32 @@ describe('Reviewed evidence presentation', () => {
     expect(screen.getByText('Confidence: unavailable')).toBeVisible()
     expect(screen.queryByRole('meter')).not.toBeInTheDocument()
     const explanation = screen.getByRole('region', { name: 'Why this verdict' })
+    // Supporting sections start collapsed so the decision and next steps stay short.
+    const toggle = within(explanation).getByRole('button', { name: 'Why this verdict' })
+    expect(toggle).toHaveAttribute('aria-expanded', 'false')
+    expect(toggle).toHaveAccessibleDescription('No warning recorded')
+    expect(within(explanation).getByText(/Absence of a warning/)).not.toBeVisible()
+    await userEvent.click(toggle)
+    expect(toggle).toHaveAttribute('aria-expanded', 'true')
     expect(within(explanation).getByText(/Absence of a warning/)).toBeVisible()
     expect(within(explanation).getByText(/No specific mitigating evidence/)).toBeVisible()
     expect(container.querySelector('script')).toBeNull()
+  })
+
+  it('keeps the decision and next steps visible while supporting sections stay collapsed', async () => {
+    render(<MessageResult assessment={messageAssessmentSchema.parse(historical)} />)
+    expect(screen.getByRole('heading', { name: 'Recommended actions' })).toBeVisible()
+    for (const name of [
+      'Detected evidence',
+      'What this assessment cannot tell you',
+      'Technical details',
+    ])
+      expect(screen.getByRole('button', { name })).toHaveAttribute('aria-expanded', 'false')
+    expect(screen.getByRole('button', { name: 'Detected evidence' })).toHaveAccessibleDescription(
+      'None found',
+    )
+    const limitations = screen.getByRole('region', { name: 'Assessment limitations' })
+    await userEvent.click(within(limitations).getByRole('button'))
+    expect(within(limitations).getByRole('list')).toBeVisible()
   })
 })

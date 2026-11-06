@@ -43,11 +43,15 @@ test('URL scenarios: persisted real results, no navigation to destinations, keyb
     const record = await (await responsePromise).json()
     expect(record.status).toBe('COMPLETED')
     await expect(page.getByText(risk, { exact: true })).toBeVisible()
+    await page
+      .getByRole('region', { name: 'Detected evidence' })
+      .getByRole('button', { name: 'URL evidence and structural indicators' })
+      .click()
     await expect(
       page.getByRole('region', { name: 'Detected evidence' }).getByText(evidence, { exact: false }),
     ).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Recommended actions' })).toBeVisible()
-    const details = page.getByText('Technical details')
+    const details = page.getByRole('button', { name: 'Technical details' })
     await details.focus()
     await page.keyboard.press('Enter')
     await expect(page.getByText('Local URL model', { exact: true })).toBeVisible()
@@ -79,6 +83,7 @@ test('URL scenarios: persisted real results, no navigation to destinations, keyb
   await expect(page.getByLabel('URL assessment')).toBeVisible()
   await page.reload()
   await page.getByRole('button', { name: /https:\/\/example.net\/login/ }).click()
+  await page.getByRole('button', { name: 'URL evidence and structural indicators' }).click()
   await expect(
     page.getByRole('region', { name: 'Detected evidence' }).getByText('Destination parameter'),
   ).toBeVisible()

@@ -22,6 +22,7 @@ test('evidence balance, abstention and private history work across responsive wi
   const assessment = page.getByLabel('Message assessment')
   await expect(assessment.getByText('High risk', { exact: true })).toBeVisible()
   await expect(assessment.getByRole('heading', { name: 'Why this verdict' })).toBeVisible()
+  await assessment.getByRole('button', { name: 'Why this verdict' }).click()
   await expect(assessment.getByText('What tempers the result')).toBeVisible()
   await expect(
     assessment.getByText('Do not share passwords, PINs or one-time verification codes.'),
