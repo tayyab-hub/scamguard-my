@@ -200,7 +200,8 @@ def main() -> None:
         "calibration_rows": len(development),
     }
     artifact_path = ROOT / args.artifact
-    artifact_path.write_text(json.dumps(artifact, indent=2) + "\n", encoding="utf-8")
+    # LF only: the checksum is pinned and Git stores LF, so Windows CRLF would break the pin.
+    artifact_path.write_bytes((json.dumps(artifact, indent=2) + "\n").encode("utf-8"))
 
     # Single evaluation on the untouched test split with the real runtime classifier.
     runtime = MessageClassifier(MODEL_ARTIFACT)
@@ -263,7 +264,7 @@ def main() -> None:
         ],
     }
     report_path = ROOT / args.report
-    report_path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+    report_path.write_bytes((json.dumps(report, indent=2) + "\n").encode("utf-8"))
     print(json.dumps(report, indent=2))
 
 

@@ -21,7 +21,7 @@ from app.ml.rules import SAFETY_CONTEXT, TACTIC_CATEGORIES, RuleAssessment
 FUSION_VERSION = "message-fusion-v3"
 CALIBRATOR_PATH = Path(__file__).resolve().parent / "artifacts" / "message_fusion_v3.json"
 # Pinned like the model artifact: a changed calibrator must be regenerated and re-reviewed.
-EXPECTED_CALIBRATOR_SHA256 = "79089a162a5cee9982b27c0a0ce5e898cca9b1785b83d337f7392f8d7d2f2efb"
+EXPECTED_CALIBRATOR_SHA256 = "b1761ecfaab010349ff5ca54c5239e38883e2c507b8049b764c827f0bf6f9bd7"
 MIN_RULE_CONTEXT = 0.25
 MIN_MODEL_CONFIDENCE = 0.55
 STRONG_RULE_SCORE = 0.72

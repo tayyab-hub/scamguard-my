@@ -1,6 +1,6 @@
 {
   "fusion_version": "message-fusion-v3",
-  "artifact_sha256": "79089a162a5cee9982b27c0a0ce5e898cca9b1785b83d337f7392f8d7d2f2efb",
+  "artifact_sha256": "b1761ecfaab010349ff5ca54c5239e38883e2c507b8049b764c827f0bf6f9bd7",
   "model_artifact_sha256": "818d99f72c8502fe6ec28849e42c77f4707949366bf014bd5677079dde2c3dd3",
   "rules_version": "message-rules-v3",
   "method": "Logistic calibration over out-of-fold model logits and rule score on train+validation (5 grouped folds); fixed probability bands declared in advance; one evaluation on the untouched test split using the runtime artifact. Calibrator-only categories; runtime tactic floors and insufficient-evidence checks are evaluated separately.",

@@ -11,7 +11,7 @@
     "fusion": "message-fusion-v3"
   },
   "model": "message-tfidf-logreg-v1 (unchanged)",
-  "challenge_set_sha256": "08886baae3a61d1d8176d5b7cefdeb3cc2f5f5102f25e8bef4beabc7c6245aa1",
+  "challenge_set_sha256": "9486c5947a683986440578f9e0c851c234c097099cf318da641603f5b51e92c0",
   "historical_test": {
     "baseline": {
       "rows": 1160,
