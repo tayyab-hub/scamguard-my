@@ -1,3 +1,7 @@
+// Real Message/URL submissions verify saved assessments, dashboard counts, unique disclosure
+// IDs and history after refresh. Capture evidence under ignored test-results; tracked
+// screenshot updates remain opt-in.
+
 import { expect, test } from '@playwright/test'
 import type { Page, TestInfo } from '@playwright/test'
 import { mkdir, writeFile } from 'node:fs/promises'

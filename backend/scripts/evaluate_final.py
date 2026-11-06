@@ -1,3 +1,8 @@
+# Release-evidence generator combining reproducible held-out Message checks with authored cross-
+# mode scenarios and warmed local timings. Controlled scenarios are regression examples, not
+# independent population accuracy estimates. Running this rewrites evidence/demo outputs, so
+# documentation validation does not invoke it.
+
 """Read-only frozen-model reproduction and controlled fixtures; no network, DB or retraining.
 
 Run from any directory with the existing backend environment. Only authored demo/evidence files
@@ -40,10 +45,13 @@ LIMITS = dict(
 )
 
 
+# Calculate a SHA-256 content fingerprint for provenance comparison.
 def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+# Derive per-class and aggregate classification measurements from a confusion matrix in the
+# supplied class order.
 def metrics(matrix, classes):
     total = sum(map(sum, matrix))
     report = {"accuracy": sum(matrix[i][i] for i in range(len(classes))) / total}
@@ -61,6 +69,8 @@ def metrics(matrix, classes):
     return {**report, "macro_f1": statistics.mean(f1s), "weighted_f1": weighted / total}
 
 
+# Check frozen source/artifact/split identities and separation, then reproduce Message test
+# predictions through the runtime classifier.
 def message_reproduction():
     original = json.loads((ROOT / "docs/model_evaluation_v1.json").read_text())
     source = ROOT / "data/raw/mendeley_sms_phishing_v1/source/Dataset_5971.csv"
@@ -103,12 +113,16 @@ def message_reproduction():
     )
 
 
+# Build one evidence record linking a named scenario, its expectation and the observed outcome,
+# with optional contextual fields.
 def row(name, expected, observed, **extra):
     return dict(
         case=name, expected=expected, observed=observed, passed=expected == observed, **extra
     )
 
 
+# Exercise authored URL, Phone, QR and payment scenarios through local engines. These examples
+# test specified behavior and cannot establish real-world accuracy.
 def controlled_evaluation():
     # Never read local secrets or enable the optional external AI provider.
     settings = Settings(_env_file=None, app_env="test", ai_review_enabled=False)
@@ -336,6 +350,9 @@ def controlled_evaluation():
     )
 
 
+# Combine reproduction checks, scenario results and warm-run latency samples, then write final
+# evaluation evidence and demonstration files. Timing depends on this machine and does not
+# measure hosted end-to-end latency.
 def main():
     def blocked(*args, **kwargs):
         raise AssertionError("Evaluation attempted network access")

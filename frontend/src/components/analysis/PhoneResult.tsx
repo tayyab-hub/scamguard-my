@@ -1,3 +1,6 @@
+// Phone result presentation of E.164, numbering metadata and conservative advice. No caller
+// identity, reputation lookup or numeric fraud confidence is inferred from valid formatting.
+
 import type { PhoneAssessment } from '../../lib/api'
 import {
   AnalysisMetaPanel,
@@ -6,10 +9,13 @@ import {
   RecommendedActionsPanel,
 } from './ResultPresentation'
 
+// Convert stored enum spelling to a readable label; this changes display text only.
 function displayType(value: string) {
   return value.replaceAll('_', ' ').toLowerCase()
 }
 
+// Render the validated Phone assessment and metadata versions using shared evidence/actions
+// panels, retaining null numeric scores.
 export function PhoneResult({
   assessment,
   analysisId,

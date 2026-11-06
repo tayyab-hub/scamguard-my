@@ -1,3 +1,7 @@
+# Render service blueprint for the API. Install locked backend dependencies and invoke the
+# migration-before-serve wrapper; sync-disabled values must be supplied privately in hosting
+# configuration. These declarations do not themselves prove a live deployment is healthy.
+
 services:
   - type: web
     name: scamguard-capstone-api

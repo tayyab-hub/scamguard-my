@@ -1,8 +1,14 @@
+// React controls around CameraScanner. Only Start/Retry/Switch begins capture; effects stop
+// capture on hidden/page exit/unmount. A detected payload is shown as inert text and remains
+// unsubmitted until AnalysePage receives a separate Analyse action.
+
 import { useEffect, useRef, useState } from 'react'
 import { Camera, CameraOff, CheckCircle2, SwitchCamera } from 'lucide-react'
 import { CameraScanner } from '../../lib/cameraScanner'
 import type { CameraPayload } from '../../lib/qrDecoder'
 
+// Render camera status, controls and decoded preview from props/state. Refs hold DOM nodes and
+// the active scanner without rerendering on each frame.
 export function QrCameraInput({
   value,
   onChange,
@@ -58,6 +64,8 @@ export function QrCameraInput({
     }
   }, [active])
 
+  // Close any previous session, clear the old payload and wire scanner callbacks to UI state.
+  // Detection occurs after the scanner has already released camera resources.
   function start(nextDeviceId?: string) {
     if (!video.current || disabled) return
     scanner.current?.close()

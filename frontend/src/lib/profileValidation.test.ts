@@ -1,3 +1,7 @@
+// Table-driven validation examples cover Unicode display names, restricted usernames, email and
+// passphrase boundaries. Frontend feedback is convenience; server validators independently
+// enforce the request contract.
+
 import { describe, expect, it } from 'vitest'
 import {
   validateEmail,

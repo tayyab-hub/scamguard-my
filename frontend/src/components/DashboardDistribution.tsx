@@ -1,7 +1,13 @@
+// Accessible links and bars for real API counts by modality/risk. Bar width is a fraction of
+// all saved records, not a fraud likelihood; unassessed and inconclusive records are described
+// explicitly.
+
 import { Link } from 'react-router-dom'
 import type { RiskLevel } from '../lib/api'
 import { riskCopy } from '../lib/resultPresentation'
 
+// Convert grouped count props into labelled history-filter links and show an inconclusive-
+// result prompt when needed.
 export function DashboardDistribution({
   types,
   risks,
@@ -69,6 +75,8 @@ export function DashboardDistribution({
   )
 }
 
+// Render labels/counts as text and a decorative proportional bar, guarding a zero total against
+// division by zero.
 function Distribution({
   title,
   items,

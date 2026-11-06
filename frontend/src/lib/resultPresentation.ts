@@ -1,3 +1,7 @@
+// Pure presentation helpers for stored results. Type guards identify a modality from its
+// components; display scaling never recomputes inference or changes persisted decisions. QR
+// must be recognized first because it can also contain a routed engine's fields.
+
 import type { Assessment, PhoneAssessment, QRAssessment, URLAssessment } from './api'
 
 export const riskCopy = {
@@ -20,14 +24,18 @@ export const riskGuidance = {
 export const SCORE_PRESENTATION_VERSION = 'risk-presentation-v1'
 const urlRanks = { LOW: 0, CAUTION: 1, ELEVATED: 2, HIGH: 3 } as const
 
+// Narrow the TypeScript union to a direct URL result, excluding QR wrappers with url_model
+// fields.
 export function isURLAssessment(assessment: Assessment): assessment is URLAssessment {
   return !isQRAssessment(assessment) && 'url_model' in assessment.components
 }
 
+// Narrow to a direct Phone result, excluding routed QR wrappers.
 export function isPhoneAssessment(assessment: Assessment): assessment is PhoneAssessment {
   return !isQRAssessment(assessment) && 'phone_metadata' in assessment.components
 }
 
+// Recognize the QR provenance component; callers can then inspect its routed engine safely.
 export function isQRAssessment(assessment: Assessment): assessment is QRAssessment {
   return 'qr' in assessment.components
 }
@@ -83,6 +91,8 @@ export function orderedEvidence(assessment: Assessment) {
   )
 }
 
+// Select at most three observations with different family/category keys. This is a compact
+// summary, not a measured ranking of causal contributions.
 export function topSignals(assessment: Assessment) {
   const seen = new Set<string>()
   return orderedEvidence(assessment)

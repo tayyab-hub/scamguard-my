@@ -1,3 +1,7 @@
+// Four-mode Analyse workspace. Keep editable drafts and QR selection in local React state until
+// explicit submission, check backend capabilities, and render the saved response through
+// AssessmentResult. Loading/error/empty states never substitute fixture results.
+
 import { useEffect, useState } from 'react'
 import {
   ArrowRight,
@@ -42,6 +46,8 @@ const modeGuidance = {
   QR: 'Reveal encoded content and assess supported payloads before acting on them.',
 }
 
+// Validate router state copied from an owned history detail. Only Message/URL/Phone text can
+// become a draft; submitting it creates a new record rather than editing its source.
 function copiedAnalysisDraft(state: unknown) {
   if (!state || typeof state !== 'object' || !('analysisDraft' in state)) return null
   const draft = (state as { analysisDraft?: unknown }).analysisDraft
@@ -60,6 +66,9 @@ function copiedAnalysisDraft(state: unknown) {
   }
 }
 
+// Coordinate mode selection, validation, explicit submit and result display. Props on child
+// inputs carry values and callbacks; useState keeps each draft across renders and
+// useSubmitAnalysis owns request status.
 export function AnalysePage() {
   const location = useLocation()
   const navigate = useNavigate()
@@ -93,6 +102,8 @@ export function AnalysePage() {
     URL: false,
     PHONE: false,
   })
+  // Consume the copied draft once, then clear its navigation state so a later visit does not
+  // replay private content.
   useEffect(() => {
     if (copiedDraft) navigate('/analyse', { replace: true, state: null })
   }, [copiedDraft, navigate])
@@ -103,6 +114,8 @@ export function AnalysePage() {
     if (inputType !== 'QR') setDrafts((previous) => ({ ...previous, [inputType]: value }))
   }
   const action = analysisActions[inputType]
+  // A rendered tab is only a presentation choice. Submission also requires storage/capability
+  // data from the connected service, and errors must not enable a stale capability.
   const canStore = !capabilities.isError && capabilities.data?.submission_available === true
   const canAnalyseMessage =
     !capabilities.isError &&
@@ -221,6 +234,9 @@ export function AnalysePage() {
                 noValidate
                 onSubmit={(event) => {
                   event.preventDefault()
+                  // The event handler prevents normal form navigation and blocks duplicates
+                  // while pending. QR chooses payload JSON or multipart image; other modes send
+                  // trimmed text. Success clears only the submitted draft.
                   if (!available || submission.isPending) return
                   if (inputType === 'QR') {
                     setQrAttempted(true)
@@ -251,6 +267,8 @@ export function AnalysePage() {
                   }
                   setSubmitAttempted((previous) => ({ ...previous, [inputType]: true }))
                   if (validation) return
+                  // Capture the submitted mode for the asynchronous success callback; clearing
+                  // the correct draft must not depend on a later render's state.
                   const mode = inputType
                   submission.mutate(
                     { input_type: mode, content: content.trim() },

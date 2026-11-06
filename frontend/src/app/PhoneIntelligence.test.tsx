@@ -1,3 +1,6 @@
+// Typed Phone result fixtures verify international input, shared submission transport, stored-
+// history rendering and the absence of invented numerical risk/confidence.
+
 import { fireEvent, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'

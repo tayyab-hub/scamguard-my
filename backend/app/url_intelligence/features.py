@@ -1,3 +1,7 @@
+# Ordered numerical URL features shared by dataset preparation and runtime inference.
+# Measurements describe the supplied string only: length, encoding, host, keywords and related
+# structure. No page content, DNS, reputation or live redirect information is collected.
+
 """Stable URL-only numeric features shared by preparation, training and inference."""
 
 import math
@@ -20,6 +24,8 @@ SHORTENERS = frozenset(
 REDIRECT_KEYS = frozenset("url redirect redirect_uri next target continue return returnurl".split())
 
 
+# Return Shannon character entropy, or zero for empty text. Varied characters can identify
+# random-looking tokens but cannot establish malicious intent.
 def entropy(value: str) -> float:
     return (
         -sum((n / len(value)) * math.log2(n / len(value)) for n in Counter(value).values())
@@ -28,6 +34,9 @@ def entropy(value: str) -> float:
     )
 
 
+# Convert ParsedURL into a fixed ordered feature dictionary expected by the exported model.
+# Changing names, order or preprocessing would require reviewed model versioning, not just an
+# inference edit.
 def features(url: ParsedURL) -> dict[str, float]:
     value = url.normalized
     tokens = re.findall(r"[a-z]+", unquote(value).lower())

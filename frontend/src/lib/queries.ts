@@ -1,3 +1,7 @@
+// TanStack Query hooks connect components to api.ts. Queries represent cached server reads;
+// mutations represent explicit writes. Private query keys include user identity, and successful
+// writes invalidate dependent lists/counts so the UI reloads measured data.
+
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   analysisDetailSchema,
@@ -13,6 +17,9 @@ import {
 } from './api'
 import { useAuth } from '../auth/AuthContext'
 
+// Return a submission mutation with no automatic retry; after success invalidate
+// dashboard/history. A lost response may follow a server commit, so retrying blindly can create
+// another record.
 export function useSubmitAnalysis() {
   const client = useQueryClient()
   return useMutation({
@@ -25,6 +32,8 @@ export function useSubmitAnalysis() {
   })
 }
 
+// Delete through the API, remove cached detail and invalidate lists/counts only after server
+// success.
 export function useDeleteAnalysis() {
   const client = useQueryClient()
   return useMutation({
@@ -38,6 +47,8 @@ export function useDeleteAnalysis() {
   })
 }
 
+// Fetch the selected page for the current user. Filters use a JSON POST so sensitive search
+// terms stay out of request URLs; AbortSignal cancels superseded reads.
 export function useHistory(page: number, filters?: HistoryFilters) {
   const { user } = useAuth()
   return useQuery({
@@ -53,6 +64,8 @@ export function useHistory(page: number, filters?: HistoryFilters) {
   })
 }
 
+// Fetch detail only when a row ID is selected. Including user ID in the cache key prevents
+// another account reusing this cached view.
 export function useAnalysisDetail(id: string | null) {
   const { user } = useAuth()
   return useQuery({
@@ -62,6 +75,8 @@ export function useAnalysisDetail(id: string | null) {
   })
 }
 
+// Poll liveness every 30 seconds for the small API badge; this is not readiness or engine
+// capability.
 export function useHealth() {
   return useQuery({
     queryKey: ['health'],
@@ -70,6 +85,7 @@ export function useHealth() {
   })
 }
 
+// Fetch measured private counts/recent summaries under an identity-specific cache key.
 export function useDashboard() {
   const { user } = useAuth()
   return useQuery({
@@ -78,6 +94,8 @@ export function useDashboard() {
   })
 }
 
+// Fetch what the current backend can store/analyse; frontend mode definitions alone do not
+// enable a service.
 export function useCapabilities() {
   return useQuery({
     queryKey: ['capabilities'],

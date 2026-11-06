@@ -1,3 +1,8 @@
+# Windows development launcher for the existing portable database, backend and frontend. Check
+# prerequisites and known-service ports, apply migrations, record owned processes and open the
+# workspace unless NoBrowser is requested. Private connection details stay inside backend
+# settings.
+
 [CmdletBinding()]
 param([switch]$NoBrowser)
 
@@ -51,6 +56,8 @@ function Test-FrontendService {
     } catch { return $false }
 }
 
+# Poll a bounded readiness condition so startup reports a clear failure instead of leaving half-
+# started services indefinitely.
 function Wait-For([scriptblock]$Condition, [int]$Seconds, [string]$Failure) {
     $deadline = (Get-Date).AddSeconds($Seconds)
     do {
@@ -60,6 +67,8 @@ function Wait-For([scriptblock]$Condition, [int]$Seconds, [string]$Failure) {
     throw $Failure
 }
 
+# Record both process identity and creation time for the separate stop script; a PID alone can
+# later belong to a different process.
 function Add-OwnedProcess([string]$Role, [int]$ProcessId) {
     $process = Get-Process -Id $ProcessId -ErrorAction Stop
     $script:owned += [pscustomobject]@{
@@ -76,6 +85,8 @@ function Save-State {
     @{ processes = @($script:owned) } | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath $stateFile -Encoding utf8
 }
 
+# Failure cleanup is limited to processes recorded during this startup attempt; previously
+# running known services are reused.
 function Stop-NewProcesses {
     foreach ($record in $script:owned | Where-Object { $_.pid -in $script:newProcessIds }) {
         $process = Get-Process -Id $record.pid -ErrorAction SilentlyContinue

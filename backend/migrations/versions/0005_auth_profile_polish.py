@@ -1,3 +1,7 @@
+# Historical schema revision. Follow revision/down_revision for ordering; ordinary comments
+# explain the migration without changing its identifiers, existing docstring or database
+# operations.
+
 """Add transitional profiles and secure password-reset tokens.
 
 Revision ID: 0005_auth_profile_polish
@@ -13,6 +17,8 @@ branch_labels = None
 depends_on = None
 
 
+# Add nullable profile fields and a unique username index, plus expiring one-use password-reset
+# storage linked to users. Nullable profile values preserve legacy accounts.
 def upgrade() -> None:
     # Nullable is intentional: production users created before Task 6.1 must remain valid and
     # can complete their profile in the application without fabricated personal information.
@@ -63,6 +69,7 @@ def upgrade() -> None:
     op.create_index("ix_password_reset_tokens_expires_at", "password_reset_tokens", ["expires_at"])
 
 
+# Remove recovery storage and profile additions in reverse order, discarding those values.
 def downgrade() -> None:
     # Destructive only for Task 6.1 profile/reset data; use isolated databases for this check.
     op.drop_index("ix_password_reset_tokens_expires_at", table_name="password_reset_tokens")

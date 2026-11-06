@@ -54,8 +54,10 @@ numbering-plan metadata: it never calls/messages the number, contacts social/mes
 performs subscriber/SIM/reverse-person lookup, or sends the number to an external reputation or AI
 provider. Numbering validity does not establish assignment, caller identity, intent, safety or fraud.
 Optional external contextual AI is
-disabled by default; no production key is configured. If an operator deliberately enables it, the
-backend may send best-effort-redacted Message text to the configured provider, while local evidence
+disabled by default. The production-key statement in earlier release evidence is a dated deployment
+observation, not something established by reading local source. If an operator deliberately enables it, the
+backend may send best-effort-redacted Message text to the configured provider, including eligible
+QR text routed to the shared Message engine. Local evidence
 continues to work if that provider fails. URL analysis has no live reputation provider and performs no
 network retrieval.
 

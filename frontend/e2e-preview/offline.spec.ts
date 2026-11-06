@@ -1,3 +1,7 @@
+// Run the built SPA without an API to verify private-route protection, public Help, direct-
+// route fallback and reduced-motion keyboard access. Failure must not create invented session
+// or analysis data.
+
 import { expect, test } from '@playwright/test'
 
 test('built SPA protects private routes when no API session can be restored', async ({

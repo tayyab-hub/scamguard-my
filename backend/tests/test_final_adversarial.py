@@ -1,3 +1,7 @@
+# Controlled adversarial and benign inputs check all four advisory engines without visiting
+# suspicious destinations. Assertions describe expected boundaries and uncertainty, not a new
+# statistical benchmark.
+
 """Authored finalization cases, independent of the held-out corpus.
 
 These check specific safety contracts. They are neither an accuracy benchmark nor

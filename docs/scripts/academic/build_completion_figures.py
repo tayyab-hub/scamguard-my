@@ -1,3 +1,8 @@
+# Historical academic figure generator using the recorded completion-verification evidence. It
+# writes report images and contains dated presentation assumptions/counts; it does not query
+# current CI or change runtime analytics. Do not regenerate these outputs as part of code-
+# comment maintenance.
+
 """Render dated, evidence-bounded report figures without modifying historical figures."""
 from pathlib import Path
 import json

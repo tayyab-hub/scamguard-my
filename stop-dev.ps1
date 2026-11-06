@@ -1,3 +1,7 @@
+# Stop the project development services. Verify recorded application process name and start time
+# before terminating it, then request a clean shutdown of the specific portable PostgreSQL
+# cluster. This protects against a reused process ID targeting an unrelated application.
+
 [CmdletBinding()]
 param()
 

@@ -1,3 +1,7 @@
+# SCAMGUARD API assembly. create_app connects validated settings, middleware, routers and shared
+# intelligence engines. Its lifespan owns the database connection pool; migrations are run
+# separately, never by creating tables at startup.
+
 import logging
 from contextlib import asynccontextmanager
 from uuid import uuid4
@@ -20,10 +24,16 @@ from app.services.mail import build_mail_service
 from app.url_intelligence.engine import build_url_engine
 
 
+# Build and return an independent FastAPI application. Tests can supply Settings explicitly;
+# normal startup uses cached environment settings. The returned app is configured here and its
+# resources are opened by lifespan.
 def create_app(settings: Settings | None = None) -> FastAPI:
     config = settings or get_settings()
     logging.basicConfig(level=config.log_level, format="%(levelname)s %(name)s %(message)s")
 
+    # Create shared engines once for this app, then yield while requests are served. A session
+    # factory creates separate database units of work per request. finally releases pooled
+    # connections even after startup or shutdown failures.
     @asynccontextmanager
     async def lifespan(application: FastAPI):
         engine = build_engine(config)
@@ -60,6 +70,9 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         },
     )
 
+    # Wrap each HTTP request with a fresh correlation ID and privacy-oriented response headers.
+    # Unexpected failures become a generic JSON error; only exception type and request ID are
+    # logged.
     @application.middleware("http")
     async def request_context(request: Request, call_next):
         request.state.request_id = str(uuid4())

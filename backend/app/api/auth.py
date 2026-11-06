@@ -1,3 +1,7 @@
+# Account HTTP endpoints: validate public forms, manage password hashes and opaque cookie
+# sessions, and return only public profile fields. Database transactions and core/auth.py
+# enforce server-side protection; the React forms are only the client interface.
+
 import logging
 import re
 import unicodedata
@@ -39,6 +43,8 @@ LOGIN_WINDOW = timedelta(minutes=15)
 LOGIN_SOURCE_MULTIPLIER = 5
 
 
+# Validate email syntax without a DNS/deliverability lookup, then return the normalized
+# lowercase address used for account lookup. Invalid input becomes a Pydantic validation error.
 def normalized_email(value: str) -> str:
     try:
         result = validate_email(value.strip(), check_deliverability=False)
@@ -49,6 +55,9 @@ def normalized_email(value: str) -> str:
     return result.normalized.lower()
 
 
+# Normalize Unicode names to NFC and collapse spaces. Allow letters, combining marks and
+# selected punctuation, but reject controls and markup-like input before enforcing the display-
+# name length.
 def normalized_full_name(value: str) -> str:
     value = unicodedata.normalize("NFC", value.strip())
     if any(unicodedata.category(character).startswith("C") for character in value):
@@ -69,6 +78,8 @@ def normalized_full_name(value: str) -> str:
     return value
 
 
+# Return a lowercase ASCII account identifier. Leading/trailing spaces are rejected rather than
+# silently changing what the user entered; the database also enforces uniqueness.
 def normalized_username(value: str) -> str:
     if value != value.strip():
         raise ValueError("Username cannot begin or end with whitespace")
@@ -77,12 +88,16 @@ def normalized_username(value: str) -> str:
     return value.lower()
 
 
+# Reject an all-whitespace SecretStr without trimming or changing the actual password. SecretStr
+# masks ordinary representations; hashing still needs its explicit raw value.
 def meaningful_password(value: SecretStr) -> SecretStr:
     if not value.get_secret_value().strip():
         raise ValueError("Password cannot contain only whitespace")
     return value
 
 
+# Declare the signup JSON contract. Reusable validators normalize identity fields, and
+# extra="forbid" rejects unexpected keys instead of accepting unrecognized account data.
 class SignupRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
     full_name: str
@@ -96,11 +111,15 @@ class SignupRequest(BaseModel):
     _meaningful_password = field_validator("password")(meaningful_password)
 
 
+# Accept a username or email plus the entered password. Login permits shorter legacy passwords;
+# the stricter minimum applies when creating or resetting a password.
 class LoginRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
     identifier: str = Field(min_length=1, max_length=320)
     password: SecretStr = Field(min_length=1, max_length=128)
 
+    # Trim and lowercase the login identifier, rejecting empty/control-containing values before
+    # database lookup.
     @field_validator("identifier")
     @classmethod
     def normalize_identifier(cls, value: str) -> str:
@@ -110,6 +129,7 @@ class LoginRequest(BaseModel):
         return value
 
 
+# Allow only the editable name and username fields; email cannot be changed through this route.
 class ProfileUpdateRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
     full_name: str
@@ -119,6 +139,8 @@ class ProfileUpdateRequest(BaseModel):
     _normalize_username = field_validator("username")(normalized_username)
 
 
+# Accept a syntactically valid email for the generic recovery response; validation does not
+# reveal whether the account exists.
 class PasswordResetRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
     email: str = Field(min_length=3, max_length=320)
@@ -126,6 +148,8 @@ class PasswordResetRequest(BaseModel):
     _normalize_email = field_validator("email")(normalized_email)
 
 
+# Bound the bearer reset token and new password. Token expiry and single-use checks happen in
+# the transaction, not in this shape-only schema.
 class PasswordResetConfirmRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
     token: str = Field(min_length=32, max_length=256)
@@ -134,11 +158,15 @@ class PasswordResetConfirmRequest(BaseModel):
     _meaningful_password = field_validator("password")(meaningful_password)
 
 
+# Require the current password in the deletion request as an additional check beyond the
+# existing session and CSRF token.
 class AccountDeleteRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
     password: SecretStr = Field(min_length=1, max_length=128)
 
 
+# Public profile response, deliberately excluding password hashes, session digests and recovery
+# tokens. Nullable name/username support older accounts.
 class UserResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: str
@@ -148,19 +176,25 @@ class UserResponse(BaseModel):
     created_at: datetime
 
 
+# Return public identity plus a CSRF token for frontend memory. The session credential itself
+# travels in an HttpOnly cookie, not this JSON body.
 class AuthResponse(BaseModel):
     user: UserResponse
     csrf_token: str
 
 
+# Return the updated public profile without replacing the current session or its CSRF token.
 class ProfileResponse(BaseModel):
     user: UserResponse
 
 
+# Expose the same recovery acknowledgement for known and unknown email addresses.
 class PasswordResetRequestedResponse(BaseModel):
     message: str
 
 
+# Explicitly map an ORM User to safe response fields and stringify its UUID. This avoids
+# accidentally serializing sensitive columns.
 def public_user(user: User) -> UserResponse:
     return UserResponse(
         id=str(user.id),
@@ -171,10 +205,15 @@ def public_user(user: User) -> UserResponse:
     )
 
 
+# Use the request client address as a rate-limit bucket identifier, with a fallback when absent.
+# Correct source attribution depends on trusted reverse-proxy configuration.
 def client_discriminator(request: Request) -> str:
     return request.client.host if request.client else "unknown"
 
 
+# Revoke any presented old session, create new random session/derived CSRF credentials, and
+# commit their digests before setting the browser cookie. Return only the raw CSRF token to the
+# caller.
 def set_auth_cookie(request: Request, response: Response, user: User, session: Session) -> str:
     settings = request.app.state.settings
     previous = request.cookies.get(settings.session_cookie_name)
@@ -211,6 +250,8 @@ def set_auth_cookie(request: Request, response: Response, user: User, session: S
     return raw_csrf
 
 
+# Expire the browser cookie using the same name, path and security attributes as creation.
+# Server-side revocation/deletion must already have succeeded.
 def clear_auth_cookies(request: Request, response: Response) -> None:
     settings = request.app.state.settings
     response.delete_cookie(
@@ -222,6 +263,9 @@ def clear_auth_cookies(request: Request, response: Response) -> None:
     )
 
 
+# Check Origin and a source rate budget, reject duplicate identity fields, hash the password and
+# create an account/session. Flush detects uniqueness races before a success response can be
+# returned.
 @router.post("/signup", response_model=AuthResponse, status_code=201)
 def signup(
     data: SignupRequest, request: Request, response: Response, session: Database
@@ -262,6 +306,9 @@ def signup(
     return AuthResponse(user=public_user(user), csrf_token=csrf_token)
 
 
+# Apply source and account budgets before password work. Email and username aliases share the
+# resolved account budget. Verify Argon2, refresh an outdated hash if needed, then issue a new
+# session.
 @router.post("/login", response_model=AuthResponse)
 def login(
     data: LoginRequest, request: Request, response: Response, session: Database
@@ -303,6 +350,8 @@ def login(
     return AuthResponse(user=public_user(user), csrf_token=csrf_token)
 
 
+# Require authenticated CSRF protection, mark this session revoked, commit, and clear its
+# browser cookie. Other sessions are unaffected by ordinary logout.
 @router.post("/logout", status_code=204)
 def logout(
     request: Request,
@@ -317,6 +366,8 @@ def logout(
     clear_auth_cookies(request, response)
 
 
+# Restore public identity and the stable session-derived CSRF token. Older sessions receive a
+# one-time stored-digest upgrade so multiple tabs can share the same token.
 @router.get("/me", response_model=AuthResponse)
 def me(
     request: Request,
@@ -337,6 +388,8 @@ def me(
     return AuthResponse(user=public_user(authenticated.user), csrf_token=csrf_token)
 
 
+# Update only the authenticated user, checking username uniqueness both before commit and
+# through the database constraint. Roll back a concurrent uniqueness conflict.
 @router.patch("/profile", response_model=ProfileResponse)
 def update_profile(
     data: ProfileUpdateRequest,
@@ -369,6 +422,9 @@ RESET_REQUEST_MESSAGE = (
 )
 
 
+# Rate-limit recovery requests and return a generic acknowledgement. For an existing user,
+# consume prior unused tokens, commit a new expiring digest, then send the raw-token link
+# through the configured mail service.
 @router.post(
     "/password-reset/request",
     response_model=PasswordResetRequestedResponse,
@@ -419,6 +475,9 @@ def request_password_reset(
     return PasswordResetRequestedResponse(message=RESET_REQUEST_MESSAGE)
 
 
+# Lock the matching reset row so concurrent confirmations cannot both consume it. Reject
+# absent/used/expired tokens; atomically change the password, consume outstanding resets and
+# revoke all sessions.
 @router.post("/password-reset/confirm", status_code=204)
 def confirm_password_reset(
     data: PasswordResetConfirmRequest,
@@ -470,6 +529,8 @@ def confirm_password_reset(
     session.commit()
 
 
+# Require CSRF, a rate budget and the current password before deleting the authenticated User.
+# Database foreign-key cascades remove owned rows; clear the cookie only after commit.
 @router.delete("/account", status_code=204)
 def delete_account(
     data: AccountDeleteRequest,

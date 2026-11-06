@@ -1,3 +1,7 @@
+// Foundation-suite identity/dashboard/history mocks let responsive and accessibility tests run
+// with persistence disabled. Health/capability requests still exercise the configured local
+// server; this helper does not prove real login or data isolation.
+
 import type { Page } from '@playwright/test'
 
 const user = {

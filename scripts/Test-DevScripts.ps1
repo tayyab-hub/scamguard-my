@@ -1,3 +1,7 @@
+# Static launcher regression checks: parse PowerShell and inspect safeguards, quoting, ownership
+# records and editor task definitions. This test does not actually start or stop application
+# services.
+
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
 $failures = [System.Collections.Generic.List[string]]::new()

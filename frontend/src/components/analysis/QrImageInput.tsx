@@ -1,9 +1,16 @@
+// Local file-selection and preview UI for QR upload. Browser MIME/size checks provide early
+// guidance; the backend still verifies real image format, dimensions and QR count before
+// persistence.
+
 import { useEffect, useRef, useState } from 'react'
 import { ImageUp, QrCode } from 'lucide-react'
 
 const imageTypes = ['image/png', 'image/jpeg', 'image/webp']
 const maxImageBytes = 5 * 1024 * 1024
 
+// Accept a controlled File prop and notify the parent on selection/removal. A FileReader
+// creates a local preview, with cleanup aborting stale reads; selecting a file does not upload
+// it.
 export function QrImageInput({
   file,
   onChange,
@@ -27,6 +34,8 @@ export function QrImageInput({
     return () => reader.abort()
   }, [file])
 
+  // Accept one nonempty allowed-MIME file within 5 MiB or show a local error. Preserve backend
+  // responsibility for actual image content and pixel limits.
   function select(files: File[]) {
     if (!files.length) return
     if (files.length !== 1) {

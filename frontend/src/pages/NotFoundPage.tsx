@@ -1,7 +1,11 @@
+// Catch-all view for unknown browser routes, with internal navigation back to the workspace.
+
 import { ArrowLeft, Compass, ScanLine } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { PageHeading } from '../components/PageHeading'
 
+// Render a readable not-found state; this client-side route does not change the API's separate
+// HTTP 404 handler.
 export function NotFoundPage() {
   return (
     <>

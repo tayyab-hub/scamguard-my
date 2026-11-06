@@ -1,3 +1,7 @@
+// Responsive, keyboard and color-contrast assertions plus screenshot evidence for foundation
+// fixtures. Screenshots are captures for review, not pixel-diff golden comparisons. Updating
+// tracked documentation images requires an explicit environment opt-in.
+
 import { mkdir, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { expect, test } from '@playwright/test'

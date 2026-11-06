@@ -1,3 +1,7 @@
+// Background camera decoder worker. Vite emits the pinned WASM binary as a same-origin asset;
+// readiness/error/result messages coordinate with qrDecoder.ts. Request up to two symbols so
+// the scanner can reject ambiguity instead of picking one silently.
+
 import { prepareZXingModule, readBarcodes } from 'zxing-wasm/reader'
 import wasmUrl from 'zxing-wasm/reader/zxing_reader.wasm?url'
 
@@ -11,6 +15,8 @@ void ready.then(
   () => self.postMessage({ type: 'ready' }),
   () => self.postMessage({ type: 'error' }),
 )
+// Wait for initialization, decode the supplied ImageData and convert raw bytes with strict
+// UTF-8. postMessage returns text/errors to the main thread; it is not an HTTP request.
 self.onmessage = async (event: MessageEvent<ImageData>) => {
   try {
     await ready

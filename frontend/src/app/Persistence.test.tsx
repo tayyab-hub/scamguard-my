@@ -1,3 +1,7 @@
+// Submission/history UI tests with explicit synthetic API records. Verify one write per action,
+// retained drafts on failure, cache invalidation, stored-result rendering and safe score
+// semantics. Actual PostgreSQL persistence belongs to browser/backend integration suites.
+
 import { fireEvent, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'

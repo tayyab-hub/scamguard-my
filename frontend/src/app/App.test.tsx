@@ -1,3 +1,7 @@
+// Route and capability tests with mocked API responses. Verify honest loading/unavailable
+// states, local drafts, mode/file validation, keyboard navigation and public Help. Disabled-
+// analysis fixtures represent unavailable capabilities, not the deployed feature set.
+
 import { fireEvent, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'

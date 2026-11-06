@@ -1,3 +1,8 @@
+# Current database mappings for all four analysis modes, accounts, sessions, password resets and
+# rate limits. The older module docstring below names the initial assessment milestone only.
+# Relationships are expressed as foreign keys and explicit queries, without ORM relationship()
+# attributes.
+
 """Persisted analysis intake and additive Task 3 message-assessment fields."""
 
 from datetime import datetime
@@ -23,6 +28,8 @@ from sqlalchemy.orm import Mapped, mapped_column
 from app.db.base import Base
 
 
+# String enum shared by validation and storage. These values identify the submission modality,
+# not the predicted risk.
 class InputType(StrEnum):
     MESSAGE = "MESSAGE"
     URL = "URL"
@@ -30,6 +37,8 @@ class InputType(StrEnum):
     QR = "QR"
 
 
+# Saved processing lifecycle. A failed assessment is different from a high-risk result, and
+# historical intake may remain SUBMITTED.
 class AnalysisStatus(StrEnum):
     SUBMITTED = "SUBMITTED"
     PROCESSING = "PROCESSING"
@@ -37,6 +46,8 @@ class AnalysisStatus(StrEnum):
     FAILED = "FAILED"
 
 
+# Account identity with a random UUID primary key and password hash. Nullable profile fields
+# preserve older accounts; unique normalized usernames/emails prevent collisions.
 class User(Base):
     __tablename__ = "users"
     __table_args__ = (
@@ -74,6 +85,8 @@ Index(
 )
 
 
+# Server-side session linked to users.id. Store token/CSRF digests, expiry and revocation rather
+# than raw browser cookies; deleting the user cascades to these rows.
 class AuthSession(Base):
     __tablename__ = "auth_sessions"
 
@@ -91,6 +104,8 @@ class AuthSession(Base):
     revoked_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
 
+# One-time recovery credential stored as a digest with expiry/use timestamps. Its foreign key
+# cascades when the owning account is deleted.
 class PasswordResetToken(Base):
     __tablename__ = "password_reset_tokens"
 
@@ -104,6 +119,8 @@ class PasswordResetToken(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
 
+# Shared attempt counter keyed by a peppered digest of scope and identity/IP discriminator. The
+# auth helper controls locking, window rollover and commits.
 class RateLimitBucket(Base):
     __tablename__ = "auth_rate_limits"
 
@@ -113,6 +130,9 @@ class RateLimitBucket(Base):
     request_count: Mapped[int] = mapped_column(default=1)
 
 
+# Owned content plus immutable saved result/audit fields. user_id stays nullable only for legacy
+# records, which ordinary owner-filtered queries cannot see. JSON columns hold modality-specific
+# evidence without a separate table per engine.
 class Analysis(Base):
     __tablename__ = "analyses"
     __table_args__ = (
@@ -141,6 +161,8 @@ class Analysis(Base):
         ),
     )
 
+    # UUIDs make stable opaque references but do not authorize access. The API still filters
+    # every private lookup by the authenticated user.
     id: Mapped[UUID] = mapped_column(Uuid, primary_key=True, default=uuid4)
     user_id: Mapped[UUID | None] = mapped_column(
         Uuid, ForeignKey("users.id", ondelete="CASCADE"), nullable=True
@@ -178,6 +200,9 @@ class Analysis(Base):
     failure_code: Mapped[str | None] = mapped_column(String(80))
 
 
+# Indexes support deterministic history ordering; the owner-prefixed index matches private
+# queries. Table checks and foreign keys remain enforced even if an application caller makes a
+# mistake.
 Index("ix_analyses_created_id", Analysis.created_at.desc(), Analysis.id.desc())
 Index(
     "ix_analyses_user_created_id",

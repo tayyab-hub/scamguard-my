@@ -1,3 +1,7 @@
+# Explainable structural URL detectors grouped by evidence family. CONTEXT is descriptive, WEAK
+# warrants caution, and MEANINGFUL supports stronger combined warnings. Small brand/shortener
+# lists and string heuristics are incomplete; no detector verifies a website.
+
 """Small evidence detectors. Thresholds are versioned review heuristics, not probabilities."""
 
 import re
@@ -17,6 +21,8 @@ BRANDS = {
 }
 
 
+# One bounded observation with severity, explanation, source and family. Fusion counts
+# independent meaningful families, not the number of displayed bullets.
 @dataclass(frozen=True)
 class Evidence:
     category: str
@@ -27,14 +33,18 @@ class Evidence:
     family: str
     source: str = "DETERMINISTIC_RULE"
 
+    # Convert the dataclass to plain fields for result JSON and database persistence.
     def to_dict(self):
         return asdict(self)
 
 
+# Construct a consistent evidence record and cap its snippet at 180 characters.
 def item(category, severity, label, explanation, snippet, family):
     return Evidence(category, severity, label, explanation, str(snippet)[:180], family)
 
 
+# Inspect numeric hosts, domain depth, Unicode scripts and limited brand tokens. Punycode alone
+# is neutral context; brand mismatch is a heuristic, not verified impersonation.
 def host_evidence(u, f):
     out = []
     if u.ip_version:
@@ -142,6 +152,8 @@ def host_evidence(u, f):
     return out
 
 
+# Describe userinfo/@ confusion and unusual/unencrypted transport. Related credential indicators
+# share one family so they do not independently inflate fusion.
 def authority_evidence(u, f):
     out = []
     if u.has_credentials:
@@ -196,6 +208,8 @@ def authority_evidence(u, f):
     return out
 
 
+# Compare string lengths/depth/counts with authored thresholds and inspect encoding/entropy.
+# Long random tokens may be legitimate tracking values; their values are withheld from evidence.
 def complexity_evidence(u, f):
     out = []
     for feature, threshold, category, title in [
@@ -254,6 +268,8 @@ def complexity_evidence(u, f):
     return out
 
 
+# Inspect keywords, shorteners, fragments, redirect-like query keys and download-like paths.
+# Nested destinations are parsed only to bounded inert hostnames, never requested.
 def destination_evidence(u, f):
     out = []
     tokens = sorted(
@@ -347,6 +363,8 @@ def destination_evidence(u, f):
 DETECTORS = (host_evidence, authority_evidence, complexity_evidence, destination_evidence)
 
 
+# Extract features once, run the four detector groups and flatten their evidence in detector
+# order. No learned score is calculated here.
 def assess_rules(url: ParsedURL) -> list[Evidence]:
     values = features(url)
     return [evidence for detector in DETECTORS for evidence in detector(url, values)]

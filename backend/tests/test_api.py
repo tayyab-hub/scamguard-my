@@ -1,3 +1,7 @@
+# FastAPI contract tests for health, readiness, capabilities, dashboard and safe errors.
+# Controlled dependency/session replacements isolate HTTP behavior from a real database;
+# PostgreSQL integration is exercised in test_persistence.py.
+
 from unittest.mock import MagicMock
 from uuid import UUID
 

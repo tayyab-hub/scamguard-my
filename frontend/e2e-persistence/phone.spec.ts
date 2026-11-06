@@ -1,3 +1,7 @@
+// Submit a Phone number through a real login and PostgreSQL-backed API, verify normalization
+// and uncertainty, then reload stored history. Browser request monitoring rejects off-origin
+// activity.
+
 import { expect, test } from '@playwright/test'
 import { createAuthenticatedAccount } from './auth-fixture'
 

@@ -1,3 +1,7 @@
+# Cross-account and multi-source regressions for login budgets, session isolation and privacy-
+# safe errors/logging. Dedicated database fixtures exercise shared rate-limit state rather than
+# a per-process approximation.
+
 """Authentication and diagnostics regressions against isolated real PostgreSQL."""
 
 import pytest

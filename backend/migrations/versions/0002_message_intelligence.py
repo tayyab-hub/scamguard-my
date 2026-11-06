@@ -1,3 +1,7 @@
+# Historical schema revision. Follow revision/down_revision for ordering; ordinary comments
+# explain the migration without changing its identifiers, existing docstring or database
+# operations.
+
 """Add persisted Task 3 message assessment fields without changing Task 2 records.
 
 Revision ID: 0002_message_intelligence
@@ -13,6 +17,8 @@ branch_labels = None
 depends_on = None
 
 
+# Add nullable risk, confidence, evidence, component and completion fields to existing analysis
+# records. Nulls preserve the meaning of older intake-only rows.
 def upgrade() -> None:
     for column in (
         sa.Column("risk_level", sa.String(32), nullable=True),
@@ -48,6 +54,7 @@ def upgrade() -> None:
     )
 
 
+# Remove the assessment fields while retaining the original intake columns.
 def downgrade() -> None:
     op.drop_constraint("ck_analyses_confidence", "analyses", type_="check")
     op.drop_constraint("ck_analyses_risk_level", "analyses", type_="check")

@@ -1,3 +1,7 @@
+// Public recovery forms for requesting and consuming a single-use reset link. Generic request
+// wording avoids disclosing account existence. Successful confirmation clears local identity
+// because the backend revokes every account session.
+
 import { useEffect, useState } from 'react'
 import { ArrowLeft, KeyRound, MailCheck } from 'lucide-react'
 import { Link, useSearchParams } from 'react-router-dom'
@@ -7,6 +11,8 @@ import { validateEmail, validateNewPassword } from '../lib/profileValidation'
 const GENERIC_MESSAGE =
   'If an account exists for that email, password reset instructions have been sent.'
 
+// Validate an email and request recovery instructions, showing generic success or an explicit
+// request failure; success does not prove inbox delivery.
 export function ForgotPasswordPage() {
   const [email, setEmail] = useState('')
   const [pending, setPending] = useState(false)
@@ -105,9 +111,14 @@ export function ForgotPasswordPage() {
   )
 }
 
+// Capture the token from the initial URL into component memory, remove it from the current
+// address, and submit it with a confirmed new password. A reload after removal needs the
+// original link again.
 export function ResetPasswordPage() {
   const [params, setParams] = useSearchParams()
   const [token] = useState(() => params.get('token') || '')
+  // Removing the query reduces continued URL exposure; it cannot erase the original email link
+  // or requests already observed by browser/hosting infrastructure.
   useEffect(() => {
     if (params.has('token')) setParams({}, { replace: true })
   }, [params, setParams])
@@ -217,6 +228,7 @@ export function ResetPasswordPage() {
   )
 }
 
+// Shared recovery layout accepting heading/description and child form/status content.
 function ResetPanel({
   eyebrow,
   title,
@@ -240,6 +252,7 @@ function ResetPanel({
   )
 }
 
+// Controlled new-password input with connected guidance/error IDs and pending-state protection.
 function PasswordField({
   id,
   label,
@@ -283,6 +296,7 @@ function PasswordField({
   )
 }
 
+// Internal router link returning from recovery to sign-in without submitting form data.
 function BackToLogin() {
   return (
     <Link

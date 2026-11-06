@@ -1,5 +1,10 @@
+// Shared page title/description/action component with focus management for client-side
+// navigation.
+
 import { useEffect, useRef, type ReactNode } from 'react'
 
+// Render supplied props and focus the mounted heading via a DOM ref. tabIndex=-1 permits
+// programmatic focus without adding another normal Tab stop.
 export function PageHeading({
   eyebrow,
   title,

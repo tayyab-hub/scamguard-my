@@ -1,6 +1,11 @@
+// Controlled mode tabs used by AnalysePage. value and onChange belong to the parent; backend
+// capabilities, not this list, decide whether submission is available.
+
 import { useRef } from 'react'
 import { analysisModes, type AnalysisMode } from './modes'
 
+// Render one tabbable active tab and support Left/Right wrapping plus Home/End. Refs move
+// keyboard focus with selection; pending submissions can disable all tabs.
 export function AnalysisModeSelector({
   value,
   onChange,

@@ -1,5 +1,12 @@
 # SCAMGUARD
 
+**Code learning guide, 28 October 2026:** start with the
+[beginner walkthrough](docs/SCAMGUARD_CODE_WALKTHROUGH_FOR_BEGINNERS.md) for the request flow,
+engine/security/database explanations, 30 viva answers and 10 exercises. The documentation pass
+inspected 172 source/configuration files and added comments to 164. See
+[coverage and fresh validation](docs/CODE_COMMENT_COVERAGE.md) for 581 passing tests, one opt-in
+live-AI skip and scope limits. These local documentation changes are uncommitted and undeployed.
+
 **Current completion pass, 20–21 October 2026:** technical release
 `0208efdd23c41d1665b28459b4e8b9d461168d33` was merged through PR #1 after successful CI.
 Fresh verification: **365 backend + 164 frontend + 52 browser tests passed**, with one intentional

@@ -1,3 +1,7 @@
+# Exercise the ASGI request-size guard, including bodies delivered in chunks without a
+# trustworthy Content-Length header. This verifies limits before normal JSON or multipart
+# parsing.
+
 import asyncio
 import json
 

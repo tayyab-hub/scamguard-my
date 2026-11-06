@@ -1,3 +1,6 @@
+// Production-build browser suite served from dist without FastAPI. Verify SPA fallback, offline
+// access boundaries and emitted QR worker/WASM assets in desktop/mobile Chromium projects.
+
 import { defineConfig, devices } from '@playwright/test'
 
 // A built frontend with no FastAPI process/proxy. The live-API suite stays independent.

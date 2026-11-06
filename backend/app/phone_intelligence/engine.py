@@ -1,3 +1,7 @@
+# Conservative Phone assessment from offline numbering metadata, with no trained classifier or
+# external lookup. Valid premium/shared-cost types warrant CAUTION; other parseable numbers
+# remain INSUFFICIENT_EVIDENCE. Numeric fraud/confidence estimates are deliberately absent.
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -10,6 +14,8 @@ FUSION_VERSION = "phone-fusion-v1"
 HIGH_COST_TYPES = {"PREMIUM_RATE", "SHARED_COST"}
 
 
+# Shared service-compatible result object whose model_version, risk_score and confidence_score
+# remain None because no learned fraud estimate exists.
 @dataclass(frozen=True)
 class PhoneAssessment:
     risk_level: str
@@ -26,6 +32,8 @@ class PhoneAssessment:
     risk_score: None = None
 
 
+# Build an evidence dictionary with NUMBERING_METADATA as its source and an explicit
+# family/severity for result presentation.
 def _evidence(
     category: str,
     label: str,
@@ -46,9 +54,12 @@ def _evidence(
     }
 
 
+# Stateless metadata/rule engine reused for direct Phone input and supported QR phone payloads.
 class PhoneIntelligenceEngine:
     version = ENGINE_VERSION
 
+    # Parse the input, identify only reliable higher-cost service metadata, and return bounded
+    # advisory evidence/actions. Invalid numbering is a format finding, not proof of fraud.
     def analyse(self, text: str) -> PhoneAssessment:
         phone = parse_phone_number(text)
         evidence = self._present_evidence(phone)
@@ -124,6 +135,8 @@ class PhoneIntelligenceEngine:
             ],
         )
 
+    # Describe format, numbering validity and service type, separating neutral context from the
+    # limited higher-cost warning.
     @staticmethod
     def _present_evidence(phone: ParsedPhoneNumber) -> list[dict[str, object]]:
         evidence = [
@@ -181,5 +194,7 @@ class PhoneIntelligenceEngine:
         return evidence
 
 
+# Construct the offline stateless engine; the pinned library already contains the numbering
+# metadata.
 def build_phone_engine() -> PhoneIntelligenceEngine:
     return PhoneIntelligenceEngine()

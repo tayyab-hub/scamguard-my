@@ -1,3 +1,7 @@
+# Destructive setup for disposable browser-test data only. Refuse database names without the
+# _e2e suffix, apply migrations, truncate test tables and generate a controlled QR fixture under
+# ignored test-results. Never point this script at personal or production data.
+
 """Migrate an explicitly isolated browser-test DB. Never seed application data."""
 
 import os

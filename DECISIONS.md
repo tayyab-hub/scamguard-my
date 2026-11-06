@@ -1,5 +1,15 @@
 # Accepted decisions
 
+## Documentation conventions — 28 October 2026
+
+The requested beginner documentation uses ordinary source comments so existing Python docstrings,
+FastAPI contracts and introspection remain unchanged. Explain actual evidence and uncertainty;
+distinguish model predictions from advisory risk, local QR decoding from optional routed Message
+review, and mocked UI checks from real PostgreSQL/browser evidence. Preserve historical revisions,
+research artifacts and runtime values. See the [walkthrough](docs/SCAMGUARD_CODE_WALKTHROUGH_FOR_BEGINNERS.md)
+and [coverage/validation report](docs/CODE_COMMENT_COVERAGE.md). This records documentation practice,
+not a new runtime design or deployment authorization.
+
 ## Completion decisions — 20–21 October 2026
 
 - Retain frozen models, policy thresholds, scope, providers and schema. Ten independently authored adversarial regressions guard existing behaviour without held-out tuning.

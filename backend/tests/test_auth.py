@@ -1,3 +1,7 @@
+# Real-PostgreSQL authentication and ownership tests: signup/login, cookies, CSRF/Origin,
+# expiry, logout, recovery and account deletion. Fixtures deliberately clear dedicated *_test
+# tables; synthetic identities and passwords here are test data.
+
 """Authentication, CSRF, privacy, and multi-user authorization on real PostgreSQL."""
 
 import os
@@ -27,6 +31,8 @@ ORIGIN = "http://localhost:5173"
 PASSWORD = "correct horse battery staple"
 
 
+# Require a dedicated *_test database, apply migrations and yield a PostgreSQL engine. The
+# suffix guard reduces accidental resets of ordinary application data.
 @pytest.fixture(scope="module")
 def auth_database():
     url = os.getenv("TEST_DATABASE_URL")
@@ -46,6 +52,8 @@ def auth_database():
     engine.dispose()
 
 
+# Clear test-owned tables and create a real app/client around the disposable database. Each test
+# receives isolated account/session state and lifespan-managed engines.
 @pytest.fixture
 def auth_client(auth_database):
     config, engine = auth_database
@@ -60,6 +68,8 @@ def auth_client(auth_database):
         yield client, engine
 
 
+# Submit a synthetic signup and return its authenticated response, including the CSRF value used
+# for subsequent protected test requests.
 def signup(
     client: TestClient,
     email: str = "owner@example.com",
@@ -84,6 +94,8 @@ def signup(
     return response
 
 
+# Perform the real login endpoint with controlled credentials, preserving the TestClient cookie
+# jar for later requests.
 def login(client: TestClient, identifier: str = "owner@example.com", password: str = PASSWORD):
     response = client.post(
         "/api/v1/auth/login",
@@ -110,6 +122,8 @@ def submit_qr(client: TestClient, payload: str = "https://example.com/controlled
     )
 
 
+# Extract the one-use token from the captured development-mail URL. This inspects a test
+# transport instead of sending or reading a real email.
 def captured_reset_token(client: TestClient) -> str:
     captured = client.app.state.mail_service.outbox[-1]
     return parse_qs(urlparse(captured.reset_url).query)["token"][0]

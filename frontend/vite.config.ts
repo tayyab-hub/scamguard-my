@@ -1,3 +1,7 @@
+// Frontend development/build/test configuration. React and Tailwind transform source, /api
+// proxies to the local FastAPI server during development, and Vitest uses jsdom with shared
+// cleanup. Preview intentionally has no API proxy.
+
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import { loadEnv } from 'vite'

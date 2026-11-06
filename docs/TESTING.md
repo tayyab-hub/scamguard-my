@@ -1,6 +1,15 @@
 # Testing and verification
 
-## Latest executed verification
+## Documentation-pass verification — 28 October 2026
+
+The comment-only source pass ran **365 backend + 164 frontend + 52 browser tests successfully**,
+with one deliberately skipped live-AI test and the existing dependency warnings. It also passed
+type/lint/build, Ruff, pip consistency, frozen URL reproduction, isolated Alembic checks and 16
+static launcher checks. Syntax-tree/token/diff comparisons preserve original executable code,
+docstrings and configuration. See [the coverage report](CODE_COMMENT_COVERAGE.md) for exact scope,
+commands, environment retries and limitations. No production deployment or live provider was tested.
+
+## Completion verification — 20–21 October 2026
 
 The completion pass ran the documented gates against real isolated PostgreSQL: 365 Pytest passes,
 one intentional external-AI skip, two upstream deprecation warnings; 164 Vitest passes; 52 browser

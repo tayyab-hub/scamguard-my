@@ -1,3 +1,7 @@
+// Browser checks for motion settling, live reduced-motion preference changes and keyboard
+// focus. Delayed test requests expose loading deterministically; local drafts must not trigger
+// writes.
+
 import { expect, test, type Page } from '@playwright/test'
 import { mockAuthenticatedWorkspace } from './auth-fixture'
 

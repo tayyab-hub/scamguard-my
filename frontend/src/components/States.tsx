@@ -1,8 +1,12 @@
+// Shared loading, failed and empty presentations. These states have distinct meanings: waiting
+// for data, unable to obtain it, or a successful view with no items.
+
 import { CircleAlert, ScanLine, RefreshCw } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { ApiError } from '../lib/api'
 
+// Announce progress text; skeleton decoration is hidden from assistive technology.
 export function LoadingState({ label = 'Loading workspace' }: { label?: string }) {
   return (
     <div className="panel motion-fade p-8 sm:p-12" role="status" aria-live="polite">
@@ -19,6 +23,8 @@ export function LoadingState({ label = 'Loading workspace' }: { label?: string }
   )
 }
 
+// Show safe request error/retry information and correlation ID when available; let the caller
+// retry its actual query.
 export function ErrorState({
   error,
   onRetry,
@@ -51,6 +57,8 @@ export function ErrorState({
   )
 }
 
+// Render caller-supplied empty-state explanation and optional next action without creating
+// placeholder records.
 export function EmptyState({
   icon: Icon,
   title,

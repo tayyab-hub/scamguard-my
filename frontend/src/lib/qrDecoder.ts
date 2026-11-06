@@ -1,3 +1,7 @@
+// Local camera decoder abstraction. Prefer native BarcodeDetector with QR support, falling back
+// to the bundled zxing-wasm worker. FrameDecoder exposes async decode and cleanup so
+// CameraScanner does not depend on one browser implementation.
+
 export type CameraPayload = { payload: string; decoder: 'BarcodeDetector' | 'zxing-wasm' }
 export type FrameDecoder = {
   name: CameraPayload['decoder']
@@ -10,6 +14,8 @@ type NativeConstructor = {
   getSupportedFormats: () => Promise<string[]>
 }
 
+// Return a local error for empty, oversized UTF-8 or unsupported-control/surrogate text;
+// backend validation repeats this boundary before saving.
 export function payloadError(payload: string): string | null {
   if (!payload.trim()) return 'This QR code has no readable text. Try another code.'
   if (new TextEncoder().encode(payload).length > 5000)
@@ -24,6 +30,9 @@ export function payloadError(payload: string): string | null {
   return null
 }
 
+// Return a decoder after native support checks or worker readiness. Native runtime failure can
+// switch to WASM; AbortSignal terminates fallback work. The worker adapter expects the
+// scanner's single outstanding frame at a time.
 export async function createQrDecoder(
   signal: AbortSignal,
   useNative = true,
@@ -98,6 +107,8 @@ export async function createQrDecoder(
         resolveFrame = resolve
         rejectPending = reject
         const frame = context.getImageData(0, 0, canvas.width, canvas.height)
+        // Transfer the pixel buffer to the worker rather than copying it. The worker responds
+        // with decoded strings; these pixels stay within this browser process boundary.
         worker.postMessage(frame, [frame.data.buffer])
       }),
     close,

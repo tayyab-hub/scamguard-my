@@ -60,14 +60,22 @@ The deterministic payload classifier reports `URL`, `PHONE`, `TEXT`, `EMAIL`, `S
 - Recognized EMV-style merchant-presented payment data is parsed as bounded byte-length TLV. Its
   CRC-16/CCITT integrity field, common merchant/payment fields and embedded HTTP(S) URL are handled
   when present. An embedded URL uses URL intelligence. A structurally valid payment payload remains
-  `INSUFFICIENT_EVIDENCE`; a malformed structure or invalid CRC produces at most `CAUTION`.
+  `INSUFFICIENT_EVIDENCE`; malformed structure or invalid CRC imposes at least `CAUTION`, while
+  preserving a higher warning from a routed URL assessment.
 
-QR never adds severity to a routed Message, URL or Phone assessment. Risk, score, confidence,
-evidence, actions and component versions come from the routed engine. A QR code is a carrier, not
+Ordinary non-payment QR routing inherits the Message, URL or Phone assessment. Payment integrity
+can impose the caution floor described above. Evidence, actions and component versions retain
+the routed engine's contribution. A QR code is a carrier, not
 evidence that its content is safe or malicious. Payment structure and CRC do not verify a merchant,
 recipient, account owner, request legitimacy or transaction safety.
 
 ## Privacy and persistence
+
+Code clarification (28 October 2026): the QR router shares the configured Message engine. Text
+routed to that engine can reach its optional external reviewer when enabled and eligible, using
+the same best-effort redaction and response validation as direct Message input. Review is disabled
+by default. Local image decoding and on-device camera frames do not imply that every possible
+QR-derived text assessment is unconditionally offline. No runtime behavior changed in this clarification.
 
 Pixel validation and decoding occur in backend memory. The original image is never written to
 PostgreSQL or application-owned durable storage. FastAPI's bounded upload parser may use an ephemeral

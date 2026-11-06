@@ -1,3 +1,7 @@
+# Read-only credential audit of selected working-tree text and unique tracked Git-history blobs.
+# Report paths and pattern categories rather than secret values. Heuristics and exclusions mean
+# this is a useful check, not proof that every possible secret is absent.
+
 """Report paths/categories only; inspect current code and unique historical code/document blobs.
 
 Research corpora, images, model arrays and lockfiles are excluded from pattern scanning. This is
@@ -22,6 +26,8 @@ PATTERNS = {
 }
 
 
+# Select source-like text for scanning while excluding dependency/generated/binary and large
+# data artifacts. The same path policy applies to historical blobs.
 def eligible(name):
     return not (
         name.startswith("data/")
@@ -49,10 +55,14 @@ def eligible(name):
     }
 
 
+# Run a Git inspection command from the repository root; callers choose text or byte output
+# depending on whether they need names or blob contents.
 def git(*args, **kwargs):
     return subprocess.check_output(["git", *args], cwd=ROOT, **kwargs)
 
 
+# Read locally configured sensitive values only to recognize accidental copies elsewhere. Return
+# values for in-memory matching; do not print them.
 def local_secrets():
     secrets = set()
     for path in [ROOT / ".env", ROOT / "backend/.env", ROOT / "frontend/.env"]:
@@ -73,6 +83,8 @@ def local_secrets():
     return secrets
 
 
+# Scan current eligible files and deduplicated historical blobs with credential patterns and
+# known local-secret matches. Exit nonzero on findings so CI or a developer can investigate.
 def main():
     private_values = local_secrets()
     findings = []

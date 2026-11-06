@@ -1,3 +1,8 @@
+# Historical Word-report generator driven by a checked template contract, Markdown sections and
+# captured evidence. Verify the template hash before copying it to an output candidate; preserve
+# approved cover/package parts while assembling the report body. Running this writes report
+# artifacts and is separate from application execution.
+
 from pathlib import Path
 from copy import deepcopy
 import re,json,hashlib,zipfile,shutil
@@ -47,24 +52,35 @@ for name in ['TOC 1','TOC 2','TOC 3','Table of Figures']:
   s=doc.styles[name];s.font.name='Times New Roman';s.font.size=Pt(12);s.paragraph_format.line_spacing=1.3
 if 'Caption' not in doc.styles:doc.styles.add_style('Caption',1)
 cap=doc.styles['Caption'];cap.font.name='Times New Roman';cap.font.size=Pt(12);cap.font.italic=False;cap.font.color.rgb=RGBColor(0,0,0);cap.paragraph_format.line_spacing=1.25
+# Normalize imported prose into the plain text expected by the report helpers.
 def clean(s):
  s=re.sub(r'\[([^\]]+)\]\([^)]+\)',r'\1',s);s=s.replace('**','').replace('`','').replace('*','')
  return s.replace(' → ',' → ').strip()
+# Append a paragraph using the requested Word style and return it for further field/format
+# additions.
 def p(text='',style=None):
  x=doc.add_paragraph(clean(text),style or 'Normal');x.paragraph_format.widow_control=True;return x
+# Append a heading at the selected report hierarchy level.
 def h(text,level=2):
  x=p(text,f'Heading {level}');num=OxmlElement('w:numPr');ni=OxmlElement('w:numId');ni.set(qn('w:val'),'0');num.append(ni);x._p.get_or_add_pPr().append(num)
+# Apply the report section boundary/page settings used by the template-driven assembly.
 def endsec(i):
  x=doc.add_paragraph();x.add_run().font.size=Pt(1);x.paragraph_format.space_after=Pt(0);x.paragraph_format.line_spacing=Pt(1);x.paragraph_format.keep_with_next=False;x._p.get_or_add_pPr().append(deepcopy(sections[i]))
+# Insert a Word field code plus cached display text into a paragraph. Word must update fields
+# later for final page numbers and generated lists.
 def field(par,code,cache=''):
  run=par.add_run();a=OxmlElement('w:fldChar');a.set(qn('w:fldCharType'),'begin');run._r.append(a)
  r=par.add_run();i=OxmlElement('w:instrText');i.set(qn('xml:space'),'preserve');i.text=' '+code+' ';r._r.append(i)
  r=par.add_run();sep=OxmlElement('w:fldChar');sep.set(qn('w:fldCharType'),'separate');r._r.append(sep);par.add_run(cache)
  r=par.add_run();e=OxmlElement('w:fldChar');e.set(qn('w:fldCharType'),'end');r._r.append(e)
 captions=[]
+# Add a numbered table/figure caption and its provenance line while recording caption metadata
+# for checks.
 def caption(kind,n,title,source,above=False):
  x=doc.add_paragraph(style='Caption');x.add_run(kind+' ');field(x,'SEQ '+kind+' \\* ARABIC',str(n));x.add_run('. '+title);x.paragraph_format.keep_with_next=True
  captions.append((kind,n,title,source));s=p('Source: '+source);s.paragraph_format.line_spacing=1.1;s.paragraph_format.space_after=Pt(6);s.paragraph_format.keep_with_next=above
+# Build a styled report table from headers and rows, with optional column widths and source
+# attribution.
 def table(n,title,headers,rows,widths=None,source='Project source and evidence at final release; see Appendix B.'):
  phrase=title if title.split()[0].isupper() else title[0].lower()+title[1:]
  p(f'Table {n} summarises the '+phrase.replace('gantt','Gantt')+'.')
@@ -92,20 +108,27 @@ def table(n,title,headers,rows,widths=None,source='Project source and evidence a
     for r in par.runs:r.font.name='Times New Roman';r.font.size=Pt(12);r.bold=(ri==0)
  gap=p();gap.add_run().font.size=Pt(1);gap.paragraph_format.line_spacing=Pt(1);gap.paragraph_format.space_after=Pt(6)
  return t
+# Insert an existing image at the specified width, with its numbered caption and source; this
+# helper does not generate or verify the image.
 def fig(n,title,file,source,width=6.0):
  phrase=title if title.split()[0].isupper() else title[0].lower()+title[1:]
  intro=p(f'Figure {n} illustrates '+phrase+'.');intro.paragraph_format.keep_with_next=True
  x=doc.add_paragraph();x.paragraph_format.line_spacing=1;x.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER;x.paragraph_format.keep_with_next=True
  shape=x.add_run().add_picture(str(D/'figures'/file),width=Inches(width));shape._inline.docPr.set('descr',title)
  caption('Figure',n,title,source)
+# Read a named Markdown source and append prose blocks as paragraphs, skipping headings, tables
+# and code-fence blocks. This is a project-specific importer, not a general Markdown renderer.
 def blocks(name,skip_intro=False):
  text=(D/name).read_text(encoding='utf-8');chunks=re.split(r'\n\s*\n',text)
  for c in chunks:
   if c.startswith('#') or c.startswith('|') or c.startswith('**Table') or c.startswith('```'):continue
   if c.startswith('References:') or (skip_intro and c==chunks[1]):continue
   p(c.replace('\n',' '))
+# Extract data rows from the selected Markdown table, omitting its header/separator lines.
 def mdtable(name,index=0):
  s=(D/name).read_text(encoding='utf-8');groups=re.findall(r'(?m)^\|.*(?:\n\|.*)+',s);lines=groups[index].splitlines();return [[v.strip() for v in line.strip('|').split('|')] for line in lines[2:]]
+# Build a front-matter section with the required generated Word field and section numbering
+# setup.
 def front(title,code,i):
  x=p(title);x.runs[0].bold=True;x.runs[0].font.size=Pt(20);field(p(),code);endsec(i)
 front('Table of Contents','TOC \\o "1-2" \\h \\z \\u',1)

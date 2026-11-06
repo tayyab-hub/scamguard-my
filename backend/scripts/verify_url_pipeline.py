@@ -1,3 +1,7 @@
+# Read-only reproduction check for the frozen URL pipeline. Verify source/split hashes, domain
+# isolation and duplicate rules, then compare exported runtime predictions with the recorded
+# held-out confusion matrix. It neither retrains nor visits URL destinations.
+
 """Verify prepared data hashes, domain isolation and deployed JSON inference on held-out rows."""
 
 import csv
@@ -13,6 +17,9 @@ from prepare_url_dataset import OUT, ROOT
 from app.url_intelligence.classifier import URLClassifier
 
 
+# Load the evidence manifest and prepared rows, reject provenance or split inconsistencies, and
+# exercise the deployed JSON classifier on test features. Assertions fail when the recorded
+# evidence can no longer be reproduced.
 def main():
     statistics = json.loads((OUT / "statistics_v1.json").read_text())
     for name, checksum in statistics["outputs_sha256"].items():

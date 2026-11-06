@@ -1,3 +1,6 @@
+// Check backward-compatible evidence presentation: old results need no invented explanation
+// trace, and abstention keeps confidence unavailable. Hostile text remains inert React content.
+
 import { render, screen, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import { MessageResult } from '../components/analysis/MessageResult'

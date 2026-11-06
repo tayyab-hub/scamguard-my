@@ -1,8 +1,14 @@
+// Recoverable service-unavailable notice used by dashboard/analysis views. Preserve a real
+// request error while allowing local navigation and drafts; do not turn API failure into mock
+// data.
+
 import { CircleAlert, RefreshCw } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { ApiError } from '../lib/api'
 
 // Task 1 pages can render their unavailable scaffold without turning a failed query into data.
+// Display caller guidance, safe error text and optional request ID with a disabled-while-
+// retrying action.
 export function PreviewNotice({
   error,
   onRetry,

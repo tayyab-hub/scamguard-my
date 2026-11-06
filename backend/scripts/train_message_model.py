@@ -1,3 +1,8 @@
+# Offline training workflow, separate from request-time inference. Verify the source checksum,
+# remove duplicates/conflicting labels, group similar texts before splitting, compare candidate
+# models and export the selected TF-IDF/logistic-regression artifact plus evidence. Running this
+# rewrites artifacts/reports; it is not a routine app-start command.
+
 """Reproducibly train and evaluate the Task 3 local message classifier.
 
 The persisted artifact is JSON rather than pickle/joblib, so application loading never executes
@@ -31,6 +36,8 @@ SOURCE_SHA256 = "649844f1c62a6b27e145eaf17a65f7010c56c390e11a794ea8329993a05ba71
 TOKEN_PATTERN = r"(?u)\b\w\w+\b"
 
 
+# Keep each normalized training text with its original source identity and label so split
+# manifests can be audited later.
 @dataclass(frozen=True)
 class Row:
     source_row: int
@@ -40,14 +47,21 @@ class Row:
     text_sha256: str
 
 
+# Return the file-content digest used to verify dataset/artifact identity, independent of its
+# filename.
 def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+# Build an NFKC/casefolded, whitespace-normalized duplicate-grouping key. This is separate from
+# the model vectorizer's accent-stripping/tokenization of the original text.
 def normalize(text: str) -> str:
     return re.sub(r"\s+", " ", unicodedata.normalize("NFKC", text).casefold()).strip()
 
 
+# Read source rows, validate labels and collapse normalized duplicates. Drop conflicting labels
+# for identical normalized text instead of teaching contradictory targets; return rows plus
+# audit counts.
 def load_and_deduplicate(path: Path) -> tuple[list[Row], dict[str, int]]:
     if sha256(path) != SOURCE_SHA256:
         raise ValueError("Source CSV checksum differs from the reviewed dataset version")
@@ -79,6 +93,8 @@ def load_and_deduplicate(path: Path) -> tuple[list[Row], dict[str, int]]:
     return rows, audit
 
 
+# Track connected groups of near-duplicate messages. Path compression and group merging let
+# transitive similarities stay together in one data split.
 class UnionFind:
     def __init__(self, size: int):
         self.parent = list(range(size))
@@ -95,6 +111,8 @@ class UnionFind:
             self.parent[b] = a
 
 
+# Compare character n-gram vectors using a cosine-distance radius and merge linked rows. Return
+# one group identifier per row to prevent near-duplicate leakage across train and test.
 def near_duplicate_groups(rows: list[Row]) -> list[int]:
     """Cluster very similar messages so clusters cannot leak between data splits."""
     vectorizer = TfidfVectorizer(analyzer="char_wb", ngram_range=(4, 5), min_df=2)
@@ -111,6 +129,8 @@ def near_duplicate_groups(rows: list[Row]) -> list[int]:
     return [roots.setdefault(groups.find(index), len(roots)) for index in range(len(rows))]
 
 
+# Use stratified group folds with a fixed seed to approximate train/validation/test proportions
+# while keeping each similarity group intact. Return lists of row indexes, not copied datasets.
 def split(rows: list[Row], groups: list[int]) -> dict[str, list[int]]:
     labels = [row.label for row in rows]
     all_indices = list(range(len(rows)))
@@ -127,6 +147,8 @@ def split(rows: list[Row], groups: list[int]) -> dict[str, list[int]]:
     }
 
 
+# Summarize true versus predicted labels with class-aware scores and a confusion matrix. Macro
+# averages give each class equal weight despite unequal class sizes.
 def metrics(labels: list[str], predicted: list[str]) -> dict[str, object]:
     return {
         "classification_report": classification_report(
@@ -137,6 +159,8 @@ def metrics(labels: list[str], predicted: list[str]) -> dict[str, object]:
     }
 
 
+# Recursively convert numerical outputs into stable, compact JSON-compatible precision for
+# reproducible artifacts.
 def rounded(value: object) -> object:
     if isinstance(value, float):
         return round(value, 8)
@@ -147,6 +171,9 @@ def rounded(value: object) -> object:
     return value
 
 
+# Select candidates using validation macro-F1, requiring Logistic Regression to remain within
+# the documented tolerance. Refit the chosen pipeline on train plus validation, evaluate the
+# frozen test partition and write model, split manifest and metrics.
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument(

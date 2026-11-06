@@ -1,3 +1,8 @@
+# Authenticated submission and private-history HTTP routes. FastAPI validates request schemas
+# and resolves Depends before calling these handlers; services/analyses.py owns persistence and
+# engine selection. Ownership always comes from the validated session, never a client-supplied
+# user ID.
+
 from datetime import timedelta
 from typing import Annotated
 from uuid import UUID
@@ -35,6 +40,8 @@ from app.services.analyses import (
 )
 
 
+# Reject all routes in this router with 503 when storage is disabled; the UI having an Analyse
+# button does not imply the backend can save submissions.
 def require_persistence(request: Request) -> None:
     if not request.app.state.settings.persistence_enabled:
         raise ApiError(503, "PERSISTENCE_UNAVAILABLE", "Submission storage is unavailable.")
@@ -43,9 +50,14 @@ def require_persistence(request: Request) -> None:
 router = APIRouter(
     prefix="/api/v1/analyses", tags=["Submissions"], dependencies=[Depends(require_persistence)]
 )
+# Annotated attaches dependency metadata to a Python type. FastAPI supplies a SQLAlchemy Session
+# and closes it after the request; callers do not construct it themselves.
 Database = Annotated[Session, Depends(get_session)]
 
 
+# Accept validated Message, URL or Phone content, charge the authenticated user's analysis
+# budget, and return the saved detail with HTTP 201. require_csrf combines session
+# authentication, exact Origin and token checks.
 @router.post("", response_model=AnalysisDetail, status_code=201)
 def create_analysis(
     data: AnalysisCreate,
@@ -71,6 +83,9 @@ def create_analysis(
     )
 
 
+# Accept exactly one multipart image, read at most the byte limit plus one, and close uploads on
+# both success and failure. Decode/validate before creating a record, so invalid images produce
+# 422 without a saved analysis.
 @router.post("/qr", response_model=AnalysisDetail, status_code=201)
 def create_qr_analysis(
     request: Request,
@@ -115,6 +130,8 @@ def create_qr_analysis(
     )
 
 
+# Return a bounded page of summaries belonging to the authenticated user. Query validation
+# limits page size and offset; the service keeps count and rows in one read snapshot.
 @router.get("", response_model=AnalysisList)
 def analyses(
     session: Database,
@@ -125,6 +142,8 @@ def analyses(
     return list_submissions(session, page, page_size, authenticated.user.id)
 
 
+# Return owned history matching a validated JSON filter object. Although read-only, this POST
+# requires CSRF and keeps private search text out of the request URL.
 @router.post("/search", response_model=AnalysisList)
 def search_analyses(
     data: HistorySearch,
@@ -135,6 +154,9 @@ def search_analyses(
     return list_submissions(session, data.page, data.page_size, authenticated.user.id, filters=data)
 
 
+# Accept already-decoded browser text and validate its UTF-8 byte length again. Return a saved
+# QR assessment with CAMERA provenance and null image fields: the server has not seen or
+# verified camera frames.
 @router.post("/qr/payload", response_model=AnalysisDetail, status_code=201)
 def create_camera_qr_analysis(
     data: CameraQRCreate,
@@ -172,6 +194,8 @@ def create_camera_qr_analysis(
     )
 
 
+# Read one UUID only within the current user's records. Missing and foreign IDs share the same
+# 404, so knowing an ID does not grant access.
 @router.get("/{analysis_id}", response_model=AnalysisDetail)
 def analysis_detail(
     analysis_id: UUID,
@@ -181,6 +205,8 @@ def analysis_detail(
     return get_submission(session, analysis_id, authenticated.user.id)
 
 
+# Delete one owned analysis after CSRF validation; success has HTTP 204 and no response body.
+# The service commits the deletion explicitly.
 @router.delete("/{analysis_id}", status_code=204)
 def analysis_delete(
     analysis_id: UUID,

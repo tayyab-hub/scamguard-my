@@ -1,3 +1,7 @@
+// Integration browser suite with real PostgreSQL, independent API/Vite ports and sequential
+// workers. Require a dedicated *_e2e database because prepare_e2e clears its tables before the
+// server starts. Mobile uses Chromium device emulation, not physical iOS Safari.
+
 import { defineConfig, devices } from '@playwright/test'
 
 const python =

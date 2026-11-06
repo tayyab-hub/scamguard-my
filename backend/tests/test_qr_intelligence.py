@@ -1,3 +1,7 @@
+# Controlled in-memory images test QR validation, decode failures, payload routing, redaction
+# and payment integrity. Stub engines expose routing/inheritance behavior without making another
+# engine decide the fixture outcome.
+
 from io import BytesIO
 from types import SimpleNamespace
 
@@ -130,6 +134,8 @@ def test_payment_tlv_and_crc_parsing():
     assert malformed is not None and not malformed.structurally_valid
 
 
+# Return a known assessment while recording routed payloads. This isolates QR dispatch,
+# preservation of higher risk and credential redaction from classifier variability.
 class StubEngine:
     def __init__(self, risk_level="HIGH"):
         self.calls = []

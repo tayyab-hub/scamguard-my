@@ -1,3 +1,8 @@
+# Compare URL classifiers using prepared numerical features, then export the selected model as
+# auditable JSON. The checked-in artifact uses a Random Forest; runtime inference reads its
+# trees without requiring the training library. Even --verify performs training/writes, so do
+# not run it as a read-only check.
+
 """Compare fixed candidates on validation only, evaluate winner once on domain-held-out test."""
 
 import csv
@@ -24,6 +29,8 @@ from app.url_intelligence.features import FEATURE_VERSION
 VERSION = "url_ml_v1"
 
 
+# Load one prepared split and separate the feature matrix from its class labels while preserving
+# the declared feature order.
 def read(name):
     with (OUT / f"{name}_v1.csv").open() as f:
         reader = csv.reader(f)
@@ -32,6 +39,8 @@ def read(name):
     return np.array([r[1:] for r in rows], dtype=float), np.array([r[0] for r in rows]), names
 
 
+# Run a candidate on a held-out split and return class metrics and a confusion matrix for model
+# selection/reporting.
 def metrics(model, x, y):
     prediction = model.predict(x)
     return {
@@ -42,6 +51,9 @@ def metrics(model, x, y):
     }
 
 
+# Fit the candidate classifiers on training data and choose by validation macro-F1. Export the
+# selected fitted model, evaluate test performance and write reports; unlike the Message
+# workflow, this does not refit on train plus validation.
 def main():
     x, y, names = read("train")
     vx, vy, _ = read("validation")

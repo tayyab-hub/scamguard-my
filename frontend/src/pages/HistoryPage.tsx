@@ -1,8 +1,13 @@
+// Protected route wrapper for private searchable history; SubmissionHistory owns filters,
+// requests and row interactions.
+
 import { Link } from 'react-router-dom'
 import { ScanLine } from 'lucide-react'
 import { PageHeading } from '../components/PageHeading'
 import { SubmissionHistory } from '../components/SubmissionHistory'
 
+// Provide the page heading, new-analysis link and history component with an explanation that
+// saved assessments reflect their original evidence.
 export function HistoryPage() {
   return (
     <>

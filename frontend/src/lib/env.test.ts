@@ -1,3 +1,6 @@
+// Public API configuration tests distinguish development proxy URLs from production HTTPS/same-
+// origin requirements. These values are build-visible configuration, never a place for secrets.
+
 import { describe, expect, it } from 'vitest'
 import { getApiBaseUrl, parseApiBaseUrl } from './env'
 

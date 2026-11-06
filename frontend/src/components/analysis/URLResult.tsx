@@ -1,3 +1,7 @@
+// Assessment renderer dispatch and direct URL detail view. Dispatch QR first because routed
+// results also contain underlying engine fields. Shared presentation components display saved
+// scores/evidence without recalculating risk.
+
 import type { Assessment, URLAssessment } from '../../lib/api'
 import { isPhoneAssessment, isQRAssessment, isURLAssessment } from '../../lib/resultPresentation'
 import { MessageResult } from './MessageResult'
@@ -11,6 +15,8 @@ import {
   RecommendedActionsPanel,
 } from './ResultPresentation'
 
+// Select QR, URL, Phone or Message UI using validated component shapes; optional content is
+// needed for the saved QR payload display.
 export function AssessmentResult({
   assessment,
   analysisId,
@@ -31,6 +37,8 @@ export function AssessmentResult({
   )
 }
 
+// Render URL evidence/actions and stored model/parser/fusion/reputation audit details.
+// Unavailable model/confidence remains explicit.
 export function URLResult({
   assessment,
   analysisId,

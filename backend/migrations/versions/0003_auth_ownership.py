@@ -1,3 +1,7 @@
+# Historical schema revision. Follow revision/down_revision for ordering; ordinary comments
+# explain the migration without changing its identifiers, existing docstring or database
+# operations.
+
 """Add users, opaque sessions, distributed rate limits, and analysis ownership.
 
 Revision ID: 0003_auth_ownership
@@ -13,6 +17,9 @@ branch_labels = None
 depends_on = None
 
 
+# Create users, sessions and shared rate-limit storage; attach a nullable user foreign key to
+# analyses. Existing unowned rows remain unowned rather than being assigned to an arbitrary
+# account.
 def upgrade() -> None:
     op.create_table(
         "users",
@@ -68,6 +75,8 @@ def upgrade() -> None:
     )
 
 
+# Remove ownership and authentication storage in dependency order. This discards account/session
+# data.
 def downgrade() -> None:
     # Explicitly destructive for Task 5 identity/session data; isolated test databases only.
     op.drop_index("ix_analyses_user_created_id", table_name="analyses")

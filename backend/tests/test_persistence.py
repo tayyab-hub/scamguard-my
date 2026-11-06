@@ -1,3 +1,7 @@
+# Database-backed lifecycle, migration, dashboard and private history tests. A guarded *_test
+# database is reset by fixtures; migration round trips verify old rows survive forward upgrades
+# and saved assessments are read without inference.
+
 """Real PostgreSQL tests. TEST_DATABASE_URL must name a disposable *_test database."""
 
 import os
@@ -26,6 +30,8 @@ ORIGIN = "http://localhost:5173"
 PASSWORD = "correct horse battery staple"
 
 
+# Create a controlled test account and attach the required Origin/CSRF headers to the client
+# used for protected persistence requests.
 def sign_in(client: TestClient, email: str = "owner@example.com") -> None:
     response = client.post(
         "/api/v1/auth/login",
@@ -36,6 +42,8 @@ def sign_in(client: TestClient, email: str = "owner@example.com") -> None:
     client.headers.update({"Origin": ORIGIN, "X-CSRF-Token": response.json()["csrf_token"]})
 
 
+# Require a *_test database and prepare the migration baseline. The integration suite includes
+# destructive reset/downgrade operations, so a disposable database is essential.
 @pytest.fixture(scope="module")
 def database():
     url = os.getenv("TEST_DATABASE_URL")
@@ -192,6 +200,8 @@ def database():
     engine.dispose()
 
 
+# Provide an authenticated app/client backed by PostgreSQL, with isolated table contents and
+# engine cleanup around each test.
 @pytest.fixture
 def persistent(database):
     config, engine = database

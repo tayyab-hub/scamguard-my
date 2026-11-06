@@ -1,3 +1,7 @@
+// Check public forms and real saved results for all four modes across eight viewport widths.
+// Authenticated API seeding isolates layout/dialog checks from repeated form entry while
+// retaining real backend assessments.
+
 import { expect, test, type Page } from '@playwright/test'
 import { createAuthenticatedAccount } from './auth-fixture'
 

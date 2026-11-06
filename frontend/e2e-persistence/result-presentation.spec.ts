@@ -1,3 +1,7 @@
+// Hold the response of a real analysis POST to inspect pending state, then compare displayed
+// scores with returned data. Verify keyboard metadata, reduced motion, URL ordinal indexes and
+// abstention.
+
 import { expect, test } from '@playwright/test'
 import { createAuthenticatedAccount } from './auth-fixture'
 

@@ -1,3 +1,7 @@
+# Continuous integration reproduces backend checks with disposable PostgreSQL, then frontend and
+# browser checks. Test databases and explicit fixtures are isolated from deployed user data;
+# failed browser runs retain diagnostic artifacts.
+
 name: Platform checks
 
 on:

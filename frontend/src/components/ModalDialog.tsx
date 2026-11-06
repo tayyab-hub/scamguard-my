@@ -1,3 +1,7 @@
+// Reusable confirmation dialog rendered in a portal under document.body. It owns focus
+// restoration, background scrolling and pending cancellation protection; callers own the actual
+// deletion action.
+
 import { useEffect, useRef, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 
@@ -14,6 +18,8 @@ export function ModalDialog({
   children: ReactNode
 }) {
   const dialog = useRef<HTMLDialogElement>(null)
+  // Remember the previous focus and scroll state, open the native modal, and restore them on
+  // cleanup. The safe initial control is marked by data-dialog-initial.
   useEffect(() => {
     const element = dialog.current!
     const previous = document.activeElement instanceof HTMLElement ? document.activeElement : null
@@ -36,6 +42,9 @@ export function ModalDialog({
       aria-modal="true"
       aria-busy={busy}
       onKeyDown={(event) => {
+        // Wrap keyboard focus across visible enabled controls. Native showModal supplies
+        // background inertness, while this explicit wrapping makes the first/last control
+        // behavior predictable.
         if (event.key !== 'Tab') return
         const controls = Array.from(
           event.currentTarget.querySelectorAll<HTMLElement>(

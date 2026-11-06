@@ -1,3 +1,7 @@
+# Offline URL boundary shared by validation, features and storage. IDNA handles international
+# names and a bundled public-suffix snapshot identifies registrable domains. Parsing never
+# performs DNS lookup or visits the destination; credentials are removed from saved text.
+
 """Strict string parsing; never resolves hosts or retrieves public suffix updates."""
 
 import ipaddress
@@ -15,6 +19,9 @@ EXTRACT = tldextract.TLDExtract(
 )
 
 
+# Separated URL fields plus normalized and credential-redacted representations.
+# Fragment/credentials flags preserve useful structural evidence without keeping userinfo in
+# original/normalized.
 @dataclass(frozen=True)
 class ParsedURL:
     original: str  # credential-redacted, otherwise preserves submitted spelling
@@ -32,11 +39,16 @@ class ParsedURL:
     ip_version: int | None
     nonstandard_host: bool
 
+    # Decode query key/value pairs with blank values retained and a bounded field count. These
+    # are strings only; redirect-looking values are not followed.
     @property
     def parameters(self) -> list[tuple[str, str]]:
         return parse_qsl(self.query, keep_blank_values=True, max_num_fields=2048)
 
 
+# Validate an absolute HTTP(S) string, reject controls/ambiguous spelling, normalize host/port
+# and return ParsedURL. Invalid host, port or encoding raises ValueError; normalization is not a
+# legitimacy check.
 def parse_url(value: str) -> ParsedURL:
     if not isinstance(value, str) or len(value.strip()) > 2048:
         raise ValueError("URL must be text of at most 2048 characters")

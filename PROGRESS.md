@@ -1,5 +1,16 @@
 # SCAMGUARD — current project state
 
+## Code documentation complete — 28 October 2026
+
+Reviewed 172 human-authored source/configuration files; added explanatory comments to 164 and
+retained 8 sufficient package markers. Created the [beginner walkthrough](docs/SCAMGUARD_CODE_WALKTHROUGH_FOR_BEGINNERS.md)
+and [file-by-file coverage/validation report](docs/CODE_COMMENT_COVERAGE.md). All 581 backend,
+frontend and browser tests passed with one intentional live-AI skip; 16 static launcher checks also
+passed. Source comparisons preserve executable structure, original docstrings and configuration.
+Clarified QR payment risk floors and optional Message-review routing in the prose documentation.
+No commit, push, deployment, retraining or feature-scope change was made. The release evidence below
+remains a separate dated record; owner acceptance and the volunteer study remain outstanding.
+
 **Current completion pass, 20–21 October 2026:** technical release
 `0208efdd23c41d1665b28459b4e8b9d461168d33` was merged through PR #1 after successful CI.
 Fresh verification: **365 backend + 164 frontend + 52 browser tests passed**, with one intentional

@@ -1,3 +1,7 @@
+// Presentation metadata and TypeScript mode unions shared by AnalysePage/dashboard. as const
+// retains literal mode types; satisfies verifies complete field/action mappings without making
+// them runtime API capabilities.
+
 import { FileText, Link2, Phone, QrCode } from 'lucide-react'
 
 // Presentation choices only. These are not API-supported capabilities.

@@ -1,3 +1,7 @@
+# Operational and dashboard endpoints. Liveness, readiness, advertised capabilities and user-
+# owned statistics answer different questions. A running HTTP process is not proof that storage,
+# models or optional mail delivery work.
+
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Request
@@ -27,12 +31,17 @@ from app.services.analyses import list_submissions
 router = APIRouter(prefix="/api/v1")
 
 
+# Return process liveness without a database call; load balancers can distinguish a dead process
+# from an unavailable dependency.
 @router.get("/health", response_model=HealthResponse, tags=["Operations"])
 def health() -> HealthResponse:
     """Liveness only. Does not assert database or analysis-service availability."""
     return HealthResponse()
 
 
+# Require local engines and database access, and probe required tables when persistence is
+# enabled. Fail with a generic 503 instead of exposing connection details. This does not test
+# real email delivery or physical cameras.
 @router.get("/ready", response_model=ReadinessResponse, tags=["Operations"])
 def readiness(
     request: Request, session: Annotated[Session, Depends(get_session)]
@@ -68,6 +77,9 @@ def readiness(
     return ReadinessResponse()
 
 
+# Return measured counts and five recent submissions for the authenticated user. Group by
+# modality/risk in PostgreSQL; ELEVATED plus HIGH defines flagged, while null risk counts as
+# unassessed.
 @router.get("/dashboard", response_model=DashboardResponse, tags=["Workspace"])
 def dashboard(
     request: Request,
@@ -105,6 +117,9 @@ def dashboard(
     )
 
 
+# Advertise only operational submission paths. Disabled/unreachable storage returns conservative
+# defaults; a missing URL model can still permit rules-only URL assessment even though strict
+# readiness fails.
 @router.get("/capabilities", response_model=CapabilitiesResponse, tags=["Workspace"])
 def capabilities(
     request: Request, session: Annotated[Session, Depends(get_session)]

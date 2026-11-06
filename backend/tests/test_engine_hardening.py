@@ -1,3 +1,7 @@
+# Regression examples for evasive Message spelling, protective context, absent vocabulary,
+# contradictory evidence, neutral URL features and QR payment risk floors. These authored cases
+# protect semantics rather than estimate population accuracy.
+
 """Behavioral/adversarial regressions; fixtures do not measure population accuracy."""
 
 from dataclasses import replace

@@ -1,5 +1,11 @@
 # SCAMGUARD roadmap
 
+**28 October 2026 — learning documentation complete:** the
+[beginner walkthrough](docs/SCAMGUARD_CODE_WALKTHROUGH_FOR_BEGINNERS.md) and
+[source-comment coverage report](docs/CODE_COMMENT_COVERAGE.md) explain the implemented system and
+record fresh local validation. This documentation-only work does not add a product phase, change
+feature completion, or satisfy the outstanding volunteer study/owner acceptance. No release was made.
+
 **Current completion pass, 20–21 October 2026:** technical release
 `0208efdd23c41d1665b28459b4e8b9d461168d33` was merged through PR #1 after successful CI.
 Fresh verification: **365 backend + 164 frontend + 52 browser tests passed**, with one intentional

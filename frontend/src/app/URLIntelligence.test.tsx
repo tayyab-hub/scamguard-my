@@ -1,3 +1,7 @@
+// Typed URL fixtures verify every advisory category, ordinal category indexes, evidence
+// ordering, unavailable confidence and inert destinations. The fixture risk is prescribed;
+// classifier quality is tested separately.
+
 import { fireEvent, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'

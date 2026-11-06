@@ -1,3 +1,7 @@
+# Academic-document rendering helper using locally installed Word COM. Open with macros
+# disabled, export a PDF and release COM resources in finally. Updating fields and saving the
+# source is explicit through UpdateAndSave; ordinary rendering opens it read-only.
+
 param([string]$InputPath, [string]$PdfPath, [switch]$UpdateAndSave)
 $ErrorActionPreference = 'Stop'
 $rubricWord = $null

@@ -1,3 +1,7 @@
+# Validated backend settings loaded from backend/.env and process environment.
+# SecretStr/repr=False reduce accidental display, not access by application code. Production
+# validation rejects insecure combinations before the server serves requests.
+
 from functools import lru_cache
 from pathlib import Path
 from typing import Literal
@@ -7,6 +11,8 @@ from pydantic import Field, PostgresDsn, SecretStr, field_validator, model_valid
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
+# Configuration schema with typed defaults, numeric bounds and environment loading. No frontend
+# VITE variable should contain these database/auth/provider secrets.
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=Path(__file__).resolve().parents[2] / ".env",
@@ -53,6 +59,8 @@ class Settings(BaseSettings):
     resend_api_key: SecretStr | None = Field(default=None, repr=False)
     resend_from_email: str | None = None
 
+    # Accept a provider-style postgresql URL and select the installed psycopg driver explicitly
+    # before DSN validation.
     @field_validator("database_url", mode="before")
     @classmethod
     def normalize_postgres_driver(cls, value: object) -> object:
@@ -60,6 +68,8 @@ class Settings(BaseSettings):
             return value.replace("postgresql://", "postgresql+psycopg://", 1)
         return value
 
+    # Reject alternative SQLAlchemy drivers so deployment uses the supported PostgreSQL/Psycopg
+    # connection path.
     @field_validator("database_url")
     @classmethod
     def require_psycopg(cls, value: PostgresDsn) -> PostgresDsn:
@@ -67,6 +77,8 @@ class Settings(BaseSettings):
             raise ValueError("DATABASE_URL must use postgresql+psycopg://")
         return value
 
+    # Require complete HTTP(S) origins without paths, credentials or wildcards. Exact origins
+    # are reused by CORS and mutation Origin checks.
     @field_validator("cors_origins")
     @classmethod
     def validate_origins(cls, values: list[str]) -> list[str]:
@@ -85,6 +97,8 @@ class Settings(BaseSettings):
                 raise ValueError("CORS origins must be exact HTTP(S) origins without paths")
         return values
 
+    # Normalize one frontend origin for password-reset links; arbitrary paths or userinfo are
+    # rejected so generated links have a predictable base.
     @field_validator("frontend_base_url")
     @classmethod
     def validate_frontend_base_url(cls, value: str) -> str:
@@ -102,6 +116,9 @@ class Settings(BaseSettings):
             raise ValueError("FRONTEND_BASE_URL must be an HTTP(S) origin without a path")
         return normalized
 
+    # Validate the configuration as a whole: persistence, HTTPS origins, secure cross-origin
+    # cookies, pepper, database TLS and mail settings. These checks do not prove provider
+    # connectivity or successful delivery.
     @model_validator(mode="after")
     def validate_production(self) -> "Settings":
         if self.app_env == "production":
@@ -135,6 +152,8 @@ class Settings(BaseSettings):
         return self
 
 
+# Load and validate settings once per process using lru_cache. Tests can pass Settings directly
+# to create_app for isolated configurations.
 @lru_cache
 def get_settings() -> Settings:
     return Settings()

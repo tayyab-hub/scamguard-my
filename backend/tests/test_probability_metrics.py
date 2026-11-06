@@ -1,3 +1,6 @@
+# Small hand-checkable probability examples distinguish Brier/log-loss quality from coarse
+# calibration-bin error. In particular, zero ECE does not imply perfect predictions.
+
 import math
 import sys
 from pathlib import Path

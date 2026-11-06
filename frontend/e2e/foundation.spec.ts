@@ -1,3 +1,7 @@
+// Browser navigation, responsive layout and failure/retry tests using the foundation
+// authenticated-workspace fixture. The live server supplies public endpoints; private
+// account/dashboard state is explicitly mocked.
+
 import { expect, test } from '@playwright/test'
 import { mockAuthenticatedWorkspace } from './auth-fixture'
 

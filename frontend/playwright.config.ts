@@ -1,3 +1,7 @@
+// Foundation browser suite: start separate loopback API/Vite servers with persistence disabled
+// and run desktop/mobile Chromium projects. Authenticated-workspace fixtures mock private
+// endpoints, while public endpoints use the local backend.
+
 import { defineConfig, devices } from '@playwright/test'
 
 const python =

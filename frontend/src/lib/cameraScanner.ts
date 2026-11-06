@@ -1,3 +1,7 @@
+// One cancellable on-device camera scan session. getUserMedia supplies video only, bounded
+// canvas frames go to a local decoder, and callbacks update the React component. No frame is
+// uploaded; AnalysePage separately submits reviewed decoded text.
+
 import { createQrDecoder, payloadError, type CameraPayload, type FrameDecoder } from './qrDecoder'
 
 type Callbacks = {
@@ -7,6 +11,7 @@ type Callbacks = {
   onDevices: (devices: MediaDeviceInfo[], currentId: string) => void
 }
 
+// Map browser media exceptions to recovery guidance without exposing internal errors.
 export function cameraError(error: unknown): string {
   const name = error instanceof Error ? error.name : ''
   if (name === 'NotAllowedError' || name === 'SecurityError')
@@ -31,6 +36,9 @@ export class CameraScanner {
     private callbacks: Callbacks,
   ) {}
 
+  // Request an explicitly started camera, open a local decoder and begin sequential scanning.
+  // Every await can complete after cancellation, so late streams/decoders must be released. A
+  // 90-second deadline bounds the session.
   async start(deviceId?: string) {
     if (!window.isSecureContext || !navigator.mediaDevices?.getUserMedia) {
       this.callbacks.onError(
@@ -105,6 +113,9 @@ export class CameraScanner {
     }
   }
 
+  // Downscale a ready frame to at most 960 pixels on its longest side, decode once, and
+  // schedule the next attempt only after this one finishes. Multiple symbols keep scanning; one
+  // valid payload stops all capture before notifying the UI.
   private async scan(): Promise<void> {
     if (this.controller.signal.aborted) return
     try {
@@ -139,6 +150,8 @@ export class CameraScanner {
     }
   }
 
+  // Idempotently abort continuations, cancel timers, stop tracks, close the worker/decoder and
+  // clear video/canvas pixels. Call on success, cancellation, errors and view exit.
   close() {
     this.controller.abort()
     clearTimeout(this.timer)

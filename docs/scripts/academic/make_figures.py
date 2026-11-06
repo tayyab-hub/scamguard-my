@@ -1,3 +1,7 @@
+# Create static diagrams and charts for the academic report using Matplotlib and recorded
+# project evidence. The illustrated values are report-era inputs, not live dashboard data.
+# Running this writes figure assets.
+
 from pathlib import Path
 import json,textwrap
 import matplotlib
@@ -7,8 +11,12 @@ from matplotlib.patches import FancyBboxPatch
 import numpy as np
 out=Path('docs/figures');out.mkdir(exist_ok=True)
 plt.rcParams.update({'font.family':'DejaVu Sans','font.size':13,'svg.fonttype':'none'})
+# Save a completed Matplotlib figure under the report figure directory and close it to release
+# graphics resources.
 def save(fig,name):
  fig.savefig(out/(name+'.png'),dpi=210,bbox_inches='tight',facecolor='white');fig.savefig(out/(name+'.svg'),bbox_inches='tight',facecolor='white');plt.close(fig)
+# Lay out the supplied labeled nodes and connecting arrows, then save a static
+# architecture/workflow illustration with its evidence note.
 def diagram(name,nodes,arrows,foot,h=9):
  fig,ax=plt.subplots(figsize=(8,h));ax.set(xlim=(0,10),ylim=(0,12));ax.axis('off')
  for key,(x,y,w,hh,label) in nodes.items():

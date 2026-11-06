@@ -1,3 +1,7 @@
+# Regressions for stable cross-tab CSRF, client-reported camera provenance, literal history
+# search and measured dashboard distributions. The historical filename groups a release
+# milestone; the assertions document the current contract.
+
 """Task 8 query/privacy and camera entry-point regressions on disposable PostgreSQL."""
 
 from datetime import UTC, datetime, timedelta

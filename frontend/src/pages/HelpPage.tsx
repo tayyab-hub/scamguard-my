@@ -1,3 +1,7 @@
+// Public educational guidance and local FAQ search. Feedback is prepared as an encoded mailto
+// link only when a public support address exists; this page does not send email or create a
+// backend support ticket.
+
 import { useMemo, useState } from 'react'
 import { BookOpen, ExternalLink, LifeBuoy, Mail, Search, ShieldAlert } from 'lucide-react'
 import { Link } from 'react-router-dom'
@@ -102,6 +106,9 @@ const categories = [
   'General feedback',
 ] as const
 
+// Filter authored FAQ text with useMemo when the search term changes, validate local feedback
+// fields, and expose a mail-app link after preparation. No API submission occurs in the
+// feedback form.
 export function HelpPage() {
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState('')

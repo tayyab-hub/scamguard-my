@@ -1,3 +1,7 @@
+# Offline international phone normalization using bundled phonenumbers metadata. Explicit +
+# country context avoids guessing a user's region. Accepting/parsing a number does not show that
+# it is assigned, active, owned by a named person or trustworthy.
+
 from __future__ import annotations
 
 import re
@@ -29,6 +33,8 @@ _NUMBER_TYPES = {
 }
 
 
+# Normalized E.164 and display forms plus possibility, validity, type and metadata version.
+# These describe a numbering plan, not a subscriber or fraud history.
 @dataclass(frozen=True)
 class ParsedPhoneNumber:
     e164: str
@@ -42,6 +48,8 @@ class ParsedPhoneNumber:
     metadata_version: str = phonenumbers.__version__
 
 
+# Check formatting with a depth counter. Reject nested, reversed or unmatched parentheses
+# instead of silently repairing ambiguous input.
 def _balanced_parentheses(value: str) -> bool:
     depth = 0
     for character in value:
@@ -56,6 +64,9 @@ def _balanced_parentheses(value: str) -> bool:
     return depth == 0
 
 
+# Validate bounded ASCII formatting and explicit international context, then return offline
+# metadata. Bad syntax raises; a parseable but invalid numbering pattern can still return a
+# result for conservative assessment.
 def parse_phone_number(value: str) -> ParsedPhoneNumber:
     if not isinstance(value, str):
         raise TypeError("Phone number must be text")

@@ -1,3 +1,7 @@
+# Settings and deployment guard tests. Build explicit settings to verify environment validation,
+# production constraints and documentation exposure without relying on a developer machine
+# configuration.
+
 import pytest
 from fastapi.testclient import TestClient
 from pydantic import ValidationError

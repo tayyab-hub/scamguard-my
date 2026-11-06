@@ -1,3 +1,7 @@
+// Shared sign-in/sign-up page. Local validation guides the user; AuthProvider performs the
+// credentialed request and installs server identity. Field errors appear after touch/submit and
+// focus moves to the first invalid input.
+
 import { useState } from 'react'
 import { Eye, EyeOff, LockKeyhole, ShieldCheck, UserRound } from 'lucide-react'
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom'
@@ -12,6 +16,8 @@ import {
 
 type FieldName = 'fullName' | 'username' | 'email' | 'password' | 'confirmation'
 
+// The mode prop selects signup fields or username/email login. Return navigation after success
+// only to an internal path; reject protocol-relative redirects to another host.
 export function AuthPage({ mode }: { mode: 'login' | 'signup' }) {
   const auth = useAuth()
   const navigate = useNavigate()
@@ -53,6 +59,8 @@ export function AuthPage({ mode }: { mode: 'login' | 'signup' }) {
         email: identifier.trim() ? undefined : 'Enter your username or email.',
         password: password ? undefined : 'Enter your password.',
       }
+  // Keep validation results separate from when to display them, so untouched empty signup
+  // fields do not all show errors immediately.
   const visibleError = (field: FieldName) =>
     (submitted || touched[field]) && errors[field] ? errors[field] : undefined
   const markTouched = (field: FieldName) => setTouched((current) => ({ ...current, [field]: true }))
@@ -296,6 +304,8 @@ type AuthFieldProps = {
   spellCheck?: boolean
 }
 
+// Reusable controlled input: value comes from parent state and onChange passes text back.
+// Label/helper/error IDs connect visible guidance to assistive technology.
 function AuthField({
   id,
   label,

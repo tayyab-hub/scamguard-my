@@ -1,3 +1,7 @@
+# Password recovery delivery boundary. Development captures links only in memory; production
+# uses the configured Resend endpoint with a bounded timeout. Provider acceptance does not prove
+# inbox delivery, and reset links must remain private.
+
 """Password-reset mail delivery without exposing reset secrets to API responses or logs."""
 
 import html
@@ -14,10 +18,15 @@ class MailDeliveryError(RuntimeError):
     """Raised when a configured provider does not accept a message."""
 
 
+# Protocol describing the single mail operation needed by auth routes; tests can inject a
+# capture implementation without sending email.
 class MailService(Protocol):
+    # Send or capture a recipient/link pair; no secret is returned to the public API.
     def send_password_reset(self, recipient: str, reset_url: str) -> None: ...
 
 
+# Development/test-only in-memory record of a recipient and raw recovery link, used to test the
+# full single-use token flow.
 @dataclass(frozen=True)
 class CapturedPasswordReset:
     recipient: str
@@ -27,20 +36,30 @@ class CapturedPasswordReset:
 class DevelopmentMailService:
     """Process-local capture for automated tests and explicit local development only."""
 
+    # Create an empty process-local outbox; messages are not delivered to an external mailbox.
     def __init__(self) -> None:
         self.outbox: list[CapturedPasswordReset] = []
 
+    # Append a capture for tests or explicit development. The raw link remains sensitive even
+    # though it is not logged.
     def send_password_reset(self, recipient: str, reset_url: str) -> None:
         self.outbox.append(CapturedPasswordReset(recipient=recipient, reset_url=reset_url))
 
 
+# Adapter for the fixed Resend HTTPS API. Credentials are supplied by backend settings, never
+# frontend configuration.
 class ResendMailService:
     endpoint = "https://api.resend.com/emails"
 
+    # Keep provider credentials and the verified sender for later requests; construction does
+    # not contact the provider.
     def __init__(self, api_key: str, from_email: str) -> None:
         self.api_key = api_key
         self.from_email = from_email
 
+    # Escape the reset URL in HTML, send text/HTML mail and raise MailDeliveryError on transport
+    # or provider rejection. The caller logs a generic delivery failure without exposing the
+    # link.
     def send_password_reset(self, recipient: str, reset_url: str) -> None:
         safe_url = html.escape(reset_url, quote=True)
         body = json.dumps(
@@ -78,6 +97,8 @@ class ResendMailService:
             raise MailDeliveryError("Password-reset email delivery failed.") from exc
 
 
+# Select the configured adapter and reject incomplete Resend settings. Return a development
+# capture only when that provider is selected.
 def build_mail_service(settings: Settings) -> MailService:
     if settings.mail_provider == "resend":
         api_key = settings.resend_api_key

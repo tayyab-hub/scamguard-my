@@ -1,3 +1,7 @@
+// Render the real AuthProvider against controlled fetch responses to verify redirects,
+// signup/login, recovery, profile updates and logout. This tests frontend state and request
+// shape; backend password/session security has separate integration tests.
+
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'

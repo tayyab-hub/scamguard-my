@@ -1,3 +1,7 @@
+# Final privacy regression checks join QR credential redaction, storage, search and account
+# isolation. These use dedicated PostgreSQL fixtures so assertions cover persisted content as
+# well as returned JSON.
+
 """Final closure privacy and all-mode ownership regressions on disposable PostgreSQL."""
 
 import json

@@ -1,3 +1,7 @@
+# Test offline URL normalization, feature order, exported classifier, independent rule families
+# and conservative fusion. Network guards fail DNS/HTTP attempts; fixture reputation providers
+# and corrupted temporary artifacts cover optional/error paths.
+
 """Offline domain/security, ML and decision-table tests using inert URL strings."""
 
 import json
@@ -20,6 +24,8 @@ from app.url_intelligence.rules import assess_rules
 ARTIFACT = Path(__file__).resolve().parents[1] / "app/url_intelligence/artifacts/url_model_v1.json"
 
 
+# Autouse fixture: forbid socket, DNS and HTTP client operations while evaluating submitted
+# URLs. Any accidental destination lookup fails the test immediately.
 @pytest.fixture(autouse=True)
 def no_network(monkeypatch):
     def blocked(*args, **kwargs):
@@ -206,6 +212,8 @@ def test_fusion_exact_table_and_disagreement():
     )
 
 
+# Controlled reputation response used to test the provider contract and fusion without
+# contacting an external reputation service.
 class Stub:
     def __init__(self, result=None, error=None):
         self.result, self.error = result, error

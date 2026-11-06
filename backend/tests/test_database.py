@@ -1,3 +1,6 @@
+# Verify database dependency cleanup and rollback on failure, plus opt-in connectivity checks.
+# Mock-session lifecycle tests differ from integration checks that require TEST_DATABASE_URL.
+
 import os
 from types import SimpleNamespace
 from unittest.mock import MagicMock

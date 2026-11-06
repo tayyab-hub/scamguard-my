@@ -1,3 +1,7 @@
+# Offline numbering-metadata tests for normalization, invalid/possible/valid numbers and high-
+# cost caution. Network operations are patched to fail so metadata processing cannot silently
+# become an external lookup.
+
 import json
 import socket
 
@@ -8,6 +12,8 @@ from app.phone_intelligence.engine import PhoneIntelligenceEngine
 from app.phone_intelligence.parsing import parse_phone_number
 
 
+# Autouse fixture: replace socket/DNS entry points with a failure so every Phone test enforces
+# the offline boundary.
 @pytest.fixture(autouse=True)
 def no_network(monkeypatch):
     def blocked(*args, **kwargs):

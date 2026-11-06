@@ -1,3 +1,7 @@
+// Small loopback-only test server for built frontend assets and Vercel-style SPA rewrites.
+// Resolve requested paths inside dist, serve the WASM MIME type and return safe errors; no
+// backend proxy is provided.
+
 // Test-only static server: exercise built files and the checked-in Vercel SPA rewrite.
 // No API implementation, fixture responses, FastAPI process or development proxy.
 import { createServer } from 'node:http'

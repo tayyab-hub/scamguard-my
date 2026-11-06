@@ -1,3 +1,7 @@
+# Categorical URL policy combines independent structural evidence families and optional
+# classifier/reputation output. It returns a risk label only; the backend deliberately has no
+# numeric URL risk score.
+
 """Conservative categorical decision table; ML confidence is not a scam probability."""
 
 from app.url_intelligence.reputation import ReputationSignal
@@ -6,6 +10,9 @@ from app.url_intelligence.rules import Evidence
 FUSION_VERSION = "url_fusion_v2"
 
 
+# Return HIGH for an accepted malicious reputation verdict; otherwise count meaningful families
+# and require model corroboration for HIGH. Model-only/weak warnings yield CAUTION, neutral
+# context alone does not escalate, and no model/no useful warning yields abstention.
 def fuse(classification, evidence: list[Evidence], reputation: ReputationSignal) -> str:
     if reputation.status == "COMPLETED" and reputation.verdict == "MALICIOUS":
         return "HIGH"

@@ -1,3 +1,7 @@
+// Overview of the authenticated user's measured history and current engine capabilities.
+// Totals/distributions come from API queries; unavailable data stays unavailable rather than
+// becoming a misleading zero.
+
 import {
   Activity,
   ArrowRight,
@@ -27,6 +31,8 @@ const metrics = [
 
 const inputLabels = { MESSAGE: 'Message', URL: 'URL', PHONE: 'Phone', QR: 'QR' } as const
 
+// Render count cards, recent rows and mode shortcuts from validated query data. Distribution
+// bars appear only with available counts and a nonempty history.
 export function DashboardPage() {
   const dashboard = useDashboard()
   const capabilities = useCapabilities()

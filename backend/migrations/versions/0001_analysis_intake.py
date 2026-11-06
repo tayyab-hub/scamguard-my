@@ -1,3 +1,7 @@
+# Historical schema revision. Follow revision/down_revision for ordering; ordinary comments
+# explain the migration without changing its identifiers, existing docstring or database
+# operations.
+
 """Persist Message/URL intake without intelligence fields.
 
 Revision ID: 0001_analysis_intake
@@ -13,6 +17,8 @@ branch_labels = None
 depends_on = None
 
 
+# Create the original Message/URL analysis intake table, UUID identity, timestamps, bounded
+# status/type values and chronological index.
 def upgrade() -> None:
     op.create_table(
         "analyses",
@@ -43,6 +49,7 @@ def upgrade() -> None:
     )
 
 
+# Drop the original intake table and its index; any contained records are lost.
 def downgrade() -> None:
     # Explicitly destructive; use only on a disposable test database or with a reviewed backup.
     op.drop_index("ix_analyses_created_id", table_name="analyses")

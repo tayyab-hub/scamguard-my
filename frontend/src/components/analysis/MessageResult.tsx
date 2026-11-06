@@ -1,3 +1,7 @@
+// Message result composition using shared hero, actions, evidence and metadata panels. Shows
+// the learned class separately from final risk and reports whether optional review actually
+// contributed.
+
 import type { MessageAssessment } from '../../lib/api'
 import {
   AnalysisMetaPanel,
@@ -7,6 +11,8 @@ import {
   RecommendedActionsPanel,
 } from './ResultPresentation'
 
+// Accept a validated MessageAssessment and optional record ID; return the saved decision
+// explanation and versions without invoking any model.
 export function MessageResult({
   assessment,
   analysisId,

@@ -1,3 +1,7 @@
+// Smoke-test the production-emitted decoder worker and WASM asset with blank pixels. This
+// proves asset loading and worker messaging; a blank-frame test alone does not prove successful
+// QR recognition.
+
 import { readdir } from 'node:fs/promises'
 import { expect, test } from '@playwright/test'
 

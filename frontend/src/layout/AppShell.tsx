@@ -1,3 +1,7 @@
+// Shared navigation, account actions and page container. Outlet renders the selected route;
+// Suspense shows a loading state for lazy chunks. Route changes update the document title and
+// focus while responsive navigation comes from styles.css.
+
 import { Suspense, useEffect, useState } from 'react'
 import {
   ArrowUpRight,
@@ -37,11 +41,15 @@ const routeLabels: Record<string, string> = {
   '/reset-password': 'Reset password',
 }
 
+// Normalize trailing slashes and map an internal pathname to a readable title, using a not-
+// found label for unknown paths.
 function routeLabel(pathname: string) {
   const normalized = pathname === '/' ? pathname : pathname.replace(/\/+$/, '')
   return routeLabels[normalized] || 'Page not found'
 }
 
+// Render desktop/mobile navigation and the active route. Logout pending/error states follow
+// actual backend revocation; failed logout is not presented as success.
 export function AppShell() {
   const auth = useAuth()
   const [logoutPending, setLogoutPending] = useState(false)

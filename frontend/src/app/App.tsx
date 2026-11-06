@@ -1,3 +1,7 @@
+// Application route map. AppShell supplies navigation and an Outlet; protected routes wait for
+// session restoration. Help/account/recovery code is loaded lazily and AppShell supplies
+// Suspense while those chunks load.
+
 import { Route, Routes } from 'react-router-dom'
 import { lazy } from 'react'
 import { AppShell } from '../layout/AppShell'
@@ -21,6 +25,8 @@ const ResetPasswordPage = lazy(() =>
   import('../pages/PasswordResetPages').then((module) => ({ default: module.ResetPasswordPage })),
 )
 
+// Return the route tree for browser paths. ProtectedRoute gates private views for usability;
+// backend session and ownership checks remain the actual data-access boundary.
 export function App() {
   return (
     <Routes>

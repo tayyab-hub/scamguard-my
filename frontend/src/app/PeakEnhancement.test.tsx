@@ -1,3 +1,7 @@
+// Regression tests for account-transition races, private-cache clearing, history search bodies,
+// explicit example submission and modal/distribution semantics. Deferred promises let tests
+// control the order of authentication responses.
+
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'

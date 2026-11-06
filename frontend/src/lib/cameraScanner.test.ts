@@ -1,3 +1,7 @@
+// Camera lifecycle tests with mocked media tracks and decoder promises. Verify explicit
+// permission requests, late-result cancellation, track/worker/timer cleanup and byte limits.
+// Real worker decoding is covered by Playwright.
+
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { CameraScanner } from './cameraScanner'
 import { createQrDecoder, payloadError } from './qrDecoder'

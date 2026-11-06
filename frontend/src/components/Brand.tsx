@@ -1,6 +1,10 @@
+// Reusable brand/home link used by AppShell; the shield graphic is decorative and does not
+// assert a safety verdict.
+
 import { ShieldCheck } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
+// Return the internal home link with an accessible name and the shared visual identity.
 export function Brand() {
   return (
     <Link to="/" className="flex items-center gap-3 rounded-md" aria-label="SCAMGUARD home">

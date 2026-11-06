@@ -1,3 +1,7 @@
+# Message orchestration and result explanation. Runs frozen local classification and
+# deterministic rules, optionally requests review for ambiguous text, applies fusion, and
+# produces the assessment saved by services/analyses.py. No training occurs during a request.
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -16,6 +20,8 @@ from app.ml.fusion import FusionResult, RiskLevel, fuse
 from app.ml.rules import RuleAssessment, assess_rules
 
 
+# Engine-to-service result object containing the final decision, evidence, actions, limitations
+# and component versions, including optional review status.
 @dataclass(frozen=True)
 class MessageAssessment:
     risk_level: RiskLevel
@@ -33,7 +39,11 @@ class MessageAssessment:
     ai: AIReview
 
 
+# Reusable model/provider container shared across requests. Each analyse call creates its own
+# evidence and result objects.
 class MessageIntelligenceEngine:
+    # Accept an already-loaded classifier and optional reviewer. unavailable_ai distinguishes
+    # requested-but-unavailable review from deliberately disabled review.
     def __init__(
         self,
         classifier: MessageClassifier,
@@ -44,6 +54,9 @@ class MessageIntelligenceEngine:
         self.provider = provider
         self.unavailable_ai = unavailable_ai
 
+    # Given message text, run local components and review only eligible ambiguous cases when a
+    # provider exists. Fuse outputs and return a presentation-ready MessageAssessment; provider
+    # failures are converted to status by perform_ai_review.
     def analyse(self, text: str) -> MessageAssessment:
         classification = self.classifier.predict(text)
         rules = assess_rules(text)
@@ -63,6 +76,9 @@ class MessageIntelligenceEngine:
         result = fuse(text, classification, rules, ai)
         return self._present(classification, rules, ai, result)
 
+    # Turn component evidence and FusionResult into user-readable reasons/actions plus saved
+    # audit metadata. Model class estimates remain separate from the final category and do not
+    # verify sender identity.
     @staticmethod
     def _present(classification, rules: RuleAssessment, ai: AIReview, result: FusionResult):
         evidence = [
@@ -239,6 +255,9 @@ class MessageIntelligenceEngine:
         )
 
 
+# Locate the reviewed artifact, initialize its classifier and optionally construct the
+# configured OpenAI reviewer. Model loading failures propagate to startup; no replacement
+# artifact is downloaded.
 def build_message_engine(settings: Settings) -> MessageIntelligenceEngine:
     artifact_path = (
         Path(settings.message_model_path)

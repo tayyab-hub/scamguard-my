@@ -1,3 +1,7 @@
+# Test the exported Message classifier, deterministic rules, fusion/abstention and optional
+# reviewer boundary. StubProvider makes ordinary tests deterministic; a separately gated
+# integration test is the only live-provider path.
+
 import os
 from pathlib import Path
 
@@ -96,6 +100,9 @@ def test_strong_local_evidence_cannot_be_lowered_by_ai(classifier):
     assert result.risk_score >= 0.72
 
 
+# Implement the optional reviewer interface with controlled output/failure and captured input.
+# Tests can verify redaction and evidence grounding without network requests or provider
+# charges.
 class StubProvider:
     provider_name = "stub"
     model_name = "stub-v1"

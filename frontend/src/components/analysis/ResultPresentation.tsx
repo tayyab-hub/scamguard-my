@@ -1,3 +1,7 @@
+// Shared advisory-result building blocks across all modalities. These components receive
+// validated assessment props; scores are display transformations only, confidence remains
+// separate and evidence stays inert text.
+
 import { useId } from 'react'
 import type { CSSProperties, ReactNode } from 'react'
 import {
@@ -23,6 +27,8 @@ import {
   topSignals,
 } from '../../lib/resultPresentation'
 
+// Show unavailable when confidence_score is null; otherwise display the stored strength label
+// with the relevant modality limitation.
 export function ConfidenceBadge({ assessment }: { assessment: Assessment }) {
   const unavailable = assessment.confidence_score === null
   return (
@@ -47,6 +53,8 @@ export function ConfidenceBadge({ assessment }: { assessment: Assessment }) {
   )
 }
 
+// Use riskScorePresentation for Message scaling or URL category index and omit the meter when
+// unscored. Accessible meter text explicitly says this is not a probability.
 export function RiskScoreDisplay({ assessment }: { assessment: Assessment }) {
   const score = riskScorePresentation(assessment)
   const id = useId()
@@ -116,6 +124,8 @@ export function RiskScoreDisplay({ assessment }: { assessment: Assessment }) {
   )
 }
 
+// Combine stored risk/category guidance, summary, score, confidence and a small diverse signal
+// selection; no frontend classification occurs.
 export function AnalysisResultHero({ assessment }: { assessment: Assessment }) {
   const signals = topSignals(assessment)
   const Icon =
@@ -192,6 +202,8 @@ export function AnalysisResultHero({ assessment }: { assessment: Assessment }) {
   )
 }
 
+// Validate optional decision/support/mitigation/uncertainty data before rendering. Older
+// immutable records without this field simply omit the panel.
 export function AssessmentBasisPanel({ assessment }: { assessment: Assessment }) {
   const headingId = useId()
   // Optional for immutable historical records and QR results with an underlying engine.
@@ -248,6 +260,8 @@ export function AssessmentBasisPanel({ assessment }: { assessment: Assessment })
   )
 }
 
+// Display one evidence item and its available source/severity/explanation. React text
+// interpolation escapes untrusted snippets instead of interpreting HTML.
 export function EvidenceCard({
   item,
   index,
@@ -283,6 +297,8 @@ export function EvidenceCard({
   )
 }
 
+// Present sorted copies of evidence where severity exists and explain an empty evidence list;
+// sorting never mutates the saved assessment.
 export function EvidencePanel({ assessment }: { assessment: Assessment }) {
   const url = isURLAssessment(assessment)
   const phone = isPhoneAssessment(assessment)
@@ -326,6 +342,7 @@ export function EvidencePanel({ assessment }: { assessment: Assessment }) {
   )
 }
 
+// Render the backend's recommended action strings as an ordered list without executing them.
 export function RecommendedActionsPanel({ actions }: { actions: string[] }) {
   return (
     <section className="result-section actions-panel">
@@ -346,6 +363,8 @@ export function RecommendedActionsPanel({ actions }: { actions: string[] }) {
   )
 }
 
+// Show stored limitations, completion time, optional record ID and caller-specific version
+// rows, plus the display-method version.
 export function AnalysisMetaPanel({
   assessment,
   analysisId,

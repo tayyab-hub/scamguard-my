@@ -1,3 +1,7 @@
+# Versioned Message advisory policy combining learned class probabilities, deterministic
+# indicators and bounded optional review. Risk measures the policy's warning level; confidence
+# describes signal strength. Neither is a calibrated probability that fraud will occur.
+
 from __future__ import annotations
 
 import re
@@ -26,6 +30,8 @@ CONFIDENCE_MODEL_WEIGHT = 0.7
 CONFIDENCE_EVIDENCE_WEIGHT = 0.3
 
 
+# Five advisory outputs shared with persistence/UI. INSUFFICIENT_EVIDENCE is abstention, not a
+# lower numerical risk category.
 class RiskLevel(StrEnum):
     LOW = "LOW"
     CAUTION = "CAUTION"
@@ -34,6 +40,8 @@ class RiskLevel(StrEnum):
     INSUFFICIENT_EVIDENCE = "INSUFFICIENT_EVIDENCE"
 
 
+# Final Message decision with nullable scores, confidence label and audit reasons. disagreement
+# records conflicting model/rule signals without deleting strong warnings.
 @dataclass(frozen=True)
 class FusionResult:
     risk_level: RiskLevel
@@ -46,6 +54,9 @@ class FusionResult:
     disagreement: bool = False
 
 
+# Accept original text plus classifier/rule/AI outputs and return a FusionResult. First reject
+# inadequate evidence, then combine local signals, preserve strong-rule floors, bound AI
+# corroboration and derive confidence separately.
 def fuse(
     text: str, classification: Classification, rules: RuleAssessment, ai: AIReview
 ) -> FusionResult:
@@ -56,6 +67,9 @@ def fuse(
         model_signal = 0.0
     words = re.findall(r"\b\w+\b", text)
     reason = None
+    # Weak rules need usable vocabulary and enough model/text context. Otherwise returning null
+    # scores is more honest than treating the model's prior or an ambiguous prediction as
+    # safety.
     if rules.score < MIN_RULE_CONTEXT:
         if classification.matched_features == 0:
             reason = "OUT_OF_VOCABULARY"
@@ -95,6 +109,8 @@ def fuse(
             min(1.0, local_score + max(0.0, ai.risk_signal - local_score) * AI_MAX_CONTRIBUTION),
         )
     contributed = contributed and score > local_score
+    # A model-only warning is capped just below the Elevated boundary. The classifier can be
+    # confidently wrong, so stronger categories need corroborating evidence.
     if not rules.indicators and not contributed and score >= CAUTION_BOUNDARY:
         score = CAUTION_BOUNDARY - 0.0001
         reason = "UNCORROBORATED_MODEL"
@@ -117,6 +133,8 @@ def fuse(
     disagreement = (classification.label == "LEGITIMATE" and strong_rules) or (
         classification.label == "SCAM" and rules.score < MIN_RULE_CONTEXT
     )
+    # Conflicting signals lower confidence while the risk floor remains. A low confidence label
+    # can therefore coexist with a serious warning.
     if disagreement:
         confidence = min(confidence, MIN_MODEL_CONFIDENCE - 0.01)
     if classification.matched_features == 0:

@@ -1,3 +1,7 @@
+// Owned history summaries, on-demand saved details, filtering/pagination and confirmed
+// deletion. Queries live in lib/queries.ts and backend ownership remains authoritative. Saved
+// results are displayed as stored; expanding a row does not run inference again.
+
 import { useId, useState } from 'react'
 import type { AnalysisSummary, HistoryFilters, RiskLevel } from '../lib/api'
 import { Inbox, RotateCcw, Search, Trash2 } from 'lucide-react'
@@ -10,6 +14,9 @@ import { riskCopy } from '../lib/resultPresentation'
 
 const inputLabels = { MESSAGE: 'Message', URL: 'URL', PHONE: 'Phone', QR: 'QR' } as const
 
+// Render summary props and fetch only the selected detail. Delete requires a confirmation
+// dialog; Analyse again copies supported saved text into router state and keeps the original
+// record immutable.
 export function SubmissionRows({
   items,
   onDeleted,
@@ -190,6 +197,8 @@ export function SubmissionRows({
   )
 }
 
+// Keep draft search text separate from submitted filters. Initial type/risk come from dashboard
+// links; fetch a bounded page and distinguish loading, failure, empty history and no matches.
 export function SubmissionHistory() {
   const [params] = useSearchParams()
   const [page, setPage] = useState(1)
@@ -207,6 +216,8 @@ export function SubmissionHistory() {
   const filtered =
     filters.query || filters.input_type || filters.risk_level || filters.sort !== 'newest'
   const history = useHistory(page, filtered ? filters : undefined)
+  // Merge a changed filter and reset page to one, preventing an old page offset from hiding
+  // matches in the new result set.
   function updateFilters(update: Partial<HistoryFilters>) {
     setFilters((current) => ({ ...current, ...update }))
     setPage(1)
@@ -327,6 +338,8 @@ export function SubmissionHistory() {
               key={`${page}-${JSON.stringify(filters)}`}
               items={history.data.items}
               onDeleted={() => {
+                // Deleting the final row of a later page would leave an empty offset; move back
+                // one page while query invalidation refreshes the count.
                 if (history.data.items.length === 1 && page > 1) setPage(page - 1)
               }}
             />

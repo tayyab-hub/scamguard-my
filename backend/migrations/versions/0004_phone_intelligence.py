@@ -1,3 +1,7 @@
+# Historical schema revision. Follow revision/down_revision for ordering; ordinary comments
+# explain the migration without changing its identifiers, existing docstring or database
+# operations.
+
 """Allow PHONE analyses while preserving existing Message and URL records.
 
 Revision ID: 0004_phone_intelligence
@@ -12,6 +16,8 @@ branch_labels = None
 depends_on = None
 
 
+# Extend the analysis input-type check constraint to accept PHONE. The shared assessment columns
+# already support its nullable scores.
 def upgrade() -> None:
     op.drop_constraint("analysis_input_type", "analyses", type_="check")
     op.create_check_constraint(
@@ -29,6 +35,8 @@ def upgrade() -> None:
     )
 
 
+# Restore the pre-Phone constraint. Existing PHONE rows would need attention before this
+# stricter constraint can be applied.
 def downgrade() -> None:
     # This DDL reversal requires PHONE rows to be removed first. Use only on an isolated database.
     op.drop_constraint("ck_analyses_content_length", "analyses", type_="check")

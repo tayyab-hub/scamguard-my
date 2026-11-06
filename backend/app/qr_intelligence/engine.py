@@ -1,3 +1,8 @@
+# Deterministic QR payload classification, credential-redacted history text and routing to
+# Message/URL/Phone engines. Decoding is not trust. Payment integrity adds a Caution floor when
+# needed; ordinary routed content inherits its engine result. The shared Message engine can use
+# optional AI if configured.
+
 from __future__ import annotations
 
 import re
@@ -18,6 +23,8 @@ CLASSIFIER_VERSION = "qr-payload-classifier-v2"
 FUSION_VERSION = "qr-risk-fusion-v2"
 
 
+# Classified payload type, optional engine route/content and payment findings. Recognizing
+# EMAIL/WIFI/etc. does not execute those instructions.
 @dataclass(frozen=True)
 class QRPayload:
     type: str
@@ -26,6 +33,8 @@ class QRPayload:
     payment: PaymentResult | None = None
 
 
+# Persistable wrapper combining decoded provenance, routed evidence, payment findings and
+# advisory limitations; there is no independent trained QR fraud model.
 @dataclass(frozen=True)
 class QRAssessment:
     risk_level: str
@@ -42,12 +51,17 @@ class QRAssessment:
     fusion_version: str = FUSION_VERSION
 
 
+# Recognize URI-like scheme:value content without mistaking prose such as URGENT: send for an
+# executable scheme.
 def _structured_payload(text: str) -> bool:
     # A prose label such as "URGENT: send..." is not treated as a URI scheme. URI-like payloads
     # have non-whitespace content immediately after the colon.
     return bool(re.match(r"^[A-Za-z][A-Za-z0-9+.-]*:\S", text))
 
 
+# Classify payment first, then HTTP(S), international phone and supported structured prefixes,
+# with suitable remaining text routed to Message. Unknown schemes/short labels are retained
+# conservatively without forced inference.
 def classify_payload(payload: str) -> QRPayload:
     text = payload.strip()
     payment = parse_payment_payload(text)
@@ -94,6 +108,9 @@ def classify_payload(payload: str) -> QRPayload:
     return QRPayload("TEXT", route, text if route else None)
 
 
+# Prepare private history text by removing recognized URL userinfo and Wi-Fi password fields and
+# normalizing supported phones. This is targeted redaction, not a guarantee that arbitrary
+# payloads contain no personal data.
 def persisted_payload(payload: str) -> str:
     """Return the decoded content that is safe to keep in private history."""
     classified = classify_payload(payload)
@@ -119,6 +136,8 @@ def persisted_payload(payload: str) -> str:
     return payload
 
 
+# Build a decoder-origin observation with a bounded, explicit evidence family; successful
+# decoding itself is neutral context.
 def _qr_evidence(category: str, label: str, explanation: str, snippet: str, *, severity="CONTEXT"):
     return {
         "category": category,
@@ -131,9 +150,13 @@ def _qr_evidence(category: str, label: str, explanation: str, snippet: str, *, s
     }
 
 
+# Reuse the app's existing engine instances for supported payloads. No camera-frame processing
+# occurs here; uploaded images were decoded before this method is called.
 class QRIntelligenceEngine:
     version = ENGINE_VERSION
 
+    # Retain shared engines and imported decoder readiness. Reusing the Message instance also
+    # reuses its configured optional reviewer.
     def __init__(
         self,
         message_engine: MessageIntelligenceEngine,
@@ -145,6 +168,10 @@ class QRIntelligenceEngine:
         self.phone_engine = phone_engine
         self.operational = decoder_operational()
 
+    # Given validated DecodedQR, classify/routinely route its original payload, combine
+    # provenance and payment evidence, and return QRAssessment. Unsupported content abstains;
+    # integrity/destination warnings preserve at least CAUTION without erasing higher routed
+    # risk.
     def analyse(self, decoded: DecodedQR) -> QRAssessment:
         payload = classify_payload(decoded.payload)
         evidence = [
@@ -166,6 +193,9 @@ class QRIntelligenceEngine:
         elif payload.route == "PHONE" and payload.routed_content:
             underlying = self.phone_engine.analyse(payload.routed_content)
         elif payload.route == "MESSAGE" and payload.routed_content:
+            # This calls the same Message pipeline as direct text submission, including optional
+            # ambiguous-text review when an operator has enabled/configured it. QR decoding does
+            # not itself contact that provider.
             underlying = self.message_engine.analyse(payload.routed_content)
 
         payment_components = None
@@ -262,6 +292,8 @@ class QRIntelligenceEngine:
                 actions = ["Verify the number independently and never disclose passwords or OTPs."]
             underlying_components = {}
 
+        # Payment consistency is separate from destination structure. A benign-looking URL
+        # cannot cancel a corrupt payment payload; a stronger destination warning is retained.
         if payload.payment:
             payment_warning = not payload.payment.structurally_valid or (
                 payload.payment.embedded_url is not None and payload.route is None
@@ -364,6 +396,8 @@ class QRIntelligenceEngine:
         )
 
 
+# Construct the router around already-loaded engines. settings is currently unused here; input
+# limits are applied by the API/decoder.
 def build_qr_engine(
     settings: Settings,
     message_engine: MessageIntelligenceEngine,

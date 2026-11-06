@@ -1,3 +1,7 @@
+// Static JavaScript/TypeScript checks for the frontend, including React hook usage and refresh-
+// safe exports. Generated outputs are excluded; linting complements type checks and executable
+// tests.
+
 import js from '@eslint/js'
 import globals from 'globals'
 import tseslint from 'typescript-eslint'

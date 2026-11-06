@@ -1,3 +1,6 @@
+// Seed eleven real records to force pagination, then exercise search, deletion focus, profile
+// changes and cross-tab logout. The second scenario checks major routes across viewport widths.
+
 import { expect, test } from '@playwright/test'
 import { createAuthenticatedAccount } from './auth-fixture'
 

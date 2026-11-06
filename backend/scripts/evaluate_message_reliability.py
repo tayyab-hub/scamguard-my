@@ -1,3 +1,7 @@
+# Evaluate the frozen Message model probabilities and advisory fusion separately. Reproduce the
+# existing dataset/split evidence without training; optionally write the requested report path.
+# Classification accuracy alone does not establish calibrated probabilities.
+
 """Reproduce frozen classification and audit probabilities without fitting to the test set.
 
 The historical test set is reused for regression/reliability reporting only. No threshold,
@@ -21,6 +25,9 @@ from app.core.config import Settings
 from app.ml.engine import build_message_engine
 
 
+# Accept true labels paired with class-probability dictionaries. Compute multiclass Brier score,
+# log loss and ten-bin expected calibration error; these measure different aspects of
+# probability quality, so a low ECE alone can be misleading.
 def probability_metrics(observations: list[tuple[str, dict[str, float]]]) -> dict:
     if not observations:
         raise ValueError("Probability metrics require labelled observations")
@@ -66,6 +73,9 @@ def probability_metrics(observations: list[tuple[str, dict[str, float]]]) -> dic
     )
 
 
+# Verify the frozen artifact and held-out rows, collect model probabilities, and separately
+# summarize final fusion categories/abstentions. Category distribution is not measured scam-
+# detection accuracy.
 def evaluate() -> dict:
     frozen = message_reproduction()  # Source checksum, labels, hashes and split-group isolation.
     settings = Settings(_env_file=None, app_env="test", ai_review_enabled=False)
@@ -102,6 +112,8 @@ def evaluate() -> dict:
     )
 
 
+# Parse the optional output path, run the read-only evaluation and print its result; writing
+# happens only when an output file is requested.
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path)

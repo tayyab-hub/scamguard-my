@@ -1,3 +1,7 @@
+// Synthetic QR responses verify image selection/upload requests, payment metadata, escaped
+// decoded content, retry behavior and stored-history presentation. No real image decoding
+// happens inside these mocked API tests.
+
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'

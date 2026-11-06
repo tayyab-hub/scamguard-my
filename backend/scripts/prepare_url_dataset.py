@@ -1,3 +1,8 @@
+# Prepare an offline URL benchmark from the checked local archive. Normalize and deduplicate
+# rows, remove conflicting labels, split by registrable-domain groups, then write ordered
+# lexical features and hashed provenance. No submitted website is visited; running this rewrites
+# prepared data.
+
 """Prepare the approved UCI archive offline; never access URLs inside dataset rows."""
 
 import csv
@@ -20,6 +25,9 @@ SOURCE_SHA = "0a639fd03aea6308c5b1c10c92aa23c2ce1505447a9137271865cd0badc9a59a"
 SEED = 20260907
 
 
+# Verify the archive checksum and build reproducible train/validation/test files. Grouping
+# related domains together reduces a model learning a domain in training and merely recognizing
+# it again in testing.
 def main():
     from sklearn.model_selection import GroupShuffleSplit
 

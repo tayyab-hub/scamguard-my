@@ -1,3 +1,6 @@
+# Deployment entry point: apply checked-in Alembic revisions before starting Uvicorn. A failed
+# migration prevents serving an application against an incompatible schema.
+
 """Apply additive migrations, then run the single-instance production API."""
 
 import os
@@ -7,6 +10,9 @@ import sys
 import uvicorn
 
 
+# Run migrations with the current Python environment, then replace this process with the API
+# server. PORT defaults to the hosting value; trusting all forwarded addresses assumes access
+# through a trusted proxy boundary.
 def main() -> None:
     subprocess.run([sys.executable, "-m", "alembic", "upgrade", "head"], check=True)
     uvicorn.run(

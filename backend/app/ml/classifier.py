@@ -1,3 +1,7 @@
+# Frozen Message model inference using a checksum-verified JSON artifact. Reproduce trained TF-
+# IDF and logistic-regression calculations locally without loading executable pickle data. The
+# three learned labels are evidence inputs; ml/fusion.py decides the advisory risk category.
+
 from __future__ import annotations
 
 import hashlib
@@ -11,6 +15,9 @@ from pathlib import Path
 EXPECTED_ARTIFACT_SHA256 = "818d99f72c8502fe6ec28849e42c77f4707949366bf014bd5677079dde2c3dd3"
 
 
+# Model output: winning label, all class probabilities, winning-class strength, version and
+# number of matched vocabulary features. Confidence is uncalibrated, and zero matches means the
+# model saw no learned text features.
 @dataclass(frozen=True)
 class Classification:
     label: str
@@ -20,9 +27,14 @@ class Classification:
     matched_features: int = 0
 
 
+# Loads the reviewed vocabulary, inverse document frequencies and regression weights once, then
+# predicts without training or network requests.
 class MessageClassifier:
     """Inference for the reviewed JSON TF-IDF/logistic-regression artifact."""
 
+    # Read artifact bytes, check the expected SHA-256 and validate schema/dimensions before
+    # retaining numeric parameters. A mismatched or malformed artifact raises instead of
+    # silently using another model.
     def __init__(self, artifact_path: Path):
         raw = artifact_path.read_bytes()
         if hashlib.sha256(raw).hexdigest() != EXPECTED_ARTIFACT_SHA256:
@@ -46,6 +58,9 @@ class MessageClassifier:
         ):
             raise ValueError("Invalid message model dimensions")
 
+    # Lowercase, decompose Unicode and remove combining marks, then return words of at least two
+    # word characters plus adjacent word pairs. These exact preprocessing choices must match
+    # training.
     @staticmethod
     def _tokens(text: str) -> list[str]:
         normalized = unicodedata.normalize("NFKD", text.lower())
@@ -53,12 +68,18 @@ class MessageClassifier:
         words = re.findall(r"(?u)\b\w\w+\b", normalized)
         return words + [f"{left} {right}" for left, right in zip(words, words[1:], strict=False)]
 
+    # Convert text to sparse TF-IDF values, L2-normalize them, calculate one linear score per
+    # class, and apply softmax. Return Classification without applying risk thresholds;
+    # unmatched tokens do not create new vocabulary entries.
     def predict(self, text: str) -> Classification:
         counts: dict[int, int] = {}
         for token in self._tokens(text):
             index = self.vocabulary.get(token)
             if index is not None:
                 counts[index] = counts.get(index, 0) + 1
+        # Sublinear term frequency (1 + log(count)) limits repetition; stored IDF gives common
+        # training terms less influence. Only learned vocabulary indices are present, keeping
+        # the vector sparse.
         values = {
             index: (1.0 + math.log(count)) * self.idf[index] for index, count in counts.items()
         }
@@ -69,6 +90,9 @@ class MessageClassifier:
             intercept + sum(coefficients[index] * value for index, value in values.items())
             for coefficients, intercept in zip(self.coefficients, self.intercepts, strict=True)
         ]
+        # Subtracting the largest logit before exponentiation preserves softmax ratios while
+        # avoiding numerical overflow. Probabilities sum to one across LEGITIMATE/SPAM/SCAM, not
+        # across final risk categories.
         maximum = max(logits)
         exponentials = [math.exp(value - maximum) for value in logits]
         total = sum(exponentials)

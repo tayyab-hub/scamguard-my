@@ -1,5 +1,13 @@
 # Final documentation index
 
+## Learn the implementation
+
+- [Beginner code walkthrough, presentation navigation, 30 viva questions and 10 exercises](SCAMGUARD_CODE_WALKTHROUGH_FOR_BEGINNERS.md)
+- [Source-comment coverage and local verification — 28 October 2026](CODE_COMMENT_COVERAGE.md)
+
+This documentation pass preserves executable behavior and remains uncommitted/undeployed.
+Release/deployment records below retain their original dates.
+
 ## Current completion package
 
 - [Engineering and academic completion audit](FINAL_COMPLETION_AUDIT_2026-10-20.md)

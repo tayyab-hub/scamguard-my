@@ -1,5 +1,11 @@
+// Immediate draft validation for Message, URL and Phone forms. Return a readable error or null;
+// this helps users before a request but does not replace authoritative backend validation.
+
 import type { SubmissionInput } from './api'
 
+// Check nonempty content and modality bounds, then validate URL shape or explicit international
+// phone punctuation/digits. Unicode code points are counted for the text limit; Phone validity
+// itself is determined by backend numbering metadata.
 export function submissionError(type: SubmissionInput['input_type'], value: string): string | null {
   const content = value.trim()
   if (!content)

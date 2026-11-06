@@ -1,3 +1,7 @@
+# Offline URL orchestration: parse text, derive structural evidence, optionally use the local
+# model, apply categorical fusion and assemble explanations. Default construction installs no
+# live reputation adapter and never requests the submitted destination.
+
 import logging
 from dataclasses import dataclass
 from pathlib import Path
@@ -9,6 +13,8 @@ from app.url_intelligence.reputation import URLReputationProvider, review
 from app.url_intelligence.rules import RULES_VERSION, assess_rules
 
 
+# Persistable URL result with categorical risk, optional model confidence and a deliberately
+# null risk_score. Model/rule/fusion versions support later explanation.
 @dataclass(frozen=True)
 class URLAssessment:
     risk_level: str
@@ -25,12 +31,19 @@ class URLAssessment:
     risk_score: None = None
 
 
+# Shared classifier/provider container. A missing classifier permits degraded structural
+# analysis without inventing a model prediction.
 class URLIntelligenceEngine:
+    # Accept a loaded classifier or None and an optional reputation interface, enabling
+    # controlled tests and explicit degraded operation.
     def __init__(
         self, classifier: URLClassifier | None, provider: URLReputationProvider | None = None
     ):
         self.classifier, self.provider = classifier, provider
 
+    # Return URLAssessment from an input string using parser, rules, classifier and reputation
+    # status. Generate actions from observed categories and preserve the boundary between model
+    # confidence and advisory risk.
     def analyse(self, text: str) -> URLAssessment:
         url = parse_url(text)
         evidence = assess_rules(url)
@@ -175,6 +188,9 @@ class URLIntelligenceEngine:
         )
 
 
+# Load the configured/bundled artifact. On recognized loading/validation failure, log only
+# exception type and construct a rules-only engine; readiness can still report the missing
+# required model.
 def build_url_engine(settings):
     path = (
         Path(settings.url_model_path)

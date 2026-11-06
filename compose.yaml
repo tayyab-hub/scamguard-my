@@ -1,3 +1,7 @@
+# Optional local PostgreSQL service for development. Bind only to loopback, obtain the password
+# from private environment configuration and retain database files in the named volume; this
+# does not start the application servers.
+
 services:
   db:
     image: postgres:17-alpine

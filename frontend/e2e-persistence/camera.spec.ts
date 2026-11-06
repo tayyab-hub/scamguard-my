@@ -1,3 +1,7 @@
+// Use a canvas-generated video stream with a controlled QR image to exercise the actual
+// browser/WASM scan path. Assert explicit submission and stream cleanup; this is deterministic
+// browser media evidence, not a physical-camera device test.
+
 import { expect, test, type Page } from '@playwright/test'
 import fs from 'node:fs'
 import path from 'node:path'

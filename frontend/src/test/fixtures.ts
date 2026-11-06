@@ -1,3 +1,6 @@
+// Explicit test-only health, capability and dashboard responses. Unknown/unavailable metrics
+// remain null so UI tests cannot mistake placeholder data for measured activity.
+
 /** Test-only contract fixtures. Never import this module into production code. */
 export const healthFixture = { status: 'ok', service: 'scamguard-api', version: '0.1.0' }
 export const dashboardFixture = {

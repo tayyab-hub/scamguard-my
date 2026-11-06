@@ -1,3 +1,7 @@
+# Historical schema revision. Follow revision/down_revision for ordering; ordinary comments
+# explain the migration without changing its identifiers, existing docstring or database
+# operations.
+
 """Allow first-class QR analyses without changing historical records.
 
 Revision ID: 0006_qr_intelligence
@@ -12,6 +16,8 @@ branch_labels = None
 depends_on = None
 
 
+# Extend the input-type check constraint to accept QR without adding an image-storage column. QR
+# results use the existing shared assessment fields.
 def upgrade() -> None:
     op.drop_constraint("analysis_input_type", "analyses", type_="check")
     op.create_check_constraint(
@@ -30,6 +36,7 @@ def upgrade() -> None:
     )
 
 
+# Restore the pre-QR constraint. Existing QR rows cannot satisfy that older constraint.
 def downgrade() -> None:
     # QR rows must be removed first. Use this reversal only on an isolated database.
     op.drop_constraint("ck_analyses_content_length", "analyses", type_="check")

@@ -1,9 +1,14 @@
+# Create synthetic QR images and payment text entirely in memory for backend/browser evidence.
+# These helpers are test-only; no user image or real payment instruction is needed.
+
 from io import BytesIO
 
 import zxingcpp
 from PIL import Image
 
 
+# Encode supplied text into a QR image and serialize it in the requested format, giving decoder
+# tests known bytes and payloads.
 def qr_image_bytes(payload: str, image_format: str = "PNG") -> bytes:
     barcode = zxingcpp.create_barcode(payload, zxingcpp.BarcodeFormat.QRCode)
     image = Image.fromarray(barcode.to_image(scale=7))
@@ -14,6 +19,8 @@ def qr_image_bytes(payload: str, image_format: str = "PNG") -> bytes:
     return output.getvalue()
 
 
+# Place two independently generated symbols on one image to verify that ambiguous multi-code
+# uploads are rejected.
 def multiple_qr_image_bytes() -> bytes:
     left = Image.open(BytesIO(qr_image_bytes("first controlled QR"))).convert("L")
     right = Image.open(BytesIO(qr_image_bytes("second controlled QR"))).convert("L")
@@ -25,6 +32,8 @@ def multiple_qr_image_bytes() -> bytes:
     return output.getvalue()
 
 
+# Construct a controlled TLV payment payload and calculate its CRC independently of the
+# production parser. Optional variations create valid and deliberately broken integrity cases.
 def emv_payment_payload(*, corrupt_crc: bool = False, embedded_url: str | None = None) -> str:
     fields = [
         ("00", "01"),

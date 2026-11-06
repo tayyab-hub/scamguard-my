@@ -1,3 +1,7 @@
+# Persistence boundary between API routes and intelligence engines. Writes save owned intake
+# before analysis and then save a completed assessment or failure code. History reads stored
+# results; they do not rerun models or optional providers.
+
 import logging
 from datetime import UTC, datetime
 from uuid import UUID
@@ -26,6 +30,8 @@ from app.url_intelligence.parsing import parse_url
 logger = logging.getLogger("scamguard.analysis")
 
 
+# Log identifiers and exception type for diagnosis without logging the submitted content or an
+# exception message that might contain it.
 def log_analysis_failure(record: Analysis, exc: Exception) -> None:
     # IDs correlate stored failures; exception messages may contain submitted content or secrets.
     logger.error(
@@ -36,6 +42,9 @@ def log_analysis_failure(record: Analysis, exc: Exception) -> None:
     )
 
 
+# Convert an ORM record or projected query row into a compact API summary. Collapse whitespace
+# and cap the preview at 160 characters; full content remains available through the owned detail
+# route.
 def summary(record: Analysis | Row) -> AnalysisSummary:
     preview = " ".join(record.content.split())
     if len(preview) > 160:
@@ -52,6 +61,9 @@ def summary(record: Analysis | Row) -> AnalysisSummary:
     )
 
 
+# Serialize a stored Analysis into AnalysisDetail. Only a completed row with a completion
+# timestamp receives an assessment; older intake and failed rows remain representable without
+# invented results.
 def detail(record: Analysis) -> AnalysisDetail:
     assessment = None
     if record.status == AnalysisStatus.COMPLETED and record.completed_at is not None:
@@ -79,6 +91,9 @@ def detail(record: Analysis) -> AnalysisDetail:
     )
 
 
+# Given validated input, available engines and a trusted user ID, return a persisted
+# AnalysisDetail. URL storage removes userinfo and Phone storage uses E.164; inference still
+# receives the submitted content. Separate commits preserve intake if later engine work fails.
 def record_submission(
     session: Session,
     data: AnalysisCreate,
@@ -139,6 +154,9 @@ def record_submission(
     return detail(record)
 
 
+# Save credential-redacted decoded content, then assess the original DecodedQR and persist its
+# derived result. This deliberately separates safe history text from original bytes needed for
+# payment CRC and routing. Binary images never become database columns.
 def record_qr_submission(
     session: Session,
     decoded: DecodedQR,
@@ -182,6 +200,9 @@ def record_qr_submission(
     return detail(record)
 
 
+# Return paginated, filtered summaries for user_id. A repeatable-read transaction makes total
+# and rows agree during concurrent writes. Select small summary columns instead of loading
+# complete evidence JSON; sorting uses UUID as a stable tie breaker.
 def list_submissions(
     session: Session,
     page: int,
@@ -192,6 +213,9 @@ def list_submissions(
 ) -> AnalysisList:
     # Keep the count and rows consistent if another request commits between them.
     # This is request-scoped: get_session closes and rolls back the read transaction.
+    # This must be the first database operation on this service session. Authentication uses a
+    # separate dependency session so it cannot accidentally start this read transaction at a
+    # different isolation level.
     session.connection(execution_options={"isolation_level": "REPEATABLE READ"})
     conditions = [Analysis.user_id == user_id]
     order = [Analysis.created_at.desc(), Analysis.id.desc()]
@@ -203,6 +227,8 @@ def list_submissions(
         if filters.query:
             conditions.append(
                 or_(
+                    # autoescape makes SQL wildcard characters in a search literal; SQLAlchemy
+                    # binds values instead of concatenating user text into SQL.
                     Analysis.content.icontains(filters.query, autoescape=True),
                     Analysis.result_summary.icontains(filters.query, autoescape=True),
                 )
@@ -239,6 +265,8 @@ def list_submissions(
     )
 
 
+# Look up a UUID together with its owner ID and serialize its saved result. A shared not-found
+# response hides whether another user owns that UUID.
 def get_submission(session: Session, analysis_id: UUID, user_id: UUID) -> AnalysisDetail:
     record = session.scalar(
         select(Analysis).where(Analysis.id == analysis_id, Analysis.user_id == user_id)
@@ -248,6 +276,8 @@ def get_submission(session: Session, analysis_id: UUID, user_id: UUID) -> Analys
     return detail(record)
 
 
+# Find an owned row, delete it and commit. Return nothing on success; raise the same 404 for an
+# absent or foreign record.
 def delete_submission(session: Session, analysis_id: UUID, user_id: UUID) -> None:
     record = session.scalar(
         select(Analysis).where(Analysis.id == analysis_id, Analysis.user_id == user_id)

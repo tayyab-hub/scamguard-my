@@ -1,3 +1,6 @@
+// Exercise real signup, session restoration, logout/login, profile changes and analysis/account
+// deletion through browser controls, then verify protected navigation and narrow layouts.
+
 import { expect, test } from '@playwright/test'
 
 test('real PostgreSQL: signup, refresh, logout, login, deletion and account privacy controls', async ({

@@ -1,3 +1,7 @@
+// Persist actual engine results to verify strong evidence, vocabulary-based abstention and
+// filtered private history across responsive widths. Browser exceptions are captured as
+// failures.
+
 import { expect, test } from '@playwright/test'
 import { createAuthenticatedAccount } from './auth-fixture'
 

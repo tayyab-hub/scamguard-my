@@ -1,3 +1,7 @@
+// Upload the generated controlled QR fixture, inspect actual decoding/routing metadata, and
+// verify private history survives refresh without retaining the image. Request monitoring
+// checks browser-side destination privacy.
+
 import { expect, test } from '@playwright/test'
 import path from 'node:path'
 import { createAuthenticatedAccount } from './auth-fixture'

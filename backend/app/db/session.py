@@ -1,3 +1,7 @@
+# SQLAlchemy connection-pool and per-request session lifecycle. An Engine manages PostgreSQL
+# connections; a Session tracks ORM work and transactions. Services choose commits explicitly,
+# while this dependency handles rollback and closure.
+
 from collections.abc import Generator
 
 from fastapi import Request
@@ -7,6 +11,9 @@ from sqlalchemy.orm import Session, sessionmaker
 from app.core.config import Settings
 
 
+# Build a lazy PostgreSQL pool with connection checks and bounded connect/query waits.
+# hide_parameters reduces accidental SQL parameter disclosure; creating the engine does not
+# migrate schema.
 def build_engine(settings: Settings) -> Engine:
     return create_engine(
         str(settings.database_url),
@@ -22,6 +29,9 @@ def build_engine(settings: Settings) -> Engine:
     )
 
 
+# Yield one request-scoped Session from app state. Exceptions roll back uncommitted changes and
+# propagate; context exit closes the session. A successful read never implicitly commits a
+# write.
 def get_session(request: Request) -> Generator[Session, None, None]:
     factory: sessionmaker[Session] = request.app.state.session_factory
     with factory() as session:

@@ -1,3 +1,6 @@
+# Template used only when Alembic creates a future revision file. Mako placeholders become
+# revision identifiers and upgrade/downgrade bodies; this is not an application module.
+
 """${message}
 
 Revision ID: ${up_revision}

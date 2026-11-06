@@ -1,3 +1,7 @@
+# Limited EMV-style payment QR parser operating on UTF-8 bytes. TLV means tag, length, value;
+# CRC checks internal byte consistency, not the identity or legitimacy of a merchant. This is a
+# generic structural subset, not complete payment-standard validation.
+
 from __future__ import annotations
 
 import re
@@ -7,6 +11,8 @@ from decimal import Decimal, InvalidOperation
 PAYMENT_PARSER_VERSION = "emv-mpm-parser-v1"
 
 
+# One parsed field with a two-digit tag, raw value bytes and original start offset, used to
+# locate the CRC boundary.
 @dataclass(frozen=True)
 class TLV:
     tag: str
@@ -14,6 +20,8 @@ class TLV:
     start: int
 
 
+# Recognition/integrity findings, exposed common fields and optional embedded URL. A None parser
+# result means this was not recognized as an EMV-style payment payload.
 @dataclass(frozen=True)
 class PaymentResult:
     recognized: bool
@@ -24,6 +32,8 @@ class PaymentResult:
     error: str | None = None
 
 
+# Compute CRC-16/CCITT from bytes using initial 0xFFFF and polynomial 0x1021. Anyone can
+# recompute a CRC; it is error detection, not a cryptographic signature.
 def _crc16_ccitt(data: bytes) -> int:
     crc = 0xFFFF
     for byte in data:
@@ -33,6 +43,8 @@ def _crc16_ccitt(data: bytes) -> int:
     return crc
 
 
+# Walk the bounded byte payload by numeric two-byte tag/two-byte length headers. Reject
+# truncated headers/values and return fields; lengths count bytes, not Unicode characters.
 def _parse_tlv(data: bytes) -> list[TLV]:
     fields: list[TLV] = []
     offset = 0
@@ -55,10 +67,14 @@ def _parse_tlv(data: bytes) -> list[TLV]:
     return fields
 
 
+# Decode a field as strict UTF-8; malformed text becomes a structural failure in the outer
+# parser.
 def _text(value: bytes) -> str:
     return value.decode("utf-8")
 
 
+# Find an HTTP(S)-looking value and inspect selected nested templates to at most four levels.
+# Return text only; the QR classifier separately validates its URL syntax.
 def _find_embedded_url(fields: list[TLV], depth: int = 0) -> str | None:
     pattern = re.compile(rb"https?://[^\x00-\x20]+", re.IGNORECASE)
     for field in fields:
@@ -83,6 +99,9 @@ def _find_embedded_url(fields: list[TLV], depth: int = 0) -> str | None:
     return None
 
 
+# Recognize the 000201 prefix, parse unique top-level fields, verify final CRC and finite
+# nonnegative amount when present. Return structural metadata or a bounded parser error; missing
+# full-standard business fields are not exhaustively validated.
 def parse_payment_payload(payload: str) -> PaymentResult | None:
     encoded = payload.encode("utf-8")
     # EMVCo merchant-presented payloads begin with ID 00, length 02, value 01.

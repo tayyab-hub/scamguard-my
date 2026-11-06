@@ -1,3 +1,7 @@
+# Human-authored Message indicators complement the frozen model. Regex matches, clause-local
+# protective wording and combination weights form an inspectable policy, not another trained AI.
+# Rules-only normalization maps evidence back to the original submitted text.
+
 from __future__ import annotations
 
 import re
@@ -10,6 +14,8 @@ AUTHORITY_COMBINATION_WEIGHT = 0.14
 PRIZE_COMBINATION_WEIGHT = 0.12
 
 
+# One reviewed regex category and its policy weight. This is a detector definition, not a match
+# in a particular message.
 @dataclass(frozen=True)
 class IndicatorDefinition:
     category: str
@@ -18,6 +24,8 @@ class IndicatorDefinition:
     weight: float
 
 
+# A matched category with original-text evidence and its policy weight; repeated wording
+# contributes at most once per category.
 @dataclass(frozen=True)
 class Indicator:
     category: str
@@ -26,6 +34,8 @@ class Indicator:
     weight: float
 
 
+# Aggregated rule score, retained evidence and suppression/normalization audit details passed to
+# fusion and presentation.
 @dataclass(frozen=True)
 class RuleAssessment:
     score: float
@@ -35,6 +45,8 @@ class RuleAssessment:
     normalization_applied: bool = False
 
 
+# Compile a case-insensitive expression and package it with a category, readable label and fixed
+# weight.
 def rule(category: str, label: str, expression: str, weight: float) -> IndicatorDefinition:
     return IndicatorDefinition(category, label, re.compile(expression, re.IGNORECASE), weight)
 
@@ -127,6 +139,8 @@ SAFETY_CONTEXT = re.compile(
 )
 CLAUSE_BREAK = re.compile(r"[.!?;\n]|\b(?:but|however|instead)\b", re.IGNORECASE)
 SPACED_WORD = re.compile(r"(?<!\w)(?:[a-z][ ._-]){2,}[a-z](?!\w)", re.IGNORECASE)
+# This small substitution table handles some mixed letter/digit spellings. It is a heuristic
+# with limited language coverage, not general deobfuscation.
 LEET = str.maketrans("013457", "oieast")
 
 
@@ -162,6 +176,8 @@ def rule_text(text: str) -> tuple[str, list[int]]:
     )
 
 
+# Find the clause surrounding a regex match and check for a protective action there. Clause
+# breaks stop a warning elsewhere in the message from suppressing every suspicious request.
 def protective_context(text: str, start: int, end: int) -> bool:
     left = 0
     right = len(text)
@@ -174,6 +190,8 @@ def protective_context(text: str, start: int, end: int) -> bool:
     return bool(SAFETY_CONTEXT.search(text[left:right]))
 
 
+# Return a short original-text context window around a match, flattening whitespace and adding
+# ellipses when cropped. Snippets are evidence for readers, not additional model input.
 def _snippet(text: str, start: int, end: int) -> str:
     left = max(0, start - 36)
     right = min(len(text), end + 50)
@@ -185,6 +203,9 @@ def _snippet(text: str, start: int, end: int) -> str:
     return value[:180]
 
 
+# Scan normalized text, suppress protective-clause matches and keep one indicator per category.
+# Add only the named combination bonuses, cap the score at one and return audit details with
+# original-text snippets.
 def assess_rules(text: str) -> RuleAssessment:
     indicators: list[Indicator] = []
     suppressed = 0
@@ -204,6 +225,9 @@ def assess_rules(text: str) -> RuleAssessment:
             )
             break  # Repeated wording cannot inflate a category's contribution.
 
+    # Combinations encode why a pattern is more concerning in context: urgency plus a requested
+    # action, authority plus threat/money, or a prize plus a demand. These weights were
+    # authored, not learned.
     categories = {indicator.category for indicator in indicators}
     score = sum(indicator.weight for indicator in indicators)
     if "URGENCY" in categories and categories & {"CREDENTIAL", "FINANCIAL", "REDIRECTION"}:

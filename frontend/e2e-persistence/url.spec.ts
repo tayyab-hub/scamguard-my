@@ -1,3 +1,7 @@
+// Run controlled URL scenarios through the real API and compare displayed evidence with
+// persisted results. No browser navigation to submitted destinations is permitted; these
+// scenarios are regression checks, not an accuracy sample.
+
 import { expect, test } from '@playwright/test'
 import { createAuthenticatedAccount } from './auth-fixture'
 

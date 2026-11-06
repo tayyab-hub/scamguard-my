@@ -1,3 +1,7 @@
+// QR result presentation for saved decoded text, upload/camera provenance and optional payment
+// metadata. React escapes text; decoded URLs and instructions are not activated. Payment fields
+// and CRC are descriptive, not merchant authentication.
+
 import { QrCode } from 'lucide-react'
 import type { QRAssessment } from '../../lib/api'
 import {
@@ -8,6 +12,9 @@ import {
   RecommendedActionsPanel,
 } from './ResultPresentation'
 
+// Render only recognized string payment fields and safely typed account-ID lists, expose long
+// payloads in a disclosure, and show decoder/routing versions. Camera provenance has no server
+// image fingerprint.
 export function QrResult({
   assessment,
   analysisId,

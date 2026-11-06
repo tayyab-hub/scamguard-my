@@ -1,3 +1,7 @@
+// Create a unique synthetic account through the real local signup API and retain its cookie in
+// the supplied browser request context. The persistence Playwright config points this at a
+// dedicated disposable database.
+
 import { expect, type APIRequestContext, type TestInfo } from '@playwright/test'
 
 export async function createAuthenticatedAccount(request: APIRequestContext, info: TestInfo) {

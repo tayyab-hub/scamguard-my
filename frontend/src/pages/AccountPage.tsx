@@ -1,3 +1,7 @@
+// Private account view for editable profile and password-confirmed deletion. Form state stays
+// local until AuthProvider submits a CSRF-protected request; server errors remain visible and
+// email is read-only.
+
 import { useState } from 'react'
 import { Database, Save, ShieldAlert, Trash2 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
@@ -8,6 +12,8 @@ import { validateFullName, validateUsername } from '../lib/profileValidation'
 import { ModalDialog } from '../components/ModalDialog'
 import { Link } from 'react-router-dom'
 
+// Render the current user's profile, track pending/saved/error states independently for profile
+// and deletion, and navigate away only after successful account deletion.
 export function AccountPage() {
   const auth = useAuth()
   const navigate = useNavigate()
@@ -25,6 +31,8 @@ export function AccountPage() {
   const usernameError = profileSubmitted ? validateUsername(username) : null
   const profileDirty =
     fullName !== (auth.user?.full_name || '') || username !== (auth.user?.username || '')
+  // Clear the password and dialog error when cancellation returns to the account view; do not
+  // retain the reauthentication field unnecessarily.
   const cancelDeletion = () => {
     setConfirming(false)
     setPassword('')

@@ -1,3 +1,7 @@
+# Bounded server-side QR image validation and in-memory decoding. Check actual raster type,
+# animation, bytes and expanded pixels before scanning exactly one symbol. Return text and
+# derived metadata; the persistence service never stores the original image.
+
 from __future__ import annotations
 
 import hashlib
@@ -14,13 +18,17 @@ DECODER_VERSION = version("zxing-cpp")
 SUPPORTED_FORMATS = {"PNG": "image/png", "JPEG": "image/jpeg", "WEBP": "image/webp"}
 
 
+# Decoder failure with a stable public code/message translated to a 422 by the upload route.
 class QRImageError(ValueError):
+    # Store safe code/message fields without attaching the uploaded bytes to the error response.
     def __init__(self, code: str, message: str):
         super().__init__(message)
         self.code = code
         self.message = message
 
 
+# Decoded payload plus audit provenance. Camera records use null image/hash fields because their
+# pixels never reach this decoder.
 @dataclass(frozen=True)
 class DecodedQR:
     payload: str
@@ -34,10 +42,14 @@ class DecodedQR:
     source: str = "UPLOAD"
 
 
+# Check imported QR decoder/version availability, not whether every real-world image or camera
+# will decode successfully.
 def decoder_operational() -> bool:
     return bool(DECODER_VERSION and zxingcpp.BarcodeFormat.QRCode)
 
 
+# Decode bounded nonempty UTF-8 bytes and reject unsupported controls. Return original text,
+# preserving bytes needed for later payment integrity checks.
 def validate_payload_bytes(payload_bytes: bytes, max_payload_bytes: int) -> str:
     if not payload_bytes:
         raise QRImageError("QR_PAYLOAD_EMPTY", "The QR code contains no readable payload.")
@@ -60,6 +72,9 @@ def validate_payload_bytes(payload_bytes: bytes, max_payload_bytes: int) -> str:
     return payload
 
 
+# Validate supplied bytes against declared MIME and resource limits, verify/reopen the image,
+# and decode only QR symbols. Reject zero/multiple valid symbols and return DecodedQR after
+# payload checks; no destination is opened.
 def decode_qr_image(
     data: bytes,
     declared_mime: str | None,
@@ -105,6 +120,9 @@ def decode_qr_image(
                     )
                 candidate.verify()
 
+            # verify checks the container and consumes parser state, so reopen it for pixel
+            # conversion. Dimension limits matter because a small compressed file can expand
+            # into a huge image.
             with Image.open(BytesIO(data)) as candidate:
                 # A fresh, single-channel pixel buffer strips EXIF and other container metadata.
                 pixels = candidate.convert("L")
