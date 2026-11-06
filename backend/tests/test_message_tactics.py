@@ -36,6 +36,11 @@ def engine():
         ),
         ("Hi dad, I dropped my phone, this is my new number. Message me here when free", "CAUTION"),
         ("Hey, is this Sarah? We met at the dinner last week", "CAUTION"),
+        (
+            "LHDN: Anda layak menerima bayaran balik cukai RM1,128. Sila isi maklumat bank "
+            "anda di lhdn-refund.example-pay.my",
+            "HIGH",
+        ),
     ],
 )
 def test_conversational_scams_are_not_low(engine, text, minimum):

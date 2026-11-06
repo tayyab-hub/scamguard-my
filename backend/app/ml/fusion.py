@@ -165,11 +165,19 @@ def _tactic_floor(categories: set[str], rules: RuleAssessment) -> tuple[float, s
     for anchor, partners in HIGH_PLAYBOOKS:
         if anchor in categories and categories & partners:
             return bands["HIGH"], "TACTIC_PLAYBOOK"
+    # Data-harvest phishing: a claimed bank/authority asks for personal, bank or login details
+    # through a link. The classifier only learned English SMS, so this must not depend on it
+    # (for example a Malay "LHDN refund, isi maklumat bank anda di <link>" message).
+    harvest = categories & {"PERSONAL_DATA", "CREDENTIAL"} and "REDIRECTION" in categories
+    if harvest and "IMPERSONATION" in categories:
+        return bands["HIGH"], "TACTIC_PLAYBOOK"
     if rules.score >= STRONG_RULE_SCORE and len(rules.indicators) >= 3:
         return bands["HIGH"], "STRONG_LOCAL_EVIDENCE"
     for anchor, partners in ELEVATED_PLAYBOOKS:
         if anchor in categories and categories & partners:
             return bands["ELEVATED"], "TACTIC_PLAYBOOK"
+    if harvest:
+        return bands["ELEVATED"], "TACTIC_PLAYBOOK"
     # A single conversational cue (new number, wrong-number opener, app move, discreet favour,
     # payment method, offer or data request) is never treated as safe: verify first.
     if categories & TACTIC_CATEGORIES:

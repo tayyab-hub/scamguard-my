@@ -97,8 +97,8 @@
         "scam_rows": 45,
         "legitimate_rows": 46,
         "scam_warned": 0.9556,
-        "scam_elevated_or_high": 0.4444,
-        "scam_high": 0.2222,
+        "scam_elevated_or_high": 0.4667,
+        "scam_high": 0.2444,
         "legitimate_warned": 0.3913,
         "legitimate_elevated_or_high": 0.0,
         "spam_warned": 0.7
@@ -196,9 +196,9 @@
       "rows": 202,
       "categories_by_label": {
         "SCAM": {
-          "CAUTION": 38,
+          "CAUTION": 37,
           "LOW": 22,
-          "HIGH": 15,
+          "HIGH": 16,
           "ELEVATED": 14,
           "INSUFFICIENT_EVIDENCE": 1
         },
@@ -216,8 +216,8 @@
         }
       },
       "scam_warned_caution_or_above": 0.7444,
-      "scam_elevated_or_high": 0.3222,
-      "scam_high": 0.1667,
+      "scam_elevated_or_high": 0.3333,
+      "scam_high": 0.1778,
       "scam_low": 0.2444,
       "legitimate_warned_caution_or_above": 0.4457,
       "legitimate_elevated_or_high": 0.0326,
@@ -230,9 +230,9 @@
         "rows": 194,
         "categories_by_label": {
           "SCAM": {
-            "CAUTION": 36,
+            "CAUTION": 35,
             "LOW": 21,
-            "HIGH": 15,
+            "HIGH": 16,
             "ELEVATED": 14,
             "INSUFFICIENT_EVIDENCE": 1
           },
@@ -250,8 +250,8 @@
           }
         },
         "scam_warned_caution_or_above": 0.7471,
-        "scam_elevated_or_high": 0.3333,
-        "scam_high": 0.1724,
+        "scam_elevated_or_high": 0.3448,
+        "scam_high": 0.1839,
         "scam_low": 0.2414,
         "legitimate_warned_caution_or_above": 0.4253,
         "legitimate_elevated_or_high": 0.0345,
@@ -263,7 +263,8 @@
     "Historical test: the untouched 1,160-row split; never used for fitting, thresholds or rule design.",
     "Challenge set: written independently by a separate assistant without access to the rules; synthetic, evaluation-only.",
     "Rules v3 errors were inspected only on odd-numbered challenge rows (development half). Even-numbered rows (holdout half) were not inspected; the holdout half is the fair generalisation estimate.",
-    "AI review disabled in all runs."
+    "AI review disabled in all runs.",
+    "Live-site test on 2026-11-06 found a Malay LHDN data-harvest message rated Caution; the data-harvest playbook (authority + data request + link) was added afterwards. Historical and holdout results were unchanged by it."
   ],
   "honest_reading": [
     "On historical SMS (full runtime engine), scams warned rose from 95.3% to 100.0%, Elevated or High from 56.6% to 92.5% and High from 17.0% to 53.8%; genuine messages warned 1.3%. High requires corroborating rule evidence.",
