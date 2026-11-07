@@ -163,3 +163,31 @@ def test_gemini_is_selected_only_when_enabled_with_a_key():
     assert build_message_engine(settings).provider.provider_name == "gemini"
     default = build_message_engine(Settings(persistence_enabled=False))
     assert default.provider is None
+
+
+def test_gemini_failure_logs_status_without_secrets(caplog):
+    import urllib.error
+
+    provider = GeminiReviewProvider("secret-key-value", "test-model", 5)
+    body = BytesIO(json.dumps({"error": {"status": "NOT_FOUND", "message": "x"}}).encode())
+    error = urllib.error.HTTPError("https://example.invalid", 404, "Not Found", {}, body)
+    with patch("urllib.request.urlopen", side_effect=error):
+        with caplog.at_level("WARNING", logger="scamguard.intelligence"):
+            assert perform_ai_review(provider, "private message text").status == "ERROR"
+    assert "http_status=404" in caplog.text and "provider_status=NOT_FOUND" in caplog.text
+    assert "secret-key-value" not in caplog.text and "private message" not in caplog.text
+
+
+def test_gemini_request_asks_for_low_thinking():
+    provider = GeminiReviewProvider("k", "m", 5)
+    reply = {
+        "risk_signal": 0.1,
+        "confidence": 0.5,
+        "summary": "ok",
+        "tactics": [],
+        "evidence_snippets": [],
+    }
+    with patch("urllib.request.urlopen", return_value=_gemini_response(reply)) as call:
+        provider.review("hello there")
+    sent = json.loads(call.call_args.args[0].data)
+    assert sent["generationConfig"]["thinkingConfig"] == {"thinkingLevel": "low"}

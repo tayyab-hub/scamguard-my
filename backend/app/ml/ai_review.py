@@ -4,12 +4,15 @@
 
 from __future__ import annotations
 
+import logging
 import re
 from dataclasses import dataclass
 from enum import StrEnum
 from typing import Protocol
 
 from pydantic import BaseModel, ConfigDict, Field
+
+logger = logging.getLogger("scamguard.intelligence")
 
 ALLOWED_TACTICS = {
     "urgency",
@@ -116,7 +119,27 @@ def perform_ai_review(provider: AIReviewProvider, message: str) -> AIReview:
     redacted = redact_for_external_review(message)
     try:
         output = _ground(provider.review(redacted), redacted)
-    except Exception:
+    except Exception as exc:
+        # Log only the failure type and the provider's HTTP/status code: never the message,
+        # the key or the provider's response body.
+        detail = ""
+        code = getattr(exc, "code", None)
+        if isinstance(code, int):
+            detail = f" http_status={code}"
+            try:
+                import json
+
+                body = json.loads(exc.read(20_000))  # type: ignore[attr-defined]
+                detail += f" provider_status={str(body['error']['status'])[:40]}"
+            except Exception:
+                pass
+        logger.warning(
+            "event=ai_review_failed provider=%s model=%s exception_type=%s%s",
+            provider.provider_name,
+            provider.model_name,
+            type(exc).__name__,
+            detail,
+        )
         return AIReview(
             status=AIStatus.ERROR, provider=provider.provider_name, model=provider.model_name
         )
@@ -222,6 +245,8 @@ class GeminiReviewProvider:
                 "responseMimeType": "application/json",
                 "responseSchema": schema,
                 "temperature": 0,
+                # Short structured review: low thinking keeps replies inside the timeout.
+                "thinkingConfig": {"thinkingLevel": "low"},
             },
         }
         request = urllib.request.Request(
