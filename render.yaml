@@ -27,8 +27,17 @@ services:
         value: "true"
       - key: COOKIE_SAMESITE
         value: none
+      # Optional AI reviewer settings are owned by the dashboard (sync: false) so a blueprint
+      # sync cannot switch a deliberately enabled reviewer back off. Leave unset or "false" to
+      # run with local intelligence only.
       - key: AI_REVIEW_ENABLED
-        value: "false"
+        sync: false
+      - key: AI_REVIEW_PROVIDER
+        sync: false
+      - key: GEMINI_MODEL
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
       - key: FRONTEND_BASE_URL
         value: https://scamguard-my.vercel.app
       - key: MAIL_PROVIDER

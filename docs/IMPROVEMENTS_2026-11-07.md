@@ -56,6 +56,26 @@ free-hosting phishing remain High.
 | `PHISHING_FEED_REFRESH_HOURS` | `12` | Refresh interval |
 | `AI_REVIEW_ENABLED` | `false` | Optional reviewer |
 | `AI_REVIEW_PROVIDER` | `openai` | `openai` or `gemini` |
-| `GEMINI_API_KEY` / `GEMINI_MODEL` | unset / `gemini-flash-latest` | Gemini reviewer |
+| `GEMINI_API_KEY` / `GEMINI_MODEL` | unset / `gemini-3.5-flash` | Gemini reviewer |
+
+## Enabling Gemini in production (verified 7 November 2026)
+
+The reviewer was enabled on the live Render service and returned `completed` results. Lessons:
+
+- **Key format.** Google AI Studio now issues keys starting with `AQ.` instead of `AIza`. They work
+  with the `x-goog-api-key` header the provider already uses.
+- **Pasting.** Render wraps long values at hyphens; editing the wrapped value with backspace deleted
+  a character and produced `401 UNAUTHENTICATED`. Paste once with the copy button, never edit. The
+  provider now also strips spaces, line breaks and quotes around the key.
+- **Model choice.** `gemini-3.8-flash`, `gemini-3.7-flash` and `gemini-flash-latest` returned
+  `503 Server Unavailable` on the free tier; `gemini-3.5-flash` and `gemini-3.6-flash` answered.
+  The default is therefore `gemini-3.5-flash`, and requests use low thinking to stay within
+  `AI_TIMEOUT_SECONDS`.
+- **Diagnosis.** Failures are logged as `event=ai_review_failed` with the exception type and the
+  provider's HTTP/status code only (no key, message or response body).
+- **Settings ownership.** `render.yaml` marks the reviewer variables `sync: false`, so the dashboard
+  is the only place they are set and a blueprint sync cannot turn the reviewer off.
+- **Privacy.** Free-tier prompts may be used by Google; enable it only for synthetic demo or
+  evaluation content and disable it (`AI_REVIEW_ENABLED=false`) otherwise.
 
 Reproduce: `backend\.venv\Scripts\python.exe backend\scripts\evaluate_message_upgrade.py --backend backend --label current --challenge-v2`.

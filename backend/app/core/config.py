@@ -45,7 +45,9 @@ class Settings(BaseSettings):
     # only with synthetic content). ai_review_provider selects which configured key is used.
     ai_review_provider: Literal["openai", "gemini"] = "openai"
     gemini_api_key: SecretStr | None = Field(default=None, repr=False)
-    gemini_model: str = "gemini-flash-latest"  # check the current model list in Google AI Studio
+    # The newest Flash models were frequently overloaded (HTTP 503) on the free tier in testing;
+    # check the current model list in Google AI Studio.
+    gemini_model: str = "gemini-3.5-flash"
     # OpenPhish community feed (non-commercial use). None = enabled only in production, so tests
     # and local development stay offline unless explicitly enabled.
     phishing_feed_enabled: bool | None = None
