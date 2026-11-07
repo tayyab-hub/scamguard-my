@@ -238,3 +238,40 @@ describe('Why this verdict reasons', () => {
     expect(within(panel).getByText('Sender identity is unverified.')).toBeVisible()
   })
 })
+
+describe('Feedback card and Quick check', () => {
+  it('waits until every Quick check question is answered before popping up', async () => {
+    // Simulate the end of the result being on screen immediately (a short result).
+    class VisibleObserver {
+      constructor(private callback: IntersectionObserverCallback) {}
+      observe() {
+        this.callback([{ isIntersecting: true } as IntersectionObserverEntry], this as never)
+      }
+      disconnect() {}
+    }
+    vi.stubGlobal('IntersectionObserver', VisibleObserver)
+    render(
+      <QueryClientProvider client={new QueryClient()}>
+        <section className="context-check">
+          {['one', 'two', 'three'].map((name) => (
+            <fieldset key={name}>
+              <legend>{name}</legend>
+              <label>
+                <input type="radio" name={name} value="yes" />
+                Yes {name}
+              </label>
+            </fieldset>
+          ))}
+        </section>
+        <ResultFeedback analysisId="11111111-1111-4111-8111-111111111111" initial={null} />
+      </QueryClientProvider>,
+    )
+    const card = () => screen.queryByRole('group', { name: 'Rate this result' })
+    expect(card()).not.toBeInTheDocument()
+    await userEvent.click(screen.getByLabelText('Yes one'))
+    await userEvent.click(screen.getByLabelText('Yes two'))
+    expect(card()).not.toBeInTheDocument()
+    await userEvent.click(screen.getByLabelText('Yes three'))
+    expect(card()).toBeInTheDocument()
+  })
+})

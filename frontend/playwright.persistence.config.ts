@@ -46,6 +46,9 @@ export default defineConfig({
         PERSISTENCE_ENABLED: 'true',
         CORS_ORIGINS: '["http://127.0.0.1:5175"]',
         SIGNUP_RATE_LIMIT: '100',
+        // Keep tests offline and independent of a developer's local .env.
+        PHISHING_FEED_ENABLED: 'false',
+        AI_REVIEW_ENABLED: 'false',
       },
     },
     {

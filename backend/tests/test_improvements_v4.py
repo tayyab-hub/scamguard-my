@@ -116,7 +116,11 @@ def test_failed_feed_download_keeps_analysis_working_without_retry_storm():
 
 
 def test_feed_is_off_outside_production():
-    assert build_url_engine(Settings(persistence_enabled=False)).provider is None
+    # Explicit values so a developer's local .env cannot enable the feed in this test.
+    settings = Settings(
+        persistence_enabled=False, phishing_feed_enabled=None, app_env="development"
+    )
+    assert build_url_engine(settings).provider is None
 
 
 def _gemini_response(payload: dict) -> BytesIO:

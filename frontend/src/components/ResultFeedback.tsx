@@ -21,6 +21,15 @@ const OPTIONS: [FeedbackVerdict, string][] = [
 // How long the "Thank you" stays before the card closes.
 const THANKS_MS = 1600
 
+// True while the Quick check questions are on the page and at least one is unanswered.
+function quickCheckPending() {
+  const section = document.querySelector('.context-check')
+  if (!section) return false
+  return [...section.querySelectorAll('fieldset')].some(
+    (group) => !group.querySelector('input:checked'),
+  )
+}
+
 export function ResultFeedback({
   analysisId,
   initial,
@@ -48,21 +57,44 @@ export function ResultFeedback({
     },
   })
 
-  // Open the card once, the first time the end of the result scrolls into view.
+  // Open the card once, the first time the end of the result scrolls into view. On short results
+  // the Quick check questions can be on screen at the same moment; the floating card would cover
+  // them, so it waits until every question is answered or the Quick check section is closed.
   useEffect(() => {
     const target = footer.current
     if (initial !== null || !target || typeof IntersectionObserver === 'undefined') return
+    let stopWaiting = () => {}
+    const openWhenQuickCheckDone = () => {
+      if (!quickCheckPending()) {
+        setOpen(true)
+        return
+      }
+      const recheck = () => {
+        if (quickCheckPending()) return
+        stopWaiting()
+        setOpen(true)
+      }
+      document.addEventListener('change', recheck)
+      document.addEventListener('click', recheck)
+      stopWaiting = () => {
+        document.removeEventListener('change', recheck)
+        document.removeEventListener('click', recheck)
+      }
+    }
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries.some((entry) => entry.isIntersecting)) {
-          setOpen(true)
           observer.disconnect()
+          openWhenQuickCheckDone()
         }
       },
       { threshold: 0.5 },
     )
     observer.observe(target)
-    return () => observer.disconnect()
+    return () => {
+      observer.disconnect()
+      stopWaiting()
+    }
   }, [initial])
 
   // After a saved answer, show the thanks briefly, then close the card.
