@@ -119,3 +119,21 @@ export function topSignals(assessment: Assessment) {
     })
     .slice(0, 3)
 }
+
+// Find the saved evidence item behind one "Why this verdict" reason so its source and matched
+// text can be shown on demand. Matching is by label (exact, then containment) and, for links and
+// numbers checked inside a message, by the checked host or number named in the reason. Returns
+// null when no evidence item clearly corresponds; nothing is inferred beyond the saved record.
+export function matchEvidence(reason: string, evidence: Assessment['evidence']) {
+  const text = reason.trim().toLowerCase()
+  const label = (item: Assessment['evidence'][number]) => item.label.trim().toLowerCase()
+  return (
+    evidence.find((item) => label(item) === text) ??
+    evidence.find((item) => label(item).length > 3 && text.includes(label(item))) ??
+    evidence.find((item) => {
+      const subject = item.snippet.split(' — ')[0]?.trim().toLowerCase() ?? ''
+      return subject.length > 3 && !subject.includes(' ') && text.includes(subject)
+    }) ??
+    null
+  )
+}

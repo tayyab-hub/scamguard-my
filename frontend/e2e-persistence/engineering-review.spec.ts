@@ -21,16 +21,22 @@ test('evidence balance, abstention and private history work across responsive wi
   await page.getByRole('button', { name: 'Analyse content' }).click()
   const assessment = page.getByLabel('Message assessment')
   await expect(assessment.getByText('High risk', { exact: true })).toBeVisible()
-  await expect(assessment.getByRole('heading', { name: 'Why this verdict' })).toBeVisible()
-  await assessment.getByRole('button', { name: 'Why this verdict' }).click()
+  // Detail sections start closed; open the explanation.
+  const why = assessment.getByRole('tab', { name: 'Why this verdict', exact: true })
+  await expect(why).toHaveAttribute('aria-expanded', 'false')
+  await why.click()
+  await expect(why).toHaveAttribute('aria-expanded', 'true')
   await expect(assessment.getByText('What tempers the result')).toBeVisible()
+  // Only the first two actions show by default; expand the rest before checking one of them.
+  const moreActions = assessment.getByRole('button', { name: /^Show \d+ more action/ })
+  if (await moreActions.count()) await moreActions.click()
   await expect(
     assessment.getByText('Do not share passwords, PINs or one-time verification codes.'),
   ).toBeVisible()
   for (const width of [320, 375, 390, 768, 1024, 1440]) {
     await page.setViewportSize({ width, height: 1000 })
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
-    await expect(assessment.getByRole('heading', { name: 'Why this verdict' })).toBeVisible()
+    await expect(why).toBeVisible()
   }
   await page.screenshot({ path: info.outputPath('review-result-desktop.png'), fullPage: true })
   await page.setViewportSize({ width: 375, height: 900 })

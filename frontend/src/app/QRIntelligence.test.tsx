@@ -135,7 +135,7 @@ describe('QR Intelligence', () => {
     }
   })
 
-  it('renders only present payment metadata with the integrity limitation', () => {
+  it('renders only present payment metadata with the integrity limitation', async () => {
     const paymentAssessment = {
       ...assessment,
       components: {
@@ -152,7 +152,8 @@ describe('QR Intelligence', () => {
       },
     }
     render(<QrResult assessment={paymentAssessment} content="000201…" />)
-    expect(screen.getByRole('region', { name: 'Payment QR structure' })).toHaveTextContent(
+    await userEvent.click(screen.getByRole('tab', { name: 'Payment' }))
+    expect(screen.getByRole('tabpanel', { name: 'Payment QR structure' })).toHaveTextContent(
       'SCAMGUARD',
     )
     expect(screen.getByText('26')).toBeInTheDocument()

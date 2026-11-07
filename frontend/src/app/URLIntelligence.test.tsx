@@ -119,13 +119,14 @@ describe('URL intelligence results', () => {
     expect(
       screen.getByText(/0 does not mean safe; 100 does not mean certain fraud/),
     ).toBeInTheDocument()
+    await userEvent.click(screen.getByRole('tab', { name: 'Evidence' }))
     expect(
-      within(screen.getByRole('region', { name: 'Detected evidence' })).getByText(
+      within(screen.getByRole('tabpanel', { name: 'Detected evidence' })).getByText(
         'IP address host',
       ),
     ).toBeInTheDocument()
     expect(screen.getByText('Verify the destination independently.')).toBeInTheDocument()
-    await userEvent.click(screen.getByRole('button', { name: 'Technical details' }))
+    await userEvent.click(screen.getByRole('tab', { name: 'Technical' }))
     expect(screen.getByText('Optional reputation review')).toBeInTheDocument()
     expect(screen.getByText('disabled')).toBeInTheDocument()
     expect(screen.getByText(/uncalibrated; not a scam probability/)).toBeInTheDocument()

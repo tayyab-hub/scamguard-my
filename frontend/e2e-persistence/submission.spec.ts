@@ -58,10 +58,10 @@ test('real PostgreSQL: Message and URL results persist through navigation and re
   await page.getByRole('button', { name: 'Analyse content' }).click()
   await expect(page.getByText('Analysis completed.')).toBeVisible()
   await expect(page.getByText('High risk')).toBeVisible()
-  // Supporting sections are collapsed by default; open evidence to inspect it.
-  await page.getByRole('button', { name: 'Detected evidence' }).click()
+  // Supporting detail sits in tabs; open the evidence tab to inspect it.
+  await page.getByRole('tab', { name: 'Evidence', exact: true }).click()
   await expect(
-    page.getByRole('region', { name: 'Detected evidence' }).getByText('Credential language'),
+    page.getByRole('tabpanel', { name: 'Detected evidence' }).getByText('Credential language'),
   ).toBeVisible()
   await capture(page, testInfo, 'recorded')
   const nav = page.getByRole('navigation', {

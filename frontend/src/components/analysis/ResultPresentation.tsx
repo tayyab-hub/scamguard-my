@@ -1,140 +1,196 @@
 // Shared advisory-result building blocks across all modalities. These components receive
 // validated assessment props; scores are display transformations only, confidence remains
 // separate and evidence stays inert text.
+//
+// Layout (compact): a verdict block (risk level, score and confidence together), a highlighted
+// next step, then one bar of collapsible sections so at most one detail view is open at a time.
+// Nothing is removed compared with the stacked layout; supporting detail moves into tabs.
 
-import { useId, useState } from 'react'
-import type { CSSProperties, ReactNode } from 'react'
-import {
-  Check,
-  ChevronDown,
-  CircleHelp,
-  FileCog,
-  Info,
-  Scale,
-  Fingerprint,
-  ListChecks,
-  ShieldAlert,
-  ShieldCheck,
-  Signal,
-} from 'lucide-react'
-import { assessmentBasisSchema, type Assessment } from '../../lib/api'
+import { useEffect, useId, useRef, useState } from 'react'
+import type { ResultTab } from './resultTabs'
+import type { CSSProperties, KeyboardEvent } from 'react'
+import { ChevronDown, CircleHelp, ListChecks, ShieldAlert, ShieldCheck, Signal } from 'lucide-react'
+import type { Assessment } from '../../lib/api'
 import {
   isCalibratedMessageScore,
   isURLAssessment,
   isPhoneAssessment,
   isQRAssessment,
-  orderedEvidence,
+  matchEvidence,
   riskCopy,
   riskGuidance,
   riskScorePresentation,
-  SCORE_PRESENTATION_VERSION,
   topSignals,
 } from '../../lib/resultPresentation'
 
-// Collapsible result section (WAI-ARIA accordion pattern: a heading containing a button). The
-// summary row stays visible with a short hint so people can see what is inside before opening it;
-// supporting detail is kept out of the way rather than removed.
-export function ResultDisclosure({
-  title,
-  label,
-  icon,
-  hint,
-  className = '',
-  children,
-}: {
-  title: string
-  label?: string
-  icon?: ReactNode
-  hint?: string
-  className?: string
-  children: ReactNode
-}) {
-  const [open, setOpen] = useState(false)
+// Collapsible tabs: one section open at a time, and none open unless `initial` names one.
+// Clicking a tab opens its section; clicking the open tab closes it again (aria-expanded tells
+// assistive technology which). Arrow keys, Home and End move between tabs and open the target.
+// All panels stay mounted (hidden when closed) so local state such as sender-question answers
+// survives switching or closing.
+export function ResultTabs({ tabs, initial }: { tabs: ResultTab[]; initial?: string }) {
   const id = useId()
+  const [selected, setSelected] = useState<string | null>(
+    () => tabs.find((tab) => tab.id === initial)?.id ?? null,
+  )
+  const refs = useRef<(HTMLButtonElement | null)[]>([])
+  const current = tabs.some((tab) => tab.id === selected) ? selected : null
+  const currentIndex = tabs.findIndex((tab) => tab.id === current)
+  // The tab reachable with Tab: the open one, otherwise the first.
+  const focusIndex = Math.max(currentIndex, 0)
+
+  // On narrow screens the tab bar scrolls sideways; keep the open tab in view.
+  useEffect(() => {
+    const tab = refs.current[currentIndex]
+    const list = tab?.parentElement
+    if (!tab || !list || list.scrollWidth <= list.clientWidth) return
+    const left = tab.offsetLeft - list.offsetLeft
+    if (left < list.scrollLeft || left + tab.offsetWidth > list.scrollLeft + list.clientWidth)
+      list.scrollTo({ left: Math.max(0, left - 16) })
+  }, [currentIndex])
+
+  if (tabs.length === 0) return null
+
+  function onKeyDown(event: KeyboardEvent<HTMLButtonElement>, index: number) {
+    const last = tabs.length - 1
+    const next =
+      event.key === 'ArrowRight'
+        ? index === last
+          ? 0
+          : index + 1
+        : event.key === 'ArrowLeft'
+          ? index === 0
+            ? last
+            : index - 1
+          : event.key === 'Home'
+            ? 0
+            : event.key === 'End'
+              ? last
+              : null
+    const target = next === null ? undefined : tabs[next]
+    if (next === null || !target) return
+    event.preventDefault()
+    setSelected(target.id)
+    refs.current[next]?.focus()
+  }
+
   return (
-    <section
-      className={`result-section result-disclosure ${className}`}
-      aria-label={label ?? title}
-      data-open={open}
-    >
-      <h3 className="text-sm font-semibold">
-        <button
-          type="button"
-          className="disclosure-trigger"
-          aria-expanded={open}
-          aria-controls={`${id}-panel`}
-          aria-describedby={hint ? `${id}-hint` : undefined}
-          onClick={() => setOpen((value) => !value)}
-        >
-          {icon}
-          <span className="disclosure-title">{title}</span>
-          {hint && (
-            <span id={`${id}-hint`} aria-hidden="true" className="disclosure-hint">
-              {hint}
-            </span>
-          )}
-          <ChevronDown size={16} className="disclosure-chevron" aria-hidden="true" />
-        </button>
-      </h3>
-      <div id={`${id}-panel`} hidden={!open} className="disclosure-content mt-4">
-        {children}
+    <section className="result-details" aria-label="Result details" data-open={current !== null}>
+      <div role="tablist" aria-label="Result details" className="result-tablist">
+        {tabs.map((tab, index) => {
+          const active = tab.id === current
+          return (
+            <button
+              key={tab.id}
+              ref={(node) => {
+                refs.current[index] = node
+              }}
+              type="button"
+              role="tab"
+              id={`${id}-${tab.id}-tab`}
+              aria-selected={active}
+              aria-expanded={active}
+              aria-controls={`${id}-${tab.id}-panel`}
+              aria-describedby={tab.hint ? `${id}-${tab.id}-hint` : undefined}
+              tabIndex={index === focusIndex ? 0 : -1}
+              className="result-tab"
+              onClick={() => setSelected((value) => (value === tab.id ? null : tab.id))}
+              onKeyDown={(event) => onKeyDown(event, index)}
+            >
+              {tab.label}
+              {tab.badge !== undefined && tab.badge > 0 && (
+                <span className="result-tab-badge" aria-hidden="true">
+                  {tab.badge}
+                </span>
+              )}
+              <ChevronDown size={12} className="result-tab-chevron" aria-hidden="true" />
+            </button>
+          )
+        })}
       </div>
+      {tabs.map(
+        (tab) =>
+          tab.hint && (
+            <span key={tab.id} id={`${id}-${tab.id}-hint`} hidden>
+              {tab.hint}
+            </span>
+          ),
+      )}
+      {current === null && (
+        <p className="result-tabs-hint">
+          Open a section above to see the details behind this result.
+        </p>
+      )}
+      {tabs.map((tab) => (
+        <div
+          key={tab.id}
+          role="tabpanel"
+          id={`${id}-${tab.id}-panel`}
+          aria-label={tab.panelLabel ?? tab.label}
+          hidden={tab.id !== current}
+          tabIndex={0}
+          className="result-tabpanel"
+        >
+          {tab.content}
+        </div>
+      ))}
     </section>
   )
 }
 
-// Pluralise a count for disclosure hints.
-function count(value: number, noun: string) {
-  return `${value} ${noun}${value === 1 ? '' : 's'}`
+// Modality-specific explanation of what confidence measures.
+function confidenceNote(assessment: Assessment) {
+  const unavailable = assessment.confidence_score === null
+  return isQRAssessment(assessment)
+    ? 'QR decoding and routed-engine evidence strength, not certainty about the code.'
+    : isURLAssessment(assessment)
+      ? 'Local classifier strength, not certainty about the website.'
+      : isPhoneAssessment(assessment)
+        ? 'Unavailable: numbering metadata cannot measure fraudulent intent.'
+        : unavailable
+          ? 'There is not enough supported evidence to report confidence.'
+          : 'Uncalibrated model and evidence strength, not a probability of fraud.'
 }
 
-// Show unavailable when confidence_score is null; otherwise display the stored strength label
-// with the relevant modality limitation.
+// Show unavailable when confidence_score is null; otherwise display the stored strength label.
+// The explanation of what it measures lives in "How to read this score".
 export function ConfidenceBadge({ assessment }: { assessment: Assessment }) {
   const unavailable = assessment.confidence_score === null
   return (
-    <div className="confidence-block">
-      <p className="eyebrow !text-[9px]">CONFIDENCE · SEPARATE FROM RISK</p>
-      <p className="mt-2 flex items-center gap-2 text-xs font-semibold text-ink">
-        <Signal size={15} aria-hidden="true" />
-        Confidence: {unavailable ? 'unavailable' : assessment.confidence_level.toLowerCase()}
-      </p>
-      <p className="mt-1 text-[11px] leading-5 text-muted">
-        {isQRAssessment(assessment)
-          ? 'QR decoding and routed-engine evidence strength, not certainty about the code.'
-          : isURLAssessment(assessment)
-            ? 'Local classifier strength, not certainty about the website.'
-            : isPhoneAssessment(assessment)
-              ? 'Unavailable: numbering metadata cannot measure fraudulent intent.'
-              : unavailable
-                ? 'There is not enough supported evidence to report confidence.'
-                : 'Uncalibrated model and evidence strength, not a probability of fraud.'}
-      </p>
-    </div>
+    <p className="confidence-line">
+      <Signal size={13} aria-hidden="true" />
+      Confidence: {unavailable ? 'unavailable' : assessment.confidence_level.toLowerCase()}
+    </p>
   )
 }
 
-// Use riskScorePresentation for Message scaling or URL category index and omit the meter when
-// unscored. Accessible meter text explicitly says this is not a probability.
-export function RiskScoreDisplay({ assessment }: { assessment: Assessment }) {
+// Compact score card: score, score kind, meter and confidence together. Accessible meter text
+// explicitly says this is not a probability; the meter is omitted when unscored.
+export function RiskScoreDisplay({
+  assessment,
+  noteId,
+}: {
+  assessment: Assessment
+  noteId: string
+}) {
   const score = riskScorePresentation(assessment)
   const id = useId()
   return (
-    <div className="score-block">
-      <div className="flex flex-wrap items-end justify-between gap-2">
-        <div>
+    <div className="score-card">
+      <div className="flex items-start justify-between gap-2">
+        <div className="min-w-0">
           <p id={`${id}-label`} className="eyebrow !text-[9px]">
             RISK SCORE
           </p>
-          <p className="mt-2 text-[11px] text-muted">{score.kind}</p>
+          <p className="mt-1 text-[10px] leading-4 text-muted">{score.kind}</p>
         </div>
         <p className="score-value tabular-nums">
           {score.value === null ? (
-            <span className="text-lg">Unavailable</span>
+            <span className="text-sm">Unavailable</span>
           ) : (
             <>
               {score.value}
-              <span className="ml-1 text-sm font-normal text-muted">/ 100</span>
+              <span className="ml-0.5 text-[10px] font-normal text-muted">/100</span>
             </>
           )}
         </p>
@@ -143,12 +199,12 @@ export function RiskScoreDisplay({ assessment }: { assessment: Assessment }) {
         <div
           role="meter"
           aria-labelledby={`${id}-label`}
-          aria-describedby={`${id}-note`}
+          aria-describedby={noteId}
           aria-valuemin={0}
           aria-valuemax={100}
           aria-valuenow={score.value}
           aria-valuetext={`${score.value} out of 100; ${score.kind}; ${riskCopy[assessment.risk_level]}; not a probability`}
-          className="score-track mt-4"
+          className="score-track mt-2"
         >
           <span
             className="score-fill"
@@ -156,33 +212,15 @@ export function RiskScoreDisplay({ assessment }: { assessment: Assessment }) {
           />
         </div>
       ) : (
-        <p className="mt-3 text-xs text-muted">
+        <p className="mt-1 text-[10px] leading-4 text-muted">
           {isPhoneAssessment(assessment)
             ? 'No defensible numeric score from numbering metadata alone.'
             : 'Not enough evidence to score.'}
         </p>
       )}
-      <p id={`${id}-note`} className="mt-3 text-[11px] leading-5 text-muted">
-        {score.kind === 'URL category index'
-          ? 'Category position, not a scam percentage.'
-          : isPhoneAssessment(assessment)
-            ? 'No invented probability or category-to-number conversion.'
-            : isCalibratedMessageScore(assessment)
-              ? 'Calibrated on historical SMS; not a guarantee for this message.'
-              : 'Combined indicator strength, not a scam percentage.'}
-      </p>
-      <details className="score-method mt-3 text-[11px]">
-        <summary className="inline-flex min-h-8 cursor-pointer items-center gap-2 rounded font-semibold text-body">
-          <CircleHelp size={13} aria-hidden="true" /> How to read this score
-        </summary>
-        <div className="disclosure-content mt-2 space-y-2 leading-5 text-muted">
-          <p>{score.explanation}</p>
-          <p>
-            Score methods are domain-specific and are not comparable across analysis types. Use the
-            risk level and evidence to guide your next step.
-          </p>
-        </div>
-      </details>
+      <div className="mt-2">
+        <ConfidenceBadge assessment={assessment} />
+      </div>
     </div>
   )
 }
@@ -191,6 +229,8 @@ export function RiskScoreDisplay({ assessment }: { assessment: Assessment }) {
 // selection; no frontend classification occurs.
 export function AnalysisResultHero({ assessment }: { assessment: Assessment }) {
   const signals = topSignals(assessment)
+  const score = riskScorePresentation(assessment)
+  const noteId = useId()
   const Icon =
     assessment.risk_level === 'LOW'
       ? ShieldCheck
@@ -199,295 +239,367 @@ export function AnalysisResultHero({ assessment }: { assessment: Assessment }) {
         : ShieldAlert
   return (
     <section className="result-hero" aria-label="Result summary">
-      <div className="flex items-center justify-between gap-3">
-        <p className="eyebrow !text-[9px]">
-          {isQRAssessment(assessment)
-            ? 'QR'
-            : isURLAssessment(assessment)
-              ? 'URL'
-              : isPhoneAssessment(assessment)
-                ? 'PHONE'
-                : 'MESSAGE'}{' '}
-          · ADVISORY RISK LEVEL
-        </p>
-        <span className="risk-icon">
-          <Icon size={22} strokeWidth={1.6} aria-hidden="true" />
-        </span>
-      </div>
-      <h3 className="mt-2 font-display text-[30px] leading-tight tracking-tight text-ink">
-        {riskCopy[assessment.risk_level]}
-      </h3>
-      <p className="risk-guidance mt-2 text-xs font-medium leading-6 text-body">
-        {riskGuidance[assessment.risk_level]}
-      </p>
-      <p className="mt-2 text-xs leading-6 text-muted">{assessment.summary}</p>
-      <div className="result-summary-grid mt-4">
-        <RiskScoreDisplay assessment={assessment} />
-        <ConfidenceBadge assessment={assessment} />
+      <div className="hero-top">
+        <div className="min-w-0 flex-1">
+          <p className="eyebrow flex items-center gap-2 !text-[9px]">
+            <span className="risk-icon">
+              <Icon size={15} strokeWidth={1.8} aria-hidden="true" />
+            </span>
+            {isQRAssessment(assessment)
+              ? 'QR'
+              : isURLAssessment(assessment)
+                ? 'URL'
+                : isPhoneAssessment(assessment)
+                  ? 'PHONE'
+                  : 'MESSAGE'}{' '}
+            · ADVISORY RISK LEVEL
+          </p>
+          <h3 className="mt-1.5 font-display text-[26px] leading-tight tracking-tight text-ink">
+            {riskCopy[assessment.risk_level]}
+          </h3>
+          <p className="risk-guidance mt-2 text-xs font-medium leading-5 text-body">
+            {riskGuidance[assessment.risk_level]}
+          </p>
+          <p className="mt-1.5 text-[11px] leading-5 text-muted">{assessment.summary}</p>
+        </div>
+        <RiskScoreDisplay assessment={assessment} noteId={noteId} />
       </div>
       {signals.length > 0 && (
-        <div className="mt-4" aria-label="Key indicators">
+        <div className="indicator-row mt-3" aria-label="Key indicators">
           <p className="eyebrow !text-[9px]">KEY INDICATORS</p>
-          <p className="mt-2 text-xs leading-6 text-body">
-            {signals.map((item) => item.label).join(' · ')}
-          </p>
-          <p className="mt-1 text-[10px] leading-5 text-muted">
-            {isURLAssessment(assessment)
-              ? 'Highest severity first; one signal per evidence family.'
-              : isPhoneAssessment(assessment)
-                ? 'Numbering metadata ordered by relevance; it does not identify the caller.'
-                : 'Selected detected signals in source order; individual contributions are not measured.'}
-          </p>
+          {signals.map((item) => (
+            <span key={item.label} className="indicator-chip">
+              {item.label}
+            </span>
+          ))}
         </div>
       )}
-      <p className="mt-4 border-t border-line pt-3 text-[11px] leading-5 text-muted">
-        Advisory, not a guarantee. This assessment reflects detected indicators and limited context.
-        The risk level remains the primary decision.
-      </p>
-      {isURLAssessment(assessment) && (
-        <p className="mt-2 text-[11px] leading-5 text-muted">
-          URL structure was analysed without opening the website. HTTPS does not guarantee safety.
+      <div className="hero-footnote mt-3">
+        <p className="text-[10.5px] leading-5 text-muted">
+          <span id={noteId}>
+            {score.kind === 'URL category index'
+              ? 'Category position, not a scam percentage.'
+              : isPhoneAssessment(assessment)
+                ? 'No invented probability or category-to-number conversion.'
+                : isCalibratedMessageScore(assessment)
+                  ? 'Calibrated on historical SMS; not a guarantee for this message.'
+                  : 'Combined indicator strength, not a scam percentage.'}
+          </span>{' '}
+          {isURLAssessment(assessment)
+            ? 'The website was not opened; HTTPS does not guarantee safety. '
+            : isPhoneAssessment(assessment)
+              ? 'The number was not called, messaged or sent to a reputation service. '
+              : isQRAssessment(assessment)
+                ? 'The QR content was decoded locally and not opened or contacted. '
+                : ''}
+          Advisory, not a guarantee.
         </p>
-      )}
-      {isPhoneAssessment(assessment) && (
-        <p className="mt-2 text-[11px] leading-5 text-muted">
-          The number was not called, messaged or sent to an external reputation service.
-        </p>
-      )}
-      {isQRAssessment(assessment) && (
-        <p className="mt-2 text-[11px] leading-5 text-muted">
-          The QR code was decoded locally. Its content was not opened, executed, contacted or
-          fetched.
-        </p>
-      )}
+        <details className="score-method text-[11px]">
+          <summary className="inline-flex min-h-8 cursor-pointer items-center gap-1.5 rounded font-semibold text-accent">
+            <CircleHelp size={13} aria-hidden="true" /> How to read this score
+          </summary>
+          <div className="disclosure-content mt-2 space-y-2 leading-5 text-muted">
+            <p>{score.explanation}</p>
+            <p>Confidence is separate from risk: {confidenceNote(assessment)}</p>
+            {signals.length > 0 && (
+              <p>
+                Key indicators:{' '}
+                {isURLAssessment(assessment)
+                  ? 'highest severity first; one signal per evidence family.'
+                  : isPhoneAssessment(assessment)
+                    ? 'numbering metadata ordered by relevance; it does not identify the caller.'
+                    : 'selected detected signals in source order; individual contributions are not measured.'}
+              </p>
+            )}
+            <p>
+              Score methods are domain-specific and are not comparable across analysis types. This
+              assessment reflects detected indicators and limited context; the risk level remains
+              the primary decision.
+            </p>
+          </div>
+        </details>
+      </div>
     </section>
   )
 }
 
-// Validate optional decision/support/mitigation/uncertainty data before rendering. Older
-// immutable records without this field simply omit the panel.
-export function AssessmentBasisPanel({ assessment }: { assessment: Assessment }) {
-  // Optional for immutable historical records and QR results with an underlying engine.
-  const basis = assessmentBasisSchema.safeParse(
-    'assessment_basis' in assessment.components ? assessment.components.assessment_basis : null,
-  )
-  if (!basis.success) return null
-  const { supporting, mitigating } = basis.data
+// Where an evidence item came from, in plain words.
+function evidenceSource(item: Assessment['evidence'][number]) {
+  const severity = 'severity' in item ? item.severity.toLowerCase() : null
   return (
-    <ResultDisclosure
-      title="Why this verdict"
-      className="assessment-basis"
-      icon={<Scale size={16} className="text-accent" aria-hidden="true" />}
-      hint={
-        supporting.length || mitigating.length
-          ? `${count(supporting.length, 'concern')} · ${mitigating.length} tempering`
-          : 'No warning recorded'
-      }
-    >
-      <p className="text-sm leading-6 text-body">{basis.data.decision}</p>
-      <div className="evidence-balance mt-5">
-        <div>
-          <h4 className="text-xs font-semibold text-ink">What raises concern</h4>
-          {basis.data.supporting.length ? (
-            <ul className="mt-3 space-y-2 text-xs leading-6 text-body">
-              {basis.data.supporting.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-          ) : (
-            <p className="mt-3 text-xs leading-6 text-muted">
-              No corroborating warning is recorded. Absence of a warning does not establish safety.
-            </p>
-          )}
-        </div>
-        <div>
-          <h4 className="text-xs font-semibold text-ink">What tempers the result</h4>
-          {basis.data.mitigating.length ? (
-            <ul className="mt-3 space-y-2 text-xs leading-6 text-body">
-              {basis.data.mitigating.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-          ) : (
-            <p className="mt-3 text-xs leading-6 text-muted">
-              No specific mitigating evidence is recorded. Sender identity and intent remain
-              unverified.
-            </p>
-          )}
-        </div>
-      </div>
-      <ul
-        className="mt-5 space-y-2 border-t border-line pt-4 text-xs leading-6 text-muted"
-        aria-label="Evidence uncertainty"
-      >
-        {basis.data.uncertainty.map((item) => (
-          <li key={item}>{item}</li>
-        ))}
-      </ul>
-    </ResultDisclosure>
+    (severity
+      ? `${severity} evidence`
+      : item.source === 'EXTERNAL_AI'
+        ? 'Grounded contextual review'
+        : item.source === 'EMBEDDED_URL'
+          ? 'Offline link check · not opened'
+          : item.source === 'EMBEDDED_PHONE'
+            ? 'Offline number check · not contacted'
+            : 'Local indicator') +
+    (item.source === 'REPUTATION' ? ' · Reputation signal' : '') +
+    (item.source === 'NUMBERING_METADATA' ? ' · Numbering metadata' : '')
   )
 }
 
-// Display one evidence item and its available source/severity/explanation. React text
+// One evidence item as a compact row: label and source always visible; the snippet is one line
+// until the list is expanded, when the explanation and full snippet show. React text
 // interpolation escapes untrusted snippets instead of interpreting HTML.
 export function EvidenceCard({
   item,
   index,
+  expanded = true,
 }: {
   item: Assessment['evidence'][number]
   index: number
+  expanded?: boolean
 }) {
   const severity = 'severity' in item ? item.severity.toLowerCase() : null
   return (
     <li className="evidence-card" data-severity={severity ?? 'indicator'}>
-      <div className="flex items-start gap-3">
-        <span className="evidence-number" aria-hidden="true">
-          {String(index + 1).padStart(2, '0')}
-        </span>
-        <div className="min-w-0 flex-1">
-          <p className="text-xs font-semibold leading-5 text-ink">{item.label}</p>
-          <p className="mt-1 text-[10px] text-muted">
-            {severity
-              ? `${severity} evidence`
-              : item.source === 'EXTERNAL_AI'
-                ? 'Grounded contextual review'
-                : item.source === 'EMBEDDED_URL'
-                  ? 'Offline link check · not opened'
-                  : item.source === 'EMBEDDED_PHONE'
-                    ? 'Offline number check · not contacted'
-                    : 'Local indicator'}
-            {item.source === 'REPUTATION' ? ' · Reputation signal' : ''}
-            {item.source === 'NUMBERING_METADATA' ? ' · Numbering metadata' : ''}
+      <span className="evidence-number" aria-hidden="true">
+        {String(index + 1).padStart(2, '0')}
+      </span>
+      <div className="min-w-0 flex-1">
+        <p className="evidence-head">
+          <span className="font-semibold text-ink">{item.label}</span>
+          <span className="evidence-source">{evidenceSource(item)}</span>
+        </p>
+        {'explanation' in item && (
+          <p className="mt-1 text-xs leading-5 text-body" hidden={!expanded}>
+            {item.explanation}
           </p>
-          {'explanation' in item && (
-            <p className="mt-2 text-xs leading-6 text-body">{item.explanation}</p>
-          )}
-          <p className="evidence-snippet mt-3">{item.snippet}</p>
-        </div>
+        )}
+        {expanded && (
+          <p className="mt-1 text-[10px] text-muted">Matched text (untrusted, shown as text):</p>
+        )}
+        <p className="evidence-snippet" data-expanded={expanded}>
+          {item.snippet}
+        </p>
       </div>
     </li>
   )
 }
 
-// Present sorted copies of evidence where severity exists and explain an empty evidence list;
-// sorting never mutates the saved assessment.
-export function EvidencePanel({ assessment }: { assessment: Assessment }) {
-  const url = isURLAssessment(assessment)
-  const phone = isPhoneAssessment(assessment)
-  const items = assessment.evidence.length
+// Evidence rows with one toggle for the full text, so many items stay short by default.
+export function EvidenceList({ items }: { items: Assessment['evidence'] }) {
+  const [expanded, setExpanded] = useState(false)
+  const id = useId()
   return (
-    <ResultDisclosure
-      label={
-        isQRAssessment(assessment)
-          ? 'QR decoding and security evidence'
-          : phone
-            ? 'Phone numbering evidence'
-            : 'Detected evidence'
-      }
-      title={
-        isQRAssessment(assessment)
-          ? 'QR decoding and routed intelligence evidence'
-          : url
-            ? 'URL evidence and structural indicators'
-            : phone
-              ? 'Phone numbering evidence'
-              : 'Detected evidence'
-      }
-      icon={<Fingerprint size={16} className="text-accent" aria-hidden="true" />}
-      hint={items ? count(items, 'item') : 'None found'}
-    >
-      {assessment.evidence.length > 0 ? (
-        <ul className="space-y-3">
-          {orderedEvidence(assessment).map((item, index) => (
-            <EvidenceCard key={`${item.category}-${index}`} item={item} index={index} />
-          ))}
-        </ul>
-      ) : (
-        <p className="rounded-lg border border-dashed border-control p-4 text-xs leading-6 text-muted">
-          {url
-            ? 'No structural warning was found. This does not verify the destination.'
-            : phone
-              ? 'No usable numbering metadata was found. No caller assessment can be made.'
-              : 'No deterministic or grounded contextual indicator was found.'}
+    <>
+      <div className="mb-2 flex items-center justify-between gap-2">
+        <p className="text-[11px] text-muted">
+          {items.length} {items.length === 1 ? 'item' : 'items'}
         </p>
-      )}
-    </ResultDisclosure>
+        <button
+          type="button"
+          className="text-link"
+          aria-expanded={expanded}
+          aria-controls={id}
+          onClick={() => setExpanded((value) => !value)}
+        >
+          {expanded ? 'Show less' : 'Show full text'}
+        </button>
+      </div>
+      <ul id={id} className="evidence-list">
+        {items.map((item, index) => (
+          <EvidenceCard
+            key={`${item.category}-${index}`}
+            item={item}
+            index={index}
+            expanded={expanded}
+          />
+        ))}
+      </ul>
+    </>
   )
 }
 
-// Render the backend's recommended action strings as an ordered list without executing them.
-export function RecommendedActionsPanel({ actions }: { actions: string[] }) {
+// One reason in "Why this verdict". When a saved evidence item backs it, the row opens to show
+// that item's source, explanation and matched text; otherwise it is a plain row.
+function ReasonRow({
+  text,
+  tone,
+  evidence,
+}: {
+  text: string
+  tone: 'concern' | 'temper'
+  evidence: Assessment['evidence']
+}) {
+  const match = matchEvidence(text, evidence)
+  if (!match)
+    return (
+      <li className="reason-row" data-tone={tone}>
+        <div className="reason-summary">
+          <span className="reason-dot" aria-hidden="true" />
+          <span className="min-w-0 flex-1">{text}</span>
+        </div>
+      </li>
+    )
   return (
-    <section className="result-section actions-panel">
-      <p className="eyebrow mb-2 !text-[9px]">YOUR NEXT STEP</p>
-      <h3 className="flex items-center gap-2 text-sm font-semibold">
-        <ListChecks size={16} className="text-accent" aria-hidden="true" />
-        Recommended actions
-      </h3>
-      <ul className="mt-4 space-y-3">
-        {actions.map((action) => (
-          <li key={action} className="flex items-start gap-3 text-xs leading-6 text-body">
-            <Check size={15} className="mt-1 shrink-0 text-accent" aria-hidden="true" />
-            <span>{action}</span>
-          </li>
-        ))}
-      </ul>
+    <li className="reason-row" data-tone={tone}>
+      <details className="reason-details">
+        <summary className="reason-summary">
+          <span className="reason-dot" aria-hidden="true" />
+          <span className="min-w-0 flex-1">{text}</span>
+          <ChevronDown size={14} className="reason-chevron" aria-hidden="true" />
+        </summary>
+        <div className="reason-body">
+          <p className="text-[10.5px] font-medium uppercase tracking-wide text-muted">
+            {evidenceSource(match)}
+          </p>
+          {match.label.trim().toLowerCase() !== text.trim().toLowerCase() && (
+            <p className="mt-1 text-xs font-semibold text-ink">{match.label}</p>
+          )}
+          {'explanation' in match && typeof match.explanation === 'string' && (
+            <p className="mt-1 text-xs leading-5 text-body">{match.explanation}</p>
+          )}
+          <p className="mt-2 text-[10px] text-muted">Matched text (untrusted, shown as text):</p>
+          <p className="evidence-snippet" data-expanded="true">
+            {match.snippet}
+          </p>
+        </div>
+      </details>
+    </li>
+  )
+}
+
+// "Why this verdict": the decision, then reasons that raise concern and reasons that temper it,
+// each row opening to its evidence; remaining uncertainty is one collapsed row.
+export function VerdictBasis({
+  decision,
+  supporting,
+  mitigating,
+  uncertainty,
+  evidence,
+}: {
+  decision: string
+  supporting: string[]
+  mitigating: string[]
+  uncertainty: string[]
+  evidence: Assessment['evidence']
+}) {
+  return (
+    <div className="space-y-3">
+      <p className="text-xs leading-5 text-body">{decision}</p>
+      <div>
+        <h4 className="reason-heading">
+          <span>What raises concern</span>
+          <span className="reason-count">{supporting.length}</span>
+        </h4>
+        {supporting.length ? (
+          <ul className="reason-list">
+            {supporting.map((item) => (
+              <ReasonRow key={item} text={item} tone="concern" evidence={evidence} />
+            ))}
+          </ul>
+        ) : (
+          <p className="text-xs leading-5 text-muted">
+            No corroborating warning is recorded. Absence of a warning does not establish safety.
+          </p>
+        )}
+      </div>
+      <div>
+        <h4 className="reason-heading">
+          <span>What tempers the result</span>
+          <span className="reason-count">{mitigating.length}</span>
+        </h4>
+        {mitigating.length ? (
+          <ul className="reason-list">
+            {mitigating.map((item) => (
+              <ReasonRow key={item} text={item} tone="temper" evidence={evidence} />
+            ))}
+          </ul>
+        ) : (
+          <p className="text-xs leading-5 text-muted">
+            No specific mitigating evidence is recorded. Sender identity and intent remain
+            unverified.
+          </p>
+        )}
+      </div>
+      {uncertainty.length > 0 && (
+        <details className="reason-details reason-uncertainty">
+          <summary className="reason-summary">
+            <CircleHelp size={13} className="shrink-0 text-muted" aria-hidden="true" />
+            <span className="min-w-0 flex-1">What remains uncertain ({uncertainty.length})</span>
+            <ChevronDown size={14} className="reason-chevron" aria-hidden="true" />
+          </summary>
+          <ul
+            className="reason-body space-y-1.5 text-xs leading-5 text-muted"
+            aria-label="Evidence uncertainty"
+          >
+            {uncertainty.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </details>
+      )}
+    </div>
+  )
+}
+
+// Render the backend's recommended action strings as a highlighted next-step strip without
+// executing them. The first two are always shown; the rest are one click away.
+const VISIBLE_ACTIONS = 2
+export function RecommendedActionsPanel({ actions }: { actions: string[] }) {
+  const [all, setAll] = useState(false)
+  const id = useId()
+  const extra = actions.length - VISIBLE_ACTIONS
+  return (
+    <section className="actions-panel" aria-label="Your next step">
+      <ListChecks size={17} className="mt-0.5 shrink-0 text-accent" aria-hidden="true" />
+      <div className="min-w-0 flex-1">
+        <h3 className="eyebrow uppercase !text-[9px] !text-accent">Recommended actions</h3>
+        <ul id={id} className="mt-1 space-y-1">
+          {actions.map((action, index) => (
+            <li
+              key={action}
+              className="text-[12.5px] font-medium leading-5 text-ink"
+              hidden={!all && index >= VISIBLE_ACTIONS}
+            >
+              {action}
+            </li>
+          ))}
+        </ul>
+        {extra > 0 && (
+          <button
+            type="button"
+            className="text-link mt-1"
+            aria-expanded={all}
+            aria-controls={id}
+            onClick={() => setAll((value) => !value)}
+          >
+            {all
+              ? 'Show fewer actions'
+              : `Show ${extra} more ${extra === 1 ? 'action' : 'actions'}`}
+          </button>
+        )}
+      </div>
     </section>
   )
 }
 
-// Show stored limitations, completion time, optional record ID and caller-specific version
-// rows, plus the display-method version.
-export function AnalysisMetaPanel({
+// Shared result shell used by every modality: verdict, next step, then the tabbed details.
+export function AssessmentLayout({
   assessment,
-  analysisId,
-  children,
+  label,
+  tabs,
+  initialTab,
 }: {
   assessment: Assessment
-  analysisId?: string
-  children: ReactNode
+  label: string
+  tabs: (ResultTab | null)[]
+  initialTab?: string
 }) {
+  const present = tabs.filter((tab): tab is ResultTab => tab !== null)
   return (
-    <>
-      <ResultDisclosure
-        title="What this assessment cannot tell you"
-        label="Assessment limitations"
-        icon={<Info size={16} className="text-accent" aria-hidden="true" />}
-        hint={count(assessment.limitations.length, 'note')}
-      >
-        <ul className="list-disc space-y-2 pl-4 text-xs leading-6 text-muted">
-          {assessment.limitations.map((limitation) => (
-            <li key={limitation}>{limitation}</li>
-          ))}
-        </ul>
-      </ResultDisclosure>
-      <ResultDisclosure
-        title="Technical details"
-        className="analysis-meta"
-        icon={<FileCog size={16} className="text-accent" aria-hidden="true" />}
-      >
-        <dl className="metadata-grid">
-          {analysisId && (
-            <div>
-              <dt>Analysis ID</dt>
-              <dd className="font-mono">{analysisId}</dd>
-            </div>
-          )}
-          <div>
-            <dt>Completed</dt>
-            <dd>
-              <time dateTime={assessment.completed_at}>
-                {new Date(assessment.completed_at).toLocaleString()}
-              </time>
-            </dd>
-          </div>
-          {children}
-          <div>
-            <dt>Score presentation</dt>
-            <dd>{SCORE_PRESENTATION_VERSION}</dd>
-          </div>
-        </dl>
-      </ResultDisclosure>
-    </>
+    <div
+      className="analysis-result motion-fade"
+      data-risk={assessment.risk_level}
+      aria-label={label}
+    >
+      <AnalysisResultHero assessment={assessment} />
+      <RecommendedActionsPanel actions={assessment.recommended_actions} />
+      <ResultTabs tabs={present} initial={initialTab} />
+    </div>
   )
 }

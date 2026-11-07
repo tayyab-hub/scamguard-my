@@ -17,8 +17,8 @@ export function AnalysisModeSelector({
 }) {
   const buttons = useRef<Array<HTMLButtonElement | null>>([])
   return (
-    <div className="mb-6">
-      <p id="content-type-label" className="mb-3 text-xs font-medium text-body">
+    <div className="mb-4">
+      <p id="content-type-label" className="mb-2 text-xs font-medium text-body">
         Content type
       </p>
       <div

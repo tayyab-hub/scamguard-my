@@ -205,15 +205,16 @@ describe('persistent submission UI', () => {
     expect(await screen.findByText('Analysis completed.')).toBeInTheDocument()
     expect(screen.getByText('High risk')).toBeInTheDocument()
     expect(screen.getByText('Confidence: high')).toBeInTheDocument()
+    await userEvent.click(screen.getByRole('tab', { name: 'Evidence' }))
     expect(
-      within(screen.getByRole('region', { name: 'Detected evidence' })).getByText(
+      within(screen.getByRole('tabpanel', { name: 'Detected evidence' })).getByText(
         'Credential request',
       ),
     ).toBeInTheDocument()
     expect(
       screen.getByText('Do not send money, credentials or verification codes.'),
     ).toBeInTheDocument()
-    await userEvent.click(screen.getByRole('button', { name: 'Technical details' }))
+    await userEvent.click(screen.getByRole('tab', { name: 'Technical' }))
     expect(screen.getByText(/SCAM · message-tfidf-logreg-v1/)).toBeInTheDocument()
     expect(screen.getByText('disabled · no contribution')).toBeInTheDocument()
     expect(screen.getByRole('meter')).toHaveAttribute('aria-valuenow', '86')

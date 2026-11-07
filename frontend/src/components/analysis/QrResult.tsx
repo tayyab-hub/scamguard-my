@@ -2,16 +2,9 @@
 // metadata. React escapes text; decoded URLs and instructions are not activated. Payment fields
 // and CRC are descriptive, not merchant authentication.
 
-import { QrCode } from 'lucide-react'
 import type { QRAssessment } from '../../lib/api'
-import {
-  AnalysisMetaPanel,
-  AnalysisResultHero,
-  AssessmentBasisPanel,
-  EvidencePanel,
-  RecommendedActionsPanel,
-  ResultDisclosure,
-} from './ResultPresentation'
+import { AssessmentLayout } from './ResultPresentation'
+import { basisTab, evidenceTab, limitsTab, technicalTab } from './resultTabs'
 
 // Render only recognized string payment fields and safely typed account-ID lists, expose long
 // payloads in a disclosure, and show decoder/routing versions. Camera provenance has no server
@@ -47,129 +40,143 @@ export function QrResult({
       ? payment.merchant_account_information_ids.join(', ')
       : ''
   return (
-    <div
-      className="analysis-result motion-fade"
-      data-risk={assessment.risk_level}
-      aria-label="QR assessment"
-    >
-      <AnalysisResultHero assessment={assessment} />
-      <RecommendedActionsPanel actions={assessment.recommended_actions} />
-      <section className="result-section" aria-label="QR decoding result">
-        <h3 className="flex items-center gap-2 text-sm font-semibold">
-          <QrCode size={16} className="text-accent" aria-hidden="true" /> QR decoding
-        </h3>
-        <dl className="metadata-grid mt-4">
-          <div>
-            <dt>Decoded type</dt>
-            <dd>{qr.payload_type.toLowerCase()}</dd>
-          </div>
-          <div>
-            <dt>Security route</dt>
-            <dd>{qr.routed_engine ? `${qr.routed_engine.toLowerCase()} intelligence` : 'none'}</dd>
-          </div>
-          <div>
-            <dt>Input source</dt>
-            <dd>
-              {qr.source === 'CAMERA'
-                ? 'Camera · decoded on device'
-                : `${qr.image_format} · ${qr.image_width} × ${qr.image_height}px`}
-            </dd>
-          </div>
-          <div>
-            <dt>Original retained</dt>
-            <dd>no</dd>
-          </div>
-        </dl>
-        <div className="mt-4 rounded-lg border border-line bg-surface-raised p-4">
-          <p className="eyebrow !text-[9px]">DECODED CONTENT · UNTRUSTED DATA</p>
-          {content.length > 600 ? (
-            <details className="mt-3 text-xs">
-              <summary className="min-h-8 cursor-pointer rounded font-semibold text-accent">
-                Reveal decoded payload ({content.length.toLocaleString()} characters)
-              </summary>
-              <pre className="mt-3 max-h-72 overflow-auto whitespace-pre-wrap break-all font-mono text-[11px] leading-5 text-body">
-                {content}
-              </pre>
-            </details>
-          ) : (
-            <pre className="mt-3 max-h-72 overflow-auto whitespace-pre-wrap break-all font-mono text-[11px] leading-5 text-body">
-              {content}
-            </pre>
-          )}
-          <p className="mt-3 text-[10px] leading-5 text-muted">
-            Untrusted content, shown as text. ScamGuard never opens it automatically.
-          </p>
-        </div>
-      </section>
-      {payment && (
-        <ResultDisclosure
-          title="Payment QR structure"
-          hint={
-            payment.crc_valid === true
-              ? 'CRC valid'
-              : payment.crc_valid === false
-                ? 'CRC invalid'
-                : 'CRC unavailable'
-          }
-        >
-          <dl className="metadata-grid">
-            <div>
-              <dt>CRC integrity</dt>
-              <dd>
-                {payment.crc_valid === true
-                  ? 'valid'
+    <AssessmentLayout
+      assessment={assessment}
+      label="QR assessment"
+      initialTab="decoded"
+      tabs={[
+        {
+          id: 'decoded',
+          label: 'Decoded content',
+          panelLabel: 'QR decoding result',
+          content: (
+            <>
+              <dl className="metadata-grid">
+                <div>
+                  <dt>Decoded type</dt>
+                  <dd>{qr.payload_type.toLowerCase()}</dd>
+                </div>
+                <div>
+                  <dt>Security route</dt>
+                  <dd>
+                    {qr.routed_engine ? `${qr.routed_engine.toLowerCase()} intelligence` : 'none'}
+                  </dd>
+                </div>
+                <div>
+                  <dt>Input source</dt>
+                  <dd>
+                    {qr.source === 'CAMERA'
+                      ? 'Camera · decoded on device'
+                      : `${qr.image_format} · ${qr.image_width} × ${qr.image_height}px`}
+                  </dd>
+                </div>
+                <div>
+                  <dt>Original retained</dt>
+                  <dd>no</dd>
+                </div>
+              </dl>
+              <div className="mt-4 rounded-lg border border-line bg-surface-raised p-4">
+                <p className="eyebrow !text-[9px]">DECODED CONTENT · UNTRUSTED DATA</p>
+                {content.length > 600 ? (
+                  <details className="mt-3 text-xs">
+                    <summary className="min-h-8 cursor-pointer rounded font-semibold text-accent">
+                      Reveal decoded payload ({content.length.toLocaleString()} characters)
+                    </summary>
+                    <pre className="mt-3 max-h-72 overflow-auto whitespace-pre-wrap break-all font-mono text-[11px] leading-5 text-body">
+                      {content}
+                    </pre>
+                  </details>
+                ) : (
+                  <pre className="mt-3 max-h-72 overflow-auto whitespace-pre-wrap break-all font-mono text-[11px] leading-5 text-body">
+                    {content}
+                  </pre>
+                )}
+                <p className="mt-3 text-[10px] leading-5 text-muted">
+                  Untrusted content, shown as text. ScamGuard never opens it automatically.
+                </p>
+              </div>
+            </>
+          ),
+        },
+        payment
+          ? {
+              id: 'payment',
+              label: 'Payment',
+              panelLabel: 'Payment QR structure',
+              hint:
+                payment.crc_valid === true
+                  ? 'CRC valid'
                   : payment.crc_valid === false
-                    ? 'invalid'
-                    : 'unavailable'}
+                    ? 'CRC invalid'
+                    : 'CRC unavailable',
+              content: (
+                <>
+                  <dl className="metadata-grid">
+                    <div>
+                      <dt>CRC integrity</dt>
+                      <dd>
+                        {payment.crc_valid === true
+                          ? 'valid'
+                          : payment.crc_valid === false
+                            ? 'invalid'
+                            : 'unavailable'}
+                      </dd>
+                    </div>
+                    {paymentRows.map(([label, value]) => (
+                      <div key={label}>
+                        <dt>{label}</dt>
+                        <dd>{value}</dd>
+                      </div>
+                    ))}
+                    {merchantAccountIds && (
+                      <div>
+                        <dt>Merchant account field IDs</dt>
+                        <dd>{merchantAccountIds}</dd>
+                      </div>
+                    )}
+                  </dl>
+                  <p className="mt-4 text-xs leading-6 text-muted">
+                    Structural consistency and CRC validity do not prove recipient identity,
+                    merchant legitimacy, or transaction safety.
+                  </p>
+                </>
+              ),
+            }
+          : null,
+        basisTab(assessment),
+        evidenceTab(assessment),
+        limitsTab(assessment),
+        technicalTab(
+          assessment,
+          analysisId,
+          <>
+            <div>
+              <dt>QR engine</dt>
+              <dd>{qr.engine_version}</dd>
+            </div>
+            <div>
+              <dt>Decoder</dt>
+              <dd>
+                {qr.decoder_library} · {qr.decoder_version}
               </dd>
             </div>
-            {paymentRows.map(([label, value]) => (
-              <div key={label}>
-                <dt>{label}</dt>
-                <dd>{value}</dd>
-              </div>
-            ))}
-            {merchantAccountIds && (
+            <div>
+              <dt>Payload classifier</dt>
+              <dd>{qr.classifier_version}</dd>
+            </div>
+            <div>
+              <dt>Risk fusion</dt>
+              <dd>{qr.fusion_version}</dd>
+            </div>
+            {qr.file_sha256 && (
               <div>
-                <dt>Merchant account field IDs</dt>
-                <dd>{merchantAccountIds}</dd>
+                <dt>Image fingerprint</dt>
+                <dd className="break-all font-mono">SHA-256 {qr.file_sha256}</dd>
               </div>
             )}
-          </dl>
-          <p className="mt-4 text-xs leading-6 text-muted">
-            Structural consistency and CRC validity do not prove recipient identity, merchant
-            legitimacy, or transaction safety.
-          </p>
-        </ResultDisclosure>
-      )}
-      <AssessmentBasisPanel assessment={assessment} />
-      <EvidencePanel assessment={assessment} />
-      <AnalysisMetaPanel assessment={assessment} analysisId={analysisId}>
-        <div>
-          <dt>QR engine</dt>
-          <dd>{qr.engine_version}</dd>
-        </div>
-        <div>
-          <dt>Decoder</dt>
-          <dd>
-            {qr.decoder_library} · {qr.decoder_version}
-          </dd>
-        </div>
-        <div>
-          <dt>Payload classifier</dt>
-          <dd>{qr.classifier_version}</dd>
-        </div>
-        <div>
-          <dt>Risk fusion</dt>
-          <dd>{qr.fusion_version}</dd>
-        </div>
-        {qr.file_sha256 && (
-          <div>
-            <dt>Image fingerprint</dt>
-            <dd className="break-all font-mono">SHA-256 {qr.file_sha256}</dd>
-          </div>
-        )}
-      </AnalysisMetaPanel>
-    </div>
+          </>,
+        ),
+      ]}
+    />
   )
 }

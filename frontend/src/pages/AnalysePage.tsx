@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import {
   ArrowRight,
   Camera,
+  Check,
   CircleHelp,
   ImageUp,
   Info,
@@ -108,6 +109,19 @@ export function AnalysePage() {
   useEffect(() => {
     if (copiedDraft) navigate('/analyse', { replace: true, state: null })
   }, [copiedDraft, navigate])
+  // When a new assessment arrives, bring the result into view and move focus to its heading so
+  // keyboard and screen-reader users land on it too. Reduced-motion users get an instant jump.
+  const resultId = submission.data?.assessment ? submission.data.id : null
+  useEffect(() => {
+    if (!resultId) return
+    const heading = document.getElementById('result-heading')
+    if (!heading) return
+    heading.focus({ preventScroll: true })
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false
+    const panel = heading.closest('section')
+    if (panel && typeof panel.scrollIntoView === 'function')
+      panel.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' })
+  }, [resultId])
   const content = inputType === 'QR' ? '' : drafts[inputType]
   const field = inputType === 'QR' ? null : draftFields[inputType]
   const setContent = (value: string) => {
@@ -176,6 +190,7 @@ export function AnalysePage() {
         eyebrow="FORENSIC INTELLIGENCE / ANALYSE"
         title="Analyse suspicious content"
         description="Check the evidence before you click, reply, call or pay."
+        compact
       />
       {copiedDraft && (
         <p
@@ -200,24 +215,22 @@ export function AnalysePage() {
             </PreviewNotice>
           )}
           <div
-            className={`motion-fade mb-6 flex items-start gap-3 rounded-lg border px-5 py-4 ${availableIntelligence.length ? 'border-line bg-surface-raised' : 'border-warning/30 bg-warning-subtle'}`}
+            className={`motion-fade mb-5 flex items-start gap-2.5 rounded-lg border px-4 py-2.5 ${availableIntelligence.length ? 'border-line bg-surface-raised' : 'border-warning/30 bg-warning-subtle'}`}
             role="status"
           >
-            <Info size={18} className="mt-0.5 shrink-0 text-muted" aria-hidden="true" />
-            <div>
-              <p className="text-sm font-medium text-body">
+            <Info size={16} className="mt-0.5 shrink-0 text-muted" aria-hidden="true" />
+            <p className="min-w-0 text-xs leading-5 text-muted xl:truncate">
+              <span className="font-medium text-body">
                 {availableIntelligence.length
                   ? `${intelligenceLabel} intelligence is available.`
                   : 'Analysis is not enabled in this release.'}
-              </p>
-              <p className="mt-1 text-xs leading-5 text-muted">
-                {availableIntelligence.length
-                  ? capabilities.data?.reason
-                  : canStore
-                    ? 'Supported submissions can be recorded. No risk assessment is generated.'
-                    : 'You can explore this workspace. No content is submitted and no risk assessment is generated.'}
-              </p>
-            </div>
+              </span>{' '}
+              {availableIntelligence.length
+                ? capabilities.data?.reason
+                : canStore
+                  ? 'Supported submissions can be recorded. No risk assessment is generated.'
+                  : 'You can explore this workspace. No content is submitted and no risk assessment is generated.'}
+            </p>
           </div>
           <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,0.95fr)]">
             <section
@@ -231,7 +244,7 @@ export function AnalysePage() {
                 </h2>
               </div>
               <form
-                className="p-5 sm:p-6"
+                className="p-5"
                 noValidate
                 onSubmit={(event) => {
                   event.preventDefault()
@@ -300,7 +313,7 @@ export function AnalysePage() {
                   aria-labelledby={`mode-${inputType}`}
                   className="analysis-mode-panel motion-enter"
                 >
-                  <p className="mb-4 text-xs leading-6 text-muted">{modeGuidance[inputType]}</p>
+                  <p className="mb-3 text-xs leading-5 text-muted">{modeGuidance[inputType]}</p>
                   {inputType === 'QR' ? (
                     <>
                       <div
@@ -358,7 +371,7 @@ export function AnalysePage() {
                       {validationVisible && (
                         <p
                           role="alert"
-                          className="validation-feedback -mt-3 mb-6 text-xs text-danger"
+                          className="validation-feedback -mt-2 mb-4 text-xs text-danger"
                         >
                           {validation}
                         </p>
@@ -367,7 +380,7 @@ export function AnalysePage() {
                   ) : (
                     field && (
                       <>
-                        <div className="mb-3 flex items-center justify-between">
+                        <div className="mb-2 flex items-center justify-between">
                           <label
                             htmlFor="analysis-content"
                             className="text-xs font-medium text-body"
@@ -386,7 +399,7 @@ export function AnalysePage() {
                         {inputType === 'MESSAGE' ? (
                           <textarea
                             id="analysis-content"
-                            className="input-field min-h-[205px] resize-y"
+                            className="input-field min-h-[120px] resize-y"
                             value={content}
                             disabled={submission.isPending}
                             onChange={(event) => setContent(event.target.value)}
@@ -419,7 +432,7 @@ export function AnalysePage() {
                             spellCheck={false}
                           />
                         )}
-                        <div className="mb-6 mt-2 flex flex-wrap justify-between gap-2 text-[11px] text-muted">
+                        <div className="mb-4 mt-2 flex flex-wrap justify-between gap-2 text-[11px] text-muted">
                           <p id="content-hint">
                             {inputType === 'PHONE'
                               ? 'Country calling code required. Spaces, hyphens and parentheses are accepted.'
@@ -433,52 +446,33 @@ export function AnalysePage() {
                           <p
                             id="content-error"
                             role="alert"
-                            className="validation-feedback -mt-3 mb-6 text-xs text-danger"
+                            className="validation-feedback -mt-2 mb-4 text-xs text-danger"
                           >
                             {validation}
                           </p>
                         )}
-                        <div className="mb-5 flex flex-wrap items-center gap-3">
-                          <button
-                            type="button"
-                            className="button-secondary"
-                            disabled={submission.isPending}
-                            onClick={() => {
-                              setContent(examples[inputType])
-                              setSampleMode(inputType)
-                              submission.reset()
-                            }}
-                          >
-                            Try an example
-                          </button>
-                          {sampleMode === inputType && (
-                            <span role="status" className="text-[11px] leading-5 text-muted">
-                              Example input · results come from the real analysis pipeline.
-                            </span>
-                          )}
-                        </div>
                       </>
                     )
                   )}
                 </div>
-                <div className="flex flex-wrap items-center justify-between gap-4 border-t border-line pt-5">
-                  <p className="flex max-w-[235px] items-start gap-2 text-[11px] leading-5 text-muted">
-                    <LockKeyhole size={14} className="mt-0.5 shrink-0" aria-hidden="true" />
-                    {available
-                      ? inputType === 'QR'
-                        ? qrSource === 'CAMERA'
-                          ? 'Only the decoded payload and assessment are saved to your private history. No camera image is uploaded.'
-                          : 'The decoded payload and assessment are stored privately. The original image is discarded after in-memory decoding.'
-                        : inputType === 'MESSAGE' && canAnalyseMessage
-                          ? 'This analysis is stored in your private account history. Local analysis runs first; optional external contextual review remains disabled by default. Use non-sensitive content only.'
-                          : inputType === 'PHONE'
-                            ? 'The normalized number and assessment are stored in your private history. No external phone or identity lookup is performed.'
-                            : 'This analysis is stored in your private account history. Other users cannot access it. Use non-sensitive content only.'
-                      : 'Nothing is submitted while analysis is unavailable.'}
-                  </p>
+                <div className="flex flex-wrap items-center gap-3">
+                  {inputType !== 'QR' && (
+                    <button
+                      type="button"
+                      className="button-secondary"
+                      disabled={submission.isPending}
+                      onClick={() => {
+                        setContent(examples[inputType])
+                        setSampleMode(inputType)
+                        submission.reset()
+                      }}
+                    >
+                      Try an example
+                    </button>
+                  )}
                   <button
                     type="submit"
-                    className="button-primary"
+                    className="button-primary ml-auto"
                     disabled={!available || Boolean(validation) || submission.isPending}
                     aria-busy={submission.isPending}
                     aria-describedby="unavailable-reason"
@@ -500,8 +494,30 @@ export function AnalysePage() {
                     <ArrowRight size={15} className="motion-arrow" aria-hidden="true" />
                   </button>
                 </div>
-                <p id="unavailable-reason" className="mt-3 text-right text-[11px] text-muted">
+                {sampleMode === inputType && inputType !== 'QR' && (
+                  <p role="status" className="mt-2 text-[11px] leading-5 text-muted">
+                    Example input · results come from the real analysis pipeline.
+                  </p>
+                )}
+                <p
+                  id="unavailable-reason"
+                  className="mt-2 text-right text-[11px] text-muted empty:hidden"
+                >
                   {reason}
+                </p>
+                <p className="mt-4 flex items-start gap-2 border-t border-line pt-3 text-[11px] leading-5 text-muted">
+                  <LockKeyhole size={14} className="mt-0.5 shrink-0" aria-hidden="true" />
+                  {available
+                    ? inputType === 'QR'
+                      ? qrSource === 'CAMERA'
+                        ? 'Only the decoded payload and assessment are saved to your private history. No camera image is uploaded.'
+                        : 'The decoded payload and assessment are stored privately. The original image is discarded after in-memory decoding.'
+                      : inputType === 'MESSAGE' && canAnalyseMessage
+                        ? 'This analysis is stored in your private account history. Local analysis runs first; optional external contextual review remains disabled by default. Use non-sensitive content only.'
+                        : inputType === 'PHONE'
+                          ? 'The normalized number and assessment are stored in your private history. No external phone or identity lookup is performed.'
+                          : 'This analysis is stored in your private account history. Other users cannot access it. Use non-sensitive content only.'
+                    : 'Nothing is submitted while analysis is unavailable.'}
                 </p>
                 {submission.isPending && (
                   <p
@@ -524,7 +540,7 @@ export function AnalysePage() {
                 {submission.data?.assessment && (
                   <a
                     href="#result-heading"
-                    className="action-link mt-4 inline-flex min-h-11 items-center gap-2 rounded text-xs font-semibold text-accent"
+                    className="action-link mt-4 inline-flex min-h-11 items-center gap-2 rounded text-xs font-semibold text-accent xl:hidden"
                     onClick={() => document.getElementById('result-heading')?.focus()}
                   >
                     View assessment{' '}
@@ -550,41 +566,49 @@ export function AnalysePage() {
               </form>
             </section>
             <aside className="motion-enter motion-delay-2 min-w-0 space-y-5">
-              <section className="panel overflow-hidden" aria-labelledby="result-heading">
-                <div className="section-heading">
+              <section
+                className="panel scroll-mt-4 overflow-hidden"
+                aria-labelledby="result-heading"
+              >
+                <div className="section-heading result-heading-row">
                   <span className="step-number">02</span>
                   <h2 id="result-heading" tabIndex={-1} className="text-sm font-semibold">
                     Analysis result
                   </h2>
-                </div>
-                {submission.isSuccess && (
-                  <div
-                    role="status"
-                    className="submission-confirmation border-b border-line px-5 py-3 text-sm"
-                  >
-                    <p className="font-semibold text-accent">
-                      {submission.data.assessment ? 'Analysis completed.' : 'Submission recorded.'}
-                    </p>
-                    <p className="mt-1 text-[11px] text-muted">
-                      {inputLabels[submission.data.input_type]} · {submission.data.status}
-                    </p>
-                    <button
-                      type="button"
-                      className="button-secondary mt-3"
-                      onClick={() => {
-                        submission.reset()
-                        setSampleMode(null)
-                        document.getElementById('analysis-content')?.focus()
-                      }}
-                    >
-                      <RotateCcw size={14} aria-hidden="true" /> Analyse another
-                    </button>
-                    {!submission.data.assessment && (
-                      <p className="mt-2 break-all font-mono text-[11px] text-muted">
-                        {submission.data.id}
+                  {submission.isSuccess && (
+                    <>
+                      <p role="status" className="result-status-chip">
+                        <Check size={12} aria-hidden="true" />
+                        <span>
+                          {submission.data.assessment
+                            ? 'Analysis completed.'
+                            : 'Submission recorded.'}
+                        </span>
+                        <span className="text-muted">
+                          {inputLabels[submission.data.input_type]}
+                          {submission.data.assessment
+                            ? ''
+                            : ` · ${submission.data.status.toLowerCase()}`}
+                        </span>
                       </p>
-                    )}
-                  </div>
+                      <button
+                        type="button"
+                        className="button-secondary ml-auto !min-h-10 !px-3"
+                        onClick={() => {
+                          submission.reset()
+                          setSampleMode(null)
+                          document.getElementById('analysis-content')?.focus()
+                        }}
+                      >
+                        <RotateCcw size={14} aria-hidden="true" /> Analyse another
+                      </button>
+                    </>
+                  )}
+                </div>
+                {submission.isSuccess && !submission.data.assessment && (
+                  <p className="break-all border-b border-line px-5 py-2 font-mono text-[11px] text-muted">
+                    {submission.data.id}
+                  </p>
                 )}
                 {submission.data?.failure_code && (
                   <p role="alert" className="p-5 text-xs text-warning">
@@ -611,6 +635,14 @@ export function AnalysePage() {
                       analysisId={submission.data.id}
                       initial={submission.data.user_feedback}
                     />
+                    <p className="result-caution">
+                      <CircleHelp size={13} className="mt-0.5 shrink-0" aria-hidden="true" />
+                      <span>
+                        <span className="font-semibold text-body">A moment of caution:</span> a
+                        familiar name alone does not confirm who sent a message; check through a
+                        channel you already trust.
+                      </span>
+                    </p>
                   </>
                 ) : (
                   <EmptyState icon={ScanLine} title="No assessment yet">
@@ -620,16 +652,18 @@ export function AnalysePage() {
                   </EmptyState>
                 )}
               </section>
-              <section className="rounded-lg border border-line bg-surface-raised/60 p-5">
-                <h2 className="flex items-center gap-2 text-sm font-medium">
-                  <CircleHelp size={17} className="text-accent" aria-hidden="true" />A moment of
-                  caution
-                </h2>
-                <p className="mt-3 text-xs leading-6 text-muted">
-                  Check unexpected requests through a contact channel you already trust. A familiar
-                  name alone does not confirm who sent a message.
-                </p>
-              </section>
+              {!submission.data?.assessment && (
+                <section className="rounded-lg border border-line bg-surface-raised/60 p-5">
+                  <h2 className="flex items-center gap-2 text-sm font-medium">
+                    <CircleHelp size={17} className="text-accent" aria-hidden="true" />A moment of
+                    caution
+                  </h2>
+                  <p className="mt-3 text-xs leading-6 text-muted">
+                    Check unexpected requests through a contact channel you already trust. A
+                    familiar name alone does not confirm who sent a message.
+                  </p>
+                </section>
+              )}
             </aside>
           </div>
         </>

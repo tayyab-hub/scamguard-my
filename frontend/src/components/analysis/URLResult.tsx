@@ -7,13 +7,8 @@ import { isPhoneAssessment, isQRAssessment, isURLAssessment } from '../../lib/re
 import { MessageResult } from './MessageResult'
 import { PhoneResult } from './PhoneResult'
 import { QrResult } from './QrResult'
-import {
-  AnalysisMetaPanel,
-  AnalysisResultHero,
-  AssessmentBasisPanel,
-  EvidencePanel,
-  RecommendedActionsPanel,
-} from './ResultPresentation'
+import { AssessmentLayout } from './ResultPresentation'
+import { basisTab, evidenceTab, limitsTab, technicalTab } from './resultTabs'
 
 // Select QR, URL, Phone or Message UI using validated component shapes; optional content is
 // needed for the saved QR payload display.
@@ -48,66 +43,69 @@ export function URLResult({
 }) {
   const { components } = assessment
   return (
-    <div
-      className="analysis-result motion-fade"
-      data-risk={assessment.risk_level}
-      aria-label="URL assessment"
-    >
-      <AnalysisResultHero assessment={assessment} />
-      <RecommendedActionsPanel actions={assessment.recommended_actions} />
-      <AssessmentBasisPanel assessment={assessment} />
-      <EvidencePanel assessment={assessment} />
-      <AnalysisMetaPanel assessment={assessment} analysisId={analysisId}>
-        <div>
-          <dt>Local URL model</dt>
-          <dd>
-            {components.url_model.status.toLowerCase()} ·{' '}
-            {components.url_model.version ?? 'unavailable'}
-          </dd>
-        </div>
-        <div>
-          <dt>Classifier estimate</dt>
-          <dd>
-            {components.url_model.class_estimate ?? 'unavailable'} ·{' '}
-            {assessment.confidence_score === null
-              ? 'unavailable'
-              : assessment.confidence_level.toLowerCase()}{' '}
-            classifier strength (uncalibrated; not a scam probability)
-          </dd>
-        </div>
-        <div>
-          <dt>URL evidence engine</dt>
-          <dd>
-            {components.url_rules.version} · {components.url_rules.indicator_count} indicators ·{' '}
-            {components.url_rules.status.toLowerCase()}
-          </dd>
-        </div>
-        <div>
-          <dt>Optional reputation review</dt>
-          <dd>
-            {components.reputation.status.toLowerCase()}
-            {components.reputation.provider
-              ? ` · ${components.reputation.provider} · ${components.reputation.version}`
-              : ''}
-          </dd>
-        </div>
-        <div>
-          <dt>Registrable domain</dt>
-          <dd>{components.url_structure.registrable_domain ?? 'not identifiable'}</dd>
-        </div>
-        <div>
-          <dt>Hostname</dt>
-          <dd>{components.url_structure.hostname}</dd>
-        </div>
-        <div>
-          <dt>URL parser</dt>
-          <dd>{components.url_structure.parser_version}</dd>
-        </div>
-        <div>
-          <dt>URL fusion</dt>
-          <dd>{components.fusion.version}</dd>
-        </div>
-      </AnalysisMetaPanel>
-    </div>
+    <AssessmentLayout
+      assessment={assessment}
+      label="URL assessment"
+      tabs={[
+        basisTab(assessment),
+        evidenceTab(assessment),
+        limitsTab(assessment),
+        technicalTab(
+          assessment,
+          analysisId,
+          <>
+            <div>
+              <dt>Local URL model</dt>
+              <dd>
+                {components.url_model.status.toLowerCase()} ·{' '}
+                {components.url_model.version ?? 'unavailable'}
+              </dd>
+            </div>
+            <div>
+              <dt>Classifier estimate</dt>
+              <dd>
+                {components.url_model.class_estimate ?? 'unavailable'} ·{' '}
+                {assessment.confidence_score === null
+                  ? 'unavailable'
+                  : assessment.confidence_level.toLowerCase()}{' '}
+                classifier strength (uncalibrated; not a scam probability)
+              </dd>
+            </div>
+            <div>
+              <dt>URL evidence engine</dt>
+              <dd>
+                {components.url_rules.version} · {components.url_rules.indicator_count} indicators ·{' '}
+                {components.url_rules.status.toLowerCase()}
+              </dd>
+            </div>
+            <div>
+              <dt>Optional reputation review</dt>
+              <dd>
+                {components.reputation.status.toLowerCase()}
+                {components.reputation.provider
+                  ? ` · ${components.reputation.provider} · ${components.reputation.version}`
+                  : ''}
+              </dd>
+            </div>
+            <div>
+              <dt>Registrable domain</dt>
+              <dd>{components.url_structure.registrable_domain ?? 'not identifiable'}</dd>
+            </div>
+            <div>
+              <dt>Hostname</dt>
+              <dd>{components.url_structure.hostname}</dd>
+            </div>
+            <div>
+              <dt>URL parser</dt>
+              <dd>{components.url_structure.parser_version}</dd>
+            </div>
+            <div>
+              <dt>URL fusion</dt>
+              <dd>{components.fusion.version}</dd>
+            </div>
+          </>,
+        ),
+      ]}
+    />
   )
 }

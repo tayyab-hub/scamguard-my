@@ -55,9 +55,13 @@ test('result presentation: real scores, keyboard metadata, pending and live redu
   await expect(
     result.getByText(`Confidence: ${record.assessment.confidence_level.toLowerCase()}`),
   ).toBeVisible()
-  await page.getByRole('link', { name: 'View assessment' }).click()
+  // A new result scrolls into view and takes focus; stacked layouts also keep a link back to it.
   await expect(page.getByRole('heading', { name: 'Analysis result' })).toBeFocused()
-  const metadata = result.getByRole('button', { name: 'Technical details' })
+  if (info.project.name === 'mobile') {
+    await page.getByRole('link', { name: 'View assessment' }).click()
+    await expect(page.getByRole('heading', { name: 'Analysis result' })).toBeFocused()
+  }
+  const metadata = result.getByRole('tab', { name: 'Technical', exact: true })
   await metadata.focus()
   await page.keyboard.press('Enter')
   await expect(result.getByText(record.id, { exact: true })).toBeVisible()

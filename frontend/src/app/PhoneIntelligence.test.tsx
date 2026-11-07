@@ -134,12 +134,13 @@ describe('Phone Intelligence', () => {
       screen.getByText('No defensible numeric score from numbering metadata alone.'),
     ).toBeInTheDocument()
     expect(
-      within(screen.getByRole('region', { name: 'Phone intelligence details' })).getByText(
+      within(screen.getByRole('tabpanel', { name: 'Phone intelligence details' })).getByText(
         '+442079460958',
       ),
     ).toBeInTheDocument()
+    await userEvent.click(screen.getByRole('tab', { name: 'Evidence' }))
     expect(
-      within(screen.getByRole('region', { name: 'Phone numbering evidence' })).getByText(
+      within(screen.getByRole('tabpanel', { name: 'Phone numbering evidence' })).getByText(
         'Valid international numbering format',
       ),
     ).toBeInTheDocument()
@@ -148,7 +149,7 @@ describe('Phone Intelligence', () => {
         'Verify unexpected callers using an official number obtained independently.',
       ),
     ).toBeInTheDocument()
-    await userEvent.click(screen.getByRole('button', { name: 'Technical details' }))
+    await userEvent.click(screen.getByRole('tab', { name: 'Technical' }))
     expect(
       screen.getByText(/cannot by itself establish whether the caller is fraudulent/),
     ).toBeInTheDocument()

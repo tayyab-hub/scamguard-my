@@ -1,13 +1,14 @@
 // November improvements: sender context questions on unclear Message results, private result
 // feedback, and labelling of links/numbers checked inside a message. Network calls are stubbed.
 
-import { render, screen, within } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { describe, expect, it, vi } from 'vitest'
 import { MessageResult } from '../components/analysis/MessageResult'
 import { ResultFeedback } from '../components/ResultFeedback'
 import { contextGuidance } from '../lib/senderContext'
+import { matchEvidence } from '../lib/resultPresentation'
 import { messageAssessmentSchema, setCsrfToken } from '../lib/api'
 
 const base = {
@@ -54,6 +55,7 @@ describe('Sender context questions', () => {
     const fetchSpy = vi.fn()
     vi.stubGlobal('fetch', fetchSpy)
     const { unmount } = render(<MessageResult assessment={messageAssessmentSchema.parse(base)} />)
+    // Shown straight away on unclear results, without opening anything.
     const panel = screen.getByRole('region', { name: 'What you know that the text cannot show' })
     const asks = within(panel).getByRole('group', { name: /ask for money/ })
     await userEvent.click(within(asks).getByLabelText('Yes'))
@@ -130,6 +132,109 @@ describe('Result feedback', () => {
     expect(init.method).toBe('PUT')
     expect(init.headers['X-CSRF-Token']).toBe('csrf-test')
     expect(JSON.parse(init.body)).toEqual({ verdict: 'TOO_LOW' })
+    // The card closes after the thanks; the footer keeps the answer and a way to change it.
+    await waitFor(
+      () => expect(screen.queryByRole('group', { name: 'Rate this result' })).toBeNull(),
+      {
+        timeout: 3000,
+      },
+    )
+    expect(screen.getByText('Not worried enough')).toBeVisible()
+    await userEvent.click(screen.getByRole('button', { name: 'Change' }))
+    expect(screen.getByRole('group', { name: 'Rate this result' })).toBeVisible()
     setCsrfToken(null)
+  })
+
+  it('closes with × without saving, reopens from the footer, and stays quiet when answered', async () => {
+    const fetchSpy = vi.fn()
+    vi.stubGlobal('fetch', fetchSpy)
+    const { unmount } = render(
+      <QueryClientProvider client={new QueryClient()}>
+        <ResultFeedback analysisId="11111111-1111-4111-8111-111111111111" initial={null} />
+      </QueryClientProvider>,
+    )
+    await userEvent.click(screen.getByRole('button', { name: 'Close feedback' }))
+    expect(screen.queryByRole('group', { name: 'Rate this result' })).toBeNull()
+    expect(fetchSpy).not.toHaveBeenCalled()
+    await userEvent.click(screen.getByRole('button', { name: 'Rate this result' }))
+    expect(screen.getByRole('group', { name: 'Rate this result' })).toBeVisible()
+    unmount()
+    render(
+      <QueryClientProvider client={new QueryClient()}>
+        <ResultFeedback analysisId="11111111-1111-4111-8111-111111111111" initial="RIGHT" />
+      </QueryClientProvider>,
+    )
+    expect(screen.queryByRole('group', { name: 'Rate this result' })).toBeNull()
+    expect(screen.getByText('Looks right')).toBeVisible()
+  })
+})
+
+describe('Why this verdict reasons', () => {
+  const evidence = [
+    {
+      category: 'CREDENTIAL_REQUEST',
+      label: 'Credential language',
+      snippet: '…enter your TAC code within 30 minutes…',
+      source: 'DETERMINISTIC_RULE',
+    },
+    {
+      category: 'EMBEDDED_LINK',
+      label: 'Link in the message: high',
+      snippet: 'shopee-hadiah.top — Brand name in an unofficial domain',
+      source: 'EMBEDDED_URL',
+    },
+  ]
+
+  it('matches reasons to saved evidence by label or checked host, and nothing else', () => {
+    expect(matchEvidence('Credential language', evidence as never)?.label).toBe(
+      'Credential language',
+    )
+    expect(
+      matchEvidence(
+        'Link shopee-hadiah.top assessed as high by the offline URL check',
+        evidence as never,
+      )?.label,
+    ).toBe('Link in the message: high')
+    expect(matchEvidence('The local model favours the SCAM class.', evidence as never)).toBeNull()
+  })
+
+  it('opens a reason to show its source and matched text; unmatched reasons stay plain', async () => {
+    const assessment = messageAssessmentSchema.parse({
+      ...base,
+      risk_level: 'HIGH',
+      risk_score: 0.9,
+      evidence,
+      components: {
+        ...base.components,
+        assessment_basis: {
+          decision: 'Several warning signs combine.',
+          supporting: [
+            'Credential language',
+            'Link shopee-hadiah.top assessed as high by the offline URL check',
+            'The local model favours the SCAM class; this alone cannot establish fraud.',
+          ],
+          mitigating: [],
+          uncertainty: ['Sender identity is unverified.'],
+        },
+      },
+    })
+    render(<MessageResult assessment={assessment} />)
+    await userEvent.click(screen.getByRole('tab', { name: 'Why this verdict' }))
+    const panel = screen.getByRole('tabpanel', { name: 'Why this verdict' })
+    const snippet = within(panel).getByText('…enter your TAC code within 30 minutes…')
+    expect(snippet).not.toBeVisible()
+    await userEvent.click(within(panel).getByText('Credential language'))
+    expect(snippet).toBeVisible()
+    await userEvent.click(within(panel).getByText(/^Link shopee-hadiah\.top/))
+    expect(within(panel).getByText('Offline link check · not opened')).toBeVisible()
+    // The model reason has no saved evidence item, so it is not an expandable row.
+    expect(
+      within(panel)
+        .getByText(/local model favours/)
+        .closest('summary'),
+    ).toBeNull()
+    expect(within(panel).getByText('Sender identity is unverified.')).not.toBeVisible()
+    await userEvent.click(within(panel).getByText('What remains uncertain (1)'))
+    expect(within(panel).getByText('Sender identity is unverified.')).toBeVisible()
   })
 })
