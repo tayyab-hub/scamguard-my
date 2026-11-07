@@ -218,7 +218,8 @@ class GeminiReviewProvider:
 
     def __init__(self, api_key: str, model: str, timeout_seconds: float):
         self.model_name = model
-        self._api_key = api_key
+        # Dashboards can add a line break, spaces or quotes when a long key is pasted.
+        self._api_key = "".join(api_key.split()).strip("\"'")
         self._timeout = timeout_seconds
 
     def review(self, redacted_message: str) -> ContextualReviewOutput:

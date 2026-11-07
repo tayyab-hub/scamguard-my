@@ -191,3 +191,8 @@ def test_gemini_request_asks_for_low_thinking():
         provider.review("hello there")
     sent = json.loads(call.call_args.args[0].data)
     assert sent["generationConfig"]["thinkingConfig"] == {"thinkingLevel": "low"}
+
+
+def test_gemini_key_whitespace_and_quotes_are_removed():
+    provider = GeminiReviewProvider(' "AQ.Ab-12\n34-xyz" \n', "m", 5)
+    assert provider._api_key == "AQ.Ab-1234-xyz"
