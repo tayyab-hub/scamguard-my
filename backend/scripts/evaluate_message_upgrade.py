@@ -41,14 +41,17 @@ def historical_test() -> list[dict]:
     ]
 
 
-def challenge() -> list[dict]:
-    with (ROOT / "data/challenge/message_challenge_v1.csv").open(encoding="utf-8") as handle:
+def challenge(path: str = "data/challenge/message_challenge_v1.csv") -> list[dict]:
+    with (ROOT / path).open(encoding="utf-8") as handle:
         return [
             {
                 "text": row["text"],
                 "label": row["label"],
                 "ambiguous": row["ambiguous"].strip().lower() == "true",
                 "category": row["category"],
+                "language": row.get("language", "en"),
+                "contains_link": row.get("contains_link", "false") == "true",
+                "contains_phone": row.get("contains_phone", "false") == "true",
             }
             for row in csv.DictReader(handle)
         ]
@@ -83,14 +86,29 @@ def main() -> None:
     parser.add_argument("--backend", required=True)
     parser.add_argument("--label", required=True)
     parser.add_argument("--details", help="optional CSV of per-row challenge results")
+    parser.add_argument(
+        "--challenge-v2", action="store_true", help="also evaluate the second challenge set"
+    )
     args = parser.parse_args()
     sys.path.insert(0, str(Path(args.backend).resolve()))
     from app.core.config import Settings
     from app.ml.engine import build_message_engine
 
     engine = build_message_engine(Settings(persistence_enabled=False, ai_review_enabled=False))
+    # Builds with embedded link/phone checks get the same URL and Phone engines as production.
+    if hasattr(engine, "attach_engines"):
+        from app.phone_intelligence.engine import build_phone_engine
+        from app.url_intelligence.engine import build_url_engine
+
+        class _URLSettings:
+            url_model_path = None
+
+        engine.attach_engines(build_url_engine(_URLSettings()), build_phone_engine())
     results = {"label": args.label}
-    for name, rows in (("historical_test", historical_test()), ("challenge_v1", challenge())):
+    datasets = [("historical_test", historical_test()), ("challenge_v1", challenge())]
+    if args.challenge_v2:
+        datasets.append(("challenge_v2", challenge("data/challenge_v2/message_challenge_v2.csv")))
+    for name, rows in datasets:
         assessed = [engine.analyse(row["text"]) for row in rows]
         levels = [str(item.risk_level) for item in assessed]
         results[name] = summarise(rows, levels)
@@ -98,6 +116,16 @@ def main() -> None:
             "rules": assessed[0].rules_version,
             "fusion": assessed[0].fusion_version,
         }
+        if name == "challenge_v2":
+            for key, test in (
+                ("english", lambda r: r["language"] == "en"),
+                ("malay_or_mixed", lambda r: r["language"] in {"ms", "mixed"}),
+                ("with_link", lambda r: r["contains_link"]),
+                ("with_phone", lambda r: r["contains_phone"]),
+                ("no_link_or_phone", lambda r: not r["contains_link"] and not r["contains_phone"]),
+            ):
+                index = [i for i, row in enumerate(rows) if test(row)]
+                results[name][key] = summarise([rows[i] for i in index], [levels[i] for i in index])
         if name == "challenge_v1":
             clear = [i for i, row in enumerate(rows) if not row["ambiguous"]]
             results[name]["excluding_ambiguous"] = summarise(

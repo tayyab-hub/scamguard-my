@@ -7,9 +7,7 @@ import { getApiBaseUrl, parseApiBaseUrl } from './env'
 describe('API deployment configuration', () => {
   it('supports the local same-origin proxy outside production', () => {
     expect(parseApiBaseUrl('/api/v1')).toBe('/api/v1')
-    expect(parseApiBaseUrl('http://127.0.0.1:8000/api/v1')).toBe(
-      'http://127.0.0.1:8000/api/v1',
-    )
+    expect(parseApiBaseUrl('http://127.0.0.1:8000/api/v1')).toBe('http://127.0.0.1:8000/api/v1')
   })
 
   it('uses the same-origin proxy when production configuration is blank', () => {

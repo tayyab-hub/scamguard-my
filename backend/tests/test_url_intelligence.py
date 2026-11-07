@@ -185,7 +185,10 @@ def test_weak_signals_do_not_dominate_even_strong_ml(value):
     evidence = assess_rules(parse_url(value))
     result = fuse(Classification("PHISHING", 0.99), evidence, ReputationSignal(status="DISABLED"))
     assert result != "HIGH"
-    if not any(e.severity == "WEAK" for e in evidence):
+    if any(e.category == "POPULAR_DOMAIN" for e in evidence):
+        # url_fusion_v4: the host-only model is ignored on listed popular sites.
+        assert result in {"LOW", "CAUTION"}
+    elif not any(e.severity == "WEAK" for e in evidence):
         assert result == "CAUTION"
 
 

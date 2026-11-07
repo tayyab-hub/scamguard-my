@@ -1,0 +1,234 @@
+id,label,category,ambiguous,language,contains_link,contains_phone,text
+v001,SCAM,bank_phishing,false,en,true,false,"Maybank2u: a new device was linked to your profile at 02:14. If this wasn't you, review it at maybank2u-sekuriti.com/review"
+v002,SCAM,courier_phishing,false,ms,true,false,PosLaju: Bungkusan anda tertahan kerana alamat tidak lengkap. Kemaskini dalam 48 jam di pos-laju-redelivery.top/my
+v003,SCAM,government_phishing,false,mixed,true,false,MySejahtera: rekod vaksin anda perlu dikemaskini utk sijil digital baru. semak sini mysejahtera-semak.xyz
+v004,SCAM,ewallet_phishing,false,en,true,false,TNG eWallet: RM38.50 toll rebate is ready to claim before 30 Nov -> tng-ewallet-rebate.vip
+v005,SCAM,shopping_phishing,false,en,true,false,Shopee: payment for order #MY24117 failed and it will be cancelled tonight. Click to update card: shopee-my-payment.weebly.com
+v006,SCAM,tax_refund_phishing,false,ms,true,false,LHDN: Anda layak menerima bayaran balik cukai RM612.40. Isi butiran bank di hasil-refund-gov.000webhostapp.com
+v007,SCAM,bank_phishing,false,en,true,false,CIMB Clicks notice - your SecureTAC registration expires today. Verify and re-register at cimb-securetac-renew.github.io to avoid disruption
+v008,SCAM,epf_phishing,false,mixed,true,false,"KWSP i-Akaun: Pengeluaran khas RM1,500 approved for you. Confirm bank details here bit.ly/kwsp-khas24"
+v009,SCAM,traffic_fine_phishing,false,ms,true,false,JPJ: Saman tertunggak RM300 untuk kenderaan anda. Jelaskan sebelum disenaraihitam: jpj-saman-online.icu
+v010,SCAM,courier_phishing,false,en,true,false,J&T Express: we tried to deliver ur parcel today but nobody was home. Reschedule (RM1.20 fee) at jnt-my-reschedule.shop
+v011,SCAM,subscription_phishing,false,en,true,false,Netflix: account suspended - we couldn't process your last payment. Update your details to keep watching: netflix-billing-help.site
+v012,SCAM,utility_phishing,false,mixed,true,false,"TNB: bil elektrik anda overdue, bekalan akan dipotong esok 10am. Bayar di tnb-bil-semasa.online"
+v013,SCAM,bank_phishing,false,en,true,false,Public Bank: unusual login detected from Johor Bahru. Verify your PBe access now at pbebank-secure.login-my.com
+v014,SCAM,crypto_phishing,false,en,true,false,Your Luno wallet has 0.0042 BTC pending withdrawal approval. Review within 12h at luno-withdraw-approval.net
+v015,SCAM,govt_aid_phishing,false,ms,true,false,Permohonan Sumbangan Tunai Rahmah fasa 3 dibuka. Semak kelayakan & daftar akaun bank anda di str-semak2026.blogspot.com
+v016,SCAM,account_phishing,false,en,true,false,URGENT: Apple ID locked for security reasons. Restore access at appleid-restore-support.com within 24 hours
+v017,SCAM,shopping_phishing,false,en,true,false,Lazada: you are selected for our 12.12 loyalty cashback RM150 :) claim via lazada-loyalty.com.my-claim.top
+v018,SCAM,ewallet_phishing,false,mixed,true,false,Boost: akaun anda akan dibekukan sbb KYC tak lengkap. Upload IC sini boost-kyc-update.vercel.app
+v019,SCAM,courier_phishing,false,en,true,false,DHL: customs duty RM4.90 unpaid for shipment MY88231. Pay now or parcel returned to sender: dhl-customs-my.000webhostapp.com
+v020,SCAM,account_takeover_link,false,en,true,false,hey is this u in this video?? 😂😂 bit.ly/3vDx9q
+v021,SCAM,bank_phishing,false,en,true,false,"RHB: card ending 4471 was charged RM2,890.00 at an online store. Not you? Click to cancel at rhb-dispute-centre.com"
+v022,SCAM,insurance_phishing,false,ms,true,false,"Pemberitahuan PERKESO: tuntutan faedah anda RM2,300 telah diluluskan. Lengkapkan maklumat di perkeso-tuntutan.weebly.com"
+v023,SCAM,account_phishing,false,en,true,false,Grab: your driver account will be deactivated for a policy violation. Submit an appeal at grab-driver-appeal.github.io
+v024,SCAM,document_phishing,false,en,true,false,Google Drive: Aina shared 'Payslip_Oct.pdf' with you. Open: docs-google.drive-share.icu/view?id=8812
+v025,SCAM,email_phishing,false,ms,true,false,Kuota emel pejabat anda hampir penuh. Log masuk semula untuk elak mesej hilang: webmail-upgrade-portal.web.app
+v026,SCAM,parcel_link_scam,false,mixed,true,false,"salam, ni gambar barang COD yg u order kan? tengok jap tinyurl.com/brg-cod-88 then confirm alamat"
+v027,SCAM,macau_scam,false,en,false,true,This is Inspector Lim from PDRM Bukit Aman. A money laundering case is registered under your IC. Call me back today at +60 3-1234 5678.
+v028,SCAM,macau_scam,false,ms,false,true,Ini panggilan dari Mahkamah Majistret Shah Alam. Anda ada saman tertunggak. Hubungi pegawai bertugas di 03-1234 5678 hari ini juga.
+v029,SCAM,tech_support_scam,false,en,false,true,"Microsoft Security: Trojan detected on your PC, banking data at risk. Call our free helpline +882 1612 3456"
+v030,SCAM,loan_scam,false,mixed,false,true,"Pinjaman peribadi tanpa CTOS/CCRIS, lulus 1 jam! Blacklist pun boleh. WhatsApp Encik Razak +60 11-2345 6789"
+v031,SCAM,job_scam,false,en,false,true,"Part-time online job, RM200-RM800/day, just like & review products from home. Interested pls WhatsApp HR Jessica +855 12 345 678"
+v032,SCAM,bank_impersonation,false,ms,false,true,"Pihak bank mengesan transaksi mencurigakan RM4,800 pada kad anda. Sila hubungi Unit Fraud di +60 3-1234 5679 dengan kadar segera."
+v033,SCAM,customs_impersonation,false,en,false,true,Your parcel from overseas contains illegal items and is held by customs. Call officer Tan at +60 3-2345 6789 to avoid prosecution.
+v034,SCAM,insurance_scam,false,en,false,true,"hi, ur medical policy lapsed and a claim of RM9,200 was rejected. call our agent at +60 12-345 6789 to reactivate before end of day"
+v035,SCAM,lucky_draw_scam,false,ms,false,true,"Tahniah! Nombor anda terpilih dalam cabutan bertuah Raya, hadiah sebuah kereta. Hubungi +60 11-2345 6780 untuk tuntutan."
+v036,SCAM,investment_scam,false,en,false,true,"Join our VIP stock group, members gained 30% this week alone. Add mentor on WhatsApp +60 11-2233 4455 for the signal list"
+v037,SCAM,extortion_scam,false,en,false,true,We have recordings of your browsing activity. Contact +882 1612 3457 within 48h or they go to everyone in your contacts.
+v038,SCAM,family_emergency_scam,false,mixed,false,true,"Mak, ni adik. Phone jatuh, guna phone kawan. Accident sikit, perlu duit hospital. Call no ni +60 11-2345 6781 jangan call no lama"
+v039,SCAM,tax_impersonation,false,en,false,true,"LHDN Enforcement: your income tax arrears of RM7,415 are under investigation. Contact Encik Faizal at +60 3-1234 5670 before 5pm."
+v040,SCAM,telco_impersonation,false,ms,false,true,Talian anda akan ditamatkan oleh MCMC kerana disyaki digunakan untuk aktiviti haram. Hubungi +60 3-1234 5671 untuk membuat rayuan.
+v041,SCAM,refund_scam,false,en,false,true,"Amazon: an order for an iPhone 15 Pro (RM5,299) was placed from your account. If this wasn't you, call support on +1 800-555-0199"
+v042,SCAM,friend_new_number_scam,false,en,false,false,"Hi mum, this is my new number, old phone broke. Can u save this one? Also need a small favour, can u transfer RM850 to my friend's acc, I'll pay back tmr"
+v043,SCAM,friend_new_number_scam,false,ms,false,false,"Assalamualaikum kak, ni Hafiz. Dah tukar nombor baru. Boleh tolong pinjam RM300 dulu? Akaun tu bukan nama sy, akaun kawan. Esok sy bayar balik"
+v044,SCAM,friend_new_number_scam,false,mixed,false,true,"Bro ni aku, no baru. Kena tahan kat roadblock, nak settle on the spot RM250. DuitNow kat 012-345 6789 jap pls, nanti aku ganti"
+v045,SCAM,whatsapp_code_hijack,false,en,false,false,Sorry I accidentally sent my OTP to your number 😅 can you forward it to me? thanks!
+v046,SCAM,whatsapp_code_hijack,false,ms,false,false,"Hai, saya terhantar kod pengesahan ke nombor awak. Boleh tolong screenshot dan hantar balik? Terima kasih ya"
+v047,SCAM,whatsapp_code_hijack,false,en,false,false,"Hi! could you vote for my niece in a dance competition? just send me the code you'll get by SMS in a minute, thanks a lot"
+v048,SCAM,job_scam,false,en,false,false,"Hello! I'm Mira from a recruitment agency. We saw your resume online. Part-time task: rate hotels on an app, RM50-RM300 daily, paid same day. Interested?"
+v049,SCAM,task_scam,false,en,false,false,"Task 3 done ✅ commission RM68 credited. To unlock withdrawal pls top up RM500 for the merchant combo task, refunded with 30% bonus"
+v050,SCAM,job_scam,false,ms,false,false,"Kerja dari rumah, hanya perlu taip data. Gaji RM3000 sebulan. Yuran pendaftaran RM99 sahaja, slot terhad."
+v051,SCAM,investment_scam,false,en,false,false,"Dear investor, our AI trading bot returned 4.2% daily last month. Minimum deposit RM1,000 with guaranteed capital protection. Reply YES for onboarding"
+v052,SCAM,crypto_romance_scam,false,en,false,false,"Good morning dear ☀️ I made another 3,000 USDT on the platform my uncle taught me. You should try with a small amount first, I'll guide you step by step"
+v053,SCAM,romance_scam,false,en,false,false,"My darling, customs held the parcel with the gold and cash I sent you. They need RM6,500 clearance fee, please pay & I will return it when I land in KL"
+v054,SCAM,romance_scam,false,mixed,false,false,"Sayang, i dah sampai airport tapi kastam tahan beg i. Perlu bayar RM2,000 dulu, nanti i ganti. Tolong i ye, i takde siapa2 kat sini"
+v055,SCAM,marketplace_buyer_scam,false,en,false,false,"Hi, I want to buy ur sofa on Carousell. I've paid via Carousell Protection, pls check the email I sent and fill in your bank login to release the funds"
+v056,SCAM,marketplace_seller_scam,false,en,false,false,"Item still available! Many ppl asking so pls bank in RM150 deposit first to lock it, balance upon delivery. Maybank acc 1622xxxx, will send tracking"
+v057,SCAM,marketplace_seller_scam,false,ms,false,false,"Barang ada lagi bos. Sebab ramai nak, kena bayar penuh dulu baru saya pos. Tak buat COD atau jumpa, sorry ya"
+v058,SCAM,rental_scam,false,en,false,false,"The unit is still available, RM900/mth. I'm currently overseas so can't do viewing. Pay 2 months deposit and I'll courier the keys to you"
+v059,SCAM,rental_scam,false,ms,false,false,"Rumah sewa Bangi tu masih kosong. Tuan rumah kat Sabah, tak boleh viewing. Bayar deposit RM1,200 dulu, kunci akan dipos."
+v060,SCAM,charity_scam,false,en,false,false,"Please help, my son needs heart surgery next week, short RM18,000. Any amount helps. CIMB 7012xxxxxx under my cousin's name. God bless 🙏"
+v061,SCAM,charity_scam,false,ms,false,false,"Tabung bantuan mangsa banjir Kelantan. Sumbangan ikhlas boleh disalurkan ke akaun peribadi pengerusi kami, Bank Islam 1201xxxx. Semoga dirahmati"
+v062,SCAM,advance_fee_scam,false,en,false,false,"Good day, I am a lawyer handling the estate of a late client who shares your surname. USD 4.2 million remains unclaimed. Reply for details on processing."
+v063,SCAM,lottery_scam,false,en,false,false,"Your mobile number is a prize winner of GBP 750,000 in the International Mobile Draw. Send full name, IC no. and home address to our claims agent"
+v064,SCAM,debt_collection_scam,false,en,false,false,"Final reminder from the legal dept. Your outstanding credit balance RM3,410 will be referred to court. Settle today via DuitNow to the agent account provided"
+v065,SCAM,macau_scam,false,ms,false,false,"Notis daripada Bank Negara: akaun anda dikaitkan dengan sindiket. Untuk tujuan siasatan, pindahkan semua baki ke akaun selamat yang diberikan pegawai kami."
+v066,SCAM,macau_scam,false,mixed,false,false,"Hello sir, ni dari Pos Malaysia. Ada parcel atas nama you, dalam tu ada 6 passport palsu. Kami akan transfer call ke balai polis KL ok?"
+v067,SCAM,refund_scam,false,en,false,false,"TNB refund: you were overcharged RM86.70 in Sept. Reply with your bank name, account no. and IC to receive the refund within 3 days"
+v068,SCAM,subscription_refund_scam,false,en,false,false,"Your Norton 360 renewed today for RM1,399. To cancel and get a refund reply CANCEL and our billing team will reach you shortly"
+v069,SCAM,ceo_gift_card_scam,false,en,false,false,"Hi, it's Dato' Kamal. In a meeting, can't talk. Need you to buy 5 Google Play cards RM200 each for a client and send me the codes. Will reimburse"
+v070,SCAM,ceo_fraud,false,ms,false,false,"Sy dlm meeting dgn client skrg. Tolong transfer RM12,000 ke akaun supplier baru ni, invois sy hantar kemudian. Jangan call, whatsapp je"
+v071,SCAM,business_email_compromise,false,en,false,false,"Hi accounts team, please note our banking details have changed. Kindly remit the Oct invoice to the new account below effective immediately. Regards, Finance"
+v072,SCAM,sim_swap_scam,false,en,false,false,"Celcom: your SIM replacement request was received and will be activated in 2 hours. If you did not request this, reply STOP with your IC number."
+v073,SCAM,giveaway_scam,false,en,false,false,Congrats 🎉 you're a WINNER in our iPhone giveaway! Just pay RM25 shipping and we'll send it out today
+v074,SCAM,investment_scam,false,ms,false,false,"Skim pelaburan emas patuh syariah, pulangan 15% sebulan. Dah ramai ustaz & ustazah join. Modal min RM500, untung masuk tiap Jumaat"
+v075,SCAM,investment_scam,false,mixed,false,false,"Bro, I kenal one guy buat forex, pulangan 20% weekly confirm. Masuk RM2k je dulu, I can add u dalam group"
+v076,SCAM,refund_code_scam,false,ms,false,false,"Hi, saya dari khidmat pelanggan Shopee. Order anda double charge, untuk refund perlu kongsi kod OTP 6 digit yang akan masuk SMS sekejap lagi"
+v077,SCAM,accidental_transfer_scam,false,en,false,false,"Hi, RM120 was sent to your e-wallet by mistake 🙏 kindly return it to my number, I'm a student and it's my rent money"
+v078,SCAM,accidental_transfer_scam,false,ms,false,false,"Assalamualaikum, maaf saya tersalah transfer RM500 ke akaun tuan. Boleh pulangkan ke akaun lain ni? Duit yuran anak saya."
+v079,SCAM,loan_fee_scam,false,ms,false,false,"Tahniah, pinjaman RM30,000 anda telah lulus. Sila bayar duti setem RM450 dahulu sebelum wang dikeluarkan ke akaun anda."
+v080,SCAM,tax_impersonation,false,en,false,false,"Dear taxpayer, your e-Filing contains an error. Reply with your bank account and MyKad number so we can process your refund."
+v081,SCAM,pet_scam,false,en,false,false,"Puppy is ready to fly from Penang 🐶 pls pay RM800 for the special air crate & vaccine cert, refundable on arrival."
+v082,SCAM,ticket_resale_scam,true,en,false,false,"Selling 2 tickets for the stadium show this Sat, RM300 each below face value. Bank in first, I'll email the e-tickets after"
+v083,SCAM,travel_package_scam,false,ms,false,false,"Pakej Umrah promosi RM3,990 sahaja (hotel 5 bintang). Bayar penuh sebelum Jumaat untuk kunci tempat, resit akan diberi kemudian."
+v084,SCAM,fake_courier_cod,false,mixed,false,false,"Hello, saya rider J&T. Parcel u ada dekat sini tapi kena bayar COD RM89. Transfer to my personal account ok, nanti sy hantar."
+v085,SCAM,paid_survey_scam,false,en,false,false,"Hi! Your number was chosen for a paid survey on Malaysian coffee habits. RM50 per 10-minute survey, we just need your bank details to pay you."
+v086,SCAM,govt_aid_scam,false,ms,false,false,"Kerajaan memberi Bantuan Khas RM500 kepada pemegang akaun bank. Balas mesej ini dengan nama, No IC dan nombor akaun untuk pembayaran."
+v087,SCAM,epf_impersonation,false,ms,false,false,"Pegawai KWSP di sini. Akaun anda dibekukan kerana pengeluaran tidak sah. Untuk aktifkan semula, kami perlukan nombor IC dan PIN i-Akaun anda."
+v088,SCAM,pig_butchering_opener,true,en,false,false,Hi is this Kevin? We were supposed to meet for golf on Sunday 😊
+v089,SCAM,pig_butchering_opener,true,en,false,false,"Sorry wrong number, but you seem nice. I'm a fashion buyer based in Singapore, may I make friends with you?"
+v090,SCAM,bank_impersonation,false,ms,false,false,"Bank Islam: Akaun anda telah disekat sementara. Sila balas dengan No IC, nombor kad ATM dan password perbankan untuk pengaktifan semula."
+v091,SCAM,money_mule_recruitment,false,en,false,false,"Earn RM1,000 a week just by renting out your bank account for our company's payments. No work needed, totally legal."
+v092,SCAM,money_mule_recruitment,false,ms,false,false,Nak duit lebih? Sewa akaun bank anda kepada kami RM500 seminggu. Hanya perlu serah kad ATM & nombor TAC.
+v093,SCAM,scholarship_scam,false,en,false,false,"You've been shortlisted for an education foundation scholarship worth RM8,000. Pay RM150 processing fee to confirm your placement."
+v094,SCAM,macau_scam,false,ms,false,false,"Saya Sarjan Azlan, Ibu Pejabat Polis Kontinjen. IC anda disalahguna untuk buka akaun haram. Jangan beritahu sesiapa, ini siasatan sulit. Ikut arahan saya."
+v095,SCAM,macau_scam,false,en,false,false,"This matter is confidential. Do not tell your family or any bank officer about this investigation, or you may be charged with obstruction."
+v096,SCAM,ewallet_impersonation,false,en,false,false,"Dear customer, your Touch 'n Go card has been cloned. To protect your balance, move it to the temporary wallet ID our officer will give you."
+v097,SCAM,gaming_account_scam,true,mixed,false,false,"Jual akaun Mobile Legends Mythic Glory, 300 skin RM180 je. Bayar TNG dulu baru i bagi login, no refund"
+v098,SCAM,airline_impersonation,false,en,false,false,"AirAsia: your flight AK6123 has been cancelled. To rebook or get a refund, verify your booking number and card details by replying here."
+v099,SCAM,hotel_booking_scam,false,en,false,false,Your reservation at the Penang hotel will be cancelled unless you re-confirm your card details with our reservations agent on WhatsApp today.
+v100,SCAM,investment_group_scam,false,ms,false,false,Kumpulan kami dipimpin oleh profesor pakar saham. Ahli baru dapat saham dalaman IPO. Daftar akaun dagangan melalui pautan yang admin beri.
+v101,SCAM,utility_impersonation,false,mixed,false,false,"Encik, ni dari Air Selangor. Meter rumah you ada tunggakan RM640, kalau tak settle petang ni kami potong bekalan. Transfer ke akaun pegawai ok"
+v102,SCAM,parcel_fee_scam,false,en,false,false,"Hi dear, the gift box I mentioned has reached Malaysia but the courier needs RM1,800 insurance before release. Can you help pay first? 🥺"
+v103,SPAM,retail_promo,false,en,false,false,MEGA SALE at our Bukit Bintang outlet! 70% off sneakers this weekend only. Reply STOP to unsubscribe.
+v104,SPAM,food_promo,false,ms,false,false,Promosi Hujung Minggu! Beli 2 percuma 1 untuk semua kopi ais. Sah di cawangan terpilih. Balas STOP untuk berhenti.
+v105,SPAM,food_promo,false,mixed,false,false,"Hi boss, kedai kami ada new stock durian Musang King RM45/kg, delivery KL/Selangor. Order PM ya 😋"
+v106,SPAM,ride_promo,false,en,false,false,"Get 20% off your next ride with promo code RIDE20, T&C apply. To unsubscribe reply STOP"
+v107,SPAM,property_promo,false,en,false,false,"New launch freehold condo in Cyberjaya from RM399k, 0% downpayment. Free consultation, reply INFO"
+v108,SPAM,insurance_promo,false,ms,false,false,"Tuan/Puan, lindungi keluarga anda dengan pelan takaful serendah RM1 sehari. Ingin tahu lebih lanjut? Balas YA."
+v109,SPAM,gym_promo,false,en,false,false,New Year body goals 💪 Join IronPulse Gym Puchong and we waive the joining fee if you sign up by 31 Dec.
+v110,SPAM,tuition_promo,false,mixed,false,false,"Tuisyen online SPM Matematik & Sains, kelas kecil max 8 org. First class trial RM0! WhatsApp kami utk daftar."
+v111,SPAM,food_promo,false,en,false,false,Missed us? Your favourite nasi lemak spot is back with buy 1 free 1 every Wednesday 🍛
+v112,SPAM,telco_promo,false,en,false,false,Upgrade to 5G Unlimited at only RM68/month. Dial *118# now. Promo ends 15 Nov.
+v113,SPAM,car_trade_in_promo,false,ms,false,false,"Nak tukar kereta? Kami beri harga trade-in terbaik untuk kereta lama anda. Proses cepat, kelulusan bank mudah."
+v114,SPAM,electronics_promo,false,en,false,false,"This week's deals: air fryer RM159, robot vacuum RM499, rice cooker RM89. In-store only at ElectroMart Seri Kembangan."
+v115,SPAM,beauty_promo,false,mixed,false,false,"Salam beauty 💕 Serum vitamin C kami dah restock! RM59 je untuk 2 botol, stok terhad, PM utk order"
+v116,SPAM,credit_card_promo,false,en,false,false,Apply for our Platinum card and enjoy 8% cashback on petrol for 3 months. Annual fee waived for the first year.
+v117,SPAM,furniture_promo,false,ms,false,false,"Jualan Gudang Perabot! Diskaun sehingga 60% untuk sofa, katil dan almari. Sabtu & Ahad, 10pg-6ptg, Shah Alam Seksyen 15."
+v118,SPAM,course_promo,false,en,false,false,"Learn digital marketing in 6 weeks. HRD Corp claimable. Limited seats for the December intake, reply COURSE"
+v119,SPAM,fashion_promo,false,mixed,false,false,"Raya dah dekat! Baju Kurung Moden ready stock, size S-3XL, harga dari RM89. Pos seluruh Malaysia, follow IG kami"
+v120,SPAM,loyalty_promo,false,en,false,false,Thanks for shopping with us! Show this SMS at the counter for RM5 off your next visit. Valid 14 days.
+v121,SPAM,cold_sales_property,false,en,false,false,"Hi, I'm a property agent in Mont Kiara. Looking to sell or rent your unit? I have ready buyers. Ignore if not interested."
+v122,SPAM,workshop_promo,false,ms,false,false,Servis kereta RM99 termasuk minyak hitam & penapis. Bengkel AutoJaya Kajang. Tempah slot sekarang!
+v123,SPAM,food_delivery_promo,false,en,false,false,🍔 Hungry? Order lunch above RM25 and get RM8 off. Today 11am-2pm only.
+v124,SPAM,wedding_promo,false,mixed,false,false,"Hello ✨ Kami offer pakej photography wedding RM2,500 include album + video highlight. Booking 2027 dah dibuka"
+v125,SPAM,telco_promo,false,ms,false,false,Tambah nilai RM30 dan dapatkan 10GB data tambahan. Tawaran sah sehingga 30/11.
+v126,SPAM,solar_promo,false,en,false,false,Cut your electricity bill by up to 70% with rooftop solar. Site assessment at no cost. Reply SOLAR to book.
+v127,SPAM,agent_recruitment_promo,false,ms,false,false,"Jom jadi agen produk kesihatan kami, komisen menarik + bonus bulanan. Tak perlu modal besar. Minat? Balas AGEN"
+v128,SPAM,car_wash_promo,false,mixed,false,false,"Car wash + wax promo RM25 je this weekend at SparkleWash Ampang. Datang awal, takut queue panjang 🚗"
+v129,LEGITIMATE,genuine_bank_notice,false,en,true,false,"Maybank: You logged in to Maybank2u on 07/11 at 09:41. If this wasn't you, log in at www.maybank2u.com.my or call the number on the back of your card."
+v130,LEGITIMATE,genuine_otp_notice,false,en,true,false,CIMB: RM250.00 DuitNow transfer to AHMAD BIN ALI. TAC 482193. Do not share this code with anyone. Security tips at cimb.com.my
+v131,LEGITIMATE,genuine_delivery_update,false,mixed,true,false,Shopee: Pesanan 2411073QK8 anda telah dihantar oleh penjual. Jejak di shopee.com.my/user/purchase
+v132,LEGITIMATE,genuine_delivery_update,false,en,true,false,Lazada: Your package is out for delivery today. Track it at lazada.com.my/order-tracking. Our riders never ask for card details.
+v133,LEGITIMATE,genuine_delivery_update,false,ms,true,false,Pos Malaysia: Item ER123456789MY sedia untuk diambil di Pejabat Pos Bangsar. Semak status di pos.com.my
+v134,LEGITIMATE,government_notice,false,ms,true,false,LHDN: Tarikh akhir e-Filing BE ialah 30 April. Isi borang melalui MyTax di mytax.hasil.gov.my. LHDN tidak meminta maklumat bank melalui SMS.
+v135,LEGITIMATE,government_notice,false,ms,true,false,KWSP: Caruman bulan Oktober sebanyak RM528.00 telah dikreditkan. Semak penyata di i-Akaun melalui kwsp.gov.my
+v136,LEGITIMATE,government_notice,false,ms,true,false,JPJ: Lesen memandu anda tamat tempoh pada 15/12/2026. Perbaharui di kaunter JPJ atau dalam talian melalui www.jpj.gov.my
+v137,LEGITIMATE,genuine_security_alert,false,en,true,false,"Google: new sign-in on Windows. If this was you, you don't need to do anything. If not, review activity at myaccount.google.com"
+v138,LEGITIMATE,work_chat,false,en,true,false,"PR #482 is ready for review, CI is green 👍 https://github.com/capstone-team/attendance-app/pull/482"
+v139,LEGITIMATE,friend_chat,false,en,true,false,lol settle the argument: https://en.wikipedia.org/wiki/Penang_Bridge it's 13.5km not 20
+v140,LEGITIMATE,genuine_ride_notice,false,en,true,false,Grab: Your driver Faizal (WXY 1234) is arriving in 3 mins. Your receipt will be available at grab.com/my after the trip.
+v141,LEGITIMATE,utility_bill_genuine,false,ms,true,false,unifi: Bil bulan November RM129.00 kini sedia. Bayar melalui aplikasi MyUnifi atau unifi.com.my sebelum 25/11. Abaikan jika telah dibayar.
+v142,LEGITIMATE,family_chat,false,mixed,true,false,"Ni link form kenduri, isi nama & berapa org datang ye: https://docs.google.com/forms/d/e/1FAIpQLSf8kd/viewform"
+v143,LEGITIMATE,work_chat,false,en,true,false,Slides for tmr's standup are in drive.google.com/drive/folders/1XyZ9 pls add your updates by 10pm tq
+v144,LEGITIMATE,genuine_bank_notice,false,en,true,false,CIMB: Your Visa card ending 2210 was charged RM45.90 at MYDIN. Not you? Call the number on the back of your card or visit cimb.com.my
+v145,LEGITIMATE,genuine_bank_notice,false,en,true,false,Maybank: Secure2u approval requested for login on a new device. Only approve if you started this login. More at maybank2u.com.my/security
+v146,LEGITIMATE,friend_chat,false,mixed,true,false,"Bro barang ni ada kat Shopee official store, lagi murah: https://shopee.com.my/product/12345678/9876543210"
+v147,LEGITIMATE,family_chat,false,en,true,false,"Sis I ordered the stroller from LazMall, link here https://www.lazada.com.my/products/i3344556677.html can u check if it fits ur car boot?"
+v148,LEGITIMATE,government_notice,false,ms,true,false,Bayaran balik cukai anda telah diproses. Semak status di mytax.hasil.gov.my. Bayaran dibuat terus ke akaun bank yang didaftarkan.
+v149,LEGITIMATE,study_chat,false,en,true,false,for the assignment cite this https://en.wikipedia.org/wiki/Phishing then check the original sources at the bottom of the page
+v150,LEGITIMATE,genuine_delivery_update,false,ms,true,false,Pos Laju: Penghantaran anda dijadualkan hari ini antara 2-6ptg. Jejak di pos.com.my. Pos Malaysia tidak meminta bayaran melalui SMS.
+v151,LEGITIMATE,genuine_otp_notice,false,en,false,false,"Your TNG eWallet code is 739104. Valid for 3 minutes. Never share this code with anyone, including TNG staff."
+v152,LEGITIMATE,genuine_otp_notice,false,ms,false,false,Kod TAC anda: 551028 untuk pemindahan RM120.00 ke akaun 1622****. JANGAN kongsi kod ini dengan sesiapa.
+v153,LEGITIMATE,genuine_otp_notice,false,en,false,false,Your Shopee verification code is 2047. It expires in 5 minutes. Do not share it with anyone.
+v154,LEGITIMATE,genuine_otp_notice,false,en,false,false,<#> 884210 is your Grab login code. Don't share it with anyone. Grab will never ask for it.
+v155,LEGITIMATE,friend_new_number_genuine,false,en,false,false,"Hi everyone, Farah here. Changed my number, the old one is no longer in use. Pls save this one 😊 no need to reply"
+v156,LEGITIMATE,friend_new_number_genuine,false,ms,false,false,"Salam semua, ni nombor baru Pak Long. Nombor lama dah tak aktif. Simpan ya."
+v157,LEGITIMATE,friend_new_number_genuine,true,en,false,false,"hey it's Wei Ling, new number! save ya"
+v158,LEGITIMATE,friend_new_number_genuine,false,mixed,false,false,"Guys this is my new no, yg lama dah hilang dgn phone. Nanti jumpa kat kelas I belanja teh tarik as promised hehe"
+v159,LEGITIMATE,family_money_agreed,false,mixed,false,false,"Ma, dah transfer RM300 for the electric bill macam kita bincang pagi tadi. Check ya"
+v160,LEGITIMATE,family_money_agreed,false,ms,false,false,"Abah, adik dah terima duit yuran tu. Terima kasih banyak 🙏 nanti adik hantar gambar resit."
+v161,LEGITIMATE,family_money_agreed,false,mixed,false,false,"Kak, nanti DuitNow RM50 share kek birthday Mak ya, I dah bayar deposit kat kedai tadi"
+v162,LEGITIMATE,family_money_agreed,false,en,false,false,"Sent you RM40 for the movie tix + popcorn, we're square now 😄"
+v163,LEGITIMATE,deadline_reminder,false,en,false,false,Reminder: assignment 2 is due Friday 11:59pm on the portal. Late submissions lose 10% per day.
+v164,LEGITIMATE,school_notice,false,ms,false,false,Peringatan: Yuran PIBG tahun 2027 perlu dijelaskan sebelum 30 Januari. Bayaran boleh dibuat di pejabat sekolah.
+v165,LEGITIMATE,deadline_reminder,false,en,false,false,Final call for the capstone poster files - upload by 5pm today so we can send to print. No extensions this time 🙏
+v166,LEGITIMATE,genuine_job_recruiter,false,en,false,false,"Hi Aiman, I'm Priya, a recruiter. We have a junior data analyst role in Petaling Jaya, RM4.5k-5.5k. Open to a 15-min call this week? Interview will be at the client's office."
+v167,LEGITIMATE,genuine_job_recruiter,false,ms,false,false,"Salam Cik Nurul, permohonan anda untuk jawatan Pembantu Tadbir telah disenarai pendek. Temuduga pada 14/11, 10 pagi di pejabat kami Seksyen 13. Sila bawa salinan sijil asal."
+v168,LEGITIMATE,genuine_job_recruiter,false,en,false,false,"Thanks for applying to the internship. Next step is a 30-min technical interview on Google Meet, Tues 2pm. Reply to confirm or suggest another slot."
+v169,LEGITIMATE,appointment_reminder,false,ms,false,false,Klinik Kesihatan: Temujanji anda pada 12/11 jam 9:00 pagi. Sila hadir 15 minit awal bersama kad temujanji.
+v170,LEGITIMATE,appointment_reminder,false,en,false,false,Reminder: your dental cleaning at SmileCare Subang is tomorrow 3:30pm. Reply C to confirm or call the clinic to reschedule.
+v171,LEGITIMATE,genuine_delivery_update,false,en,false,false,J&T: Your parcel will be delivered today by rider Hafiz. Please ensure someone is at home. COD amount: RM0.00
+v172,LEGITIMATE,genuine_delivery_update,false,ms,false,false,"Hi, saya rider Shopee Express. Dah sampai depan pagar, parcel saya letak atas kerusi ya. Tq"
+v173,LEGITIMATE,work_chat,false,en,false,false,"guys meeting moved to 3pm, room 4B. bring the Q3 numbers"
+v174,LEGITIMATE,work_chat,false,mixed,false,false,"Boss, report dah siap, I emailed you just now. Kalau ada changes let me know before lunch ya"
+v175,LEGITIMATE,family_chat,false,ms,false,false,"Dah sampai rumah? Hujan lebat kat sini, bawa kereta elok2"
+v176,LEGITIMATE,family_chat,false,ms,false,false,"Mak masak rendang tadi, balik makan malam ni tak?"
+v177,LEGITIMATE,marketplace_genuine,false,en,false,false,"Hi, is the study table still available? Can I view it Saturday morning in Puchong? Will pay cash on pickup."
+v178,LEGITIMATE,marketplace_genuine,false,ms,false,false,"Salam, boleh saya tengok basikal tu dulu sebelum beli? Saya area Kajang, boleh jumpa kat stesen minyak dekat tol"
+v179,LEGITIMATE,marketplace_genuine,false,mixed,false,false,"Hi sis, baju tu still ada? Kalau ok I ambil, boleh meet up kat LRT Taman Jaya petang ni, bayar cash"
+v180,LEGITIMATE,government_notice,false,ms,false,false,PDRM: Berhati-hati dengan panggilan yang mendakwa daripada polis atau mahkamah. Polis tidak akan meminta anda memindahkan wang ke mana-mana akaun.
+v181,LEGITIMATE,genuine_bank_notice,false,en,false,false,"Reminder from your bank: we will never ask for your PIN, TAC or password via phone, SMS or WhatsApp. Stay alert."
+v182,LEGITIMATE,utility_bill_genuine,false,ms,false,false,Air Selangor: Bil anda bagi bulan Oktober ialah RM32.40. Tarikh akhir bayaran 20/11. Terima kasih.
+v183,LEGITIMATE,utility_bill_genuine,false,en,false,false,"TNB: Your bill for Oct is RM187.25, due 28/11. Pay via the myTNB app or any authorised payment channel."
+v184,LEGITIMATE,school_notice,false,ms,false,false,Notis: Sekolah ditutup pada 10/11 sempena cuti peristiwa. Kelas bersambung seperti biasa pada 11/11.
+v185,LEGITIMATE,school_notice,false,en,false,false,"Dear parents, Year 4 trip to Zoo Negara on 20 Nov. Please return the signed consent slip and RM25 to the class teacher by Friday."
+v186,LEGITIMATE,genuine_delivery_update,false,en,false,false,Ninja Van: Your parcel was delivered and signed for by AMIRA at 14:22.
+v187,LEGITIMATE,genuine_bank_notice,false,en,false,false,"Public Bank: Your fixed deposit of RM10,000.00 matured on 05/11 and has been auto-renewed for 12 months."
+v188,LEGITIMATE,work_chat,false,en,false,false,Congrats! You won the lucky draw at our company dinner 🎉 Collect your prize from HR on Monday.
+v189,LEGITIMATE,friend_chat,false,en,false,false,free tonight? mamak at 9? 🍳
+v190,LEGITIMATE,genuine_security_alert,false,en,false,false,"Your password was changed successfully. If you didn't make this change, contact support from within the app."
+v191,LEGITIMATE,work_chat,false,en,false,false,"URGENT: prod server down, can whoever's on-call check the logs? I'm stuck in traffic"
+v192,LEGITIMATE,subscription_notice,false,en,false,false,Your Spotify Premium renews on 12/11 for RM16.90. Manage your plan in the app.
+v193,LEGITIMATE,genuine_otp_notice,false,ms,false,false,Kod pengesahan MyDigital ID anda ialah 482117. Jangan kongsi kod ini dengan sesiapa.
+v194,LEGITIMATE,building_notice,false,en,false,false,Management office: water supply will be cut tomorrow 10am-2pm for tank cleaning. Sorry for the inconvenience.
+v195,LEGITIMATE,neighbour_chat,false,en,false,false,"Hello, is this the owner of the white Myvi at B2? Your headlights are still on"
+v196,LEGITIMATE,work_chat,false,en,false,false,Pls verify the attendance list I attached and click Approve in the HR system before Friday. Tq!
+v197,LEGITIMATE,family_chat,false,mixed,false,false,"Adik, jangan lupa ambik ubat atuk kat farmasi before 6pm, I dah bayar online"
+v198,LEGITIMATE,friend_chat,false,mixed,false,false,"Weh esok futsal jadi tak? Court dah booking 8pm, RM10 sorang, bayar kat kaunter je"
+v199,LEGITIMATE,family_chat,false,en,false,false,"Dad landed safely, we're grabbing breakfast at the airport then heading home 🛬"
+v200,LEGITIMATE,religious_group_notice,false,ms,false,false,Makluman: Kuliah Maghrib malam Jumaat ini dibatalkan kerana penceramah uzur. Harap maklum.
+v201,LEGITIMATE,genuine_bank_notice,false,ms,false,false,"Bank Rakyat: Pembiayaan peribadi anda telah dikreditkan sebanyak RM15,000.00 pada 04/11. Terima kasih kerana memilih kami."
+v202,LEGITIMATE,genuine_delivery_update,false,mixed,false,false,"Hi, saya dari Lalamove, dah on the way ambil barang. ETA 15 min ya, tunggu kat lobby tq"
+v203,LEGITIMATE,appointment_reminder,false,en,false,false,"Your car is due for its 40,000km service. Your slot is Sat 9am at our Glenmarie service centre. Reply 1 to confirm."
+v204,LEGITIMATE,government_notice,false,ms,false,false,SPR: Hari mengundi Pilihan Raya Kecil ditetapkan pada 23/11. Semak pusat mengundi anda melalui saluran rasmi SPR.
+v205,LEGITIMATE,work_chat,false,mixed,false,false,"Team, client minta revise logo jadi warna biru. Deadline Wed. Siapa free boleh ambil task ni?"
+v206,LEGITIMATE,study_chat,false,en,false,false,anyone got notes for week 7 lecture? I was sick that day 🤒
+v207,LEGITIMATE,study_chat,false,ms,false,false,"Kumpulan 3, kita jumpa kat perpustakaan pukul 2 petang esok untuk siapkan slide pembentangan."
+v208,LEGITIMATE,friend_chat,false,en,false,false,"Happy birthday bro!! 🎂 Have a good one, lunch on me next week"
+v209,LEGITIMATE,genuine_otp_notice,false,en,false,false,Your Lazada one-time code is 6631. Lazada staff will never ask for this code.
+v210,LEGITIMATE,genuine_bank_notice,false,ms,false,false,Maybank: Pindahan DuitNow RM85.00 kepada SITI AMINAH berjaya pada 06/11 22:10. Rujukan 77810234.
+v211,LEGITIMATE,landlord_chat,false,en,false,false,"Hi, rent for Dec is RM1,100 as per the tenancy agreement, same account as usual. Tq and have a good weekend"
+v212,LEGITIMATE,landlord_chat,false,ms,false,false,Tuan rumah sini. Tukang paip akan datang Sabtu pukul 11 pagi untuk baiki sinki. Tolong ada di rumah ya.
+v213,LEGITIMATE,family_money_agreed,false,en,false,false,"Ok I've paid the RM600 deposit for the homestay in Cameron, sending the receipt to the family group now"
+v214,LEGITIMATE,community_notice,false,ms,false,false,Gotong-royong taman kita Ahad ini jam 8 pagi. Sarapan disediakan. Jumpa di dewan orang ramai!
+v215,LEGITIMATE,genuine_job_recruiter,false,mixed,false,false,"Hi, saya HR dari kilang kami di Senai. Kami nak offer you position technician, gaji RM2,800 + OT. Boleh datang interview Isnin ni?"
+v216,LEGITIMATE,friend_chat,false,en,false,false,omg just saw the photos from the trip 😭 sending u the album link once I upload everything
+v217,LEGITIMATE,work_chat,false,en,false,false,Reminder: timesheets due by 6pm today. Ping me if the portal gives you trouble.
+v218,LEGITIMATE,genuine_delivery_update,false,en,false,false,Your Foodpanda order is on the way! Rider Aznil is 2 km away.
+v219,LEGITIMATE,family_chat,false,mixed,false,false,"Nanti singgah kedai beli roti & susu ya, nak buat sarapan esok. Thanks sayang"
+v220,LEGITIMATE,insurance_genuine,false,en,false,false,Your motor insurance with us expires 30/11. Renew via your agent or our official app. Ignore if already renewed.
+v221,LEGITIMATE,government_notice,false,mixed,false,false,Reminder from MBPJ: cukai taksiran penggal kedua due by 31 Oct. Pay at the counter or official online portal.
+v222,LEGITIMATE,friend_chat,false,mixed,false,false,"Eh tadi I tertinggal payung kat kereta u, nanti bagi balik masa kelas ok 🙏"
+v223,LEGITIMATE,work_chat,false,en,false,false,"Server maintenance tonight 11pm-1am. Save your work before then, VPN may disconnect."
+v224,LEGITIMATE,genuine_bank_notice,false,en,false,false,Hong Leong Bank: Your new debit card has been dispatched to your registered address and should arrive within 7 working days.
+v225,LEGITIMATE,school_notice,false,mixed,false,false,"Parents, esok Sports Day, students datang pakai baju rumah sukan masing-masing. Start 7.30am kat padang."
+v226,LEGITIMATE,clinic_result_notice,false,en,false,false,Klinik Sejahtera: your blood test results are ready. Please see the doctor at your next visit or call the clinic to arrange.
+v227,LEGITIMATE,friend_chat,false,ms,false,false,"Kau dah sampai? Aku tunggu kat pintu masuk C, sebelah kedai kopi"
+v228,LEGITIMATE,family_chat,false,en,false,false,"Grandma says thanks for the durians, she ate three already 😂"
+v229,LEGITIMATE,marketplace_genuine,false,en,false,false,"Thanks for buying the monitor! Shipped via Pos Laju this morning, tracking no. ER998877665MY"
+v230,LEGITIMATE,genuine_job_recruiter,false,en,false,false,"Hi Daniel, following up on your application. The hiring manager would like a second round onsite on 18 Nov. No payment or documents needed beforehand."
+v231,LEGITIMATE,deadline_reminder,false,ms,false,false,Peringatan: Pendaftaran kursus semester baharu ditutup pada 15/11 jam 5 petang. Sila daftar melalui portal pelajar.
+v232,LEGITIMATE,work_chat,false,mixed,false,false,"Guys, client meeting jadi esok 10am. Dress smart sikit ya, dorang nak tengok demo"
+v233,LEGITIMATE,friend_chat,false,en,false,false,"Thanks for the help moving yesterday, owe you one. Pizza's on me Friday"

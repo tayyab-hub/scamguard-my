@@ -41,6 +41,16 @@ class Settings(BaseSettings):
     openai_api_key: SecretStr | None = Field(default=None, repr=False)
     openai_model: str = "gpt-5-mini-2025-08-07"
     ai_timeout_seconds: float = Field(default=8.0, ge=1.0, le=30.0)
+    # Optional Gemini reviewer (off by default; free-tier data may be used by Google, so use it
+    # only with synthetic content). ai_review_provider selects which configured key is used.
+    ai_review_provider: Literal["openai", "gemini"] = "openai"
+    gemini_api_key: SecretStr | None = Field(default=None, repr=False)
+    gemini_model: str = "gemini-flash-latest"  # check the current model list in Google AI Studio
+    # OpenPhish community feed (non-commercial use). None = enabled only in production, so tests
+    # and local development stay offline unless explicitly enabled.
+    phishing_feed_enabled: bool | None = None
+    phishing_feed_url: str = "https://openphish.com/feed.txt"
+    phishing_feed_refresh_hours: int = Field(default=12, ge=1, le=168)
     auth_token_pepper: SecretStr = Field(
         default=SecretStr("local-development-only-change-me"), repr=False
     )

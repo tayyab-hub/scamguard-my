@@ -31,6 +31,7 @@ import {
   type DraftMode,
 } from '../components/analysis/modes'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { ResultFeedback } from '../components/ResultFeedback'
 
 const inputLabels = { MESSAGE: 'Message', URL: 'URL', PHONE: 'Phone', QR: 'QR' } as const
 const examples = {
@@ -598,12 +599,19 @@ export function AnalysePage() {
                     <div className="mt-3 h-3 w-1/2 rounded bg-line" />
                   </div>
                 ) : submission.data?.assessment ? (
-                  <AssessmentResult
-                    key={submission.data.id}
-                    assessment={submission.data.assessment}
-                    analysisId={submission.data.id}
-                    content={submission.data.content}
-                  />
+                  <>
+                    <AssessmentResult
+                      key={submission.data.id}
+                      assessment={submission.data.assessment}
+                      analysisId={submission.data.id}
+                      content={submission.data.content}
+                    />
+                    <ResultFeedback
+                      key={`feedback-${submission.data.id}`}
+                      analysisId={submission.data.id}
+                      initial={submission.data.user_feedback}
+                    />
+                  </>
                 ) : (
                   <EmptyState icon={ScanLine} title="No assessment yet">
                     {submission.isSuccess

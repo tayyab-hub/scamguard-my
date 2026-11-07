@@ -10,6 +10,7 @@ import {
   EvidencePanel,
   RecommendedActionsPanel,
 } from './ResultPresentation'
+import { SenderContextCheck } from './SenderContextCheck'
 
 // Accept a validated MessageAssessment and optional record ID; return the saved decision
 // explanation and versions without invoking any model.
@@ -29,6 +30,9 @@ export function MessageResult({
     >
       <AnalysisResultHero assessment={assessment} />
       <RecommendedActionsPanel actions={assessment.recommended_actions} />
+      {['LOW', 'CAUTION', 'INSUFFICIENT_EVIDENCE'].includes(assessment.risk_level) && (
+        <SenderContextCheck />
+      )}
       <AssessmentBasisPanel assessment={assessment} />
       <EvidencePanel assessment={assessment} />
       <AnalysisMetaPanel assessment={assessment} analysisId={analysisId}>

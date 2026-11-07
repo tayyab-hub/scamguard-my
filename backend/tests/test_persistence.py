@@ -256,6 +256,7 @@ def test_create_read_and_restart(persistent, database, mode, content):
         "updated_at",
         "assessment",
         "failure_code",
+        "user_feedback",
     }
     if mode == "MESSAGE":
         assert record["status"] == "COMPLETED"
@@ -600,6 +601,17 @@ def test_request_size_limit_and_post_cors(persistent):
     )
     assert preflight.status_code == 200
     assert "POST" in preflight.headers["access-control-allow-methods"]
+    # Result feedback uses PUT and must pass a cross-origin preflight too.
+    feedback = persistent.options(
+        "/api/v1/analyses/00000000-0000-4000-8000-000000000000/feedback",
+        headers={
+            "Origin": "http://localhost:5173",
+            "Access-Control-Request-Method": "PUT",
+            "Access-Control-Request-Headers": "content-type,x-csrf-token",
+        },
+    )
+    assert feedback.status_code == 200
+    assert "PUT" in feedback.headers["access-control-allow-methods"]
 
 
 def test_url_credentials_removed_and_history_never_reanalyses(persistent, database, monkeypatch):
@@ -630,8 +642,8 @@ def test_url_credentials_removed_and_history_never_reanalyses(persistent, databa
     assert provider.calls == 1
     with Session(database[1]) as session:
         row = session.get(Analysis, result["id"])
-        assert row.model_version == "url_ml_v1" and row.rules_version == "url_rules_v3"
-        assert row.fusion_version == "url_fusion_v3" and row.ai_provider is None
+        assert row.model_version == "url_ml_v1" and row.rules_version == "url_rules_v4"
+        assert row.fusion_version == "url_fusion_v4" and row.ai_provider is None
         assert "secret" not in json.dumps(row.component_details) + row.content
 
     def forbidden(*args):
@@ -668,3 +680,57 @@ def test_historical_message_and_url_intake_still_read(persistent, database):
         assert persistent.get(f"/api/v1/analyses/{identity}").status_code == 404
     with Session(database[1]) as session:
         assert session.query(Analysis).filter(Analysis.id.in_(ids)).count() == 2
+
+
+def test_result_feedback_is_private_bounded_and_keeps_the_result(persistent, database):
+    # Migration 0007: the owner's opinion is stored separately and never alters the saved result.
+    created = persistent.post(
+        "/api/v1/analyses",
+        json={"input_type": "MESSAGE", "content": "Hi mum new number, transfer RM450 to my friend"},
+    ).json()
+    before = persistent.get(f"/api/v1/analyses/{created['id']}").json()
+    assert before["user_feedback"] is None
+    response = persistent.put(
+        f"/api/v1/analyses/{created['id']}/feedback", json={"verdict": "TOO_HIGH"}
+    )
+    assert response.status_code == 200
+    after = response.json()
+    assert after["user_feedback"] == "TOO_HIGH"
+    assert after["assessment"] == before["assessment"]
+    assert after["updated_at"] == before["updated_at"]
+    assert (
+        persistent.put(
+            f"/api/v1/analyses/{created['id']}/feedback", json={"verdict": "RIGHT"}
+        ).json()["user_feedback"]
+        == "RIGHT"
+    )
+    for bad in ({"verdict": "MAYBE"}, {"verdict": "RIGHT", "comment": "free text"}, {}):
+        assert (
+            persistent.put(f"/api/v1/analyses/{created['id']}/feedback", json=bad).status_code
+            == 422
+        )
+    # CSRF is required, and another account cannot rate this record.
+    token = persistent.headers.pop("X-CSRF-Token")
+    assert (
+        persistent.put(
+            f"/api/v1/analyses/{created['id']}/feedback", json={"verdict": "RIGHT"}
+        ).status_code
+        == 403
+    )
+    persistent.headers["X-CSRF-Token"] = token
+    persistent.post(
+        "/api/v1/auth/signup",
+        json={
+            "full_name": "Other Person",
+            "username": "other_user",
+            "email": "other@example.com",
+            "password": PASSWORD,
+        },
+    )
+    sign_in(persistent, "other@example.com")
+    assert (
+        persistent.put(
+            f"/api/v1/analyses/{created['id']}/feedback", json={"verdict": "RIGHT"}
+        ).status_code
+        == 404
+    )

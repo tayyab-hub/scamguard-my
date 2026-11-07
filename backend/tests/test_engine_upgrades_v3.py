@@ -56,7 +56,7 @@ def test_legitimate_links_with_paths_are_low(url_engine, url):
 def test_model_judges_host_only(url_engine):
     result = url_engine.analyse("https://en.wikipedia.org/wiki/Phishing")
     assert result.components["url_model"]["input"] == "host_only"
-    assert result.fusion_version == "url_fusion_v3"
+    assert result.fusion_version == "url_fusion_v4"
 
 
 @pytest.mark.parametrize("host", ["amazonaws.com", "applebees.com", "github.com"])

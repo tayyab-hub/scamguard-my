@@ -7,7 +7,7 @@
 from app.url_intelligence.reputation import ReputationSignal
 from app.url_intelligence.rules import Evidence
 
-FUSION_VERSION = "url_fusion_v3"
+FUSION_VERSION = "url_fusion_v4"
 HOST_MODEL_STRONG = 0.90
 HOST_MODEL_LEANING = 0.50
 
@@ -32,6 +32,14 @@ def fuse(classification, evidence: list[Evidence], reputation: ReputationSignal)
     meaningful = {e.family for e in evidence if e.severity == "MEANINGFUL"}
     weak = any(e.severity == "WEAK" for e in evidence)
     strength = phishing_strength(classification)
+    # url_fusion_v4: the host-only model is unreliable on well-known hosts it never saw, so it is
+    # ignored for listed popular, official and registry-restricted domains.
+    trusted_host = any(
+        e.category in {"POPULAR_DOMAIN", "KNOWN_OFFICIAL_DOMAIN", "RESTRICTED_REGISTRY_DOMAIN"}
+        for e in evidence
+    )
+    if trusted_host:
+        strength = None
     strong_host = strength is not None and strength >= HOST_MODEL_STRONG
     if len(meaningful) >= 2 or (meaningful and strong_host):
         return "HIGH"
@@ -39,7 +47,7 @@ def fuse(classification, evidence: list[Evidence], reputation: ReputationSignal)
         return "ELEVATED"
     # A reviewed official brand domain with only weak signals (login wording, a path) is not
     # warned about; the evidence still notes that official pages can be misused.
-    if any(e.category == "KNOWN_OFFICIAL_DOMAIN" for e in evidence):
+    if any(e.category in {"KNOWN_OFFICIAL_DOMAIN", "RESTRICTED_REGISTRY_DOMAIN"} for e in evidence):
         return "LOW"
     if weak or (strength is not None and strength >= HOST_MODEL_LEANING):
         return "CAUTION"

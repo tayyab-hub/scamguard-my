@@ -6,7 +6,7 @@ import logging
 from datetime import UTC, datetime
 from uuid import UUID
 
-from sqlalchemy import Row, case, func, or_, select
+from sqlalchemy import Row, case, func, or_, select, update
 from sqlalchemy.orm import Session
 
 from app.api.analysis_schemas import (
@@ -88,6 +88,7 @@ def detail(record: Analysis) -> AnalysisDetail:
         updated_at=record.updated_at,
         assessment=assessment,
         failure_code=record.failure_code,
+        user_feedback=record.user_feedback,
     )
 
 
@@ -273,6 +274,28 @@ def get_submission(session: Session, analysis_id: UUID, user_id: UUID) -> Analys
     )
     if record is None:
         raise ApiError(404, "ANALYSIS_NOT_FOUND", "Submission not found.")
+    return detail(record)
+
+
+# Record or replace the owner's opinion of a completed result. Only the feedback columns change;
+# the saved assessment, versions and timestamps of the analysis itself are untouched.
+def record_feedback(
+    session: Session, analysis_id: UUID, user_id: UUID, verdict: str
+) -> AnalysisDetail:
+    record = session.scalar(
+        select(Analysis).where(Analysis.id == analysis_id, Analysis.user_id == user_id)
+    )
+    if record is None:
+        raise ApiError(404, "ANALYSIS_NOT_FOUND", "Submission not found.")
+    if record.status != AnalysisStatus.COMPLETED:
+        raise ApiError(409, "FEEDBACK_NOT_AVAILABLE", "Only completed results can be rated.")
+    session.execute(
+        update(Analysis)
+        .where(Analysis.id == record.id)
+        .values(user_feedback=verdict, feedback_at=func.now(), updated_at=record.updated_at)
+    )
+    session.commit()
+    session.refresh(record)
     return detail(record)
 
 

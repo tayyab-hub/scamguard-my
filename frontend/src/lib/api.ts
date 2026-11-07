@@ -37,7 +37,7 @@ const evidenceSchema = z.object({
   category: z.string(),
   label: z.string(),
   snippet: z.string(),
-  source: z.enum(['DETERMINISTIC_RULE', 'EXTERNAL_AI']),
+  source: z.enum(['DETERMINISTIC_RULE', 'EXTERNAL_AI', 'EMBEDDED_URL', 'EMBEDDED_PHONE']),
 })
 const structuredEvidenceSchema = z.object({
   category: z.string(),
@@ -254,6 +254,8 @@ export const analysisDetailSchema = z.object({
     .nullable()
     .default(null),
   failure_code: z.string().nullable().default(null),
+  // Owner's private opinion of the result (API 0007); absent on older API versions.
+  user_feedback: z.enum(['RIGHT', 'TOO_HIGH', 'TOO_LOW', 'UNSURE']).nullable().default(null),
 })
 export const analysisSummarySchema = z.object({
   ...analysisFields,
@@ -428,7 +430,7 @@ export async function retryWhileWaking<T>(
 type RequestOptions = {
   signal?: AbortSignal
   handlesSessionExpiry?: boolean
-  method?: 'GET' | 'POST' | 'PATCH' | 'DELETE'
+  method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
   body?: unknown
   timeoutMs?: number
 }
@@ -626,6 +628,16 @@ export async function confirmPasswordReset(token: string, password: string) {
 
 // Delete one UUID through the owner-checked backend endpoint; return no response data on HTTP
 // 204.
+export type FeedbackVerdict = 'RIGHT' | 'TOO_HIGH' | 'TOO_LOW' | 'UNSURE'
+
+// Save the owner's opinion of a completed result. It never changes the stored assessment.
+export async function submitFeedback(id: string, verdict: FeedbackVerdict) {
+  return requestApi(`/analyses/${id}/feedback`, analysisDetailSchema, {
+    method: 'PUT',
+    body: { verdict },
+  })
+}
+
 export async function deleteAnalysis(id: string) {
   return requestApi(`/analyses/${id}`, z.unknown(), { method: 'DELETE' })
 }

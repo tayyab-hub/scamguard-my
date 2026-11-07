@@ -351,7 +351,11 @@ export function EvidenceCard({
               ? `${severity} evidence`
               : item.source === 'EXTERNAL_AI'
                 ? 'Grounded contextual review'
-                : 'Local indicator'}
+                : item.source === 'EMBEDDED_URL'
+                  ? 'Offline link check · not opened'
+                  : item.source === 'EMBEDDED_PHONE'
+                    ? 'Offline number check · not contacted'
+                    : 'Local indicator'}
             {item.source === 'REPUTATION' ? ' · Reputation signal' : ''}
             {item.source === 'NUMBERING_METADATA' ? ' · Numbering metadata' : ''}
           </p>

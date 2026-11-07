@@ -42,6 +42,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             application.state.message_engine = build_message_engine(config)
             application.state.url_engine = build_url_engine(config)
             application.state.phone_engine = build_phone_engine()
+            # Links and numbers inside messages reuse the same offline URL/Phone engines.
+            application.state.message_engine.attach_engines(
+                application.state.url_engine, application.state.phone_engine
+            )
             application.state.qr_engine = build_qr_engine(
                 config,
                 application.state.message_engine,
@@ -98,7 +102,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         CORSMiddleware,
         allow_origins=config.cors_origins,
         allow_credentials=True,
-        allow_methods=["GET", "POST", "PATCH", "DELETE"],
+        allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE"],
         allow_headers=["Accept", "Content-Type", "X-CSRF-Token"],
         expose_headers=["X-Request-ID"],
     )

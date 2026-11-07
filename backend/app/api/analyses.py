@@ -16,6 +16,7 @@ from app.api.analysis_schemas import (
     AnalysisList,
     CameraQRCreate,
     HistorySearch,
+    ResultFeedback,
 )
 from app.core.auth import (
     AuthenticatedSession,
@@ -35,6 +36,7 @@ from app.services.analyses import (
     delete_submission,
     get_submission,
     list_submissions,
+    record_feedback,
     record_qr_submission,
     record_submission,
 )
@@ -203,6 +205,18 @@ def analysis_detail(
     authenticated: Annotated[AuthenticatedSession, Depends(require_authenticated_session)],
 ) -> AnalysisDetail:
     return get_submission(session, analysis_id, authenticated.user.id)
+
+
+# Save the owner's private opinion of a completed result after CSRF validation. It is stored
+# for later evaluation only and never changes or retrains anything.
+@router.put("/{analysis_id}/feedback", response_model=AnalysisDetail)
+def analysis_feedback(
+    analysis_id: UUID,
+    payload: ResultFeedback,
+    session: Database,
+    authenticated: Annotated[AuthenticatedSession, Depends(require_csrf)],
+) -> AnalysisDetail:
+    return record_feedback(session, analysis_id, authenticated.user.id, payload.verdict)
 
 
 # Delete one owned analysis after CSRF validation; success has HTTP 204 and no response body.

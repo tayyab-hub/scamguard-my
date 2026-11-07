@@ -1,5 +1,7 @@
 # SCAMGUARD roadmap
 
+**Improvements, 7 November 2026:** links and phone numbers inside messages are now checked offline, well-known and `.gov.my`/`.edu.my` sites no longer get false URL warnings, production compares links with the OpenPhish phishing feed, unclear results ask "What you know that the text cannot show", owners can rate results privately, and an optional Gemini reviewer exists (off by default). On a second independent challenge set, scams containing a link at Elevated or High rose from 46% to 92% with no new false alarms. A meaning-based multilingual model was measured and not deployed (memory and accuracy). See [improvements](docs/IMPROVEMENTS_2026-11-07.md).
+
 **Accuracy upgrade, 6 November 2026:** after supervisor feedback that Message scoring relied on keywords, Message now uses scam-tactic rules (v3) and a calibrated score (fusion v3), and URL, Phone and QR received offline brand-impersonation, number-type and payment-recipient checks. On untouched historical SMS, scams at Elevated or High rose from 57% to 92%; on an independent conversational challenge holdout, scams warned doubled (27% to 53%) with more Caution results on genuine messages. Phishing URLs at Elevated or High rose from 0.2% to 52%, and legitimate links with a path are no longer all flagged (100% to 22%). See [accuracy upgrade](docs/ACCURACY_UPGRADE_2026-11-06.md). 406 backend, 171 frontend and 52 browser tests pass.
 
 **28 October 2026 — learning documentation complete:** the

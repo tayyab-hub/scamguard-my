@@ -159,6 +159,10 @@ class Analysis(Base):
             "confidence_score IS NULL OR (confidence_score >= 0 AND confidence_score <= 1)",
             name="ck_analyses_confidence",
         ),
+        CheckConstraint(
+            "user_feedback IS NULL OR user_feedback IN ('RIGHT', 'TOO_HIGH', 'TOO_LOW', 'UNSURE')",
+            name="ck_analyses_user_feedback",
+        ),
     )
 
     # UUIDs make stable opaque references but do not authorize access. The API still filters
@@ -198,6 +202,10 @@ class Analysis(Base):
     ai_contributed: Mapped[bool | None] = mapped_column(Boolean)
     completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     failure_code: Mapped[str | None] = mapped_column(String(80))
+    # The owner's private opinion of the result (migration 0007). It never alters the saved
+    # assessment and is not used for automatic retraining.
+    user_feedback: Mapped[str | None] = mapped_column(String(16))
+    feedback_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
 
 # Indexes support deterministic history ordering; the owner-prefixed index matches private

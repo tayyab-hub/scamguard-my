@@ -1,5 +1,18 @@
 # Accepted decisions
 
+## D63 — Cross-engine checks, trusted domains, feed, context and feedback (7 November 2026)
+
+Links and numbers inside messages reuse the offline URL/Phone engines and may only raise a Message
+result (links from Elevated, numbers from Caution); bare addresses need a common ending. Trusted
+domains are a hand-reviewed list plus `.gov.my`/`.edu.my`/`.mil.my`; Tranco was not copied because
+its redistribution terms are unclear. The OpenPhish community feed is downloaded by the server
+(non-commercial use) and never stored in the repository; submitted URLs are only compared with it.
+Context questions are client-side and never change a score. Result feedback is a private, closed
+choice stored by migration 0007 and never used for automatic retraining. Gemini is an optional
+reviewer, off by default, for synthetic content only. A quantized multilingual embedding model was
+rejected after measurement (about +425 MB memory, lower validation macro F1). The second challenge
+set is evaluation-only and was run once per build after changes were final.
+
 ## D62 — Calibrated Message score and tactic-based detection (6 November 2026)
 
 Supervisor feedback: keyword dependence let conversational scams score Low, and the score was not

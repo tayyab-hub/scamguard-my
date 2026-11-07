@@ -11,6 +11,7 @@ import { EmptyState, ErrorState, LoadingState } from './States'
 import { ModalDialog } from './ModalDialog'
 import { AssessmentResult } from './analysis/URLResult'
 import { riskCopy } from '../lib/resultPresentation'
+import { ResultFeedback } from './ResultFeedback'
 
 const inputLabels = { MESSAGE: 'Message', URL: 'URL', PHONE: 'Phone', QR: 'QR' } as const
 
@@ -92,6 +93,10 @@ export function SubmissionRows({
                         assessment={detail.data.assessment}
                         analysisId={detail.data.id}
                         content={detail.data.content}
+                      />
+                      <ResultFeedback
+                        analysisId={detail.data.id}
+                        initial={detail.data.user_feedback}
                       />
                     </div>
                   )}

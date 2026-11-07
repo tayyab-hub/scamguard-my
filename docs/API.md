@@ -1,5 +1,23 @@
 # Current API contract
 
+## November 2026 additions (migration 0007)
+
+`PUT /api/v1/analyses/{id}/feedback` with `{"verdict": "RIGHT" | "TOO_HIGH" | "TOO_LOW" | "UNSURE"}`
+records the owner's private opinion of a COMPLETED result. It requires the session cookie and
+`X-CSRF-Token`; extra keys (including free text) are rejected with 422; a foreign or unknown id is
+404; a non-completed record is 409 `FEEDBACK_NOT_AVAILABLE`. It returns the analysis detail. The
+saved assessment and `updated_at` are unchanged. Every analysis detail now includes
+`user_feedback` (one of the verdicts or `null`). Feedback is evaluation evidence only and is never
+used for automatic retraining; deleting the analysis deletes it.
+
+Message evidence `source` may now also be `EMBEDDED_URL` or `EMBEDDED_PHONE` (links and numbers
+written inside the message, checked offline by the URL and Phone engines and never opened or
+contacted); Message components may include `embedded_checks` (`version`, `items[{kind, shown,
+risk_level}]`) and fusion `reason` `EMBEDDED_LINK` or `EMBEDDED_PHONE`. URL evidence may include
+`POPULAR_DOMAIN` and `RESTRICTED_REGISTRY_DOMAIN` (context) and, in production, a reputation result
+from the OpenPhish community feed (`provider: "openphish-community"`). Deploy the frontend before
+the backend so older clients never receive unknown evidence sources.
+
 ## October 2026 compatibility additions
 
 Message `confidence_score` may now be null when the model lacks usable vocabulary support

@@ -12,8 +12,9 @@ from urllib.parse import unquote, urlsplit
 from app.url_intelligence.brands import BRANDS, brand_findings, is_official
 from app.url_intelligence.features import KEYWORDS, REDIRECT_KEYS, entropy, features
 from app.url_intelligence.parsing import ParsedURL
+from app.url_intelligence.popular import is_popular, is_restricted_registry
 
-RULES_VERSION = "url_rules_v3"
+RULES_VERSION = "url_rules_v4"
 # v3 lists. Free hosting and dynamic DNS let anyone publish under a reputable parent domain;
 # these TLDs are cheap and over-represented in phishing reports. Both are weak alone and become
 # meaningful only with a brand or account/payment wording. Shorteners extend the model's v1 list
@@ -262,6 +263,34 @@ def host_evidence(u, f):
                 "branding",
             )
         )
+    # v4: well-known sites and registry-restricted Malaysian endings. Not applied to free-hosting
+    # pages, where anyone can publish under the shared parent domain.
+    if not hosting and not is_official(u.registrable_domain):
+        if is_restricted_registry(u.registrable_domain):
+            out.append(
+                item(
+                    "RESTRICTED_REGISTRY_DOMAIN",
+                    "CONTEXT",
+                    "Government or education domain",
+                    "Only Malaysian government bodies or recognised institutions can register "
+                    "this ending. Individual pages can still be misused.",
+                    u.registrable_domain,
+                    "reputation",
+                )
+            )
+        elif is_popular(u.registrable_domain):
+            out.append(
+                item(
+                    "POPULAR_DOMAIN",
+                    "CONTEXT",
+                    "Well-known website",
+                    "The registrable domain is on a reviewed list of widely used legitimate "
+                    "sites, so the host-only model is not used to raise a warning. Pages and "
+                    "user content on popular sites can still be misused.",
+                    u.registrable_domain,
+                    "reputation",
+                )
+            )
     return out
 
 

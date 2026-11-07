@@ -121,10 +121,21 @@ class CameraQRCreate(BaseModel):
 
 # Full owned record. assessment can be absent for historical intake or failure; failure_code
 # supports diagnosis without exposing exception text.
+FeedbackVerdict = Literal["RIGHT", "TOO_HIGH", "TOO_LOW", "UNSURE"]
+
+
 class AnalysisDetail(AnalysisFields):
     content: str
     assessment: "AssessmentResponse | None" = None
     failure_code: str | None = None
+    user_feedback: FeedbackVerdict | None = None
+
+
+# The owner's opinion of a completed result; no free text is accepted, so no extra personal
+# content is collected.
+class ResultFeedback(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    verdict: FeedbackVerdict
 
 
 # Small history/dashboard view, including a bounded preview and optional QR subtype; fetching it

@@ -1,0 +1,581 @@
+{
+  "title": "November 2026 improvements evaluation (embedded link/phone checks, popular domains, phishing feed)",
+  "date": "2026-11-07",
+  "before": {
+    "commit": "f1460f1",
+    "message": "message-rules-v3 + message-fusion-v3",
+    "url": "url_rules_v3 + url_fusion_v3"
+  },
+  "after": {
+    "message": "message-rules-v3 + message-fusion-v3 + message-embedded-v1",
+    "url": "url_rules_v4 + url_fusion_v4 (phishing feed disabled in evaluation for reproducibility)"
+  },
+  "challenge_v2_sha256": "170cbcb5d5c0be914fbaf3fcc642b147751ae63fba786a11ff864d778ad5ef9c",
+  "results_before": {
+    "label": "before-f1460f1",
+    "historical_test": {
+      "rows": 1160,
+      "categories_by_label": {
+        "LEGITIMATE": {
+          "LOW": 944,
+          "CAUTION": 11,
+          "INSUFFICIENT_EVIDENCE": 10,
+          "ELEVATED": 2
+        },
+        "SPAM": {
+          "CAUTION": 69,
+          "LOW": 5,
+          "ELEVATED": 11,
+          "HIGH": 2
+        },
+        "SCAM": {
+          "ELEVATED": 41,
+          "HIGH": 57,
+          "CAUTION": 8
+        }
+      },
+      "scam_warned_caution_or_above": 1.0,
+      "scam_elevated_or_high": 0.9245,
+      "scam_high": 0.5377,
+      "scam_low": 0.0,
+      "legitimate_warned_caution_or_above": 0.0134,
+      "legitimate_elevated_or_high": 0.0021,
+      "spam_warned_caution_or_above": 0.9425,
+      "versions": {
+        "rules": "message-rules-v3",
+        "fusion": "message-fusion-v3"
+      }
+    },
+    "challenge_v1": {
+      "rows": 202,
+      "categories_by_label": {
+        "SCAM": {
+          "CAUTION": 37,
+          "LOW": 22,
+          "HIGH": 16,
+          "ELEVATED": 14,
+          "INSUFFICIENT_EVIDENCE": 1
+        },
+        "SPAM": {
+          "CAUTION": 13,
+          "LOW": 5,
+          "INSUFFICIENT_EVIDENCE": 1,
+          "ELEVATED": 1
+        },
+        "LEGITIMATE": {
+          "LOW": 49,
+          "CAUTION": 38,
+          "ELEVATED": 3,
+          "INSUFFICIENT_EVIDENCE": 2
+        }
+      },
+      "scam_warned_caution_or_above": 0.7444,
+      "scam_elevated_or_high": 0.3333,
+      "scam_high": 0.1778,
+      "scam_low": 0.2444,
+      "legitimate_warned_caution_or_above": 0.4457,
+      "legitimate_elevated_or_high": 0.0326,
+      "spam_warned_caution_or_above": 0.7,
+      "versions": {
+        "rules": "message-rules-v3",
+        "fusion": "message-fusion-v3"
+      },
+      "excluding_ambiguous": {
+        "rows": 194,
+        "categories_by_label": {
+          "SCAM": {
+            "CAUTION": 35,
+            "LOW": 21,
+            "HIGH": 16,
+            "ELEVATED": 14,
+            "INSUFFICIENT_EVIDENCE": 1
+          },
+          "SPAM": {
+            "CAUTION": 13,
+            "LOW": 5,
+            "INSUFFICIENT_EVIDENCE": 1,
+            "ELEVATED": 1
+          },
+          "LEGITIMATE": {
+            "LOW": 48,
+            "CAUTION": 34,
+            "ELEVATED": 3,
+            "INSUFFICIENT_EVIDENCE": 2
+          }
+        },
+        "scam_warned_caution_or_above": 0.7471,
+        "scam_elevated_or_high": 0.3448,
+        "scam_high": 0.1839,
+        "scam_low": 0.2414,
+        "legitimate_warned_caution_or_above": 0.4253,
+        "legitimate_elevated_or_high": 0.0345,
+        "spam_warned_caution_or_above": 0.7
+      }
+    },
+    "challenge_v2": {
+      "rows": 233,
+      "categories_by_label": {
+        "SCAM": {
+          "ELEVATED": 22,
+          "LOW": 42,
+          "CAUTION": 31,
+          "HIGH": 6,
+          "INSUFFICIENT_EVIDENCE": 1
+        },
+        "SPAM": {
+          "CAUTION": 11,
+          "LOW": 14,
+          "INSUFFICIENT_EVIDENCE": 1
+        },
+        "LEGITIMATE": {
+          "HIGH": 3,
+          "CAUTION": 38,
+          "LOW": 55,
+          "INSUFFICIENT_EVIDENCE": 6,
+          "ELEVATED": 3
+        }
+      },
+      "scam_warned_caution_or_above": 0.5784,
+      "scam_elevated_or_high": 0.2745,
+      "scam_high": 0.0588,
+      "scam_low": 0.4118,
+      "legitimate_warned_caution_or_above": 0.419,
+      "legitimate_elevated_or_high": 0.0571,
+      "spam_warned_caution_or_above": 0.4231,
+      "versions": {
+        "rules": "message-rules-v3",
+        "fusion": "message-fusion-v3"
+      },
+      "english": {
+        "rows": 129,
+        "categories_by_label": {
+          "SCAM": {
+            "ELEVATED": 19,
+            "LOW": 16,
+            "HIGH": 6,
+            "CAUTION": 18
+          },
+          "SPAM": {
+            "CAUTION": 9,
+            "LOW": 4
+          },
+          "LEGITIMATE": {
+            "HIGH": 3,
+            "CAUTION": 25,
+            "LOW": 27,
+            "ELEVATED": 2
+          }
+        },
+        "scam_warned_caution_or_above": 0.7288,
+        "scam_elevated_or_high": 0.4237,
+        "scam_high": 0.1017,
+        "scam_low": 0.2712,
+        "legitimate_warned_caution_or_above": 0.5263,
+        "legitimate_elevated_or_high": 0.0877,
+        "spam_warned_caution_or_above": 0.6923
+      },
+      "malay_or_mixed": {
+        "rows": 104,
+        "categories_by_label": {
+          "SCAM": {
+            "LOW": 26,
+            "ELEVATED": 3,
+            "CAUTION": 13,
+            "INSUFFICIENT_EVIDENCE": 1
+          },
+          "SPAM": {
+            "CAUTION": 2,
+            "LOW": 10,
+            "INSUFFICIENT_EVIDENCE": 1
+          },
+          "LEGITIMATE": {
+            "CAUTION": 13,
+            "LOW": 28,
+            "INSUFFICIENT_EVIDENCE": 6,
+            "ELEVATED": 1
+          }
+        },
+        "scam_warned_caution_or_above": 0.3721,
+        "scam_elevated_or_high": 0.0698,
+        "scam_high": 0.0,
+        "scam_low": 0.6047,
+        "legitimate_warned_caution_or_above": 0.2917,
+        "legitimate_elevated_or_high": 0.0208,
+        "spam_warned_caution_or_above": 0.1538
+      },
+      "with_link": {
+        "rows": 48,
+        "categories_by_label": {
+          "SCAM": {
+            "ELEVATED": 11,
+            "LOW": 8,
+            "CAUTION": 6,
+            "HIGH": 1
+          },
+          "LEGITIMATE": {
+            "HIGH": 1,
+            "CAUTION": 13,
+            "LOW": 8
+          }
+        },
+        "scam_warned_caution_or_above": 0.6923,
+        "scam_elevated_or_high": 0.4615,
+        "scam_high": 0.0385,
+        "scam_low": 0.3077,
+        "legitimate_warned_caution_or_above": 0.6364,
+        "legitimate_elevated_or_high": 0.0455,
+        "spam_warned_caution_or_above": null
+      },
+      "with_phone": {
+        "rows": 16,
+        "categories_by_label": {
+          "SCAM": {
+            "CAUTION": 4,
+            "LOW": 7,
+            "ELEVATED": 5
+          }
+        },
+        "scam_warned_caution_or_above": 0.5625,
+        "scam_elevated_or_high": 0.3125,
+        "scam_high": 0.0,
+        "scam_low": 0.4375,
+        "legitimate_warned_caution_or_above": null,
+        "legitimate_elevated_or_high": null,
+        "spam_warned_caution_or_above": null
+      },
+      "no_link_or_phone": {
+        "rows": 169,
+        "categories_by_label": {
+          "SCAM": {
+            "CAUTION": 21,
+            "LOW": 27,
+            "ELEVATED": 6,
+            "HIGH": 5,
+            "INSUFFICIENT_EVIDENCE": 1
+          },
+          "SPAM": {
+            "CAUTION": 11,
+            "LOW": 14,
+            "INSUFFICIENT_EVIDENCE": 1
+          },
+          "LEGITIMATE": {
+            "CAUTION": 25,
+            "LOW": 47,
+            "INSUFFICIENT_EVIDENCE": 6,
+            "HIGH": 2,
+            "ELEVATED": 3
+          }
+        },
+        "scam_warned_caution_or_above": 0.5333,
+        "scam_elevated_or_high": 0.1833,
+        "scam_high": 0.0833,
+        "scam_low": 0.45,
+        "legitimate_warned_caution_or_above": 0.3614,
+        "legitimate_elevated_or_high": 0.0602,
+        "spam_warned_caution_or_above": 0.4231
+      }
+    }
+  },
+  "results_after": {
+    "label": "after-v4",
+    "historical_test": {
+      "rows": 1160,
+      "categories_by_label": {
+        "LEGITIMATE": {
+          "LOW": 944,
+          "CAUTION": 11,
+          "INSUFFICIENT_EVIDENCE": 10,
+          "ELEVATED": 2
+        },
+        "SPAM": {
+          "CAUTION": 69,
+          "LOW": 5,
+          "ELEVATED": 11,
+          "HIGH": 2
+        },
+        "SCAM": {
+          "ELEVATED": 41,
+          "HIGH": 57,
+          "CAUTION": 8
+        }
+      },
+      "scam_warned_caution_or_above": 1.0,
+      "scam_elevated_or_high": 0.9245,
+      "scam_high": 0.5377,
+      "scam_low": 0.0,
+      "legitimate_warned_caution_or_above": 0.0134,
+      "legitimate_elevated_or_high": 0.0021,
+      "spam_warned_caution_or_above": 0.9425,
+      "versions": {
+        "rules": "message-rules-v3",
+        "fusion": "message-fusion-v3"
+      }
+    },
+    "challenge_v1": {
+      "rows": 202,
+      "categories_by_label": {
+        "SCAM": {
+          "CAUTION": 36,
+          "LOW": 21,
+          "HIGH": 16,
+          "ELEVATED": 16,
+          "INSUFFICIENT_EVIDENCE": 1
+        },
+        "SPAM": {
+          "CAUTION": 13,
+          "LOW": 5,
+          "INSUFFICIENT_EVIDENCE": 1,
+          "ELEVATED": 1
+        },
+        "LEGITIMATE": {
+          "LOW": 49,
+          "CAUTION": 38,
+          "ELEVATED": 3,
+          "INSUFFICIENT_EVIDENCE": 2
+        }
+      },
+      "scam_warned_caution_or_above": 0.7556,
+      "scam_elevated_or_high": 0.3556,
+      "scam_high": 0.1778,
+      "scam_low": 0.2333,
+      "legitimate_warned_caution_or_above": 0.4457,
+      "legitimate_elevated_or_high": 0.0326,
+      "spam_warned_caution_or_above": 0.7,
+      "versions": {
+        "rules": "message-rules-v3",
+        "fusion": "message-fusion-v3"
+      },
+      "excluding_ambiguous": {
+        "rows": 194,
+        "categories_by_label": {
+          "SCAM": {
+            "CAUTION": 34,
+            "LOW": 20,
+            "HIGH": 16,
+            "ELEVATED": 16,
+            "INSUFFICIENT_EVIDENCE": 1
+          },
+          "SPAM": {
+            "CAUTION": 13,
+            "LOW": 5,
+            "INSUFFICIENT_EVIDENCE": 1,
+            "ELEVATED": 1
+          },
+          "LEGITIMATE": {
+            "LOW": 48,
+            "CAUTION": 34,
+            "ELEVATED": 3,
+            "INSUFFICIENT_EVIDENCE": 2
+          }
+        },
+        "scam_warned_caution_or_above": 0.7586,
+        "scam_elevated_or_high": 0.3678,
+        "scam_high": 0.1839,
+        "scam_low": 0.2299,
+        "legitimate_warned_caution_or_above": 0.4253,
+        "legitimate_elevated_or_high": 0.0345,
+        "spam_warned_caution_or_above": 0.7
+      }
+    },
+    "challenge_v2": {
+      "rows": 233,
+      "categories_by_label": {
+        "SCAM": {
+          "HIGH": 20,
+          "ELEVATED": 20,
+          "LOW": 35,
+          "CAUTION": 26,
+          "INSUFFICIENT_EVIDENCE": 1
+        },
+        "SPAM": {
+          "CAUTION": 11,
+          "LOW": 14,
+          "INSUFFICIENT_EVIDENCE": 1
+        },
+        "LEGITIMATE": {
+          "HIGH": 3,
+          "CAUTION": 38,
+          "LOW": 55,
+          "INSUFFICIENT_EVIDENCE": 6,
+          "ELEVATED": 3
+        }
+      },
+      "scam_warned_caution_or_above": 0.6471,
+      "scam_elevated_or_high": 0.3922,
+      "scam_high": 0.1961,
+      "scam_low": 0.3431,
+      "legitimate_warned_caution_or_above": 0.419,
+      "legitimate_elevated_or_high": 0.0571,
+      "spam_warned_caution_or_above": 0.4231,
+      "versions": {
+        "rules": "message-rules-v3",
+        "fusion": "message-fusion-v3"
+      },
+      "english": {
+        "rows": 129,
+        "categories_by_label": {
+          "SCAM": {
+            "HIGH": 16,
+            "ELEVATED": 13,
+            "LOW": 14,
+            "CAUTION": 16
+          },
+          "SPAM": {
+            "CAUTION": 9,
+            "LOW": 4
+          },
+          "LEGITIMATE": {
+            "HIGH": 3,
+            "CAUTION": 25,
+            "LOW": 27,
+            "ELEVATED": 2
+          }
+        },
+        "scam_warned_caution_or_above": 0.7627,
+        "scam_elevated_or_high": 0.4915,
+        "scam_high": 0.2712,
+        "scam_low": 0.2373,
+        "legitimate_warned_caution_or_above": 0.5263,
+        "legitimate_elevated_or_high": 0.0877,
+        "spam_warned_caution_or_above": 0.6923
+      },
+      "malay_or_mixed": {
+        "rows": 104,
+        "categories_by_label": {
+          "SCAM": {
+            "ELEVATED": 7,
+            "HIGH": 4,
+            "CAUTION": 10,
+            "LOW": 21,
+            "INSUFFICIENT_EVIDENCE": 1
+          },
+          "SPAM": {
+            "CAUTION": 2,
+            "LOW": 10,
+            "INSUFFICIENT_EVIDENCE": 1
+          },
+          "LEGITIMATE": {
+            "CAUTION": 13,
+            "LOW": 28,
+            "INSUFFICIENT_EVIDENCE": 6,
+            "ELEVATED": 1
+          }
+        },
+        "scam_warned_caution_or_above": 0.4884,
+        "scam_elevated_or_high": 0.2558,
+        "scam_high": 0.093,
+        "scam_low": 0.4884,
+        "legitimate_warned_caution_or_above": 0.2917,
+        "legitimate_elevated_or_high": 0.0208,
+        "spam_warned_caution_or_above": 0.1538
+      },
+      "with_link": {
+        "rows": 48,
+        "categories_by_label": {
+          "SCAM": {
+            "HIGH": 15,
+            "ELEVATED": 9,
+            "LOW": 1,
+            "CAUTION": 1
+          },
+          "LEGITIMATE": {
+            "HIGH": 1,
+            "CAUTION": 13,
+            "LOW": 8
+          }
+        },
+        "scam_warned_caution_or_above": 0.9615,
+        "scam_elevated_or_high": 0.9231,
+        "scam_high": 0.5769,
+        "scam_low": 0.0385,
+        "legitimate_warned_caution_or_above": 0.6364,
+        "legitimate_elevated_or_high": 0.0455,
+        "spam_warned_caution_or_above": null
+      },
+      "with_phone": {
+        "rows": 16,
+        "categories_by_label": {
+          "SCAM": {
+            "CAUTION": 4,
+            "LOW": 7,
+            "ELEVATED": 5
+          }
+        },
+        "scam_warned_caution_or_above": 0.5625,
+        "scam_elevated_or_high": 0.3125,
+        "scam_high": 0.0,
+        "scam_low": 0.4375,
+        "legitimate_warned_caution_or_above": null,
+        "legitimate_elevated_or_high": null,
+        "spam_warned_caution_or_above": null
+      },
+      "no_link_or_phone": {
+        "rows": 169,
+        "categories_by_label": {
+          "SCAM": {
+            "CAUTION": 21,
+            "LOW": 27,
+            "ELEVATED": 6,
+            "HIGH": 5,
+            "INSUFFICIENT_EVIDENCE": 1
+          },
+          "SPAM": {
+            "CAUTION": 11,
+            "LOW": 14,
+            "INSUFFICIENT_EVIDENCE": 1
+          },
+          "LEGITIMATE": {
+            "CAUTION": 25,
+            "LOW": 47,
+            "INSUFFICIENT_EVIDENCE": 6,
+            "HIGH": 2,
+            "ELEVATED": 3
+          }
+        },
+        "scam_warned_caution_or_above": 0.5333,
+        "scam_elevated_or_high": 0.1833,
+        "scam_high": 0.0833,
+        "scam_low": 0.45,
+        "legitimate_warned_caution_or_above": 0.3614,
+        "legitimate_elevated_or_high": 0.0602,
+        "spam_warned_caution_or_above": 0.4231
+      }
+    }
+  },
+  "method_notes": [
+    "challenge_v2 was written by a separate assistant without access to the detector or to challenge_v1, and was evaluated exactly once per build after all changes were final. No rule, threshold or list was adjusted after seeing it.",
+    "Design decisions for embedded checks (common domain endings for bare addresses; links raise a message only at Elevated/High) were made on the historical train/validation split, not on any test data.",
+    "The OpenPhish feed is time-varying and was disabled for this evaluation so results are reproducible.",
+    "Re-evaluated once after fixes from an independent code review (phishing-feed host matching, retry cooldown, link/number extraction); these fixes were not informed by challenge_v2."
+  ],
+  "meaning_based_model_experiment": {
+    "result": {
+      "model": "Xenova/paraphrase-multilingual-MiniLM-L12-v2 (onnx/model_quantized.onnx)",
+      "model_file_mb": 118.3,
+      "process_rss_mb": {
+        "before_model": 147.10784,
+        "after_model": 571.830272,
+        "after_embedding": 1071.013888
+      },
+      "ms_per_message_single_thread": 41.4,
+      "validation_macro_f1": 0.866,
+      "chosen_C": 0.5,
+      "tfidf_validation_macro_f1_reference": 0.8861,
+      "challenge_v1_holdout_scam_probability_thresholds": {
+        "0.2": {
+          "scam_flagged": 0.8222,
+          "legitimate_flagged": 0.6087
+        },
+        "0.35": {
+          "scam_flagged": 0.6444,
+          "legitimate_flagged": 0.4565
+        },
+        "0.5": {
+          "scam_flagged": 0.4889,
+          "legitimate_flagged": 0.3043
+        }
+      }
+    },
+    "decision": "Not deployed: loading the quantized multilingual model raised process memory by about 425 MB (above the 512 MB Render free instance) and validation macro F1 (0.866) was below the TF-IDF model (0.8861). On the challenge v1 holdout it did not separate scams from genuine messages better than the current system."
+  }
+}

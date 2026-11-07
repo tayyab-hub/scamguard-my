@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 
 from app.core.config import Settings
@@ -12,11 +12,13 @@ from app.ml.ai_review import (
     AIReview,
     AIReviewProvider,
     AIStatus,
+    GeminiReviewProvider,
     OpenAIReviewProvider,
     perform_ai_review,
 )
 from app.ml.classifier import MessageClassifier
-from app.ml.fusion import FusionResult, RiskLevel, calibrator, fuse
+from app.ml.embedded import EMBEDDED_VERSION, ORDER, EmbeddedFinding, assess_embedded, strongest
+from app.ml.fusion import FusionResult, RiskLevel, calibrator, fuse, thresholds
 from app.ml.rules import RuleAssessment, assess_rules
 
 
@@ -53,6 +55,14 @@ class MessageIntelligenceEngine:
         self.classifier = classifier
         self.provider = provider
         self.unavailable_ai = unavailable_ai
+        self.url_engine = None
+        self.phone_engine = None
+
+    # Share the app's URL and Phone engines so links and numbers written inside a message are
+    # assessed with the same offline policy as direct URL/Phone submissions.
+    def attach_engines(self, url_engine, phone_engine) -> None:
+        self.url_engine = url_engine
+        self.phone_engine = phone_engine
 
     # Given message text, run local components and review only eligible ambiguous cases when a
     # provider exists. Fuse outputs and return a presentation-ready MessageAssessment; provider
@@ -74,13 +84,47 @@ class MessageIntelligenceEngine:
                 model=self.provider.model_name,
             )
         result = fuse(text, classification, rules, ai)
-        return self._present(classification, rules, ai, result)
+        embedded = assess_embedded(text, self.url_engine, self.phone_engine)
+        result = self._apply_embedded(result, embedded)
+        return self._present(classification, rules, ai, result, embedded)
+
+    # A risky link or number inside the message raises the Message category to the same level;
+    # it never lowers the text assessment.
+    @staticmethod
+    def _apply_embedded(result: FusionResult, embedded: list[EmbeddedFinding]) -> FusionResult:
+        # Links raise the message only at Elevated/High: a Caution link usually reflects the
+        # host-only model's weak leaning. Numbers raise it from Caution (risky number types).
+        raising = [
+            f
+            for f in embedded
+            if (f.kind == "LINK" and f.risk_level in {"ELEVATED", "HIGH"})
+            or (f.kind == "PHONE" and f.risk_level in {"CAUTION", "ELEVATED", "HIGH"})
+        ]
+        top = strongest(raising)
+        if top is None:
+            return result
+        if ORDER.index(top.risk_level) <= ORDER.index(str(result.risk_level)):
+            return result
+        floor = thresholds()[top.risk_level]
+        return replace(
+            result,
+            risk_level=RiskLevel(top.risk_level),
+            risk_score=round(max(result.risk_score or 0.0, floor), 4),
+            reason="EMBEDDED_LINK" if top.kind == "LINK" else "EMBEDDED_PHONE",
+        )
 
     # Turn component evidence and FusionResult into user-readable reasons/actions plus saved
     # audit metadata. Model class estimates remain separate from the final category and do not
     # verify sender identity.
     @staticmethod
-    def _present(classification, rules: RuleAssessment, ai: AIReview, result: FusionResult):
+    def _present(
+        classification,
+        rules: RuleAssessment,
+        ai: AIReview,
+        result: FusionResult,
+        embedded: list[EmbeddedFinding] | None = None,
+    ):
+        embedded = embedded or []
         evidence = [
             {
                 "category": indicator.category,
@@ -99,6 +143,19 @@ class MessageIntelligenceEngine:
                     "source": "EXTERNAL_AI",
                 }
                 for snippet in ai.evidence_snippets
+            )
+        for finding in embedded:
+            noun = "Link" if finding.kind == "LINK" else "Phone number"
+            level = finding.risk_level.replace("_", " ").lower()
+            reasons = "; ".join(finding.labels[:3]) or "no structural warning"
+            evidence.append(
+                {
+                    "category": "EMBEDDED_" + finding.kind,
+                    "label": f"{noun} in the message: {level}",
+                    "snippet": f"{finding.shown} — {reasons}"
+                    + (f" ({finding.assumed})" if finding.assumed else ""),
+                    "source": "EMBEDDED_URL" if finding.kind == "LINK" else "EMBEDDED_PHONE",
+                }
             )
         if result.risk_level == RiskLevel.INSUFFICIENT_EVIDENCE:
             summary = {
@@ -181,7 +238,19 @@ class MessageIntelligenceEngine:
             )
         if "PERSONAL_DATA" in categories:
             actions.append("Do not send IC, bank or card details in reply to a message.")
+        for finding in embedded:
+            if finding.risk_level in {"CAUTION", "ELEVATED", "HIGH"}:
+                for action in finding.actions[:2]:
+                    if action not in actions:
+                        actions.append(action)
         supporting = [item.label for item in rules.indicators]
+        supporting.extend(
+            f"{'Link' if f.kind == 'LINK' else 'Phone number'} {f.shown} assessed as "
+            f"{f.risk_level.replace('_', ' ').lower()} by the offline "
+            f"{'URL' if f.kind == 'LINK' else 'Phone'} check"
+            for f in embedded
+            if f.risk_level in {"CAUTION", "ELEVATED", "HIGH"}
+        )
         if classification.label == "SCAM" and classification.matched_features:
             supporting.append(
                 "The local model favours the SCAM class; this alone cannot establish fraud."
@@ -236,6 +305,14 @@ class MessageIntelligenceEngine:
             "SOCIAL_ENGINEERING_CUE": (
                 "A conversational scam tactic was detected. Messages like this are not treated "
                 "as safe even without classic warning words."
+            ),
+            "EMBEDDED_LINK": (
+                "A link written in the message was checked offline with the URL engine and its "
+                "warning raised the result; the link was not opened."
+            ),
+            "EMBEDDED_PHONE": (
+                "A phone number written in the message was checked with the Phone engine and its "
+                "warning raised the result; the number was not contacted."
             ),
             "PROTECTIVE_NOTICE": (
                 "The text warns the reader not to share or act and asks for nothing, which is "
@@ -300,6 +377,13 @@ class MessageIntelligenceEngine:
                     "reason": result.reason,
                     "disagreement": result.disagreement,
                 },
+                "embedded_checks": {
+                    "version": EMBEDDED_VERSION,
+                    "items": [
+                        {"kind": f.kind, "shown": f.shown, "risk_level": f.risk_level}
+                        for f in embedded
+                    ],
+                },
                 "assessment_basis": {
                     "decision": decisions[result.reason],
                     "supporting": supporting,
@@ -312,7 +396,8 @@ class MessageIntelligenceEngine:
                 "fraudulent.",
                 "The local model was evaluated on an imbalanced, mainly English historical "
                 "SMS dataset.",
-                "Links, phone numbers, identities and external claims were not checked.",
+                "Links and phone numbers in the text are checked offline for structure only; "
+                "they are never opened or contacted. Identities and claims are not verified.",
                 "The risk score is calibrated on historical SMS data, not on this sender; "
                 "new scam styles may differ.",
                 "Some scams read exactly like a genuine message. Without knowing the sender, "
@@ -341,12 +426,19 @@ def build_message_engine(settings: Settings) -> MessageIntelligenceEngine:
     # artifact must stop the deploy at the health check instead of failing every submission.
     calibrator()
     provider = None
-    if settings.ai_review_enabled and settings.openai_api_key:
-        provider = OpenAIReviewProvider(
-            settings.openai_api_key.get_secret_value(),
-            settings.openai_model,
-            settings.ai_timeout_seconds,
-        )
+    if settings.ai_review_enabled:
+        if settings.ai_review_provider == "gemini" and settings.gemini_api_key:
+            provider = GeminiReviewProvider(
+                settings.gemini_api_key.get_secret_value(),
+                settings.gemini_model,
+                settings.ai_timeout_seconds,
+            )
+        elif settings.ai_review_provider == "openai" and settings.openai_api_key:
+            provider = OpenAIReviewProvider(
+                settings.openai_api_key.get_secret_value(),
+                settings.openai_model,
+                settings.ai_timeout_seconds,
+            )
     return MessageIntelligenceEngine(
         classifier,
         provider,

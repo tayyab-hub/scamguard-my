@@ -6,6 +6,7 @@ import logging
 from dataclasses import dataclass
 from pathlib import Path
 
+from app.url_intelligence.blocklist import PhishingFeedProvider
 from app.url_intelligence.classifier import URLClassifier
 from app.url_intelligence.fusion import FUSION_VERSION, fuse
 from app.url_intelligence.parsing import PARSER_VERSION, parse_url
@@ -160,8 +161,13 @@ class URLIntelligenceEngine:
                     else [],
                     "uncertainty": [
                         "Neutral URL metadata does not increase risk by itself.",
-                        "No destination was visited and no live reputation lookup "
-                        "is configured by default.",
+                        "No destination was visited. "
+                        + (
+                            "The link was compared with a downloaded phishing list; a missing "
+                            "match does not prove the site is genuine."
+                            if reputation.status == "COMPLETED"
+                            else "No phishing-list comparison was available for this check."
+                        ),
                         *(
                             [
                                 "The local model is unavailable; "
@@ -193,8 +199,8 @@ class URLIntelligenceEngine:
                     "strength, not a scam probability."
                 ),
                 (
-                    "No live reputation provider is configured by default. A "
-                    "missing match does not prove legitimacy."
+                    "Phishing lists only contain reported sites. A missing match does not prove "
+                    "legitimacy."
                 ),
             ],
             classification.model_version if classification else None,
@@ -223,4 +229,15 @@ def build_url_engine(settings):
             "event=model_unavailable engine=URL exception_type=%s", type(exc).__name__
         )
         classifier = None  # Rules remain useful; never invent a model prediction.
-    return URLIntelligenceEngine(classifier)
+    # The OpenPhish feed is on by default only in production so tests and local runs stay
+    # offline; PHISHING_FEED_ENABLED overrides either way.
+    enabled = getattr(settings, "phishing_feed_enabled", None)
+    if enabled is None:
+        enabled = getattr(settings, "app_env", "development") == "production"
+    provider = None
+    if enabled:
+        provider = PhishingFeedProvider(
+            settings.phishing_feed_url, settings.phishing_feed_refresh_hours
+        )
+        provider.refresh_in_background()
+    return URLIntelligenceEngine(classifier, provider)
