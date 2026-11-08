@@ -74,7 +74,13 @@ test('reduced motion keeps offline authentication keyboard accessible', async ({
     'outline-style',
     'solid',
   )
-  await page.getByRole('link', { name: 'Help & Support' }).click()
+  // The footer repeats the link; use the main navigation's copy.
+  await page
+    .getByRole('navigation', {
+      name: info.project.name === 'mobile' ? 'Mobile navigation' : 'Desktop navigation',
+    })
+    .getByRole('link', { name: 'Help & Support' })
+    .click()
   await expect(page.getByRole('heading', { name: 'Help & Support' })).toBeFocused()
   expect(await page.evaluate(() => document.getAnimations().length)).toBe(0)
 })

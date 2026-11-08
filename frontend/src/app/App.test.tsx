@@ -386,3 +386,51 @@ describe('application routes and API states', () => {
     expect(document.title).toBe('Help & Support · SCAMGUARD')
   })
 })
+
+describe('desktop sidebar', () => {
+  it('collapses to an icon rail, keeps link names, and remembers the choice', async () => {
+    const store = new Map<string, string>()
+    vi.stubGlobal('localStorage', {
+      getItem: (key: string) => store.get(key) ?? null,
+      setItem: (key: string, value: string) => void store.set(key, value),
+      removeItem: (key: string) => void store.delete(key),
+    })
+    const { unmount } = renderApp()
+    await screen.findByText('Your activity starts here')
+    const toggle = screen.getByRole('button', { name: 'Collapse sidebar' })
+    expect(toggle).toHaveAttribute('aria-expanded', 'true')
+    expect(screen.getByText('Clarity before you act.')).toBeInTheDocument()
+    await userEvent.click(toggle)
+    expect(screen.getByRole('button', { name: 'Expand sidebar' })).toHaveAttribute(
+      'aria-expanded',
+      'false',
+    )
+    expect(screen.queryByText('Clarity before you act.')).not.toBeInTheDocument()
+    // Icons only, but every link keeps its accessible name.
+    const desktopNav = screen.getByRole('navigation', { name: 'Desktop navigation' })
+    for (const name of ['Overview', 'Analyse', 'History', 'Help & Support'])
+      expect(within(desktopNav).getByRole('link', { name })).toBeInTheDocument()
+    expect(window.localStorage.getItem('scamguard.sidebar')).toBe('collapsed')
+    unmount()
+    renderApp()
+    await screen.findByText('Your activity starts here')
+    expect(screen.getByRole('button', { name: 'Expand sidebar' })).toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name: 'Expand sidebar' }))
+    expect(window.localStorage.getItem('scamguard.sidebar')).toBe('expanded')
+  })
+
+  it('stays expanded and usable when browser storage is unavailable', async () => {
+    vi.stubGlobal('localStorage', {
+      getItem: () => {
+        throw new Error('blocked')
+      },
+      setItem: () => {
+        throw new Error('blocked')
+      },
+    })
+    renderApp()
+    await screen.findByText('Your activity starts here')
+    await userEvent.click(screen.getByRole('button', { name: 'Collapse sidebar' }))
+    expect(screen.getByRole('button', { name: 'Expand sidebar' })).toBeInTheDocument()
+  })
+})

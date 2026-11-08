@@ -75,7 +75,7 @@ test('product polish: searchable private history, pagination, deletion dialog an
   const second = await context.newPage()
   await second.goto('/account')
   await expect(second.getByText('Profile details')).toBeVisible()
-  await page.getByRole('link', { name: 'Account', exact: true }).click()
+  await page.getByRole('banner').getByRole('link', { name: 'Account', exact: true }).click()
   await page.getByLabel('Full name').fill('Multiple Tab User')
   await page.getByRole('button', { name: 'Save profile' }).click()
   await expect(page.getByText('Profile saved.')).toBeVisible()

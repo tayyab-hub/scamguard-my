@@ -21,6 +21,7 @@ import { analysisModes } from '../components/analysis/modes'
 import { EmptyState, LoadingState } from '../components/States'
 import { PreviewNotice } from '../components/PreviewNotice'
 import { PageHeading } from '../components/PageHeading'
+import { CountUp } from '../components/motion/CountUp'
 import { useCapabilities, useDashboard } from '../lib/queries'
 
 const metrics = [
@@ -95,13 +96,15 @@ export function DashboardPage() {
                         : 'Not available'
                     }
                   >
-                    {label === 'Total analyses' && data
-                      ? data.total_analyses.toLocaleString()
-                      : label === 'Flagged for review' && data && data.flagged_analyses !== null
-                        ? data.flagged_analyses.toLocaleString()
-                        : label === 'Latest analysis' && latest
-                          ? inputLabels[latest.input_type]
-                          : '—'}
+                    {label === 'Total analyses' && data ? (
+                      <CountUp value={data.total_analyses} />
+                    ) : label === 'Flagged for review' && data && data.flagged_analyses !== null ? (
+                      <CountUp value={data.flagged_analyses} />
+                    ) : label === 'Latest analysis' && latest ? (
+                      inputLabels[latest.input_type]
+                    ) : (
+                      '—'
+                    )}
                   </span>
                   <span className="status-chip">
                     {label === 'Total analyses' && data

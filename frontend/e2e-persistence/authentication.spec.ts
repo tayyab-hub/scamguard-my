@@ -22,7 +22,7 @@ test('real PostgreSQL: signup, refresh, logout, login, deletion and account priv
   await page.getByLabel('Confirm password').fill(password)
   await page.getByRole('button', { name: 'Create account' }).click()
   await expect(page.getByRole('heading', { name: 'Security overview' })).toBeVisible()
-  await expect(page.getByRole('link', { name: 'Account' })).toBeVisible()
+  await expect(page.getByRole('banner').getByRole('link', { name: 'Account' })).toBeVisible()
 
   await page.reload()
   await expect(page.getByRole('heading', { name: 'Security overview' })).toBeVisible()
@@ -51,7 +51,7 @@ test('real PostgreSQL: signup, refresh, logout, login, deletion and account priv
   await analysisDialog.getByRole('button', { name: 'Delete analysis' }).click()
   await expect(history.getByText(message)).toHaveCount(0)
 
-  await page.getByRole('link', { name: 'Account' }).click()
+  await page.getByRole('banner').getByRole('link', { name: 'Account' }).click()
   await expect(page.getByRole('heading', { name: 'Account controls' })).toBeVisible()
   await expect(page.getByLabel('Email address')).toHaveAttribute('readonly', '')
   await page.getByLabel('Full name').fill('Updated Browser User')

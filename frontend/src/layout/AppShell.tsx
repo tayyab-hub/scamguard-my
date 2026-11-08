@@ -2,7 +2,8 @@
 // Suspense shows a loading state for lazy chunks. Route changes update the document title and
 // focus while responsive navigation comes from styles.css.
 
-import { Suspense, useEffect, useState } from 'react'
+import { Suspense, useEffect, useState, type MouseEvent } from 'react'
+import { flushSync } from 'react-dom'
 import {
   ArrowUpRight,
   ChevronRight,
@@ -12,15 +13,37 @@ import {
   LayoutDashboard,
   LogIn,
   LogOut,
+  PanelLeftClose,
+  PanelLeftOpen,
   ScanLine,
   Shield,
   UserRound,
 } from 'lucide-react'
-import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
+import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { ApiStatus } from '../components/ApiStatus'
 import { Brand } from '../components/Brand'
 import { useAuth } from '../auth/AuthContext'
 import { LoadingState } from '../components/States'
+import { SiteFooter } from '../components/SiteFooter'
+import { motionAllowed } from '../lib/motion'
+
+// Desktop sidebar preference, remembered in this browser only. Storage can be unavailable
+// (private windows, blocked site data), so every access is guarded and defaults to expanded.
+const SIDEBAR_KEY = 'scamguard.sidebar'
+function readSidebarCollapsed() {
+  try {
+    return window.localStorage.getItem(SIDEBAR_KEY) === 'collapsed'
+  } catch {
+    return false
+  }
+}
+function saveSidebarCollapsed(collapsed: boolean) {
+  try {
+    window.localStorage.setItem(SIDEBAR_KEY, collapsed ? 'collapsed' : 'expanded')
+  } catch {
+    // Not remembered; the choice still applies until the page is reloaded.
+  }
+}
 
 const navigation = [
   { to: '/', label: 'Overview', icon: LayoutDashboard },
@@ -56,6 +79,32 @@ export function AppShell() {
   const [logoutError, setLogoutError] = useState('')
   const { pathname } = useLocation()
   const current = routeLabel(pathname)
+  const navigate = useNavigate()
+  const [collapsed, setCollapsed] = useState(readSidebarCollapsed)
+  const toggleSidebar = () => {
+    saveSidebarCollapsed(!collapsed)
+    setCollapsed(!collapsed)
+  }
+
+  // Main navigation uses the browser's View Transitions when available and motion is allowed, so
+  // the old page fades out instead of vanishing. Modified clicks (new tab etc.) and browsers
+  // without support fall back to normal link behaviour.
+  function transitionTo(event: MouseEvent<HTMLAnchorElement>, to: string) {
+    if (
+      event.defaultPrevented ||
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey ||
+      to === pathname ||
+      typeof document.startViewTransition !== 'function' ||
+      !motionAllowed()
+    )
+      return
+    event.preventDefault()
+    document.startViewTransition(() => flushSync(() => navigate(to)))
+  }
   useEffect(() => {
     document.title = `${current} · SCAMGUARD`
     document.getElementById('page-heading')?.focus()
@@ -66,55 +115,87 @@ export function AppShell() {
       <a href="#main-content" className="skip-link">
         Skip to content
       </a>
-      <aside className="workspace-sidebar fixed inset-y-0 left-0 z-30 hidden w-[260px] flex-col overflow-y-auto border-r border-line bg-sidebar px-5 py-7 lg:flex">
-        <Brand />
-        <div className="mb-7 mt-10 border-y border-line py-4">
-          <p className="eyebrow">SECURITY / WORKSPACE</p>
-          <p className="mt-2 text-xs text-body">Clarity before you act.</p>
-        </div>
-        <p className="eyebrow mb-3 px-3">Workspace</p>
-        <nav aria-label="Desktop navigation" className="space-y-2">
+      <aside
+        id="workspace-sidebar"
+        data-collapsed={collapsed}
+        className="workspace-sidebar fixed inset-y-0 left-0 z-30 hidden flex-col overflow-y-auto overflow-x-hidden border-r border-line bg-sidebar py-7 lg:flex"
+      >
+        <Brand compact={collapsed} />
+        {!collapsed && (
+          <>
+            <div className="mb-7 mt-10 border-y border-line py-4">
+              <p className="eyebrow">SECURITY / WORKSPACE</p>
+              <p className="mt-2 text-xs text-body">Clarity before you act.</p>
+            </div>
+            <p className="eyebrow mb-3 px-3">Workspace</p>
+          </>
+        )}
+        <nav
+          aria-label="Desktop navigation"
+          className={collapsed ? 'mt-10 space-y-2 border-t border-line pt-6' : 'space-y-2'}
+        >
           {navigation.map(({ to, label, icon: Icon }) => (
             <NavLink
               key={to}
               to={to}
               end={to === '/'}
+              onClick={(event) => transitionTo(event, to)}
+              data-tooltip={collapsed ? label : undefined}
               className={({ isActive }) => `nav-link ${isActive ? 'nav-link-active' : ''}`}
             >
               <Icon size={18} strokeWidth={1.6} aria-hidden="true" />
-              {label}
-              <ChevronRight size={14} className="ml-auto text-muted" aria-hidden="true" />
+              <span className={collapsed ? 'sr-only' : undefined}>{label}</span>
+              {!collapsed && (
+                <ChevronRight size={14} className="ml-auto text-muted" aria-hidden="true" />
+              )}
             </NavLink>
           ))}
         </nav>
-        <div className="mt-auto pt-12">
-          <div className="rounded-md border border-line bg-surface/50 p-4">
-            <Shield size={19} className="mb-3 text-accent" strokeWidth={1.5} aria-hidden="true" />
-            <p className="text-sm font-semibold text-ink">Pause. Check. Protect.</p>
-            <p className="mt-2 text-xs leading-5 text-muted">
-              A little caution can make a meaningful difference.
-            </p>
-            <Link
-              to="/analyse"
-              className="action-link mt-4 flex min-h-8 items-center gap-2 rounded text-xs font-semibold text-accent"
-            >
-              Explore analysis
-              <ArrowUpRight size={14} className="motion-arrow" aria-hidden="true" />
-            </Link>
+        {!collapsed && (
+          <div className="mt-auto pt-12">
+            <div className="rounded-md border border-line bg-surface/50 p-4">
+              <Shield size={19} className="mb-3 text-accent" strokeWidth={1.5} aria-hidden="true" />
+              <p className="text-sm font-semibold text-ink">Pause. Check. Protect.</p>
+              <p className="mt-2 text-xs leading-5 text-muted">
+                A little caution can make a meaningful difference.
+              </p>
+              <Link
+                to="/analyse"
+                className="action-link mt-4 flex min-h-8 items-center gap-2 rounded text-xs font-semibold text-accent"
+              >
+                Explore analysis
+                <ArrowUpRight size={14} className="motion-arrow" aria-hidden="true" />
+              </Link>
+            </div>
+            <div className="mt-6 flex items-center gap-2 px-1 text-[11px] text-muted">
+              <Globe2 size={14} aria-hidden="true" />
+              Built for safer digital decisions
+            </div>
           </div>
-          <div className="mt-6 flex items-center gap-2 px-1 text-[11px] text-muted">
-            <Globe2 size={14} aria-hidden="true" />
-            Built for safer digital decisions
-          </div>
-        </div>
+        )}
       </aside>
 
-      <div className="workspace-canvas lg:pl-[260px]">
+      <div className="workspace-canvas" data-sidebar={collapsed ? 'collapsed' : 'expanded'}>
         <header className="flex min-h-[78px] items-center justify-between gap-4 border-b border-line bg-surface/70 px-5 sm:px-8 xl:px-10">
           <div className="lg:hidden">
             <Brand />
           </div>
           <div className="hidden items-center gap-3 text-xs lg:flex">
+            <button
+              type="button"
+              className="sidebar-toggle"
+              aria-controls="workspace-sidebar"
+              aria-expanded={!collapsed}
+              aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+              title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+              onClick={toggleSidebar}
+            >
+              {collapsed ? (
+                <PanelLeftOpen size={17} aria-hidden="true" />
+              ) : (
+                <PanelLeftClose size={17} aria-hidden="true" />
+              )}
+            </button>
             <span className="text-muted">Workspace</span>
             <ChevronRight size={13} className="text-muted" aria-hidden="true" />
             <span
@@ -215,23 +296,15 @@ export function AppShell() {
         <main
           id="main-content"
           tabIndex={-1}
-          className="mx-auto max-w-[1480px] px-5 pb-32 pt-8 outline-none sm:px-8 sm:pt-10 lg:pb-10 xl:px-10"
+          className="mx-auto max-w-[1480px] px-5 pb-10 pt-8 outline-none sm:px-8 sm:pt-10 xl:px-10"
         >
           <div key={pathname} className="route-content">
             <Suspense fallback={<LoadingState label="Loading view" />}>
               <Outlet />
             </Suspense>
           </div>
-          <footer className="mt-9 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-5 text-[10px] text-muted">
-            <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
-              <Shield size={13} aria-hidden="true" />
-              <span className="font-semibold">SCAMGUARD</span>
-              <span aria-hidden="true">/</span>
-              <span>Forensic Intelligence</span>
-            </span>
-            <span>Thoughtful technology. Safer decisions.</span>
-          </footer>
         </main>
+        <SiteFooter />
       </div>
 
       <nav aria-label="Mobile navigation" className="mobile-nav">
@@ -240,6 +313,7 @@ export function AppShell() {
             key={to}
             to={to}
             end={to === '/'}
+            onClick={(event) => transitionTo(event, to)}
             className={({ isActive }) =>
               `flex min-h-14 flex-1 flex-col items-center justify-center gap-1 rounded-md border text-[11px] font-semibold ${isActive ? 'border-accent/30 bg-accent-subtle text-accent' : 'border-transparent text-muted'}`
             }

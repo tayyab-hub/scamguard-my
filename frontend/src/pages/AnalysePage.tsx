@@ -2,7 +2,7 @@
 // explicit submission, check backend capabilities, and render the saved response through
 // AssessmentResult. Loading/error/empty states never substitute fixture results.
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   ArrowRight,
   Camera,
@@ -33,8 +33,12 @@ import {
 } from '../components/analysis/modes'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { ResultFeedback } from '../components/ResultFeedback'
+import { ScanningIndicator } from '../components/analysis/ScanningIndicator'
+import { motionAllowed } from '../lib/motion'
 
 const inputLabels = { MESSAGE: 'Message', URL: 'URL', PHONE: 'Phone', QR: 'QR' } as const
+// Shortest time the scanning radar stays visible once an analysis starts (motion allowed only).
+const MIN_SCAN_MS = 700
 const examples = {
   MESSAGE:
     'Your account will be suspended today. Send your password and verification code now to keep access. Visit https://example.com/verify.',
@@ -77,6 +81,22 @@ export function AnalysePage() {
   const [copiedDraft] = useState(() => copiedAnalysisDraft(location.state))
   const capabilities = useCapabilities()
   const submission = useSubmitAnalysis()
+  // Keep the scanning radar up for a short minimum so a very fast analysis does not just flash
+  // it for one frame. Only when motion is allowed; reduced motion shows the result at once.
+  const [scanHold, setScanHold] = useState(false)
+  const scanStartedAt = useRef(0)
+  const submit: typeof submission.mutate = (variables, options) => {
+    scanStartedAt.current = performance.now()
+    if (motionAllowed()) setScanHold(true)
+    submission.mutate(variables, {
+      ...options,
+      onSettled: (...args) => {
+        const remaining = MIN_SCAN_MS - (performance.now() - scanStartedAt.current)
+        window.setTimeout(() => setScanHold(false), Math.max(0, remaining))
+        options?.onSettled?.(...args)
+      },
+    })
+  }
   const [inputType, setInputType] = useState<AnalysisMode>(() => {
     const mode = new URLSearchParams(location.search).get('mode')
     return (
@@ -219,7 +239,7 @@ export function AnalysePage() {
             role="status"
           >
             <Info size={16} className="mt-0.5 shrink-0 text-muted" aria-hidden="true" />
-            <p className="min-w-0 text-xs leading-5 text-muted xl:truncate">
+            <p className="min-w-0 text-xs leading-5 text-muted">
               <span className="font-medium text-body">
                 {availableIntelligence.length
                   ? `${intelligenceLabel} intelligence is available.`
@@ -256,7 +276,7 @@ export function AnalysePage() {
                     setQrAttempted(true)
                     if (qrSource === 'CAMERA') {
                       if (!cameraPayload) return
-                      submission.mutate(
+                      submit(
                         { input_type: 'QR', ...cameraPayload },
                         {
                           onSuccess: () => {
@@ -268,7 +288,7 @@ export function AnalysePage() {
                       return
                     }
                     if (!qrFile) return
-                    submission.mutate(
+                    submit(
                       { input_type: 'QR', file: qrFile },
                       {
                         onSuccess: () => {
@@ -284,7 +304,7 @@ export function AnalysePage() {
                   // Capture the submitted mode for the asynchronous success callback; clearing
                   // the correct draft must not depend on a later render's state.
                   const mode = inputType
-                  submission.mutate(
+                  submit(
                     { input_type: mode, content: content.trim() },
                     {
                       onSuccess: () => {
@@ -616,12 +636,8 @@ export function AnalysePage() {
                     {submission.data.failure_code}
                   </p>
                 )}
-                {submission.isPending ? (
-                  <div aria-hidden="true" className="p-5">
-                    <div className="loading-scan h-40 rounded-lg border border-line bg-surface-raised" />
-                    <div className="mt-4 h-3 w-2/3 rounded bg-line" />
-                    <div className="mt-3 h-3 w-1/2 rounded bg-line" />
-                  </div>
+                {submission.isPending || scanHold ? (
+                  <ScanningIndicator mode={inputType} />
                 ) : submission.data?.assessment ? (
                   <>
                     <AssessmentResult

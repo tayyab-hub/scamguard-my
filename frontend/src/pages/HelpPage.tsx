@@ -2,9 +2,9 @@
 // link only when a public support address exists; this page does not send email or create a
 // backend support ticket.
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { BookOpen, ExternalLink, LifeBuoy, Mail, Search, ShieldAlert } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { PageHeading } from '../components/PageHeading'
 import { getSupportEmail } from '../lib/env'
 
@@ -110,6 +110,16 @@ const categories = [
 // fields, and expose a mail-app link after preparation. No API submission occurs in the
 // feedback form.
 export function HelpPage() {
+  // Footer links such as /help#privacy-heading open the matching section. Wait one frame so the
+  // workspace's own focus on the page heading happens first, then bring the section into view.
+  const { hash } = useLocation()
+  useEffect(() => {
+    if (!hash) return
+    const frame = requestAnimationFrame(() => {
+      document.getElementById(decodeURIComponent(hash.slice(1)))?.scrollIntoView({ block: 'start' })
+    })
+    return () => cancelAnimationFrame(frame)
+  }, [hash])
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState('')
   const [summary, setSummary] = useState('')

@@ -3,6 +3,8 @@
 // explicitly.
 
 import { Link } from 'react-router-dom'
+import * as m from 'motion/react-m'
+import { EASE_EMPHASIZED, useMotionAllowed } from '../lib/motion'
 import type { RiskLevel } from '../lib/api'
 import { riskCopy } from '../lib/resultPresentation'
 
@@ -90,7 +92,7 @@ function Distribution({
     <div className="min-w-0">
       <h3 className="mb-3 text-xs font-semibold text-body">{title}</h3>
       <ul className="space-y-1">
-        {items.map((item) => (
+        {items.map((item, index) => (
           <li key={item.label}>
             <Link
               to={item.to}
@@ -105,10 +107,10 @@ function Distribution({
                 aria-hidden="true"
                 className="distribution-track mt-2 block h-1.5 overflow-hidden rounded-sm bg-surface-raised"
               >
-                <span
-                  data-risk={item.risk}
-                  className="distribution-bar block h-full bg-accent"
-                  style={{ width: `${total ? (item.count / total) * 100 : 0}%` }}
+                <GrowingBar
+                  risk={item.risk}
+                  width={`${total ? (item.count / total) * 100 : 0}%`}
+                  delay={index * 0.05}
                 />
               </span>
             </Link>
@@ -116,5 +118,22 @@ function Distribution({
         ))}
       </ul>
     </div>
+  )
+}
+
+// Decorative proportional bar that grows from the left the first time it scrolls into view;
+// it is simply drawn at full length under reduced motion.
+function GrowingBar({ risk, width, delay }: { risk?: string; width: string; delay: number }) {
+  const allowed = useMotionAllowed()
+  return (
+    <m.span
+      data-risk={risk}
+      className="distribution-bar block h-full bg-accent"
+      style={{ width, originX: 0 }}
+      initial={allowed ? { scaleX: 0 } : false}
+      whileInView={{ scaleX: 1 }}
+      viewport={{ once: true, amount: 0.8 }}
+      transition={{ duration: 0.7, delay, ease: EASE_EMPHASIZED }}
+    />
   )
 }

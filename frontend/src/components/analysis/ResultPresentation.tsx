@@ -8,6 +8,8 @@
 
 import { useEffect, useId, useRef, useState } from 'react'
 import type { ResultTab } from './resultTabs'
+import { CountUp } from '../motion/CountUp'
+import { Pop, Reveal } from '../motion/Reveal'
 import type { CSSProperties, KeyboardEvent } from 'react'
 import { ChevronDown, CircleHelp, ListChecks, ShieldAlert, ShieldCheck, Signal } from 'lucide-react'
 import type { Assessment } from '../../lib/api'
@@ -189,7 +191,7 @@ export function RiskScoreDisplay({
             <span className="text-sm">Unavailable</span>
           ) : (
             <>
-              {score.value}
+              <CountUp value={score.value} duration={0.9} delay={0.2} />
               <span className="ml-0.5 text-[10px] font-normal text-muted">/100</span>
             </>
           )}
@@ -242,9 +244,9 @@ export function AnalysisResultHero({ assessment }: { assessment: Assessment }) {
       <div className="hero-top">
         <div className="min-w-0 flex-1">
           <p className="eyebrow flex items-center gap-2 !text-[9px]">
-            <span className="risk-icon">
+            <Pop className="risk-icon" delay={0.12}>
               <Icon size={15} strokeWidth={1.8} aria-hidden="true" />
-            </span>
+            </Pop>
             {isQRAssessment(assessment)
               ? 'QR'
               : isURLAssessment(assessment)
@@ -578,7 +580,8 @@ export function RecommendedActionsPanel({ actions }: { actions: string[] }) {
   )
 }
 
-// Shared result shell used by every modality: verdict, next step, then the tabbed details.
+// Shared result shell used by every modality: verdict, next step, then the tabbed details, each
+// revealed in turn (no animation under reduced motion).
 export function AssessmentLayout({
   assessment,
   label,
@@ -597,9 +600,16 @@ export function AssessmentLayout({
       data-risk={assessment.risk_level}
       aria-label={label}
     >
-      <AnalysisResultHero assessment={assessment} />
-      <RecommendedActionsPanel actions={assessment.recommended_actions} />
-      <ResultTabs tabs={present} initial={initialTab} />
+      {/* Staged reveal: verdict, then the next step, then the details (still when reduced). */}
+      <Reveal>
+        <AnalysisResultHero assessment={assessment} />
+      </Reveal>
+      <Reveal delay={0.16}>
+        <RecommendedActionsPanel actions={assessment.recommended_actions} />
+      </Reveal>
+      <Reveal delay={0.26}>
+        <ResultTabs tabs={present} initial={initialTab} />
+      </Reveal>
     </div>
   )
 }

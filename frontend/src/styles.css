@@ -296,6 +296,39 @@
       .motion-icon {
       transform: translateX(1px);
     }
+    /* Primary actions glow softly in the accent colour on hover. */
+    .button-primary:not(:disabled):not([aria-disabled='true']):not([aria-busy='true']):hover {
+      box-shadow:
+        inset 0 1px 0 rgb(255 255 255 / 16%),
+        0 10px 24px -10px rgb(163 70 42 / 70%);
+    }
+  }
+  .button-primary {
+    transition:
+      color var(--motion-fast) var(--ease-standard),
+      background-color var(--motion-fast) var(--ease-standard),
+      border-color var(--motion-fast) var(--ease-standard),
+      box-shadow var(--motion-standard) var(--ease-standard),
+      transform var(--motion-fast) var(--ease-standard);
+  }
+  /* Page changes: the old page fades out while the new one plays its usual entrance. The
+     sidebar and bottom bar are not part of the transition, so they stay still. */
+  #main-content {
+    view-transition-name: workspace-page;
+  }
+  ::view-transition-old(root),
+  ::view-transition-new(root),
+  ::view-transition-new(workspace-page) {
+    animation: none;
+  }
+  ::view-transition-old(workspace-page) {
+    animation: page-leave var(--motion-fast) var(--ease-standard) both;
+  }
+}
+@keyframes page-leave {
+  to {
+    opacity: 0;
+    transform: translateY(-6px);
   }
 }
 
@@ -587,6 +620,248 @@
     transform: scaleX(var(--score-scale));
     transform-origin: left;
     background: var(--risk-color);
+  }
+  /* Site footer: description, link groups, urgent help and a bottom bar. */
+  /* Desktop sidebar: full (260px) or a slim icon rail (76px); the page content follows. */
+  .workspace-sidebar {
+    width: 260px;
+    padding-inline: 1.25rem;
+  }
+  .workspace-sidebar[data-collapsed='true'] {
+    width: 76px;
+    padding-inline: 0.875rem;
+    align-items: center;
+  }
+  @media (min-width: 1024px) {
+    .workspace-canvas[data-sidebar='expanded'] {
+      padding-left: 260px;
+    }
+    .workspace-canvas[data-sidebar='collapsed'] {
+      padding-left: 76px;
+    }
+  }
+  .workspace-sidebar[data-collapsed='true'] .nav-link {
+    position: relative;
+    justify-content: center;
+    width: 3rem;
+    padding-inline: 0;
+  }
+  /* Collapsed rail: the page name appears beside the icon on hover or keyboard focus. */
+  .workspace-sidebar[data-collapsed='true'] .nav-link::after {
+    content: attr(data-tooltip);
+    position: fixed;
+    left: 84px;
+    z-index: 50;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+    background: var(--color-ink);
+    color: var(--color-surface);
+    font-size: 11px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .workspace-sidebar[data-collapsed='true'] .nav-link:hover::after,
+  .workspace-sidebar[data-collapsed='true'] .nav-link:focus-visible::after {
+    opacity: 1;
+  }
+  .sidebar-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    margin-left: -0.5rem;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    color: var(--color-muted);
+  }
+  .sidebar-toggle:hover {
+    border-color: var(--color-line);
+    background: var(--color-surface);
+    color: var(--color-ink);
+  }
+  /* Sections opened from a link (for example /help#privacy-heading) keep some space above. */
+  h2[id] {
+    scroll-margin-top: 1.5rem;
+  }
+  .site-footer {
+    border-top: 1px solid var(--color-line);
+    background: linear-gradient(180deg, var(--color-sidebar), var(--color-canvas));
+  }
+  .site-footer-inner {
+    max-width: 1480px;
+    margin-inline: auto;
+    padding: 2.5rem 1.25rem 7.5rem;
+  }
+  @media (min-width: 640px) {
+    .site-footer-inner {
+      padding-inline: 2rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .site-footer-inner {
+      padding-bottom: 1.75rem;
+    }
+  }
+  @media (min-width: 1280px) {
+    .site-footer-inner {
+      padding-inline: 2.5rem;
+    }
+  }
+  /* Phones and tablets: description and urgent help span the width; the two link groups sit
+     side by side. Wide screens: four columns. */
+  .site-footer-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem 1.5rem;
+  }
+  .site-footer-grid > :first-child,
+  .site-footer-urgent {
+    grid-column: 1 / -1;
+  }
+  @media (min-width: 1280px) {
+    .site-footer-grid {
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 0.8fr) minmax(0, 1fr) minmax(0, 1.4fr);
+      gap: 2.5rem;
+    }
+    .site-footer-grid > :first-child,
+    .site-footer-urgent {
+      grid-column: auto;
+    }
+  }
+  .site-footer-heading {
+    margin-bottom: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+  .site-footer-list {
+    display: grid;
+    gap: 0.25rem;
+  }
+  .site-footer-link {
+    display: inline-flex;
+    min-height: 2rem;
+    align-items: center;
+    border-radius: 4px;
+    font-size: 12.5px;
+    color: var(--color-body);
+  }
+  .site-footer-link:hover {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .site-footer-urgent {
+    padding: 1rem 1.125rem;
+    border: 1px solid rgb(162 53 48 / 25%);
+    border-left: 3px solid var(--color-danger);
+    border-radius: 10px;
+    background: var(--color-danger-subtle);
+  }
+  .site-footer-call {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.5rem 0.875rem 0.5rem 0.75rem;
+    border: 1px solid rgb(162 53 48 / 30%);
+    border-radius: 8px;
+    background: var(--color-surface);
+    color: var(--color-danger);
+  }
+  .site-footer-call:hover {
+    border-color: var(--color-danger);
+  }
+  .site-footer-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem 1.5rem;
+    margin-top: 2.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--color-line);
+    font-size: 11px;
+    color: var(--color-muted);
+  }
+  /* Analysing: decorative radar and the local checks for the chosen input type. */
+  .scan-stage {
+    padding: 2.25rem 1.25rem 2rem;
+  }
+  .scan-radar {
+    position: relative;
+    width: 13rem;
+    height: 13rem;
+    margin: 0 auto;
+    overflow: hidden;
+    border-radius: 999px;
+    background: radial-gradient(circle, rgb(163 70 42 / 7%), transparent 70%);
+  }
+  .scan-ring {
+    position: absolute;
+    inset: 50% auto auto 50%;
+    border: 1.5px solid var(--color-accent);
+    border-radius: 999px;
+    translate: -50% -50%;
+  }
+  .scan-ring-1 {
+    width: 36%;
+    height: 36%;
+    opacity: 0.5;
+  }
+  .scan-ring-2 {
+    width: 64%;
+    height: 64%;
+    opacity: 0.3;
+  }
+  .scan-ring-3 {
+    width: 92%;
+    height: 92%;
+    opacity: 0.16;
+  }
+  .scan-sweep {
+    position: absolute;
+    inset: 0 0 auto;
+    top: 50%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--color-accent), transparent);
+    opacity: 0.55;
+  }
+  .scan-core {
+    position: absolute;
+    inset: 50% auto auto 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.75rem;
+    height: 3.75rem;
+    border-radius: 999px;
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+    translate: -50% -50%;
+    box-shadow: 0 8px 24px -8px rgb(163 70 42 / 55%);
+  }
+  .scan-steps {
+    display: grid;
+    gap: 0.5rem;
+    width: fit-content;
+    margin-inline: auto;
+  }
+  .scan-step {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    font-size: 12px;
+    color: var(--color-muted);
+  }
+  .scan-step-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 999px;
+    background: var(--color-line);
   }
   /* Evidence: compact rows in one bordered list; full text on demand. */
   .evidence-list {
@@ -1175,6 +1450,82 @@ summary.reason-summary:focus-visible {
 @media (prefers-reduced-motion: no-preference) {
   .reason-details[open] > .reason-body {
     animation: workspace-fade var(--motion-standard) var(--ease-standard);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .workspace-sidebar,
+  .workspace-canvas {
+    transition:
+      width var(--motion-standard) var(--ease-standard),
+      padding var(--motion-standard) var(--ease-standard);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .scan-ring {
+    animation: scan-pulse 1.8s var(--ease-standard) infinite;
+  }
+  .scan-ring-2 {
+    animation-delay: 0.3s;
+  }
+  .scan-ring-3 {
+    animation-delay: 0.6s;
+  }
+  .scan-sweep {
+    animation: scan-sweep 1.6s ease-in-out infinite alternate;
+  }
+  .scan-step {
+    animation: scan-step 1.8s var(--ease-standard) infinite;
+  }
+  .scan-step:nth-child(2) {
+    animation-delay: 0.6s;
+  }
+  .scan-step:nth-child(3) {
+    animation-delay: 1.2s;
+  }
+  .scan-step .scan-step-dot {
+    animation: scan-dot 1.8s var(--ease-standard) infinite;
+    animation-delay: inherit;
+  }
+}
+@keyframes scan-pulse {
+  0%,
+  100% {
+    scale: 1;
+  }
+  50% {
+    scale: 1.12;
+  }
+}
+@keyframes scan-sweep {
+  from {
+    top: 8%;
+  }
+  to {
+    top: 92%;
+  }
+}
+@keyframes scan-step {
+  0%,
+  45%,
+  100% {
+    color: var(--color-muted);
+  }
+  15%,
+  30% {
+    color: var(--color-ink);
+  }
+}
+@keyframes scan-dot {
+  0%,
+  45%,
+  100% {
+    background: var(--color-line);
+    scale: 1;
+  }
+  15%,
+  30% {
+    background: var(--color-accent);
+    scale: 1.4;
   }
 }
 @media (prefers-reduced-motion: no-preference) {
