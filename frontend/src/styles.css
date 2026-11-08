@@ -1452,12 +1452,14 @@ summary.reason-summary:focus-visible {
     animation: workspace-fade var(--motion-standard) var(--ease-standard);
   }
 }
-@media (prefers-reduced-motion: no-preference) {
-  .workspace-sidebar,
+/* Animate the sidebar only when it is toggled on desktop. Limiting this to desktop widths keeps
+   window resizes instant, so the old 260px padding never lingers on a narrow screen. */
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  .workspace-sidebar {
+    transition: width var(--motion-standard) var(--ease-standard);
+  }
   .workspace-canvas {
-    transition:
-      width var(--motion-standard) var(--ease-standard),
-      padding var(--motion-standard) var(--ease-standard);
+    transition: padding-left var(--motion-standard) var(--ease-standard);
   }
 }
 @media (prefers-reduced-motion: no-preference) {
