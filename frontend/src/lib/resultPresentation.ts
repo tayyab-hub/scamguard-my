@@ -41,12 +41,14 @@ export function isQRAssessment(assessment: Assessment): assessment is QRAssessme
 }
 
 /** Display transformation only. Never changes a stored score, category or confidence. */
-/** message-fusion-v3 stores a calibrated score; earlier saved results keep their original
- * fusion-score wording because they were produced by a different, uncalibrated policy. */
+/** message-fusion-v3 and later store a calibrated score; earlier saved results keep their
+ * original fusion-score wording because they were produced by a different, uncalibrated policy. */
 export function isCalibratedMessageScore(assessment: Assessment) {
   if (isURLAssessment(assessment) || isPhoneAssessment(assessment)) return false
   const fusion = (assessment.components as { fusion?: { version?: unknown } }).fusion
-  return fusion?.version === 'message-fusion-v3'
+  const match =
+    typeof fusion?.version === 'string' && /^message-fusion-v(\d+)$/.exec(fusion.version)
+  return Boolean(match && Number(match[1]) >= 3)
 }
 
 export function riskScorePresentation(assessment: Assessment) {

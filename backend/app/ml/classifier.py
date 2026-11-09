@@ -12,7 +12,7 @@ import unicodedata
 from dataclasses import dataclass
 from pathlib import Path
 
-EXPECTED_ARTIFACT_SHA256 = "818d99f72c8502fe6ec28849e42c77f4707949366bf014bd5677079dde2c3dd3"
+EXPECTED_ARTIFACT_SHA256 = "055c10a076deabb3ab657014600540f0976f922f98b2a928c6e65de1263bc651"
 
 
 # Model output: winning label, all class probabilities, winning-class strength, version and
@@ -48,6 +48,8 @@ class MessageClassifier:
         self.classes: list[str] = artifact["classes"]
         vectorizer = artifact["vectorizer"]
         self.vocabulary: dict[str, int] = vectorizer["vocabulary"]
+        # v2 artifacts list function words ignored during training; v1 artifacts have none.
+        self.stop_words: frozenset[str] = frozenset(vectorizer.get("stop_words", []))
         self.idf: list[float] = vectorizer["idf"]
         self.coefficients: list[list[float]] = artifact["classifier"]["coefficients"]
         self.intercepts: list[float] = artifact["classifier"]["intercepts"]
@@ -59,13 +61,14 @@ class MessageClassifier:
             raise ValueError("Invalid message model dimensions")
 
     # Lowercase, decompose Unicode and remove combining marks, then return words of at least two
-    # word characters plus adjacent word pairs. These exact preprocessing choices must match
-    # training.
-    @staticmethod
-    def _tokens(text: str) -> list[str]:
+    # word characters plus adjacent word pairs. Stop words are dropped before pairing, exactly as
+    # scikit-learn does. These preprocessing choices must match training.
+    def _tokens(self, text: str) -> list[str]:
         normalized = unicodedata.normalize("NFKD", text.lower())
         normalized = "".join(char for char in normalized if not unicodedata.combining(char))
-        words = re.findall(r"(?u)\b\w\w+\b", normalized)
+        words = [
+            word for word in re.findall(r"(?u)\b\w\w+\b", normalized) if word not in self.stop_words
+        ]
         return words + [f"{left} {right}" for left, right in zip(words, words[1:], strict=False)]
 
     # Convert text to sparse TF-IDF values, L2-normalize them, calculate one linear score per

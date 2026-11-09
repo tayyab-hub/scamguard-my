@@ -134,6 +134,23 @@ describe('Reviewed evidence presentation', () => {
     expect(first).toHaveAttribute('aria-selected', 'true')
   })
 
+  it('labels message-fusion-v4 scores as calibrated too', () => {
+    render(
+      <MessageResult
+        assessment={messageAssessmentSchema.parse({
+          ...historical,
+          risk_level: 'CAUTION',
+          risk_score: 0.2,
+          components: {
+            ...historical.components,
+            fusion: { version: 'message-fusion-v4', reason: 'CALIBRATED_SIGNALS' },
+          },
+        })}
+      />,
+    )
+    expect(screen.getByText('Calibrated risk score')).toBeInTheDocument()
+  })
+
   it('labels calibrated v3 scores and keeps historical v2 wording', () => {
     const calibrated = messageAssessmentSchema.parse({
       ...historical,

@@ -23,7 +23,7 @@ from app.ml.rules import assess_rules
 
 @pytest.fixture(scope="module")
 def classifier():
-    path = Path(__file__).resolve().parents[1] / "app/ml/artifacts/message_tfidf_v1.json"
+    path = Path(__file__).resolve().parents[1] / "app/ml/artifacts/message_tfidf_v2.json"
     return MessageClassifier(path)
 
 
@@ -34,7 +34,7 @@ def classifier():
         ("THREAT", "Your account will be suspended today."),
         ("CREDENTIAL", "Please provide your OTP to continue."),
         ("FINANCIAL", "Transfer the payment to this bank account."),
-        ("IMPERSONATION", "This is the bank security team."),
+        ("IMPERSONATION", "This is the bank security team. Provide your OTP now."),
         ("PRIZE", "You won a prize, claim your reward."),
         ("INVESTMENT", "Guaranteed return from this investment opportunity."),
         ("JOB_TASK", "Easy task, earn daily with this part-time job."),
@@ -49,6 +49,15 @@ def test_each_rule_category_is_explainable(category, text):
     match = next(item for item in result.indicators if item.category == category)
     assert match.snippet.strip("…") in text or text in match.snippet
     assert 0 < match.weight <= 1
+
+
+def test_a_lone_brand_or_authority_name_is_shown_but_adds_no_weight():
+    # v4: genuine bank and courier notices name the sender; only pressure or a request around
+    # the name makes it a warning sign.
+    result = assess_rules("Hong Leong Bank: your new debit card has been dispatched.")
+    match = next(item for item in result.indicators if item.category == "IMPERSONATION")
+    assert match.weight == 0
+    assert result.score == 0
 
 
 @pytest.mark.parametrize(
@@ -74,7 +83,7 @@ def test_classifier_exposes_distinct_measured_classes(classifier):
     result = classifier.predict("Claim your prize now by clicking this link")
     assert set(result.probabilities) == {"LEGITIMATE", "SPAM", "SCAM"}
     assert sum(result.probabilities.values()) == pytest.approx(1.0)
-    assert result.model_version == "message-tfidf-logreg-v1"
+    assert result.model_version == "message-tfidf-logreg-v2"
 
 
 def test_short_context_returns_insufficient_evidence(classifier):

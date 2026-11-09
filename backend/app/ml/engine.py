@@ -69,7 +69,9 @@ class MessageIntelligenceEngine:
     # failures are converted to status by perform_ai_review.
     def analyse(self, text: str) -> MessageAssessment:
         classification = self.classifier.predict(text)
-        rules = assess_rules(text)
+        embedded = assess_embedded(text, self.url_engine, self.phone_engine)
+        trusted = tuple(f.source for f in embedded if f.kind == "LINK" and f.trusted and f.source)
+        rules = assess_rules(text, trusted)
         ambiguous = classification.confidence < 0.78 or (
             classification.label == "LEGITIMATE" and rules.score >= 0.25
         )
@@ -84,7 +86,6 @@ class MessageIntelligenceEngine:
                 model=self.provider.model_name,
             )
         result = fuse(text, classification, rules, ai)
-        embedded = assess_embedded(text, self.url_engine, self.phone_engine)
         result = self._apply_embedded(result, embedded)
         return self._present(classification, rules, ai, result, embedded)
 
@@ -260,6 +261,12 @@ class MessageIntelligenceEngine:
             mitigating.append(
                 "The local model favours LEGITIMATE; this does not verify the sender."
             )
+        for finding in embedded:
+            if finding.kind == "LINK" and finding.trusted:
+                mitigating.append(
+                    f"Link {finding.shown} is a recognised official or well-known site "
+                    "(checked offline, not opened)."
+                )
         if rules.suppressed_matches:
             mitigating.append(
                 "Protective wording caused local rule matches to be discounted within their clause."
@@ -417,7 +424,7 @@ def build_message_engine(settings: Settings) -> MessageIntelligenceEngine:
     artifact_path = (
         Path(settings.message_model_path)
         if settings.message_model_path
-        else Path(__file__).resolve().parent / "artifacts/message_tfidf_v1.json"
+        else Path(__file__).resolve().parent / "artifacts/message_tfidf_v2.json"
     )
     if settings.message_model_path and not artifact_path.is_absolute():
         artifact_path = Path(__file__).resolve().parents[3] / artifact_path

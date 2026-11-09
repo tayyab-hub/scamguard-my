@@ -35,6 +35,8 @@ _NOT_HOSTS = re.compile(
     re.IGNORECASE,
 )
 ORDER = ["INSUFFICIENT_EVIDENCE", "LOW", "CAUTION", "ELEVATED", "HIGH"]
+# URL-engine evidence labels for hand-reviewed popular sites and registry-restricted domains.
+TRUSTED_SITE_LABELS = frozenset({"Well-known website", "Government or education domain"})
 # Addresses written without http(s):// or www. must end in a commonly used ending. Casual text
 # often omits the space after a full stop ("friday.hope", "days.so"), and some such endings are
 # real but rare top-level domains.
@@ -53,6 +55,8 @@ class EmbeddedFinding:
     labels: list[str]
     actions: list[str]
     assumed: str | None = None  # explains any interpretation, e.g. "https:// added"
+    source: str | None = None  # the link as written in the message
+    trusted: bool = False  # Low risk on a recognised official or well-known site
 
 
 def extract_links(text: str) -> list[str]:
@@ -112,9 +116,17 @@ def assess_embedded(text: str, url_engine, phone_engine) -> list[EmbeddedFinding
                 continue
             host = result.components["url_structure"]["hostname"]
             labels = [e["label"] for e in result.evidence if e.get("severity") != "CONTEXT"]
+            recognised = any(e["label"] in TRUSTED_SITE_LABELS for e in result.evidence)
             findings.append(
                 EmbeddedFinding(
-                    "LINK", host, result.risk_level, labels, result.recommended_actions, assumed
+                    "LINK",
+                    host,
+                    result.risk_level,
+                    labels,
+                    result.recommended_actions,
+                    assumed,
+                    source=link,
+                    trusted=str(result.risk_level) == "LOW" and recognised,
                 )
             )
     if phone_engine is not None:

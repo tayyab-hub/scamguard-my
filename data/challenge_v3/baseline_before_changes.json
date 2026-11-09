@@ -1,0 +1,22 @@
+{
+  "engine": {
+    "model": "message-tfidf-logreg-v1",
+    "rules": "message-rules-v3",
+    "fusion": "message-fusion-v3"
+  },
+  "all": {
+    "scam_warned": 0.7255,
+    "scam_elevated_or_high": 0.4118,
+    "legitimate_warned": 0.3455,
+    "legitimate_elevated_or_high": 0.0636,
+    "spam_warned": 0.52
+  },
+  "english": {
+    "scam_elevated_or_high": 0.5686,
+    "legitimate_warned": 0.5849
+  },
+  "malay_or_mixed": {
+    "scam_elevated_or_high": 0.2549,
+    "legitimate_warned": 0.1228
+  }
+}

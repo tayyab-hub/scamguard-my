@@ -1,0 +1,141 @@
+{
+  "fusion_version": "message-fusion-v4",
+  "artifact_sha256": "40276ce2d916b0e14158cfa3bce3db54e0132a3766dfca3c071198df0e580ee8",
+  "model_artifact_sha256": "055c10a076deabb3ab657014600540f0976f922f98b2a928c6e65de1263bc651",
+  "rules_version": "message-rules-v4",
+  "method": "v3 method re-fitted: logistic calibration over out-of-fold model logits and rule score on English train+validation plus Malay/Manglish translations of training messages (5 grouped folds; a translation shares its source's group); fixed bands; one evaluation on the untouched English test split with the runtime artifact.",
+  "thresholds": {
+    "HIGH": 0.7,
+    "ELEVATED": 0.35,
+    "CAUTION": 0.05
+  },
+  "development_rows": 6014,
+  "development_cross_validated_categories_by_label": {
+    "LEGITIMATE": {
+      "LOW": 4576,
+      "CAUTION": 81,
+      "HIGH": 1,
+      "ELEVATED": 9
+    },
+    "SPAM": {
+      "LOW": 287,
+      "CAUTION": 213,
+      "ELEVATED": 69,
+      "HIGH": 40
+    },
+    "SCAM": {
+      "CAUTION": 47,
+      "ELEVATED": 64,
+      "HIGH": 603,
+      "LOW": 24
+    }
+  },
+  "test_rows": 1160,
+  "test_categories_by_label": {
+    "LEGITIMATE": {
+      "LOW": 958,
+      "CAUTION": 7,
+      "ELEVATED": 2
+    },
+    "SPAM": {
+      "CAUTION": 37,
+      "LOW": 34,
+      "ELEVATED": 12,
+      "HIGH": 4
+    },
+    "SCAM": {
+      "HIGH": 88,
+      "ELEVATED": 9,
+      "CAUTION": 8,
+      "LOW": 1
+    }
+  },
+  "test_rates": {
+    "scam_at_elevated_or_high": 0.9151,
+    "scam_at_caution_or_above": 0.9906,
+    "scam_at_high": 0.8302,
+    "legitimate_at_caution_or_above": 0.0093,
+    "legitimate_at_elevated_or_high": 0.0021
+  },
+  "test_probability_quality": {
+    "brier": 0.01339,
+    "ece_10_bins": 0.01054,
+    "bins": [
+      {
+        "lower": 0.0,
+        "upper": 0.1,
+        "count": 1014,
+        "mean_score": 0.0039,
+        "observed_scam_rate": 0.001
+      },
+      {
+        "lower": 0.1,
+        "upper": 0.2,
+        "count": 20,
+        "mean_score": 0.1371,
+        "observed_scam_rate": 0.25
+      },
+      {
+        "lower": 0.2,
+        "upper": 0.3,
+        "count": 7,
+        "mean_score": 0.257,
+        "observed_scam_rate": 0.2857
+      },
+      {
+        "lower": 0.3,
+        "upper": 0.4,
+        "count": 10,
+        "mean_score": 0.3528,
+        "observed_scam_rate": 0.1
+      },
+      {
+        "lower": 0.4,
+        "upper": 0.5,
+        "count": 4,
+        "mean_score": 0.4268,
+        "observed_scam_rate": 0.5
+      },
+      {
+        "lower": 0.5,
+        "upper": 0.6,
+        "count": 7,
+        "mean_score": 0.5574,
+        "observed_scam_rate": 0.4286
+      },
+      {
+        "lower": 0.6,
+        "upper": 0.7,
+        "count": 6,
+        "mean_score": 0.6563,
+        "observed_scam_rate": 0.6667
+      },
+      {
+        "lower": 0.7,
+        "upper": 0.8,
+        "count": 10,
+        "mean_score": 0.7545,
+        "observed_scam_rate": 0.8
+      },
+      {
+        "lower": 0.8,
+        "upper": 0.9,
+        "count": 10,
+        "mean_score": 0.8454,
+        "observed_scam_rate": 0.8
+      },
+      {
+        "lower": 0.9,
+        "upper": 1.0,
+        "count": 72,
+        "mean_score": 0.9701,
+        "observed_scam_rate": 1.0
+      }
+    ]
+  },
+  "limitations": [
+    "Calibrated on one historical, mainly UK SMS dataset and its machine translations; not a real-world fraud probability.",
+    "Translations describe the same (UK) scams in Malay/Manglish; Malaysian-specific playbooks are covered by rules, and measured on the challenge sets.",
+    "The test split was used once for this report and for no fitting or threshold choice."
+  ]
+}

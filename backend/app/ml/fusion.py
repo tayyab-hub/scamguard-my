@@ -1,4 +1,4 @@
-# Versioned Message advisory policy (message-fusion-v3). A logistic calibrator learned from
+# Versioned Message advisory policy (message-fusion-v4). A logistic calibrator learned from
 # out-of-fold data combines model class probabilities with the rule score into a calibrated
 # share of similar historical messages that were scams. Fixed probability bands map that score to
 # a category; documented scam-tactic playbooks can only raise it. Confidence stays separate.
@@ -18,10 +18,10 @@ from app.ml.ai_review import AIReview, AIStatus
 from app.ml.classifier import Classification
 from app.ml.rules import SAFETY_CONTEXT, TACTIC_CATEGORIES, RuleAssessment
 
-FUSION_VERSION = "message-fusion-v3"
-CALIBRATOR_PATH = Path(__file__).resolve().parent / "artifacts" / "message_fusion_v3.json"
+FUSION_VERSION = "message-fusion-v4"
+CALIBRATOR_PATH = Path(__file__).resolve().parent / "artifacts" / "message_fusion_v4.json"
 # Pinned like the model artifact: a changed calibrator must be regenerated and re-reviewed.
-EXPECTED_CALIBRATOR_SHA256 = "b1761ecfaab010349ff5ca54c5239e38883e2c507b8049b764c827f0bf6f9bd7"
+EXPECTED_CALIBRATOR_SHA256 = "40276ce2d916b0e14158cfa3bce3db54e0132a3766dfca3c071198df0e580ee8"
 MIN_RULE_CONTEXT = 0.25
 MIN_MODEL_CONFIDENCE = 0.55
 STRONG_RULE_SCORE = 0.72
@@ -31,8 +31,9 @@ AI_MAX_CONTRIBUTION = 0.18
 CONFIDENCE_MODEL_WEIGHT = 0.7
 CONFIDENCE_EVIDENCE_WEIGHT = 0.3
 EPSILON = 1e-3  # extreme model outputs must not let one logit swamp the others
-# Class shares of the 4,637 calibration rows (422 SCAM, 348 SPAM), used when no vocabulary matches.
-NO_FEATURE_PRIOR = {"LEGITIMATE": 0.8340, "SCAM": 0.0910, "SPAM": 0.0750}
+# Class shares of the 6,014 v4 calibration rows (738 SCAM, 609 SPAM: 4,637 English plus 1,377
+# Malay/Manglish translations), used when no vocabulary matches.
+NO_FEATURE_PRIOR = {"LEGITIMATE": 0.7760, "SCAM": 0.1227, "SPAM": 0.1013}
 
 # Playbooks that are well documented in public scam advisories but nearly absent from the
 # training SMS data. They set a minimum category rather than a learned probability, so the score
@@ -160,7 +161,9 @@ def _category(score: float) -> RiskLevel:
 
 
 # Return the minimum score implied by documented tactics, with the reason that set it.
-def _tactic_floor(categories: set[str], rules: RuleAssessment) -> tuple[float, str | None]:
+def _tactic_floor(
+    categories: set[str], rules: RuleAssessment, protective: bool = False
+) -> tuple[float, str | None]:
     bands = thresholds()
     for anchor, partners in HIGH_PLAYBOOKS:
         if anchor in categories and categories & partners:
@@ -171,12 +174,33 @@ def _tactic_floor(categories: set[str], rules: RuleAssessment) -> tuple[float, s
     harvest = categories & {"PERSONAL_DATA", "CREDENTIAL"} and "REDIRECTION" in categories
     if harvest and "IMPERSONATION" in categories:
         return bands["HIGH"], "TACTIC_PLAYBOOK"
+    # v4: a claimed bank/authority asking for credentials or personal details in the message
+    # itself (no link), under a threat or a safe-account story, with no protective advice.
+    asks_details = categories & {"PERSONAL_DATA", "CREDENTIAL"}
+    if (
+        asks_details
+        and "IMPERSONATION" in categories
+        and categories & {"THREAT", "SAFE_ACCOUNT", "SECRECY", "URGENCY"}
+        and not protective
+    ):
+        return bands["HIGH"], "TACTIC_PLAYBOOK"
+    if categories & {"SAFE_ACCOUNT", "ACCOUNT_RENTAL"} and categories & (
+        PAYMENT_REQUESTS | {"IMPERSONATION", "FINANCIAL", "SECRECY", "THREAT"}
+    ):
+        return bands["HIGH"], "TACTIC_PLAYBOOK"
     if rules.score >= STRONG_RULE_SCORE and len(rules.indicators) >= 3:
         return bands["HIGH"], "STRONG_LOCAL_EVIDENCE"
     for anchor, partners in ELEVATED_PLAYBOOKS:
         if anchor in categories and categories & partners:
             return bands["ELEVATED"], "TACTIC_PLAYBOOK"
     if harvest:
+        return bands["ELEVATED"], "TACTIC_PLAYBOOK"
+    # v4: passing on a received code, a safe account or account rental is never routine.
+    if categories & {"CODE_REQUEST", "SAFE_ACCOUNT", "ACCOUNT_RENTAL"}:
+        return bands["ELEVATED"], "TACTIC_PLAYBOOK"
+    if "REFUND_REQUEST" in categories and categories & {"FINANCIAL", "MONEY_REQUEST"}:
+        return bands["ELEVATED"], "TACTIC_PLAYBOOK"
+    if asks_details and "IMPERSONATION" in categories and not protective:
         return bands["ELEVATED"], "TACTIC_PLAYBOOK"
     # A single conversational cue (new number, wrong-number opener, app move, discreet favour,
     # payment method, offer or data request) is never treated as safe: verify first.
@@ -224,7 +248,7 @@ def fuse(
         score = thresholds()["HIGH"] - 0.0001
         reason = "UNCORROBORATED_MODEL"
 
-    floor, floor_reason = _tactic_floor(categories, rules)
+    floor, floor_reason = _tactic_floor(categories, rules, bool(SAFETY_CONTEXT.search(text)))
     if floor > score:
         score = floor
         reason = floor_reason

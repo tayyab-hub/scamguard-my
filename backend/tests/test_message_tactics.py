@@ -78,14 +78,14 @@ def test_genuine_notices_are_not_escalated(engine, text):
 def test_low_result_does_not_claim_safety(engine):
     result = engine.analyse("Running 10 mins late, grab a table and order me a latte please")
     assert "does not confirm" in result.summary
-    assert result.components["fusion"]["version"] == "message-fusion-v3"
+    assert result.components["fusion"]["version"] == "message-fusion-v4"
 
 
 def test_calibrator_artifact_is_checksum_pinned_and_ordered():
     artifact = calibrator()
     bands = artifact["thresholds"]
     assert bands["CAUTION"] < bands["ELEVATED"] < bands["HIGH"]
-    assert artifact["rules_version"] == "message-rules-v3"
+    assert artifact["rules_version"] == "message-rules-v4"
 
 
 def test_engine_startup_rejects_a_tampered_calibrator(monkeypatch):

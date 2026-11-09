@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "fusion_version": "message-fusion-v4",
+  "created_by": "backend/scripts/calibrate_message_fusion_v4.py",
+  "random_seed": 20261106,
+  "model_artifact_sha256": "055c10a076deabb3ab657014600540f0976f922f98b2a928c6e65de1263bc651",
+  "rules_version": "message-rules-v4",
+  "target": "SCAM",
+  "features": [
+    "logit_scam",
+    "logit_spam",
+    "rule_score"
+  ],
+  "coefficients": [
+    1.54890442,
+    0.52051527,
+    1.73352881
+  ],
+  "intercept": 0.46815976,
+  "thresholds": {
+    "HIGH": 0.7,
+    "ELEVATED": 0.35,
+    "CAUTION": 0.05
+  },
+  "band_meaning": "Calibrated share of similar development messages (English SMS and their Malay/Manglish translations) that were scams: HIGH >= 0.70, ELEVATED >= 0.35, CAUTION >= 0.05.",
+  "calibration_rows": 6014
+}

@@ -8,7 +8,7 @@ import re
 import unicodedata
 from dataclasses import dataclass
 
-RULES_VERSION = "message-rules-v3"
+RULES_VERSION = "message-rules-v4"
 URGENCY_COMBINATION_WEIGHT = 0.16
 AUTHORITY_COMBINATION_WEIGHT = 0.14
 PRIZE_COMBINATION_WEIGHT = 0.12
@@ -32,6 +32,32 @@ TACTIC_CATEGORIES = frozenset(
         "UNSOLICITED_OFFER",
         "PERSONAL_DATA",
         "ADVANCE_FEE",
+        # Added in v4 (see docs/ERROR_ANALYSIS_2026-11-09.md): forwarding a received code,
+        # "safe account" transfers, renting out a bank account, and "wrong transfer" refunds.
+        "CODE_REQUEST",
+        "SAFE_ACCOUNT",
+        "ACCOUNT_RENTAL",
+        "REFUND_REQUEST",
+    }
+)
+
+# A brand or authority name alone (a bank, courier or agency in a genuine notice) is not a
+# warning sign. It adds weight only alongside a request, threat or other pressure (v4).
+AUTHORITY_PARTNERS = frozenset(
+    {
+        "THREAT",
+        "CREDENTIAL",
+        "PERSONAL_DATA",
+        "MONEY_REQUEST",
+        "SUSPICIOUS_ACTION",
+        "REDIRECTION",
+        "URGENCY",
+        "ADVANCE_FEE",
+        "PRIZE",
+        "SECRECY",
+        "CODE_REQUEST",
+        "SAFE_ACCOUNT",
+        "ACCOUNT_RENTAL",
     }
 )
 
@@ -147,7 +173,7 @@ TACTIC_DEFINITIONS = (
         "Unsolicited earning or investment offer",
         r"\b(daily (?:pay|salary|income|commission|earnings?)|earn (?:rm|\$|up to|extra)|"
         r"(?:rm|\$) ?\d[\d,]* ?(?:-|to) ?(?:rm|\$)? ?\d[\d,]* ?(?:per|a|/) ?(?:day|hour)|"
-        r"(?:per|a) day|flexible (?:hours|working|time)|remote (?:role|job|position|work)|"
+        r"flexible (?:hours|working|time)|remote (?:role|job|position|work)|"
         r"no experience (?:needed|required)|(?:like|rate|review) (?:videos|posts|products|"
         r"hotels) (?:and|to) earn|trading (?:signals?|mentor|platform|group)|"
         r"investment (?:platform|group|plan|mentor)|profit (?:of|up to)|passive income|"
@@ -164,7 +190,13 @@ TACTIC_DEFINITIONS = (
         r"(?:fee|fi|charge|deposit)s?|(?:pay|bayar|transfer|bank in) (?:the |a )?(?:\w+ )?"
         r"(?:fee|fi|deposit) (?:first|dahulu|dulu)|(?:fee|fi|deposit) (?:first|dahulu|dulu)|"
         r"before (?:we|i|they) (?:release|approve|pay|send|courier|ship)|"
-        r"(?:cuma|hanya) bayar)\b",
+        r"(?:cuma|hanya) bayar|duti setem|stamp duty|"
+        r"(?:pay|bayar|top ?up|deposit)\b.{0,40}\b(?:before|sebelum)\b.{0,40}\b(?:release|"
+        r"keluar|dikeluarkan|withdraw|pengeluaran|deliver|penghantaran|dihantar|courier|pos)|"
+        r"to unlock (?:the |your )?(?:withdrawal|account|funds?)|"
+        r"(?:bayar|pay) (?:penuh |full |semua )?(?:dulu|dahulu|first)|"
+        r"(?:pay|bayar) (?:rm|\$) ?\d[\d,.]* (?:\w+ ){0,3}(?:shipping|postage|pos|insurance|"
+        r"insurans|fee|crate|cert))\b",
         0.16,
     ),
     rule(
@@ -173,8 +205,47 @@ TACTIC_DEFINITIONS = (
         r"\b(full (?:name and )?address|ic (?:number|no)|mykad|nric|identity card|"
         r"date of birth|bank (?:account )?(?:number|statement|details)|account (?:number|no)|"
         r"card number|cvv|tac (?:number|code)|selfie (?:with|holding) (?:your |it|the )?(?:ic)?|"
-        r"copy of (?:your )?ic|maklumat (?:bank|akaun|peribadi))\b",
+        r"copy of (?:your )?ic|maklumat (?:bank|akaun|peribadi)|atm card|kad atm|"
+        r"no\.? ?ic|nombor (?:ic|kad|akaun|mykad)|no\.? akaun|balas (?:\w+ ){0,3}dengan "
+        r"(?:nama|no|nombor|ic|maklumat))\b",
         0.14,
+    ),
+    rule(
+        "CODE_REQUEST",
+        "Asks you to pass on a code you received",
+        r"\b((?:forward|send|share|screenshot|give|pass)\b.{0,40}\b(?:code|otp|tac|kod)\b"
+        r".{0,40}\b(?:to me|back|balik|semula|kepada saya|kat saya|ke saya)|"
+        r"(?:accidentally|wrongly|mistakenly) sent (?:my |the |a |an )?(?:\w+ )?"
+        r"(?:code|otp|tac)|(?:tersalah|terhantar|tersilap) (?:hantar )?(?:kod|otp|tac)|"
+        r"send me the (?:\w+ )?code|(?:the |a )?code you(?:'ll| will)? (?:get|receive)|"
+        r"hantar (?:balik |semula )?kod)\b",
+        0.24,
+    ),
+    rule(
+        "SAFE_ACCOUNT",
+        "Transfer to a so-called safe account",
+        r"\b(safe(?:ty)? account|akaun selamat|secure (?:holding )?account|"
+        r"(?:transfer|move|pindah(?:kan)?) (?:all |semua )?(?:your |the )?(?:balance|baki|"
+        r"savings|simpanan) (?:to|ke))\b",
+        0.26,
+    ),
+    rule(
+        "ACCOUNT_RENTAL",
+        "Asks to rent or use your bank account",
+        r"\b(rent (?:out )?your (?:bank )?account|sewa(?:kan)? akaun|jual akaun|"
+        r"pinjam(?:kan)? akaun|use your (?:bank )?account to (?:receive|transfer)|"
+        r"(?:serah|serahkan|hand over) (?:kad atm|atm card|your card))\b",
+        0.26,
+    ),
+    rule(
+        "REFUND_REQUEST",
+        "Asks you to return a mistaken transfer",
+        r"\b((?:sent|transferred|credited) (?:to )?(?:your|ur) (?:\w+ )?(?:account|e-?wallet|"
+        r"number) by mistake|by mistake (?:to|into) (?:your|ur)|"
+        r"tersalah (?:transfer|pindah|hantar|masuk)|wrongly (?:transferred|sent)|"
+        r"(?:return|pulangkan|refund) (?:it|the money|duit|wang)?.{0,30}\b(?:to|ke) "
+        r"(?:my|this|another|akaun lain|nombor))",
+        0.16,
     ),
 )
 
@@ -184,7 +255,7 @@ DEFINITIONS = (
         "Urgent deadline",
         r"\b(urgent|immediately|act now|within \d+ (?:hour|minute)s?|last chance|"
         r"expires? (?:today|tonight|in \d+)|before (?:midnight|today ends)|segera|"
-        r"sekarang juga)\b",
+        r"sekarang juga|hari ini juga|dalam masa \d+ (?:jam|minit))\b",
         0.14,
     ),
     rule(
@@ -193,13 +264,16 @@ DEFINITIONS = (
         r"\b(account (?:will be )?(?:blocked|suspended|closed)|legal action|arrest|"
         r"penalty|unauthori[sz]ed activity|warrant|money laundering|(?:account|card) "
         r"(?:has been |is |will be )?frozen|dibekukan|disekat|summons|saman|case number|"
-        r"blacklist(?:ed)?|senarai hitam)\b",
+        r"blacklist(?:ed)?|senarai hitam|ditamatkan|dipotong|potong bekalan|"
+        r"tindakan undang-undang|waran tangkap|ditangkap|didakwa|sindiket|haram)\b",
         0.18,
     ),
     rule(
         "CREDENTIAL",
         "Credential language",
-        r"\b(otp|one[- ]time pass(?:word|code)|password|pin|security code|login details)\b",
+        r"\b(otp|one[- ]time pass(?:word|code)|"
+        r"password(?! (?:was|has been) (?:changed|updated|reset))|pin|security code|"
+        r"login details|kata laluan|kod pengesahan|nombor pin)\b",
         0.21,
     ),
     rule(
@@ -214,7 +288,8 @@ DEFINITIONS = (
         r"\b(bank|police|tax department|government|courier|support team|security team|"
         r"lhdn|pdrm|polis|mahkamah|court|bank negara|bnm|customs|kastam|immigration|"
         r"imigresen|pos ?laju|j&t|ninja ?van|shopee|lazada|maybank|cimb|public bank|rhb|"
-        r"touch ?'?n ?'?go|tng)\b",
+        r"touch ?'?n ?'?go|tng|kwsp|epf|mcmc|jpj|tnb|unit fraud|sarjan|inspektor|"
+        r"balai polis|ibu pejabat polis)\b",
         0.09,
     ),
     rule(
@@ -245,7 +320,9 @@ DEFINITIONS = (
     rule(
         "SECRECY",
         "Secrecy pressure",
-        r"\b(don't tell|do not tell|keep (?:this|it) secret|confidential between us)\b",
+        r"\b(don't tell|do not tell|keep (?:this|it) secret|confidential between us|"
+        r"siasatan sulit|jangan (?:beritahu|bagitahu|maklumkan|cakap)(?: kepada)? "
+        r"(?:sesiapa|siapa|keluarga|pihak bank)|this matter is confidential)\b",
         0.19,
     ),
     rule(
@@ -269,9 +346,18 @@ DEFINITIONS = (
 # Negation must describe a protective action in the same clause. Generic words like
 # 'warning' also appear in account-threat scams and must never disable detection.
 SAFETY_CONTEXT = re.compile(
-    r"\b(?:never|do not|don't|avoid|should not|must not|will not|won't)\s+"
+    r"\b(?:never|do not|don't|does not|doesn't|did not|avoid|should not|must not|will not|"
+    r"won't)\s+"
     r"(?:ever\s+)?(?:share|send|provide|give|disclose|enter|click(?:ing)?|open(?:ing)?|"
-    r"follow(?:ing)?|pay(?:ing)?|transfer(?:ring)?|reply(?:ing)?|ask)\b",
+    r"follow(?:ing)?|pay(?:ing)?|transfer(?:ring)?|reply(?:ing)?|ask)\b|"
+    # v4: Malay protective advice ("jangan kongsi", "tidak akan meminta") and statements that
+    # nothing has to be paid ("no payment needed", "tiada bayaran").
+    r"\b(?:jangan|tidak (?:akan |pernah )?|tak (?:akan |pernah )?|takkan)\s*"
+    r"(?:kongsi(?:kan)?|beri(?:kan)?|dedah(?:kan)?|hantar|klik|tekan|buka|bayar|minta|"
+    r"meminta|memberi)\b|"
+    r"\bno (?:payment|fee|charge|deposit|upfront \w+)s?\b|"
+    r"\b(?:payment|fee)s? (?:is |are )?not (?:required|needed)\b|"
+    r"\btiada (?:bayaran|caj|yuran)\b",
     re.IGNORECASE,
 )
 CLAUSE_BREAK = re.compile(r"[.!?;\n]|\b(?:but|however|instead)\b", re.IGNORECASE)
@@ -343,9 +429,15 @@ def _snippet(text: str, start: int, end: int) -> str:
 # Scan normalized text, suppress protective-clause matches and keep one indicator per category.
 # Add only the named combination bonuses, cap the score at one and return audit details with
 # original-text snippets.
-def assess_rules(text: str) -> RuleAssessment:
+def assess_rules(text: str, trusted_links: tuple[str, ...] = ()) -> RuleAssessment:
     indicators: list[Indicator] = []
     suppressed = 0
+    # Links the offline URL check recognised as official or well known are not redirection
+    # evidence (v4). Mask them with a neutral word of the same length so evidence offsets hold.
+    for link in trusted_links:
+        start = text.lower().find(link.lower())
+        if start >= 0:
+            text = text[:start] + ("x" * len(link)) + text[start + len(link) :]
     normalized, offsets = rule_text(text)
     for definition in DEFINITIONS:
         for match in definition.pattern.finditer(normalized):
@@ -366,10 +458,30 @@ def assess_rules(text: str) -> RuleAssessment:
     # action, authority plus threat/money, or a prize plus a demand. These weights were
     # authored, not learned.
     categories = {indicator.category for indicator in indicators}
+    # A lone brand or authority name stays visible as evidence but adds no weight (v4).
+    if "IMPERSONATION" in categories and not categories & AUTHORITY_PARTNERS:
+        indicators = [
+            Indicator(item.category, item.label, item.snippet, 0.0)
+            if item.category == "IMPERSONATION"
+            else item
+            for item in indicators
+        ]
     score = sum(indicator.weight for indicator in indicators)
     if "URGENCY" in categories and categories & {"CREDENTIAL", "FINANCIAL", "REDIRECTION"}:
         score += URGENCY_COMBINATION_WEIGHT
-    if "IMPERSONATION" in categories and categories & {"THREAT", "CREDENTIAL", "FINANCIAL"}:
+    # v4: generic money words ("transfer", "payment") appear in genuine bank notices, so they
+    # complete the authority combination only together with pressure or a requested action.
+    authority_pressure = categories & {
+        "THREAT",
+        "CREDENTIAL",
+        "PERSONAL_DATA",
+        "MONEY_REQUEST",
+        "SAFE_ACCOUNT",
+        "CODE_REQUEST",
+    } or (
+        "FINANCIAL" in categories and categories & {"URGENCY", "REDIRECTION", "SUSPICIOUS_ACTION"}
+    )
+    if "IMPERSONATION" in categories and authority_pressure:
         score += AUTHORITY_COMBINATION_WEIGHT
     if "PRIZE" in categories and categories & {"FINANCIAL", "REDIRECTION", "SUSPICIOUS_ACTION"}:
         score += PRIZE_COMBINATION_WEIGHT

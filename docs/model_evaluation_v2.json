@@ -1,0 +1,433 @@
+{
+  "model_version": "message-tfidf-logreg-v2",
+  "artifact_sha256": "055c10a076deabb3ab657014600540f0976f922f98b2a928c6e65de1263bc651",
+  "data": {
+    "english_split_manifest": "data/processed/message_split_manifest_v1.csv",
+    "translations": "data/processed/malay_translation/message_train_malay_v1.csv",
+    "translation_rows": 1377,
+    "translation_languages": {
+      "ms": 838,
+      "mixed": 539
+    },
+    "malay_validation_rows": 312,
+    "malay_validation_labels": {
+      "SCAM": 69,
+      "LEGITIMATE": 194,
+      "SPAM": 49
+    },
+    "selection_train_rows": 4221,
+    "final_training_rows": 6014
+  },
+  "english_validation_candidates": {
+    "logistic_regression": {
+      "classification_report": {
+        "LEGITIMATE": {
+          "precision": 0.97766497,
+          "recall": 0.9958635,
+          "f1-score": 0.98668033,
+          "support": 967.0
+        },
+        "SPAM": {
+          "precision": 0.84931507,
+          "recall": 0.71264368,
+          "f1-score": 0.775,
+          "support": 87.0
+        },
+        "SCAM": {
+          "precision": 0.92156863,
+          "recall": 0.88679245,
+          "f1-score": 0.90384615,
+          "support": 106.0
+        },
+        "accuracy": 0.96465517,
+        "macro avg": {
+          "precision": 0.91618289,
+          "recall": 0.86509988,
+          "f1-score": 0.88850883,
+          "support": 1160.0
+        },
+        "weighted avg": {
+          "precision": 0.96291269,
+          "recall": 0.96465517,
+          "f1-score": 0.96323497,
+          "support": 1160.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          963,
+          3,
+          1
+        ],
+        [
+          18,
+          62,
+          7
+        ],
+        [
+          4,
+          8,
+          94
+        ]
+      ],
+      "class_order": [
+        "LEGITIMATE",
+        "SPAM",
+        "SCAM"
+      ]
+    },
+    "linear_svm": {
+      "classification_report": {
+        "LEGITIMATE": {
+          "precision": 0.97379032,
+          "recall": 0.99896587,
+          "f1-score": 0.98621746,
+          "support": 967.0
+        },
+        "SPAM": {
+          "precision": 0.86153846,
+          "recall": 0.64367816,
+          "f1-score": 0.73684211,
+          "support": 87.0
+        },
+        "SCAM": {
+          "precision": 0.90291262,
+          "recall": 0.87735849,
+          "f1-score": 0.88995215,
+          "support": 106.0
+        },
+        "accuracy": 0.9612069,
+        "macro avg": {
+          "precision": 0.91274714,
+          "recall": 0.84000084,
+          "f1-score": 0.87100391,
+          "support": 1160.0
+        },
+        "weighted avg": {
+          "precision": 0.95889468,
+          "recall": 0.9612069,
+          "f1-score": 0.95871765,
+          "support": 1160.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          966,
+          1,
+          0
+        ],
+        [
+          21,
+          56,
+          10
+        ],
+        [
+          5,
+          8,
+          93
+        ]
+      ],
+      "class_order": [
+        "LEGITIMATE",
+        "SPAM",
+        "SCAM"
+      ]
+    },
+    "multinomial_naive_bayes": {
+      "classification_report": {
+        "LEGITIMATE": {
+          "precision": 0.94433594,
+          "recall": 1.0,
+          "f1-score": 0.97137117,
+          "support": 967.0
+        },
+        "SPAM": {
+          "precision": 0.85,
+          "recall": 0.3908046,
+          "f1-score": 0.53543307,
+          "support": 87.0
+        },
+        "SCAM": {
+          "precision": 0.91666667,
+          "recall": 0.83018868,
+          "f1-score": 0.87128713,
+          "support": 106.0
+        },
+        "accuracy": 0.9387931,
+        "macro avg": {
+          "precision": 0.90366753,
+          "recall": 0.74033109,
+          "f1-score": 0.79269712,
+          "support": 1160.0
+        },
+        "weighted avg": {
+          "precision": 0.93473234,
+          "recall": 0.9387931,
+          "f1-score": 0.9295302,
+          "support": 1160.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          967,
+          0,
+          0
+        ],
+        [
+          45,
+          34,
+          8
+        ],
+        [
+          12,
+          6,
+          88
+        ]
+      ],
+      "class_order": [
+        "LEGITIMATE",
+        "SPAM",
+        "SCAM"
+      ]
+    }
+  },
+  "malay_validation_candidates": {
+    "logistic_regression": {
+      "classification_report": {
+        "LEGITIMATE": {
+          "precision": 0.96938776,
+          "recall": 0.97938144,
+          "f1-score": 0.97435897,
+          "support": 194.0
+        },
+        "SPAM": {
+          "precision": 0.80487805,
+          "recall": 0.67346939,
+          "f1-score": 0.73333333,
+          "support": 49.0
+        },
+        "SCAM": {
+          "precision": 0.84,
+          "recall": 0.91304348,
+          "f1-score": 0.875,
+          "support": 69.0
+        },
+        "accuracy": 0.91666667,
+        "macro avg": {
+          "precision": 0.87142193,
+          "recall": 0.8552981,
+          "f1-score": 0.86089744,
+          "support": 312.0
+        },
+        "weighted avg": {
+          "precision": 0.9149367,
+          "recall": 0.91666667,
+          "f1-score": 0.91453197,
+          "support": 312.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          190,
+          3,
+          1
+        ],
+        [
+          5,
+          33,
+          11
+        ],
+        [
+          1,
+          5,
+          63
+        ]
+      ],
+      "class_order": [
+        "LEGITIMATE",
+        "SPAM",
+        "SCAM"
+      ]
+    },
+    "linear_svm": {
+      "classification_report": {
+        "LEGITIMATE": {
+          "precision": 0.95024876,
+          "recall": 0.98453608,
+          "f1-score": 0.96708861,
+          "support": 194.0
+        },
+        "SPAM": {
+          "precision": 0.82051282,
+          "recall": 0.65306122,
+          "f1-score": 0.72727273,
+          "support": 49.0
+        },
+        "SCAM": {
+          "precision": 0.86111111,
+          "recall": 0.89855072,
+          "f1-score": 0.87943262,
+          "support": 69.0
+        },
+        "accuracy": 0.91346154,
+        "macro avg": {
+          "precision": 0.8772909,
+          "recall": 0.84538268,
+          "f1-score": 0.85793132,
+          "support": 312.0
+        },
+        "weighted avg": {
+          "precision": 0.91016043,
+          "recall": 0.91346154,
+          "f1-score": 0.91003976,
+          "support": 312.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          191,
+          3,
+          0
+        ],
+        [
+          7,
+          32,
+          10
+        ],
+        [
+          3,
+          4,
+          62
+        ]
+      ],
+      "class_order": [
+        "LEGITIMATE",
+        "SPAM",
+        "SCAM"
+      ]
+    },
+    "multinomial_naive_bayes": {
+      "classification_report": {
+        "LEGITIMATE": {
+          "precision": 0.96039604,
+          "recall": 1.0,
+          "f1-score": 0.97979798,
+          "support": 194.0
+        },
+        "SPAM": {
+          "precision": 0.86842105,
+          "recall": 0.67346939,
+          "f1-score": 0.75862069,
+          "support": 49.0
+        },
+        "SCAM": {
+          "precision": 0.86111111,
+          "recall": 0.89855072,
+          "f1-score": 0.87943262,
+          "support": 69.0
+        },
+        "accuracy": 0.92628205,
+        "macro avg": {
+          "precision": 0.89664273,
+          "recall": 0.85734004,
+          "f1-score": 0.8726171,
+          "support": 312.0
+        },
+        "weighted avg": {
+          "precision": 0.92399401,
+          "recall": 0.92628205,
+          "f1-score": 0.92286562,
+          "support": 312.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          194,
+          0,
+          0
+        ],
+        [
+          6,
+          33,
+          10
+        ],
+        [
+          2,
+          5,
+          62
+        ]
+      ],
+      "class_order": [
+        "LEGITIMATE",
+        "SPAM",
+        "SCAM"
+      ]
+    }
+  },
+  "selection": {
+    "selected": "logistic_regression",
+    "rationale": "Same transparent probability model as v1, within 0.02 macro F1 of the best candidate on English validation and on held-out Malay/Manglish."
+  },
+  "untouched_english_test": {
+    "classification_report": {
+      "LEGITIMATE": {
+        "precision": 0.99070248,
+        "recall": 0.99172699,
+        "f1-score": 0.99121447,
+        "support": 967.0
+      },
+      "SPAM": {
+        "precision": 0.79775281,
+        "recall": 0.81609195,
+        "f1-score": 0.80681818,
+        "support": 87.0
+      },
+      "SCAM": {
+        "precision": 0.90291262,
+        "recall": 0.87735849,
+        "f1-score": 0.88995215,
+        "support": 106.0
+      },
+      "accuracy": 0.96810345,
+      "macro avg": {
+        "precision": 0.89712264,
+        "recall": 0.89505915,
+        "f1-score": 0.89599494,
+        "support": 1160.0
+      },
+      "weighted avg": {
+        "precision": 0.96820908,
+        "recall": 0.96810345,
+        "f1-score": 0.96813147,
+        "support": 1160.0
+      }
+    },
+    "confusion_matrix": [
+      [
+        959,
+        5,
+        3
+      ],
+      [
+        9,
+        71,
+        7
+      ],
+      [
+        0,
+        13,
+        93
+      ]
+    ],
+    "class_order": [
+      "LEGITIMATE",
+      "SPAM",
+      "SCAM"
+    ]
+  },
+  "class_order": [
+    "LEGITIMATE",
+    "SPAM",
+    "SCAM"
+  ]
+}
