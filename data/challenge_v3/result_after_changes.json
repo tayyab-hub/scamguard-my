@@ -1,0 +1,105 @@
+{
+  "engine": {
+    "model": "message-tfidf-logreg-v2",
+    "rules": "message-rules-v4",
+    "fusion": "message-fusion-v4"
+  },
+  "levels_by_label": {
+    "SCAM": {
+      "HIGH": 24,
+      "ELEVATED": 33,
+      "LOW": 14,
+      "CAUTION": 31
+    },
+    "SPAM": {
+      "CAUTION": 15,
+      "LOW": 8,
+      "ELEVATED": 2
+    },
+    "LEGITIMATE": {
+      "ELEVATED": 9,
+      "LOW": 66,
+      "CAUTION": 34,
+      "HIGH": 1
+    }
+  },
+  "all": {
+    "scam_warned": [
+      0.8627,
+      102
+    ],
+    "scam_elevated_or_high": [
+      0.5588,
+      102
+    ],
+    "scam_missed_low": [
+      0.1373,
+      102
+    ],
+    "legitimate_warned": [
+      0.4,
+      110
+    ],
+    "legitimate_elevated_or_high": [
+      0.0909,
+      110
+    ],
+    "spam_warned": [
+      0.68,
+      25
+    ]
+  },
+  "english": {
+    "scam_warned": [
+      0.902,
+      51
+    ],
+    "scam_elevated_or_high": [
+      0.549,
+      51
+    ],
+    "legitimate_warned": [
+      0.4906,
+      53
+    ],
+    "legitimate_elevated_or_high": [
+      0.0943,
+      53
+    ]
+  },
+  "malay_or_mixed": {
+    "scam_warned": [
+      0.8235,
+      51
+    ],
+    "scam_elevated_or_high": [
+      0.5686,
+      51
+    ],
+    "legitimate_warned": [
+      0.3158,
+      57
+    ],
+    "legitimate_elevated_or_high": [
+      0.0877,
+      57
+    ]
+  },
+  "scams_with_link": [
+    0.8519,
+    27
+  ],
+  "scams_with_phone": [
+    0.7333,
+    15
+  ],
+  "scams_no_link_or_phone": [
+    0.3833,
+    60
+  ],
+  "legit_with_official_link_warned": [
+    0.6667,
+    21
+  ],
+  "note": "Single evaluation after all changes were final (2026-11-10). Values are [share, rows]."
+}

@@ -274,3 +274,9 @@ Total rows: **237**
 - **Small.** About 230 rows; per-category and per-language results have wide confidence intervals.
 - **Fixed snapshot.** Reflects scam patterns publicly documented up to late 2026; new scam types will not be represented.
 - `contains_link` and `contains_phone` were derived with simple patterns and spot-checked; `ambiguous` rows have uncertain ground truth by design.
+
+## Use record
+
+Evaluated once on 10 November 2026 against detector model v2 / rules v4 / fusion v4, after a
+baseline taken on 9 November before any change (`baseline_before_changes.json`,
+`result_after_changes.json`). The set is no longer unseen for later detector versions.

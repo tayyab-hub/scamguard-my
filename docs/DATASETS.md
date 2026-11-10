@@ -54,3 +54,11 @@ source record, license review, split manifest, versioned artifact and untouched 
 The UCI SMS Spam Collection was also reviewed: it is a genuine 5,574-message CC BY 4.0 ham/spam
 corpus (<https://doi.org/10.24432/C5CC84>), but its binary label cannot preserve the required
 spam-versus-scam distinction. It was therefore not merged into Task 3 training data.
+
+## Malay/Manglish translations and challenge set v3 (November 2026)
+
+Model v2 adds 1,377 machine translations of training-split rows of the source above (CC BY 4.0,
+attribution kept); see [the data card](../data/processed/malay_translation/README.md). Validation,
+test and challenge rows were never translated. Challenge set v3 (`data/challenge_v3`) is
+evaluation-only and was used once on 10 November 2026; see
+[the upgrade record](IMPROVEMENTS_2026-11-10.md).
