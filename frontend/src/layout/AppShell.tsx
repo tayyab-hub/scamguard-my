@@ -5,10 +5,7 @@
 import { Suspense, useEffect, useState, type MouseEvent } from 'react'
 import { flushSync } from 'react-dom'
 import {
-  ArrowUpRight,
-  ChevronRight,
   CircleHelp,
-  Globe2,
   History,
   LayoutDashboard,
   LogIn,
@@ -16,7 +13,6 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   ScanLine,
-  Shield,
   UserRound,
 } from 'lucide-react'
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
@@ -121,19 +117,7 @@ export function AppShell() {
         className="workspace-sidebar fixed inset-y-0 left-0 z-30 hidden flex-col overflow-y-auto overflow-x-hidden border-r border-line bg-sidebar py-7 lg:flex"
       >
         <Brand compact={collapsed} />
-        {!collapsed && (
-          <>
-            <div className="mb-7 mt-10 border-y border-line py-4">
-              <p className="eyebrow">SECURITY / WORKSPACE</p>
-              <p className="mt-2 text-xs text-body">Clarity before you act.</p>
-            </div>
-            <p className="eyebrow mb-3 px-3">Workspace</p>
-          </>
-        )}
-        <nav
-          aria-label="Desktop navigation"
-          className={collapsed ? 'mt-10 space-y-2 border-t border-line pt-6' : 'space-y-2'}
-        >
+        <nav aria-label="Desktop navigation" className="mt-8 space-y-1">
           {navigation.map(({ to, label, icon: Icon }) => (
             <NavLink
               key={to}
@@ -145,38 +129,13 @@ export function AppShell() {
             >
               <Icon size={18} strokeWidth={1.6} aria-hidden="true" />
               <span className={collapsed ? 'sr-only' : undefined}>{label}</span>
-              {!collapsed && (
-                <ChevronRight size={14} className="ml-auto text-muted" aria-hidden="true" />
-              )}
             </NavLink>
           ))}
         </nav>
-        {!collapsed && (
-          <div className="mt-auto pt-12">
-            <div className="rounded-md border border-line bg-surface/50 p-4">
-              <Shield size={19} className="mb-3 text-accent" strokeWidth={1.5} aria-hidden="true" />
-              <p className="text-sm font-semibold text-ink">Pause. Check. Protect.</p>
-              <p className="mt-2 text-xs leading-5 text-muted">
-                A little caution can make a meaningful difference.
-              </p>
-              <Link
-                to="/analyse"
-                className="action-link mt-4 flex min-h-8 items-center gap-2 rounded text-xs font-semibold text-accent"
-              >
-                Explore analysis
-                <ArrowUpRight size={14} className="motion-arrow" aria-hidden="true" />
-              </Link>
-            </div>
-            <div className="mt-6 flex items-center gap-2 px-1 text-[11px] text-muted">
-              <Globe2 size={14} aria-hidden="true" />
-              Built for safer digital decisions
-            </div>
-          </div>
-        )}
       </aside>
 
       <div className="workspace-canvas" data-sidebar={collapsed ? 'collapsed' : 'expanded'}>
-        <header className="flex min-h-[78px] items-center justify-between gap-4 border-b border-line bg-surface/70 px-5 sm:px-8 xl:px-10">
+        <header className="flex min-h-16 items-center justify-between gap-4 border-b border-line bg-surface/70 px-5 sm:px-8 xl:px-10">
           <div className="lg:hidden">
             <Brand />
           </div>
@@ -196,12 +155,10 @@ export function AppShell() {
                 <PanelLeftClose size={17} aria-hidden="true" />
               )}
             </button>
-            <span className="text-muted">Workspace</span>
-            <ChevronRight size={13} className="text-muted" aria-hidden="true" />
             <span
               key={pathname}
               aria-label="Current page"
-              className="motion-fade font-medium text-ink"
+              className="motion-fade text-sm font-medium text-ink"
             >
               {current}
             </span>
@@ -211,7 +168,7 @@ export function AppShell() {
               <ApiStatus />
             </div>
             {auth.user ? (
-              <div className="flex min-w-0 items-center gap-1 rounded-lg border border-line bg-surface-raised p-1">
+              <div className="flex min-w-0 items-center gap-1">
                 <span
                   className="hidden max-w-52 truncate px-2 text-xs text-muted md:block"
                   title={auth.user.email}
@@ -289,7 +246,7 @@ export function AppShell() {
           </div>
         )}
         <div className="flex items-center justify-between gap-2 border-b border-line bg-surface/70 px-5 py-3 sm:hidden">
-          <span className="text-[11px] text-muted">Forensic Intelligence</span>
+          <span className="text-[12px] text-muted">{current}</span>
           <ApiStatus />
         </div>
 
@@ -315,11 +272,18 @@ export function AppShell() {
             end={to === '/'}
             onClick={(event) => transitionTo(event, to)}
             className={({ isActive }) =>
-              `flex min-h-14 flex-1 flex-col items-center justify-center gap-1 rounded-md border text-[11px] font-semibold ${isActive ? 'border-accent/30 bg-accent-subtle text-accent' : 'border-transparent text-muted'}`
+              `flex min-h-14 flex-1 flex-col items-center justify-center gap-1 rounded-md border text-[12px] font-semibold ${isActive ? 'border-accent/30 bg-accent-subtle text-accent' : 'border-transparent text-muted'}`
             }
           >
             <Icon size={20} strokeWidth={1.6} aria-hidden="true" />
-            {label}
+            {/* Phones show "Help"; the rest of the name stays for screen readers and tests. */}
+            {label === 'Help & Support' ? (
+              <span>
+                Help<span className="max-sm:sr-only"> &amp; Support</span>
+              </span>
+            ) : (
+              label
+            )}
           </NavLink>
         ))}
       </nav>

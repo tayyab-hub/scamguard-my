@@ -132,7 +132,7 @@ export function QrCameraInput({
           >
             {value.payload}
           </pre>
-          <p className="mt-3 text-[11px] leading-5 text-muted">
+          <p className="mt-3 text-[12px] leading-5 text-muted">
             Untrusted content. Camera decoding does not establish who created this code.
           </p>
         </section>
@@ -198,7 +198,7 @@ export function QrCameraInput({
           </button>
         )}
       </div>
-      <p className="text-[11px] leading-5 text-muted">
+      <p className="text-[12px] leading-5 text-muted">
         Camera frames are used only to detect the QR code on this device and are not recorded or
         uploaded. Only the decoded content is submitted when you choose Analyse QR.
       </p>

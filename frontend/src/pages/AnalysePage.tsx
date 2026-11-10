@@ -258,7 +258,6 @@ export function AnalysePage() {
               aria-labelledby="content-heading"
             >
               <div className="section-heading">
-                <span className="step-number">01</span>
                 <h2 id="content-heading" className="text-sm font-semibold">
                   Content to review
                 </h2>
@@ -452,7 +451,7 @@ export function AnalysePage() {
                             spellCheck={false}
                           />
                         )}
-                        <div className="mb-4 mt-2 flex flex-wrap justify-between gap-2 text-[11px] text-muted">
+                        <div className="mb-4 mt-2 flex flex-wrap justify-between gap-2 text-[12px] text-muted">
                           <p id="content-hint">
                             {inputType === 'PHONE'
                               ? 'Country calling code required. Spaces, hyphens and parentheses are accepted.'
@@ -515,17 +514,17 @@ export function AnalysePage() {
                   </button>
                 </div>
                 {sampleMode === inputType && inputType !== 'QR' && (
-                  <p role="status" className="mt-2 text-[11px] leading-5 text-muted">
+                  <p role="status" className="mt-2 text-[12px] leading-5 text-muted">
                     Example input · results come from the real analysis pipeline.
                   </p>
                 )}
                 <p
                   id="unavailable-reason"
-                  className="mt-2 text-right text-[11px] text-muted empty:hidden"
+                  className="mt-2 text-right text-[12px] text-muted empty:hidden"
                 >
                   {reason}
                 </p>
-                <p className="mt-4 flex items-start gap-2 border-t border-line pt-3 text-[11px] leading-5 text-muted">
+                <p className="mt-4 flex items-start gap-2 border-t border-line pt-3 text-[12px] leading-5 text-muted">
                   <LockKeyhole size={14} className="mt-0.5 shrink-0" aria-hidden="true" />
                   {available
                     ? inputType === 'QR'
@@ -591,7 +590,6 @@ export function AnalysePage() {
                 aria-labelledby="result-heading"
               >
                 <div className="section-heading result-heading-row">
-                  <span className="step-number">02</span>
                   <h2 id="result-heading" tabIndex={-1} className="text-sm font-semibold">
                     Analysis result
                   </h2>
@@ -626,7 +624,7 @@ export function AnalysePage() {
                   )}
                 </div>
                 {submission.isSuccess && !submission.data.assessment && (
-                  <p className="break-all border-b border-line px-5 py-2 font-mono text-[11px] text-muted">
+                  <p className="break-all border-b border-line px-5 py-2 font-mono text-[12px] text-muted">
                     {submission.data.id}
                   </p>
                 )}

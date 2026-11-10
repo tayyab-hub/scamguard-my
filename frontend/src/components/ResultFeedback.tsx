@@ -112,7 +112,7 @@ export function ResultFeedback({
   return (
     <>
       <div ref={footer} className="result-feedback">
-        <p className="flex min-h-7 flex-wrap items-center gap-x-2 text-[11px] text-muted">
+        <p className="flex min-h-7 flex-wrap items-center gap-x-2 text-[12px] text-muted">
           <ThumbsUp size={13} className="text-accent" aria-hidden="true" />
           {savedLabel ? (
             <span>
@@ -167,7 +167,7 @@ export function ResultFeedback({
               </button>
             ))}
           </div>
-          <p className="mt-2 text-[10.5px] leading-5 text-muted" aria-live="polite">
+          <p className="mt-2 text-[12px] leading-5 text-muted" aria-live="polite">
             {mutation.isError
               ? mutation.error instanceof ApiError
                 ? mutation.error.message

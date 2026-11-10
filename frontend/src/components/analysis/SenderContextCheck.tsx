@@ -12,7 +12,7 @@ export function SenderContextCheck() {
   const guidance = contextGuidance(answers)
   return (
     <section className="context-check" aria-label="What you know that the text cannot show">
-      <p className="text-[11px] leading-5 text-muted">
+      <p className="text-[12px] leading-5 text-muted">
         <span className="font-semibold text-ink">What you know that the text cannot show.</span>{' '}
         Some scams look exactly like a normal message. Your answers stay on this device and do not
         change the saved result.

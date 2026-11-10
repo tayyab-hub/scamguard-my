@@ -171,7 +171,7 @@ export function HelpPage() {
           ],
         ].map(([step, title, copy]) => (
           <article key={step} className="panel p-5 sm:p-6">
-            <span className="step-number">{step}</span>
+            <span className="step-number">{Number(step)}</span>
             <h2 className="mt-4 text-base font-semibold">{title}</h2>
             <p className="mt-2 text-xs leading-6 text-muted">{copy}</p>
           </article>
@@ -230,7 +230,7 @@ export function HelpPage() {
                 placeholder="Search questions and guidance"
               />
             </div>
-            <p className="mt-2 text-[11px] text-muted" role="status" aria-live="polite">
+            <p className="mt-2 text-[12px] text-muted" role="status" aria-live="polite">
               {filteredFaqs.length} {filteredFaqs.length === 1 ? 'answer' : 'answers'} available
             </p>
             <div className="mt-5 divide-y divide-line border-y border-line">
@@ -369,7 +369,7 @@ export function HelpPage() {
                 {detailsError}
               </p>
             )}
-            <p id="feedback-privacy" className="mt-2 text-[11px] leading-5 text-muted">
+            <p id="feedback-privacy" className="mt-2 text-[12px] leading-5 text-muted">
               Do not include scam content, passwords, account details or other sensitive
               information. This form stays in your browser until you choose to open your email app.
             </p>

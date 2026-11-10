@@ -399,13 +399,14 @@ describe('desktop sidebar', () => {
     await screen.findByText('Your activity starts here')
     const toggle = screen.getByRole('button', { name: 'Collapse sidebar' })
     expect(toggle).toHaveAttribute('aria-expanded', 'true')
-    expect(screen.getByText('Clarity before you act.')).toBeInTheDocument()
+    const sidebar = document.getElementById('workspace-sidebar')!
+    expect(sidebar).toHaveAttribute('data-collapsed', 'false')
     await userEvent.click(toggle)
     expect(screen.getByRole('button', { name: 'Expand sidebar' })).toHaveAttribute(
       'aria-expanded',
       'false',
     )
-    expect(screen.queryByText('Clarity before you act.')).not.toBeInTheDocument()
+    expect(sidebar).toHaveAttribute('data-collapsed', 'true')
     // Icons only, but every link keeps its accessible name.
     const desktopNav = screen.getByRole('navigation', { name: 'Desktop navigation' })
     for (const name of ['Overview', 'Analyse', 'History', 'Help & Support'])

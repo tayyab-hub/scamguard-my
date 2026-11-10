@@ -3,7 +3,6 @@
 // becoming a misleading zero.
 
 import {
-  Activity,
   ArrowRight,
   ArrowUpRight,
   Clock3,
@@ -12,7 +11,6 @@ import {
   Info,
   ScanLine,
   ShieldAlert,
-  ShieldCheck,
 } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import { SubmissionRows } from '../components/SubmissionHistory'
@@ -79,13 +77,11 @@ export function DashboardPage() {
                 key={label}
                 aria-label={label}
               >
-                <div className="flex items-center justify-between gap-2">
-                  <h2 className="text-xs font-semibold text-body">{label}</h2>
-                  <span className="metric-icon flex size-8 items-center justify-center rounded-md border border-line bg-surface-raised">
-                    <Icon size={16} className="text-muted" strokeWidth={1.6} aria-hidden="true" />
-                  </span>
-                </div>
-                <div className="mb-2 mt-6 flex items-center gap-3">
+                <h2 className="flex items-center gap-2 text-xs font-medium text-muted">
+                  <Icon size={15} strokeWidth={1.7} aria-hidden="true" />
+                  {label}
+                </h2>
+                <div className="mb-1.5 mt-3 flex items-center gap-3">
                   <span
                     className={`font-display leading-none text-ink ${label === 'Latest analysis' && latest ? 'text-2xl' : 'text-4xl'}`}
                     aria-label={
@@ -106,25 +102,27 @@ export function DashboardPage() {
                       '—'
                     )}
                   </span>
-                  <span className="status-chip">
-                    {label === 'Total analyses' && data
-                      ? 'Recorded'
-                      : label === 'Flagged for review' && data && data.flagged_analyses !== null
-                        ? 'Evidence-based'
-                        : label === 'Latest analysis' && data
-                          ? latest
-                            ? latest.status.replace('_', ' ')
-                            : 'No submissions'
-                          : 'Not available yet'}
-                  </span>
+                  {/* A chip only when there is something to explain: no data, or an unfinished
+                      latest analysis. */}
+                  {(label === 'Total analyses' && data) ||
+                  (label === 'Flagged for review' && data && data.flagged_analyses !== null) ||
+                  (label === 'Latest analysis' && latest?.status === 'COMPLETED') ? null : (
+                    <span className="status-chip">
+                      {label === 'Latest analysis' && data
+                        ? latest
+                          ? latest.status.replace('_', ' ').toLowerCase()
+                          : 'No submissions'
+                        : 'Not available yet'}
+                    </span>
+                  )}
                 </div>
-                <p className="border-t border-line/70 pt-3 text-[11px] text-muted">
+                <p className="text-[12px] text-muted">
                   {label === 'Latest analysis' && latest
                     ? new Date(latest.created_at).toLocaleString()
                     : label === 'Total analyses' && data
-                      ? 'Persisted Message, URL, Phone and QR submissions'
+                      ? 'Messages, links, numbers and QR codes you have checked'
                       : label === 'Flagged for review' && data && data.flagged_analyses !== null
-                        ? 'Owned results at elevated or high risk'
+                        ? 'Your results at elevated or high risk'
                         : hint}
                 </p>
               </section>
@@ -147,14 +145,10 @@ export function DashboardPage() {
                 className="panel motion-enter motion-delay-3 overflow-hidden"
                 aria-labelledby="recent-heading"
               >
-                <div className="section-heading justify-between">
-                  <div className="flex items-center gap-2.5">
-                    <Activity size={17} className="text-accent" aria-hidden="true" />
-                    <h2 id="recent-heading" className="text-sm font-semibold">
-                      Recent analyses
-                    </h2>
-                  </div>
-                  <span className="eyebrow !text-[9px]">ACTIVITY</span>
+                <div className="section-heading">
+                  <h2 id="recent-heading" className="text-sm font-semibold">
+                    Recent analyses
+                  </h2>
                 </div>
                 {data && data.recent_analyses.length > 0 ? (
                   <SubmissionRows items={data.recent_analyses} />
@@ -185,26 +179,11 @@ export function DashboardPage() {
                     </button>
                   </div>
                 )}
-                <div className="flex items-start gap-2.5 border-t border-line bg-surface-raised/40 px-5 py-3.5 text-[11px] leading-5 text-muted sm:px-6">
+                <div className="flex items-start gap-2.5 border-t border-line bg-surface-raised/40 px-5 py-3.5 text-[12px] leading-5 text-muted sm:px-6">
                   <Info size={14} className="mt-0.5 shrink-0" aria-hidden="true" />
                   {data
                     ? 'Private account history. Results are decision support, not proof of fraud or safety.'
                     : 'No live statistics are being collected or displayed.'}
-                </div>
-              </section>
-              <section className="flex items-start gap-4 rounded-lg border border-line bg-surface-raised/60 px-5 py-5">
-                <ShieldCheck
-                  className="mt-1 shrink-0 text-accent"
-                  size={22}
-                  strokeWidth={1.5}
-                  aria-hidden="true"
-                />
-                <div>
-                  <h2 className="text-sm font-semibold">Make space for a second look</h2>
-                  <p className="mt-2 text-xs leading-6 text-muted">
-                    Unexpected request? Take a moment before sharing information, opening a link, or
-                    making a payment.
-                  </p>
                 </div>
               </section>
             </div>
@@ -225,13 +204,9 @@ export function DashboardPage() {
                   ))}
                 </div>
               </section>
-              <section
-                className="rounded-lg border border-accent/25 bg-accent-subtle p-5"
-                aria-labelledby="reading-results-heading"
-              >
-                <p className="eyebrow !text-accent">FROM EVIDENCE TO ACTION</p>
-                <h2 id="reading-results-heading" className="mt-3 font-display text-2xl text-ink">
-                  Read beyond the score
+              <section className="panel p-5" aria-labelledby="reading-results-heading">
+                <h2 id="reading-results-heading" className="text-sm font-semibold text-ink">
+                  How to read a result
                 </h2>
                 <ol className="mt-4 space-y-4 text-xs leading-6 text-body">
                   <li>

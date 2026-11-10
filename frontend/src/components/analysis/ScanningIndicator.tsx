@@ -34,7 +34,7 @@ export function ScanningIndicator({ mode }: { mode: AnalysisMode }) {
           </li>
         ))}
       </ul>
-      <p className="mt-4 text-center text-[11px] text-muted">
+      <p className="mt-4 text-center text-[12px] text-muted">
         Links are never opened and numbers are never called.
       </p>
     </div>

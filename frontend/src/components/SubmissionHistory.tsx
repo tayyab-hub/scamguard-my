@@ -34,7 +34,7 @@ export function SubmissionRows({
   return (
     <ul className="divide-y divide-line">
       {items.map((item) => (
-        <li key={item.id} className="min-w-0 p-5 sm:px-6">
+        <li key={item.id} className="min-w-0 px-5 py-3.5 sm:px-6">
           <button
             type="button"
             className="history-trigger button-quiet block w-full rounded text-left"
@@ -42,27 +42,29 @@ export function SubmissionRows({
             aria-controls={`${prefix}-detail-${item.id}`}
             onClick={() => setSelected(selected === item.id ? null : item.id)}
           >
-            <span className="flex flex-wrap items-center justify-between gap-2">
+            <span className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
               <span className="text-sm font-semibold">
                 {inputLabels[item.input_type]}
                 {item.input_type === 'QR' && item.payload_type
                   ? ` · ${item.payload_type.toLowerCase()}`
                   : ''}
               </span>
-              <span className="status-chip">{item.status.replace('_', ' ')}</span>
+              {item.risk_level && (
+                <span className="history-risk" data-risk={item.risk_level}>
+                  {riskCopy[item.risk_level]}
+                </span>
+              )}
+              {item.status !== 'COMPLETED' && (
+                <span className="status-chip">{item.status.replace('_', ' ').toLowerCase()}</span>
+              )}
+              <time dateTime={item.created_at} className="ml-auto text-[12px] text-muted">
+                {new Date(item.created_at).toLocaleString()}
+              </time>
             </span>
-            {item.risk_level && (
-              <span className="history-risk mt-2 inline-block" data-risk={item.risk_level}>
-                {riskCopy[item.risk_level]}
-              </span>
-            )}
-            <time dateTime={item.created_at} className="mt-2 block text-[11px] text-muted">
-              {new Date(item.created_at).toLocaleString()}
-            </time>
-            <span className="mt-3 block break-words text-xs leading-6 text-body [overflow-wrap:anywhere]">
+            <span className="history-preview mt-1.5 block text-xs leading-6 text-body">
               {item.preview}
             </span>
-            <span className="mt-2 block text-[11px] font-medium text-accent">
+            <span className="mt-1 inline-flex items-center gap-1 text-[12px] font-medium text-accent">
               {selected === item.id ? 'Hide submission' : 'View submission'}
             </span>
           </button>
@@ -84,7 +86,7 @@ export function SubmissionRows({
                   <p className="whitespace-pre-wrap break-words text-sm leading-6 [overflow-wrap:anywhere]">
                     {detail.data.content}
                   </p>
-                  <p className="mt-4 break-all font-mono text-[10px] text-muted">
+                  <p className="mt-4 break-all font-mono text-[12px] text-muted">
                     Reference: {detail.data.id}
                   </p>
                   {detail.data.assessment && (
@@ -127,7 +129,7 @@ export function SubmissionRows({
                       </button>
                     )}
                     {detail.data.status === 'COMPLETED' && detail.data.input_type === 'QR' && (
-                      <p className="mb-3 text-[11px] leading-5 text-muted">
+                      <p className="mb-3 text-[12px] leading-5 text-muted">
                         Scan the code or upload its image again for a new analysis. Original images
                         and camera frames are not retained.
                       </p>
@@ -310,7 +312,7 @@ export function SubmissionHistory() {
           </label>
         </div>
         {filters.sort === 'risk' && (
-          <p className="text-[11px] leading-5 text-muted">
+          <p className="text-[12px] leading-5 text-muted">
             High to Low, followed by unranked insufficient-evidence and unassessed records. Unranked
             does not mean safe.
           </p>

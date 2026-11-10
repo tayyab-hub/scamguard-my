@@ -76,22 +76,22 @@ export function QrResult({
                 </div>
               </dl>
               <div className="mt-4 rounded-lg border border-line bg-surface-raised p-4">
-                <p className="eyebrow !text-[9px]">DECODED CONTENT · UNTRUSTED DATA</p>
+                <p className="eyebrow !text-[12px]">Decoded content (untrusted data)</p>
                 {content.length > 600 ? (
                   <details className="mt-3 text-xs">
                     <summary className="min-h-8 cursor-pointer rounded font-semibold text-accent">
                       Reveal decoded payload ({content.length.toLocaleString()} characters)
                     </summary>
-                    <pre className="mt-3 max-h-72 overflow-auto whitespace-pre-wrap break-all font-mono text-[11px] leading-5 text-body">
+                    <pre className="mt-3 max-h-72 overflow-auto whitespace-pre-wrap break-all font-mono text-[12px] leading-5 text-body">
                       {content}
                     </pre>
                   </details>
                 ) : (
-                  <pre className="mt-3 max-h-72 overflow-auto whitespace-pre-wrap break-all font-mono text-[11px] leading-5 text-body">
+                  <pre className="mt-3 max-h-72 overflow-auto whitespace-pre-wrap break-all font-mono text-[12px] leading-5 text-body">
                     {content}
                   </pre>
                 )}
-                <p className="mt-3 text-[10px] leading-5 text-muted">
+                <p className="mt-3 text-[12px] leading-5 text-muted">
                   Untrusted content, shown as text. ScamGuard never opens it automatically.
                 </p>
               </div>

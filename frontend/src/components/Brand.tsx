@@ -13,12 +13,7 @@ export function Brand({ compact = false }: { compact?: boolean }) {
         <ShieldCheck size={23} strokeWidth={1.5} aria-hidden="true" />
       </span>
       {!compact && (
-        <span className="text-[14px] font-bold tracking-[0.06em] text-ink">
-          SCAMGUARD
-          <span className="mt-1 block whitespace-nowrap font-mono text-[8px] font-medium tracking-[0.09em] text-muted">
-            FORENSIC INTELLIGENCE
-          </span>
-        </span>
+        <span className="text-[15px] font-bold tracking-[0.04em] text-ink">SCAMGUARD</span>
       )}
     </Link>
   )

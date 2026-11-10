@@ -106,7 +106,7 @@ describe('URL intelligence results', () => {
       expect(screen.getByText('Not enough evidence to score.')).toBeInTheDocument()
     } else {
       const expected = { LOW: 0, CAUTION: 33, ELEVATED: 67, HIGH: 100 }[risk]
-      expect(screen.getByRole('meter', { name: 'RISK SCORE' })).toHaveAttribute(
+      expect(screen.getByRole('meter', { name: 'Risk score' })).toHaveAttribute(
         'aria-valuenow',
         String(expected),
       )

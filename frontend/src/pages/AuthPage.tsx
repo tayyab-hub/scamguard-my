@@ -3,7 +3,7 @@
 // focus moves to the first invalid input.
 
 import { useState } from 'react'
-import { Eye, EyeOff, LockKeyhole, ShieldCheck, UserRound } from 'lucide-react'
+import { Eye, EyeOff, LockKeyhole, ShieldCheck } from 'lucide-react'
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
 import { ApiError } from '../lib/api'
@@ -68,13 +68,11 @@ export function AuthPage({ mode }: { mode: 'login' | 'signup' }) {
   return (
     <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-[0.95fr_1.05fr]">
       <section className="panel p-6 sm:p-8" aria-labelledby="page-heading">
-        <div className="flex items-center gap-3">
-          <span className="flex size-10 items-center justify-center rounded-lg border border-accent/20 bg-accent-subtle text-accent">
-            <UserRound size={20} aria-hidden="true" />
-          </span>
-          <p className="eyebrow">PRIVATE WORKSPACE</p>
-        </div>
-        <h1 id="page-heading" tabIndex={-1} className="mt-5 text-3xl font-semibold text-ink">
+        <h1
+          id="page-heading"
+          tabIndex={-1}
+          className="font-display text-[28px] leading-tight text-ink outline-none"
+        >
           {signup ? 'Create your account' : 'Welcome back'}
         </h1>
         <p className="mt-3 max-w-lg text-sm leading-6 text-muted">
@@ -265,7 +263,7 @@ export function AuthPage({ mode }: { mode: 'login' | 'signup' }) {
       <aside className="panel flex flex-col justify-between bg-surface-raised p-6 sm:p-8">
         <div>
           <ShieldCheck size={30} className="text-accent" aria-hidden="true" />
-          <h2 className="mt-5 text-xl font-semibold">Clarity before you act</h2>
+          <h2 className="mt-5 text-xl font-semibold">What SCAMGUARD does</h2>
           <ul className="mt-5 space-y-3 text-sm leading-6 text-muted">
             <li>
               Check suspicious messages, website addresses, phone numbers and QR codes in one place.

@@ -24,7 +24,7 @@ export function ApiStatus() {
       <span
         role="status"
         aria-atomic="true"
-        className={`flex items-center gap-2 text-[11px] ${health.isError ? 'text-warning' : health.isPending ? 'text-muted' : 'text-success'}`}
+        className={`flex items-center gap-2 text-[12px] ${health.isError ? 'text-warning' : health.isPending ? 'text-muted' : 'text-success'}`}
       >
         <span key={label} className="motion-fade flex items-center gap-2">
           <span

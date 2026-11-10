@@ -181,10 +181,9 @@ export function RiskScoreDisplay({
     <div className="score-card">
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <p id={`${id}-label`} className="eyebrow !text-[9px]">
-            RISK SCORE
+          <p id={`${id}-label`} className="eyebrow !text-[12px]">
+            Risk score
           </p>
-          <p className="mt-1 text-[10px] leading-4 text-muted">{score.kind}</p>
         </div>
         <p className="score-value tabular-nums">
           {score.value === null ? (
@@ -192,11 +191,14 @@ export function RiskScoreDisplay({
           ) : (
             <>
               <CountUp value={score.value} duration={0.9} delay={0.2} />
-              <span className="ml-0.5 text-[10px] font-normal text-muted">/100</span>
+              <span className="ml-0.5 whitespace-nowrap text-[12px] font-normal text-muted">
+                /100
+              </span>
             </>
           )}
         </p>
       </div>
+      <p className="text-[12px] leading-4 text-muted">{score.kind}</p>
       {score.value !== null ? (
         <div
           role="meter"
@@ -214,7 +216,7 @@ export function RiskScoreDisplay({
           />
         </div>
       ) : (
-        <p className="mt-1 text-[10px] leading-4 text-muted">
+        <p className="mt-1 text-[12px] leading-4 text-muted">
           {isPhoneAssessment(assessment)
             ? 'No defensible numeric score from numbering metadata alone.'
             : 'Not enough evidence to score.'}
@@ -243,7 +245,7 @@ export function AnalysisResultHero({ assessment }: { assessment: Assessment }) {
     <section className="result-hero" aria-label="Result summary">
       <div className="hero-top">
         <div className="min-w-0 flex-1">
-          <p className="eyebrow flex items-center gap-2 !text-[9px]">
+          <p className="eyebrow flex items-center gap-2 !text-[12px]">
             <Pop className="risk-icon" delay={0.12}>
               <Icon size={15} strokeWidth={1.8} aria-hidden="true" />
             </Pop>
@@ -252,9 +254,9 @@ export function AnalysisResultHero({ assessment }: { assessment: Assessment }) {
               : isURLAssessment(assessment)
                 ? 'URL'
                 : isPhoneAssessment(assessment)
-                  ? 'PHONE'
-                  : 'MESSAGE'}{' '}
-            · ADVISORY RISK LEVEL
+                  ? 'Phone'
+                  : 'Message'}{' '}
+            · advisory risk level
           </p>
           <h3 className="mt-1.5 font-display text-[26px] leading-tight tracking-tight text-ink">
             {riskCopy[assessment.risk_level]}
@@ -262,13 +264,13 @@ export function AnalysisResultHero({ assessment }: { assessment: Assessment }) {
           <p className="risk-guidance mt-2 text-xs font-medium leading-5 text-body">
             {riskGuidance[assessment.risk_level]}
           </p>
-          <p className="mt-1.5 text-[11px] leading-5 text-muted">{assessment.summary}</p>
+          <p className="mt-1.5 text-[12px] leading-5 text-muted">{assessment.summary}</p>
         </div>
         <RiskScoreDisplay assessment={assessment} noteId={noteId} />
       </div>
       {signals.length > 0 && (
         <div className="indicator-row mt-3" aria-label="Key indicators">
-          <p className="eyebrow !text-[9px]">KEY INDICATORS</p>
+          <p className="eyebrow !text-[12px]">Key indicators</p>
           {signals.map((item) => (
             <span key={item.label} className="indicator-chip">
               {item.label}
@@ -277,7 +279,7 @@ export function AnalysisResultHero({ assessment }: { assessment: Assessment }) {
         </div>
       )}
       <div className="hero-footnote mt-3">
-        <p className="text-[10.5px] leading-5 text-muted">
+        <p className="text-[12px] leading-5 text-muted">
           <span id={noteId}>
             {score.kind === 'URL category index'
               ? 'Category position, not a scam percentage.'
@@ -296,7 +298,7 @@ export function AnalysisResultHero({ assessment }: { assessment: Assessment }) {
                 : ''}
           Advisory, not a guarantee.
         </p>
-        <details className="score-method text-[11px]">
+        <details className="score-method text-[12px]">
           <summary className="inline-flex min-h-8 cursor-pointer items-center gap-1.5 rounded font-semibold text-accent">
             <CircleHelp size={13} aria-hidden="true" /> How to read this score
           </summary>
@@ -372,7 +374,7 @@ export function EvidenceCard({
           </p>
         )}
         {expanded && (
-          <p className="mt-1 text-[10px] text-muted">Matched text (untrusted, shown as text):</p>
+          <p className="mt-1 text-[12px] text-muted">Matched text (untrusted, shown as text):</p>
         )}
         <p className="evidence-snippet" data-expanded={expanded}>
           {item.snippet}
@@ -389,7 +391,7 @@ export function EvidenceList({ items }: { items: Assessment['evidence'] }) {
   return (
     <>
       <div className="mb-2 flex items-center justify-between gap-2">
-        <p className="text-[11px] text-muted">
+        <p className="text-[12px] text-muted">
           {items.length} {items.length === 1 ? 'item' : 'items'}
         </p>
         <button
@@ -446,7 +448,7 @@ function ReasonRow({
           <ChevronDown size={14} className="reason-chevron" aria-hidden="true" />
         </summary>
         <div className="reason-body">
-          <p className="text-[10.5px] font-medium uppercase tracking-wide text-muted">
+          <p className="text-[12px] font-medium uppercase tracking-wide text-muted">
             {evidenceSource(match)}
           </p>
           {match.label.trim().toLowerCase() !== text.trim().toLowerCase() && (
@@ -455,7 +457,7 @@ function ReasonRow({
           {'explanation' in match && typeof match.explanation === 'string' && (
             <p className="mt-1 text-xs leading-5 text-body">{match.explanation}</p>
           )}
-          <p className="mt-2 text-[10px] text-muted">Matched text (untrusted, shown as text):</p>
+          <p className="mt-2 text-[12px] text-muted">Matched text (untrusted, shown as text):</p>
           <p className="evidence-snippet" data-expanded="true">
             {match.snippet}
           </p>
@@ -550,7 +552,7 @@ export function RecommendedActionsPanel({ actions }: { actions: string[] }) {
     <section className="actions-panel" aria-label="Your next step">
       <ListChecks size={17} className="mt-0.5 shrink-0 text-accent" aria-hidden="true" />
       <div className="min-w-0 flex-1">
-        <h3 className="eyebrow uppercase !text-[9px] !text-accent">Recommended actions</h3>
+        <h3 className="text-[13px] font-semibold text-accent">Recommended actions</h3>
         <ul id={id} className="mt-1 space-y-1">
           {actions.map((action, index) => (
             <li

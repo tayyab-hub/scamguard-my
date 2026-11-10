@@ -6,13 +6,13 @@ import { useEffect, useRef, type ReactNode } from 'react'
 // Render supplied props and focus the mounted heading via a DOM ref. tabIndex=-1 permits
 // programmatic focus without adding another normal Tab stop.
 export function PageHeading({
-  eyebrow,
   title,
   description,
   action,
   compact = false,
 }: {
-  eyebrow: string
+  /** Kept for callers; no longer displayed (the title already names the page). */
+  eyebrow?: string
   title: string
   description: string
   action?: ReactNode
@@ -25,18 +25,14 @@ export function PageHeading({
   }, [])
   return (
     <div
-      className={`page-heading flex flex-wrap items-end justify-between gap-5 ${compact ? 'page-heading-compact mb-5' : 'mb-8'}`}
+      className={`page-heading flex flex-wrap items-end justify-between gap-5 ${compact ? 'mb-5' : 'mb-7'}`}
     >
       <div>
-        <p className="eyebrow motion-fade mb-3 flex items-center gap-2">
-          <span aria-hidden="true" className="eyebrow-rule h-px w-5 bg-accent" />
-          {eyebrow}
-        </p>
         <h1
           ref={heading}
           id="page-heading"
           tabIndex={-1}
-          className={`motion-enter motion-delay-1 font-display font-normal leading-[1.18] tracking-[-0.035em] text-ink outline-none ${compact ? 'text-[28px] sm:text-[32px]' : 'text-[32px] sm:text-[40px]'}`}
+          className={`motion-enter motion-delay-1 font-display font-normal leading-[1.18] tracking-[-0.035em] text-ink outline-none ${compact ? 'text-[26px] sm:text-[28px]' : 'text-[28px] sm:text-[32px]'}`}
         >
           {title}
         </h1>

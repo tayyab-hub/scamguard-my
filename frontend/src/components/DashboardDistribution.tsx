@@ -66,7 +66,7 @@ export function DashboardDistribution({
           }))}
         />
       </div>
-      <p className="border-t border-line px-5 py-4 text-[11px] leading-5 text-muted">
+      <p className="border-t border-line px-5 py-4 text-[12px] leading-5 text-muted">
         All-time saved records in your account. Bar lengths show record counts, not scam
         probabilities.{' '}
         {unassessed > 0 &&

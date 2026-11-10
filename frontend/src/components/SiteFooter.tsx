@@ -31,18 +31,13 @@ export function SiteFooter() {
               <span className="flex size-9 items-center justify-center rounded-md bg-accent text-on-accent">
                 <Shield size={18} strokeWidth={1.8} aria-hidden="true" />
               </span>
-              <span>
-                <span className="block text-sm font-semibold tracking-wide text-ink">
-                  SCAMGUARD
-                </span>
-                <span className="eyebrow block !text-[9px]">FORENSIC INTELLIGENCE</span>
-              </span>
+              <span className="text-sm font-bold tracking-[0.04em] text-ink">SCAMGUARD</span>
             </div>
             <p className="mt-4 text-xs leading-6 text-body">
               Check suspicious messages, links, phone numbers and QR codes before you click, reply,
               call or pay.
             </p>
-            <p className="mt-2 text-[11px] leading-5 text-muted">
+            <p className="mt-2 text-[12px] leading-5 text-muted">
               Links are never opened and numbers are never called. Results are advisory, not a
               guarantee.
             </p>
@@ -82,12 +77,12 @@ export function SiteFooter() {
               <Phone size={16} aria-hidden="true" />
               <span>
                 <span className="block text-sm font-semibold">Call 997</span>
-                <span className="block text-[11px] font-normal text-muted">
+                <span className="block text-[12px] font-normal text-muted">
                   National Scam Response Centre · 24 hours
                 </span>
               </span>
             </a>
-            <p className="mt-2 text-[11px] leading-5 text-muted">
+            <p className="mt-2 text-[12px] leading-5 text-muted">
               Report within 24 hours of finding out, and call your bank on the number printed on
               your card.
             </p>
@@ -101,17 +96,15 @@ export function SiteFooter() {
               <ArrowUpRight size={13} aria-hidden="true" />
               <span className="sr-only">(opens in a new tab)</span>
             </a>
-            <p className="mt-1 text-[10.5px] leading-5 text-muted">
+            <p className="mt-1 text-[12px] leading-5 text-muted">
               No record there does not mean it is safe.
             </p>
           </section>
         </div>
 
         <div className="site-footer-bottom">
-          <p>
-            © {year} SCAMGUARD <span aria-hidden="true">·</span> Forensic Intelligence
-          </p>
-          <p>Thoughtful technology. Safer decisions.</p>
+          <p>© {year} SCAMGUARD</p>
+          <p>Results are advisory. Always verify through a channel you trust.</p>
         </div>
       </div>
     </footer>

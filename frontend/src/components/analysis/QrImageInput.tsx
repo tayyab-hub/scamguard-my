@@ -121,7 +121,7 @@ export function QrImageInput({
             )}
             <p className="min-w-0 flex-1 break-all text-xs leading-5 text-ink">
               {file.name || 'Camera image'}
-              <span className="block font-mono text-[10px] text-muted">
+              <span className="block font-mono text-[12px] text-muted">
                 Ready to upload · {Math.ceil(file.size / 1024)} KB
               </span>
             </p>
@@ -140,7 +140,7 @@ export function QrImageInput({
           </div>
         )}
       </div>
-      <p id="qr-privacy-note" className="mt-3 text-[11px] leading-5 text-muted">
+      <p id="qr-privacy-note" className="mt-3 text-[12px] leading-5 text-muted">
         The original image is validated, decoded in memory, fingerprinted, and discarded. Its
         decoded text and assessment are stored in your private history.
       </p>
