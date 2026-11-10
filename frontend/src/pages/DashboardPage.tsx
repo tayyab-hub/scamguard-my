@@ -77,13 +77,15 @@ export function DashboardPage() {
                 key={label}
                 aria-label={label}
               >
-                <h2 className="flex items-center gap-2 text-xs font-medium text-muted">
-                  <Icon size={15} strokeWidth={1.7} aria-hidden="true" />
-                  {label}
-                </h2>
+                <div className="flex items-center justify-between gap-3">
+                  <h2 className="text-[13px] font-medium text-muted">{label}</h2>
+                  <span className="metric-icon">
+                    <Icon size={17} strokeWidth={1.8} aria-hidden="true" />
+                  </span>
+                </div>
                 <div className="mb-1.5 mt-3 flex items-center gap-3">
                   <span
-                    className={`font-display leading-none text-ink ${label === 'Latest analysis' && latest ? 'text-2xl' : 'text-4xl'}`}
+                    className={`font-display leading-none text-ink ${label === 'Latest analysis' && latest ? 'text-[28px]' : 'text-[40px]'}`}
                     aria-label={
                       (data && label === 'Total analyses') ||
                       (data && label === 'Flagged for review' && data.flagged_analyses !== null) ||

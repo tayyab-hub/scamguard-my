@@ -586,7 +586,7 @@ export function AnalysePage() {
             </section>
             <aside className="motion-enter motion-delay-2 min-w-0 space-y-5">
               <section
-                className="panel scroll-mt-4 overflow-hidden"
+                className="panel scroll-mt-20 overflow-hidden"
                 aria-labelledby="result-heading"
               >
                 <div className="section-heading result-heading-row">

@@ -10,7 +10,7 @@ import { useEffect, useId, useRef, useState } from 'react'
 import type { ResultTab } from './resultTabs'
 import { CountUp } from '../motion/CountUp'
 import { Pop, Reveal } from '../motion/Reveal'
-import type { CSSProperties, KeyboardEvent } from 'react'
+import type { KeyboardEvent } from 'react'
 import { ChevronDown, CircleHelp, ListChecks, ShieldAlert, ShieldCheck, Signal } from 'lucide-react'
 import type { Assessment } from '../../lib/api'
 import {
@@ -179,26 +179,6 @@ export function RiskScoreDisplay({
   const id = useId()
   return (
     <div className="score-card">
-      <div className="flex items-start justify-between gap-2">
-        <div className="min-w-0">
-          <p id={`${id}-label`} className="eyebrow !text-[12px]">
-            Risk score
-          </p>
-        </div>
-        <p className="score-value tabular-nums">
-          {score.value === null ? (
-            <span className="text-sm">Unavailable</span>
-          ) : (
-            <>
-              <CountUp value={score.value} duration={0.9} delay={0.2} />
-              <span className="ml-0.5 whitespace-nowrap text-[12px] font-normal text-muted">
-                /100
-              </span>
-            </>
-          )}
-        </p>
-      </div>
-      <p className="text-[12px] leading-4 text-muted">{score.kind}</p>
       {score.value !== null ? (
         <div
           role="meter"
@@ -208,22 +188,52 @@ export function RiskScoreDisplay({
           aria-valuemax={100}
           aria-valuenow={score.value}
           aria-valuetext={`${score.value} out of 100; ${score.kind}; ${riskCopy[assessment.risk_level]}; not a probability`}
-          className="score-track mt-2"
+          className="score-ring"
         >
-          <span
-            className="score-fill"
-            style={{ '--score-scale': score.value / 100 } as CSSProperties}
-          />
+          <svg viewBox="0 0 64 64" aria-hidden="true">
+            <circle className="score-ring-track" cx="32" cy="32" r="27" />
+            <circle
+              className="score-fill"
+              cx="32"
+              cy="32"
+              r="27"
+              pathLength={100}
+              strokeDasharray="100"
+              strokeDashoffset={100 - score.value}
+            />
+          </svg>
+          <span className="score-value tabular-nums">
+            <CountUp value={score.value} duration={0.9} delay={0.2} />
+          </span>
         </div>
       ) : (
-        <p className="mt-1 text-[12px] leading-4 text-muted">
-          {isPhoneAssessment(assessment)
-            ? 'No defensible numeric score from numbering metadata alone.'
-            : 'Not enough evidence to score.'}
-        </p>
+        <div className="score-ring score-ring-empty" aria-hidden="true">
+          <span className="score-value">–</span>
+        </div>
       )}
-      <div className="mt-2">
-        <ConfidenceBadge assessment={assessment} />
+      <div className="min-w-0 flex-1">
+        <p id={`${id}-label`} className="text-[13px] font-semibold text-ink">
+          Risk score
+        </p>
+        <p className="text-[12px] leading-4 text-muted">
+          {score.value === null ? (
+            'Unavailable'
+          ) : (
+            <>
+              <span>{score.kind}</span> · out of 100
+            </>
+          )}
+        </p>
+        {score.value === null && (
+          <p className="mt-1 text-[12px] leading-4 text-muted">
+            {isPhoneAssessment(assessment)
+              ? 'No defensible numeric score from numbering metadata alone.'
+              : 'Not enough evidence to score.'}
+          </p>
+        )}
+        <div className="mt-2">
+          <ConfidenceBadge assessment={assessment} />
+        </div>
       </div>
     </div>
   )

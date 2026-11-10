@@ -6,20 +6,19 @@ import { describe, expect, it } from 'vitest'
 import { SiteFooter } from '../components/SiteFooter'
 
 describe('SiteFooter', () => {
-  it('links the workspace and help sections and gives accurate urgent-help contacts', () => {
+  it('links the help sections and gives accurate urgent-help contacts', () => {
     render(
       <MemoryRouter>
         <SiteFooter />
       </MemoryRouter>,
     )
     const footer = screen.getByRole('contentinfo')
-    const workspace = within(footer).getByRole('navigation', { name: 'Workspace links' })
-    expect(within(workspace).getByRole('link', { name: 'Analyse' })).toHaveAttribute(
+    const links = within(footer).getByRole('navigation', { name: 'Footer links' })
+    expect(within(links).getByRole('link', { name: 'Help & Support' })).toHaveAttribute(
       'href',
-      '/analyse',
+      '/help',
     )
-    const help = within(footer).getByRole('navigation', { name: 'Help links' })
-    expect(within(help).getByRole('link', { name: 'Privacy and your data' })).toHaveAttribute(
+    expect(within(links).getByRole('link', { name: 'Privacy and your data' })).toHaveAttribute(
       'href',
       '/help#privacy-heading',
     )

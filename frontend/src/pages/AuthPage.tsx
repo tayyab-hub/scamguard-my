@@ -260,11 +260,15 @@ export function AuthPage({ mode }: { mode: 'login' | 'signup' }) {
           </Link>
         </p>
       </section>
-      <aside className="panel flex flex-col justify-between bg-surface-raised p-6 sm:p-8">
+      <aside className="auth-aside flex flex-col justify-between p-6 sm:p-8 lg:order-first">
         <div>
-          <ShieldCheck size={30} className="text-accent" aria-hidden="true" />
-          <h2 className="mt-5 text-xl font-semibold">What SCAMGUARD does</h2>
-          <ul className="mt-5 space-y-3 text-sm leading-6 text-muted">
+          <span className="auth-aside-mark">
+            <ShieldCheck size={24} aria-hidden="true" />
+          </span>
+          <h2 className="mt-6 font-display text-[28px] leading-tight">
+            Check it before you trust it.
+          </h2>
+          <ul className="auth-aside-list mt-6">
             <li>
               Check suspicious messages, website addresses, phone numbers and QR codes in one place.
             </li>
@@ -272,13 +276,13 @@ export function AuthPage({ mode }: { mode: 'login' | 'signup' }) {
             <li>Completed results remain unchanged; Analyse again creates a fresh record.</li>
           </ul>
         </div>
-        <p className="mt-8 text-xs leading-5 text-muted">
+        <p className="auth-aside-note mt-8 text-xs leading-5">
           This remains an academic prototype. Never submit passwords, recovery phrases, payment
           credentials, or highly sensitive personal information.
         </p>
         <Link
           to="/help#privacy-heading"
-          className="action-link mt-4 inline-flex min-h-11 items-center text-xs font-semibold text-accent"
+          className="auth-aside-link mt-3 inline-flex min-h-11 items-center text-xs font-semibold"
         >
           How your data is handled
         </Link>

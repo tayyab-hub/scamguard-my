@@ -10,6 +10,7 @@ import {
   LayoutDashboard,
   LogIn,
   LogOut,
+  Phone,
   PanelLeftClose,
   PanelLeftOpen,
   ScanLine,
@@ -114,9 +115,9 @@ export function AppShell() {
       <aside
         id="workspace-sidebar"
         data-collapsed={collapsed}
-        className="workspace-sidebar fixed inset-y-0 left-0 z-30 hidden flex-col overflow-y-auto overflow-x-hidden border-r border-line bg-sidebar py-7 lg:flex"
+        className="workspace-sidebar fixed inset-y-0 left-0 z-30 hidden flex-col overflow-y-auto overflow-x-hidden py-6 lg:flex"
       >
-        <Brand compact={collapsed} />
+        <Brand compact={collapsed} onDark />
         <nav aria-label="Desktop navigation" className="mt-8 space-y-1">
           {navigation.map(({ to, label, icon: Icon }) => (
             <NavLink
@@ -132,10 +133,22 @@ export function AppShell() {
             </NavLink>
           ))}
         </nav>
+        {!collapsed && (
+          <div className="sidebar-help mt-auto">
+            <p className="text-[13px] font-semibold text-surface">Been scammed?</p>
+            <p className="mt-1 text-[12px] leading-5">
+              Call the National Scam Response Centre within 24 hours.
+            </p>
+            <a href="tel:997" className="sidebar-help-call">
+              <Phone size={14} aria-hidden="true" />
+              Call 997
+            </a>
+          </div>
+        )}
       </aside>
 
       <div className="workspace-canvas" data-sidebar={collapsed ? 'collapsed' : 'expanded'}>
-        <header className="flex min-h-16 items-center justify-between gap-4 border-b border-line bg-surface/70 px-5 sm:px-8 xl:px-10">
+        <header className="workspace-header flex min-h-16 items-center justify-between gap-4 border-b border-line px-5 sm:px-8 xl:px-10">
           <div className="lg:hidden">
             <Brand />
           </div>
