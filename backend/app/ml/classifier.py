@@ -12,7 +12,7 @@ import unicodedata
 from dataclasses import dataclass
 from pathlib import Path
 
-EXPECTED_ARTIFACT_SHA256 = "055c10a076deabb3ab657014600540f0976f922f98b2a928c6e65de1263bc651"
+EXPECTED_ARTIFACT_SHA256 = "ccbf13ff3fcabf2aab84f724254b999a72d108f12873eabd87b2fb91a2c3c8ca"
 
 
 # Model output: winning label, all class probabilities, winning-class strength, version and

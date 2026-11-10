@@ -1,0 +1,201 @@
+label,language,category,text
+SCAM,en,bank_phishing_link,"Maybank2u: We noticed a sign-in from a new device (Samsung A54, Johor Bahru) on 09/11 at 22:14. If this was not you, review your account at https://maybank2u-secure.top/verify within 24 hours to keep access."
+SCAM,en,bank_phishing_link,CIMB Clicks Notice: Your Secure Device binding expires today. Re-register at cimbclicks-update.online to avoid interruption. Ref: CC-88213904
+SCAM,en,bank_phishing_link,"Dear customer, as part of Bank Negara's 2026 e-KYC refresh, Public Bank requires all online banking users to reconfirm their details. Please complete the form at pbebank-ekyc.info/form before 15 November. Thank you for banking with us."
+SCAM,en,bank_phishing_link,"RHB: Your statement for October is ready. View securely: bit.ly/rhb-estmt-7731 (login with username, password and card PIN required)"
+SCAM,en,bank_phishing_link,HONG LEONG CONNECT ALERT!!! Your account will be LOCKED in 2 HOURS due to incomplete verification. Click NOW http://hlb-connect-verify.xyz
+SCAM,ms,bank_phishing_link,Maybank: Akaun anda telah dikemas kini kepada sistem keselamatan baharu. Sila sahkan maklumat anda di m2u-pengesahan.site sebelum 12/11 bagi mengelakkan sekatan perkhidmatan.
+SCAM,ms,bank_phishing_link,"Bank Islam: Tuan/Puan, peranti baharu telah didaftarkan untuk GO Secure pada 08/11 jam 9.42 malam. Jika bukan anda, batalkan segera di bankislam-go.online/batal. No. Ruj: BI2611-40917"
+SCAM,ms,bank_phishing_link,PERHATIAN! Akaun BSN anda akan DITUTUP hari ini kerana maklumat tidak lengkap. Kemaskini SEKARANG: mybsn-kemaskini.top
+SCAM,ms,bank_phishing_link,"Pelanggan AmBank yang dihormati, mata ganjaran AmBonus anda berjumlah 18,450 mata akan luput pada 30/11. Tebus sekarang dengan log masuk di ambank-rewards.club dan masukkan nombor kad serta CVV untuk pengesahan."
+SCAM,ms,bank_phishing_link,"RHB Now: Had pindahan harian anda telah ditukar kepada RM50,000. Sekiranya anda tidak membuat permohonan ini, sila log masuk di rhbnow-semak.cc untuk membatalkan."
+SCAM,mixed,bank_phishing_link,"Maybank: Your MAE app perlu update security certificate sebelum 11/11. Tekan link ni utk update: mae-secure-update.top/app. Kalau tak update, akaun akan temporarily disabled ya."
+SCAM,mixed,bank_phishing_link,"CIMB: Dear customer, akaun anda detected unusual login dari Kuching. Sila verify identity anda di cimb-octo-verify.live dalam masa 12 jam. TQ."
+SCAM,en,fake_transaction_alert_callback,"RM 2,899.00 was charged to your Maybank Visa card ending 4417 at LAZADA*TECHSTORE on 09/11. If you did not make this purchase, call our Card Fraud Unit at 03-1234 5678 immediately."
+SCAM,en,fake_transaction_alert_callback,CIMB: Card ending 8820 used for USD 612.40 at APPLE.COM/BILL. Not you? Contact 011-2345 6789 (24h) to dispute. Do not reply to this SMS.
+SCAM,en,fake_transaction_alert_callback,"Public Bank Alert: A transfer of RM4,500.00 to TAN W** K** (Acc ****3391) is pending approval. To cancel, WhatsApp our officer at +60 11-1111 2222 within 30 minutes."
+SCAM,en,fake_transaction_alert_callback,"Your HSBC credit card has been used for an overseas transaction of RM7,230.15 (Ref HS-2611-55102). If unauthorised, please call 1-300-00-1234 and have your card number and expiry date ready for verification."
+SCAM,en,fake_transaction_alert_callback,"Standard Chartered: We declined a card-not-present transaction of RM 899.00 at NETFLIX.COM. To confirm whether this was you, kindly return our call on 03-2222 0000 and quote case SC-4471906."
+SCAM,ms,fake_transaction_alert_callback,"RHB: Transaksi RM3,150.00 di SHOPEE*GADGETHUB menggunakan kad berakhir 2093 telah diluluskan. Jika bukan anda, hubungi 03-0000 1234 dengan segera untuk sekatan kad."
+SCAM,ms,fake_transaction_alert_callback,"Bank Rakyat: Pengeluaran ATM RM2,000 di Kota Bharu pada 09/11 5.12 pagi. Sekiranya tidak dilakukan oleh tuan/puan, sila hubungi Unit Pemantauan Kad di 012-345 6789."
+SCAM,ms,fake_transaction_alert_callback,"AMARAN MAYBANK: Kad anda digunakan RM5,999 di luar negara!! Hubungi SEGERA 011-0000 9999 sebelum wang ditolak!!"
+SCAM,ms,fake_transaction_alert_callback,"Hong Leong Bank: Pembayaran ansuran RM1,288.00 kepada AEON CREDIT telah dijadualkan daripada akaun anda pada 11/11. Untuk bantahan, hubungi pegawai kami En. Farid di 03-1111 0000 (waktu pejabat). No. Ruj: HL-774102."
+SCAM,mixed,fake_transaction_alert_callback,"Maybank2u: RM1,980.00 telah didebit dari akaun anda utk DuitNow transfer ke LIM *** HUAT. If bukan anda, call hotline 03-1234 0000 now untuk cancel transaction."
+SCAM,mixed,fake_transaction_alert_callback,"CIMB Alert: Kad kredit anda charge RM4,210 kat AGODA. Tak buat? Terus WhatsApp +60 11-2222 3333, officer on duty akan freeze card."
+SCAM,en,account_freeze_suspension,"Your Maybank account has been temporarily restricted following multiple failed login attempts. To restore access, confirm your identity at maybank-restore.help within 48 hours. Case ID: MBB-30917726."
+SCAM,en,account_freeze_suspension,CIMB: We have suspended outgoing transfers on your account pending verification of recent activity. Please reply with your full name and IC number so that an officer can assist.
+SCAM,en,account_freeze_suspension,URGENT: Your bank account is FROZEN under AMLA. Call 011-3333 4444 NOW or all funds will be forfeited within 24 HOURS.
+SCAM,en,account_freeze_suspension,Touch 'n Go eWallet: Your wallet has been suspended due to a mismatch in your registered details. Restore it at tng-ewallet-restore.site by entering your 6-digit PIN.
+SCAM,ms,account_freeze_suspension,Akaun Bank Islam anda telah dibekukan sementara kerana aktiviti mencurigakan. Sila sahkan identiti di bankislam-nyahbeku.online dalam tempoh 24 jam. No. Kes: BIMB/2611/0481.
+SCAM,ms,account_freeze_suspension,"Public Bank: Akses PBe anda digantung. Untuk pengaktifan semula, sila hubungi Pegawai Pematuhan, Pn. Suraya, di 03-1234 9999 dan sediakan nombor kad ATM serta PIN anda."
+SCAM,ms,account_freeze_suspension,NOTIS AKHIR: Akaun simpanan anda akan dibekukan oleh Bank Negara dalam masa 3 jam. Pindahkan baki ke akaun selamat yang diberikan pegawai. Hubungi 011-4444 5555.
+SCAM,ms,account_freeze_suspension,GXBank: Akaun anda disekat buat sementara waktu kerana dokumen pengenalan telah tamat tempoh. Muat naik gambar MyKad depan dan belakang di gxbank-dokumen.app untuk meneruskan penggunaan.
+SCAM,ms,account_freeze_suspension,"Tuan/Puan, sistem kami mendapati akaun AmBank anda tidak aktif melebihi 12 bulan dan akan digantung pada 14/11. Bagi mengekalkan akaun, sila buat pengesahan di amonline-aktif.info. Terima kasih."
+SCAM,mixed,account_freeze_suspension,"Maybank: Akaun anda kena temporary hold sebab ada suspicious login. Please verify dekat m2u-unlock.top sebelum 6pm hari ni, kalau tak akaun terus suspended."
+SCAM,mixed,account_freeze_suspension,"Boost: Your wallet dah kena freeze sbb gagal verify. Reply mesej ni dengan nama penuh, no IC & PIN utk reactivate."
+SCAM,en,otp_tac_request,"Maybank: A TAC was sent to your phone in error for a transaction you did not request. To cancel it, please reply to this message with the 6-digit code you received."
+SCAM,en,otp_tac_request,"Hi, this is CIMB customer care. We are reversing a wrong debit of RM350 to your account. You will receive an OTP shortly, kindly reply with the OTP to complete the refund."
+SCAM,en,otp_tac_request,WhatsApp Support: Your account is being registered on another device. Send us the 6-digit code sent by SMS to keep your account. Failure to do so will result in deactivation today.
+SCAM,en,otp_tac_request,"Shopee Security: To stop the unauthorised login to your account, share the verification code we just sent to you with our agent on WhatsApp +60 11-5555 6666."
+SCAM,en,otp_tac_request,"GrabPay: We're processing your RM50 goodwill credit. For security, please tell the agent calling from 03-3333 0000 the one-time PIN sent to this number."
+SCAM,ms,otp_tac_request,"Bank Rakyat: Kod TAC telah dihantar ke nombor anda bagi pembatalan transaksi RM1,200. Sila balas SMS ini dengan kod TAC tersebut untuk mengesahkan pembatalan."
+SCAM,ms,otp_tac_request,"Salam tuan, saya Aiman dari Unit Keselamatan Maybank. Kami sedang menyekat cubaan pindahan dari akaun tuan. Mohon berikan nombor OTP yang baru diterima supaya sekatan dapat dibuat segera."
+SCAM,ms,otp_tac_request,"Touch 'n Go eWallet: Permintaan tukar nombor telefon telah diterima. Jika bukan anda, balas dengan kod pengesahan 6 digit dan PIN eWallet anda untuk membatalkan."
+SCAM,ms,otp_tac_request,MAXIS: SIM anda sedang dipindahkan ke telefon lain. BALAS kod OTP SEKARANG untuk HALANG pemindahan!!!
+SCAM,mixed,otp_tac_request,"Hi sis, sorry ganggu. Saya tersalah masukkan no phone sis masa register akaun bank. Nanti ada 6 digit code masuk, boleh tolong forward kat saya tak? Urgent sangat ni."
+SCAM,mixed,otp_tac_request,"RHB: Kami detect login dari device baru. Untuk block, sila reply TAC number yang anda terima dalam masa 5 minit. Thank you."
+SCAM,en,ewallet_reward_phishing,Touch 'n Go eWallet: You've earned RM88 cashback from the Year-End Rewards campaign. Claim before 12/11 at tngo-cashback.top/claim
+SCAM,en,ewallet_reward_phishing,Congratulations! Your GrabPay wallet has been selected for an RM200 loyalty rebate. Verify your wallet at grab-rebate.online and enter your GrabPay PIN to receive the credit.
+SCAM,en,ewallet_reward_phishing,Boost: Your 11.11 reward of RM111 is pending. Tap bit.ly/boost1111-rm to confirm your bank details for crediting. Offer ends midnight.
+SCAM,en,ewallet_reward_phishing,"ShopeePay: A refund voucher worth RM60 has been issued to your account. To activate, log in via shopeepay-voucher.club within 24 hours."
+SCAM,ms,ewallet_reward_phishing,Touch 'n Go eWallet: Tahniah! Anda layak menerima rebat tol RM150 bagi tahun 2026. Tuntut di tng-rebat-tol.site dengan mengisi nombor kad bank anda.
+SCAM,ms,ewallet_reward_phishing,eWallet MAE: Baki ganjaran RM75.00 anda akan luput esok. Sila tebus melalui pautan mae-ganjaran.online dan sahkan dengan kata laluan Maybank2u.
+SCAM,ms,ewallet_reward_phishing,"TAHNIAH!!! Anda pemenang bertuah Boost RM5,000! Hubungi 011-6666 7777 dan bayar yuran pemprosesan RM99 untuk tuntut hadiah HARI INI JUGA."
+SCAM,ms,ewallet_reward_phishing,Setel: Anda menerima kredit petrol percuma RM40 sempena kempen hujung tahun. Aktifkan dalam masa 48 jam di setel-kredit.info. Kod: STL-90417.
+SCAM,ms,ewallet_reward_phishing,"BigPay: Bayaran balik RM32.90 daripada transaksi gagal sedia untuk dikreditkan. Sahkan butiran kad anda (nombor kad, tarikh luput, CVV) di bigpay-bayarbalik.top."
+SCAM,mixed,ewallet_reward_phishing,"TNG eWallet: Cashback RM120 anda belum claim lagi! Click tng-claimnow.xyz, login & masukkan PIN untuk terus masuk wallet. Valid today only."
+SCAM,mixed,ewallet_reward_phishing,"GrabPay: Bro/sis, you layak dapat rebate RM50 sbb top-up bulan lepas. Just verify akaun kat grabpay-my-reward.live, 2 minit je siap."
+SCAM,en,courier_redelivery_customs_fee,Pos Malaysia: Your parcel EM204417735MY could not be delivered because of an incomplete address. Update your details and pay the RM1.90 redelivery fee at posmy-redeliver.top
+SCAM,en,courier_redelivery_customs_fee,J&T Express: Delivery attempt failed on 09/11. Please reschedule within 48 hours at jnt-reschedule.online/track or the parcel will be returned to sender.
+SCAM,en,courier_redelivery_customs_fee,DHL: Your shipment 4471 9082 13 is held at KLIA customs. A duty of RM38.50 is payable before release. Pay securely: dhl-customs-my.info
+SCAM,en,courier_redelivery_customs_fee,"Ninja Van: We tried to deliver your parcel today but nobody was home. Kindly WhatsApp our rider at +60 11-7777 8888 with your full name, address and IC number to arrange redelivery."
+SCAM,en,courier_redelivery_customs_fee,FINAL NOTICE: Your package will be DESTROYED in 24 hours!! Pay customs tax RM25 now: bit.ly/pkg-tax-my
+SCAM,ms,courier_redelivery_customs_fee,Pos Laju: Bungkusan anda (No. EP883201746MY) tertahan di pusat mel kerana alamat tidak lengkap. Kemas kini alamat dan jelaskan caj RM2.50 di poslaju-kemaskini.site
+SCAM,ms,courier_redelivery_customs_fee,J&T: Penghantaran gagal. Sila tetapkan semula tarikh penghantaran di jtexpress-hantar.cc dalam tempoh 24 jam. Bungkusan akan dipulangkan selepas tempoh tersebut.
+SCAM,ms,courier_redelivery_customs_fee,Kastam Diraja Malaysia: Barangan anda dari luar negara ditahan kerana cukai belum dijelaskan. Bayar RM86.00 ke akaun Maybank 5121-XXXX-7730 (NORLIZA BT AHMAD) dan hantar resit ke 012-000 1111.
+SCAM,ms,courier_redelivery_customs_fee,Ninja Van: Pakej NVMY00417239 anda tiba di hab Shah Alam tetapi nombor rumah tidak jelas. Sahkan alamat di ninjavan-alamat.online. Caj penghantaran semula: RM3.00.
+SCAM,mixed,courier_redelivery_customs_fee,Pos Laju: Parcel anda tak dapat deliver sbb alamat incomplete. Please update address & bayar fee RM2 kat poslaju-redelivery.xyz dalam 12 jam.
+SCAM,mixed,courier_redelivery_customs_fee,"Hi, saya rider Flash Express. Parcel awak stuck kat warehouse, kena bayar storage fee RM15 dulu. Boleh transfer ke TNG 011-8888 9999 then saya hantar petang ni."
+SCAM,en,government_aid_refund_phishing,"LHDN: You are eligible for an income tax refund of RM1,246.80 for Year of Assessment 2025. Submit your bank details at lhdn-refund.online by 15 November to receive payment."
+SCAM,en,government_aid_refund_phishing,MyGov: Your application for the Sumbangan Tunai Rahmah Phase 4 payment of RM300 has been approved. Confirm your account at str-payment.top/confirm
+SCAM,en,government_aid_refund_phishing,"Inland Revenue Board: Our records show an overpayment of RM874.00. To process your refund, an officer requires your online banking username and password. Contact 03-4444 0000."
+SCAM,en,government_aid_refund_phishing,Government eMadani credit: RM100 is waiting to be claimed. Register with your MyKad number and card details at emadani-claim.site before the closing date.
+SCAM,ms,government_aid_refund_phishing,LHDN: Tuan/Puan layak menerima bayaran balik cukai berjumlah RM982.40. Sila kemas kini maklumat akaun bank di hasil-bayaranbalik.info sebelum 14/11/2026. No. Ruj: LHDN/BB/2611/30477.
+SCAM,ms,government_aid_refund_phishing,STR 2026: Bantuan Fasa 4 sebanyak RM500 telah diluluskan. Semak status dan sahkan akaun penerima di semakan-str.online menggunakan no. MyKad dan kata laluan perbankan anda.
+SCAM,ms,government_aid_refund_phishing,"TAHNIAH! Anda terpilih terima Bantuan Khas Kerajaan RM3,000!! Daftar SEGERA di bit.ly/bantuan-khas-rm3k sebelum kuota penuh!"
+SCAM,ms,government_aid_refund_phishing,"Jabatan Kebajikan Masyarakat: Permohonan bantuan bulanan anda diluluskan. Yuran pendaftaran RM50 perlu dijelaskan ke akaun pegawai (CIMB 7061-XXXX-21, MOHD HAFIZ) sebelum bantuan disalurkan."
+SCAM,ms,government_aid_refund_phishing,Baitulmal: Bantuan zakat khas hujung tahun RM800 sedia untuk disalurkan. Sila hubungi Ustaz Rahim di 011-9999 0000 dan berikan nombor kad ATM untuk pengkreditan.
+SCAM,mixed,government_aid_refund_phishing,"LHDN: Refund cukai anda RM650.20 dah approved. Sila update bank account kat lhdn-ezrefund.xyz within 3 days, kalau tak refund akan forfeited."
+SCAM,mixed,government_aid_refund_phishing,"Bantuan STR: Duit RM300 dah boleh claim! Just isi form dekat str-claim-now.club, perlu no IC + online banking login utk verify."
+SCAM,en,fake_summons_fine_link,JPJ: You have an outstanding summons (No. AK7741902) for exceeding the speed limit on 02/11. Pay RM150 before 13/11 to enjoy the 50% discount: myjpj-saman.top
+SCAM,en,fake_summons_fine_link,PDRM Traffic: An unpaid compound is recorded against vehicle W** 4127. Settle online at pdrm-esaman.online within 7 days to avoid blacklisting.
+SCAM,en,fake_summons_fine_link,MySikap Notice: Your driving licence will be suspended due to 2 unpaid AES summonses. Check and pay now at aes-semak.info/pay
+SCAM,en,fake_summons_fine_link,WARNING: WARRANT OF ARREST will be issued for unpaid traffic fine RM300. Pay within 6 HOURS at bit.ly/saman-bayar or call 011-1234 0000.
+SCAM,en,fake_summons_fine_link,Road Transport Department: Our system shows your road tax renewal is blocked by a pending summons of RM200. Clear the block by paying with your debit card at jpj-roadtax-clear.cc. Ref: RTD/26/118204.
+SCAM,ms,fake_summons_fine_link,JPJ: Kenderaan anda mempunyai saman tertunggak No. 88A40217 berjumlah RM300. Bayar sebelum 12/11 untuk diskaun 50% di jpj-bayarsaman.site
+SCAM,ms,fake_summons_fine_link,PDRM: Saman trafik anda (Seksyen 79(2) APJ 1987) belum dijelaskan. Semak dan bayar di mybayar-saman.online. Kegagalan boleh menyebabkan senarai hitam.
+SCAM,ms,fake_summons_fine_link,MBPJ: Kompaun letak kereta No. PJ2611-55871 berjumlah RM100 masih tertunggak. Bayar RM30 sahaja jika dijelaskan hari ini melalui mbpj-kompaun.top.
+SCAM,ms,fake_summons_fine_link,NOTIS MAHKAMAH: Waran tangkap akan dikeluarkan kerana saman AES tidak dibayar. Hubungi Sarjan Kamal 011-2345 0000 dan bayar ke akaun yang diberi SEBELUM 5 PETANG.
+SCAM,mixed,fake_summons_fine_link,"JPJ: Anda ada 1 saman outstanding RM150. Pay sekarang dapat discount 70%, link: jpj-esaman-pay.xyz. Offer tamat malam ni."
+SCAM,mixed,fake_summons_fine_link,"DBKL: Kompaun parking you belum settle (RM80). Bayar online kat dbkl-epay.live before Friday, else kereta kena clamp & blacklist."
+SCAM,en,authority_investigation_macau,"This is Inspector Razak from Bukit Aman Commercial Crime Division. Your identity card has been linked to a money laundering case (Report No. BA/CCID/4471/26). Call 03-5555 0000 at once. Do not discuss this matter with anyone, including family."
+SCAM,en,authority_investigation_macau,"Bank Negara Malaysia: Your accounts are under investigation. To protect your savings, transfer all balances to the BNM safe custody account given by the officer in charge. Funds will be returned after 48 hours of audit."
+SCAM,en,authority_investigation_macau,"Magistrate's Court Kuala Lumpur: You failed to attend a hearing on 03/11 (Case MA-83-1127-10/2026). To avoid an arrest warrant, press 9 or call the court officer at 011-0000 2222."
+SCAM,en,authority_investigation_macau,"Dear Sir/Madam, a parcel registered under your name containing 8 ATM cards and a forged passport was intercepted at KLIA. This call is being transferred to Sabah police HQ. You must keep the investigation confidential and remain reachable on WhatsApp +60 11-3333 0000."
+SCAM,en,authority_investigation_macau,MACC Notice: You are named in a bribery probe. Cooperate by declaring your bank balances to Officer Lim at 03-6666 0000. Disclosure of this notice to third parties is an offence.
+SCAM,ms,authority_investigation_macau,Saya Sarjan Azman dari IPD Dang Wangi. Nombor MyKad tuan didapati terlibat dalam kes pengubahan wang haram dan dadah. Tuan dikehendaki bekerjasama dan tidak memberitahu sesiapa mengenai siasatan ini. Hubungi 011-4444 0000.
+SCAM,ms,authority_investigation_macau,"Bank Negara Malaysia: Akaun anda disyaki digunakan oleh sindiket. Bagi tujuan audit, pindahkan semua wang simpanan ke akaun selamat 1640-XXXX-9912 (Unit Siasatan Khas). Wang akan dipulangkan selepas siasatan selesai."
+SCAM,ms,authority_investigation_macau,MAHKAMAH TINGGI: Anda mempunyai kes tertunggak. Waran tangkap akan dikeluarkan dalam 2 JAM. Tekan pautan mahkamah-ekes.top atau hubungi 03-7777 0000 SEGERA.
+SCAM,ms,authority_investigation_macau,"LHDN & PDRM: Tuan/Puan mempunyai tunggakan cukai syarikat RM38,400 atas nama anda. Panggilan ini akan disambung ke Balai Polis Kota Kinabalu. Sila sediakan butiran akaun bank untuk semakan dan rahsiakan perkara ini."
+SCAM,ms,authority_investigation_macau,SPRM: Nama anda disenaraikan dalam siasatan. Pegawai penyiasat Tuan Hakimi akan menghubungi melalui WhatsApp 012-111 0000. Anda perlu memuat turun aplikasi pengesahan di sprm-semakan.app dan log masuk dengan ID perbankan.
+SCAM,mixed,authority_investigation_macau,"Ini Inspektor Faizal dari Bukit Aman. IC awak involved dalam kes money laundering. Jangan bagitau family or kawan, this is confidential investigation. Transfer duit ke akaun selamat yang kami bagi untuk freeze sementara."
+SCAM,mixed,authority_investigation_macau,"Bank Negara officer here. Akaun you dalam siasatan AMLA. Untuk elak kena freeze, please pindahkan savings ke safe account dulu. Call 03-8888 0000, jangan inform bank staff."
+SCAM,en,telco_line_termination,Maxis: Your line will be terminated within 24 hours because your SIM registration could not be verified. Press 1 or call 03-9999 0000 to speak to an officer.
+SCAM,en,telco_line_termination,CelcomDigi: Your October bill of RM128.60 is overdue. Avoid suspension by paying at celcomdigi-billpay.top today.
+SCAM,en,telco_line_termination,MCMC Notice: Your mobile number was used to send illegal messages and will be barred in 2 hours. Contact the MCMC officer at 011-5555 0000 to file an objection.
+SCAM,en,telco_line_termination,"U Mobile: You have 4,820 reward points expiring today. Redeem a RM50 bill rebate at umobile-points.online by entering your card details."
+SCAM,ms,telco_line_termination,Maxis: Talian anda akan ditamatkan dalam tempoh 24 jam kerana pendaftaran SIM tidak lengkap. Kemas kini MyKad anda di maxis-daftarsim.site.
+SCAM,ms,telco_line_termination,CelcomDigi: Bil tertunggak RM96.40 belum dijelaskan. Bayar sebelum 11/11 di celcomdigi-bayar.info untuk mengelakkan pemotongan talian. No. Akaun: 1.0449xxxx
+SCAM,ms,telco_line_termination,SKMM: Nombor telefon anda didaftarkan untuk aktiviti penipuan dan akan DISEKAT dalam 2 JAM. Tekan 9 untuk bercakap dengan pegawai atau hubungi 03-0000 5555.
+SCAM,ms,telco_line_termination,Unifi: Perkhidmatan internet anda akan digantung esok kerana bil tertunggak RM179.00. Jelaskan bayaran ke akaun CIMB 8003-XXXX-45 (AZLAN B. YUSOF) dan WhatsApp resit ke 011-6666 0000.
+SCAM,ms,telco_line_termination,Yes 5G: Pelan anda gagal diperbaharui. Kemas kini kad pembayaran di yes5g-pembaharuan.top dalam 12 jam bagi mengelakkan penamatan talian.
+SCAM,mixed,telco_line_termination,"Maxis: Line anda akan kena terminate esok sbb SIM belum re-register. Please update IC dekat maxis-simreg.xyz, 5 minit je."
+SCAM,mixed,telco_line_termination,"Digi: Bill bulan ni RM88 overdue dah. Bayar now kat digi-paybill.live to avoid barring. Kalau dah bayar, ignore je msg ni."
+SCAM,en,utility_disconnection_personal_account,"TNB: Your electricity supply at the registered premises will be disconnected today at 4.00pm due to arrears of RM412.75. To stop the disconnection, pay to Maybank 1122-XXXX-8840 (ROSLAN BIN OMAR, TNB field officer) and call 012-222 0000."
+SCAM,en,utility_disconnection_personal_account,Air Selangor: Final reminder. Outstanding balance RM96.30. Pay at airselangor-ebill.top within 24 hours to avoid water supply disconnection.
+SCAM,en,utility_disconnection_personal_account,Indah Water: Your account shows 14 months of unpaid sewerage charges (RM224.00). Our contractor will attend tomorrow. Settle by DuitNow to 011-7777 0000 to cancel the visit.
+SCAM,en,utility_disconnection_personal_account,TNB DISCONNECTION TEAM: Power will be CUT in 30 MINUTES. Transfer RM350 NOW to our technician account and send the slip to +60 11-8888 0000!!
+SCAM,ms,utility_disconnection_personal_account,"TNB: Bekalan elektrik ke premis anda akan dipotong hari ini jam 3.00 petang kerana tunggakan RM286.40. Untuk mengelakkan pemotongan, buat bayaran ke akaun Bank Islam 1407-XXXX-663 (SITI NORAINI) dan hantar resit ke 011-0000 3333."
+SCAM,ms,utility_disconnection_personal_account,Air Selangor: Bil air anda tertunggak RM74.85. Bekalan akan dipotong dalam masa 24 jam. Bayar segera di airselangor-bayarbil.site.
+SCAM,ms,utility_disconnection_personal_account,"SAJ Ranhill: Meter air anda perlu ditukar mengikut arahan baharu. Caj pemasangan RM120 hendaklah dibayar terus kepada juruteknik, En. Zul (TNG 012-333 0000), sebelum lawatan esok."
+SCAM,ms,utility_disconnection_personal_account,Indah Water: Notis terakhir. Tunggakan RM198.00. Bayar melalui pautan iwk-epay.online sebelum 5 petang ini atau tindakan mahkamah akan diambil.
+SCAM,ms,utility_disconnection_personal_account,"Gas Malaysia: Akaun anda mempunyai baki tertunggak RM65.20. Sila jelaskan dalam tempoh 48 jam melalui pindahan ke akaun RHB 2140-XXXX-07 atas nama pegawai kutipan, LEE M** H**."
+SCAM,mixed,utility_disconnection_personal_account,"TNB: Elektrik rumah anda akan kena potong today 5pm sebab bil overdue RM310. Nak elak, transfer terus ke akaun officer kami & WhatsApp receipt ke 011-1111 3333."
+SCAM,mixed,utility_disconnection_personal_account,"Air Selangor: Your bil tertunggak RM58.90. Pay now at airselangor-quickpay.xyz, kalau tak water supply cut tomorrow morning."
+SCAM,en,epf_kwsp_withdrawal_phishing,"KWSP: Your application for the Flexible Account withdrawal of RM3,200 is ready for crediting. Confirm your bank account at kwsp-iakaun.top within 3 working days."
+SCAM,en,epf_kwsp_withdrawal_phishing,EPF: You have an unclaimed dividend adjustment of RM412.18 for 2025. Log in with your i-Akaun ID and password at epf-dividend.online to claim.
+SCAM,en,epf_kwsp_withdrawal_phishing,"EPF Special Withdrawal 2026 is now open. Get up to RM10,000 from Account 2 in 24 hours. Our agent will handle everything for a 10% service fee. WhatsApp +60 11-9999 1111."
+SCAM,en,epf_kwsp_withdrawal_phishing,KWSP Notice: Your i-Akaun will be deactivated on 13/11 because your phone number is not verified. Verify at kwsp-verify.info/tac and enter the TAC sent to you.
+SCAM,ms,epf_kwsp_withdrawal_phishing,"KWSP: Permohonan pengeluaran Akaun Fleksibel anda berjumlah RM2,500 telah diluluskan. Sahkan nombor akaun bank di kwsp-pengeluaran.site sebelum 14/11/2026."
+SCAM,ms,epf_kwsp_withdrawal_phishing,KWSP i-Akaun: Kata laluan anda akan tamat tempoh dalam 24 jam. Tetapkan semula di iakaun-kwsp.online untuk mengelakkan akaun dikunci.
+SCAM,ms,epf_kwsp_withdrawal_phishing,"PENGELUARAN KHAS KWSP RM10,000 DIBUKA SEMULA! Mohon cepat di bit.ly/kwsp-khas10k. Kuota TERHAD!!"
+SCAM,ms,epf_kwsp_withdrawal_phishing,"Salam, saya ejen berdaftar KWSP. Tuan/puan boleh keluarkan simpanan Akaun 1 lebih awal. Hanya perlu berikan ID i-Akaun, kata laluan dan bayar caj urusan RM200. Hubungi Pn. Zaiton 012-444 0000."
+SCAM,ms,epf_kwsp_withdrawal_phishing,KWSP: Dividen tambahan RM318.60 belum dituntut. Sila kemas kini penama dan akaun bank di kwsp-dividen.top. No. Ruj: KWSP/DIV/26/774120.
+SCAM,mixed,epf_kwsp_withdrawal_phishing,"KWSP: Withdrawal Akaun Fleksibel anda RM1,800 dah approved. Sila confirm bank account dekat kwsp-flexi.xyz, perlu masukkan i-Akaun password & TAC."
+SCAM,mixed,epf_kwsp_withdrawal_phishing,"EPF: Nak keluarkan duit Akaun 2 cepat? Kami boleh tolong settle within 1 day, just bagi IC, i-Akaun login & fee RM150. PM 011-2222 1111."
+SCAM,en,loan_upfront_fee,"Congratulations, your personal loan of RM30,000 from Bank Rakyat has been approved at 3.2% p.a. To release the funds, a refundable processing fee of RM450 must be paid today. Contact Mr. Daniel at 011-3333 1111."
+SCAM,en,loan_upfront_fee,"AEON Credit: Pre-approved cash financing up to RM50,000, no documents, no CTOS check. Pay stamp duty RM280 first and receive funds in 1 hour. Apply: aeon-easycash.top"
+SCAM,en,loan_upfront_fee,"Your loan application LN-2611-40822 is at the final stage. Before disbursement, a loan insurance premium of RM600 is required. Please transfer to Maybank 5540-XXXX-1192 (KUMAR A/L RAJAN) and send the slip."
+SCAM,en,loan_upfront_fee,"LOAN APPROVED!!! RM100,000 blacklist OK!! Just pay lawyer fee RM999 and get cash TODAY. WhatsApp +60 11-4444 1111"
+SCAM,en,loan_upfront_fee,"RHB Easy: We are pleased to inform you that your financing of RM25,000 is approved. As your account failed our verification, please deposit RM1,000 to activate the disbursement channel. The deposit will be returned together with the loan."
+SCAM,ms,loan_upfront_fee,"Tahniah! Pinjaman peribadi anda sebanyak RM20,000 telah diluluskan oleh pihak bank. Sila jelaskan yuran guaman dan duti setem RM350 sebelum wang dikreditkan. Hubungi En. Shahrul 011-5555 1111."
+SCAM,ms,loan_upfront_fee,"Koperasi Sejahtera: Pembiayaan sehingga RM80,000 untuk kakitangan kerajaan dan swasta. Kelulusan segera tanpa penjamin. Bayaran deposit insurans RM500 diperlukan. Mohon di koperasi-pinjaman.online"
+SCAM,ms,loan_upfront_fee,"Permohonan pinjaman anda (No. Ruj: PJ/26/110-774) telah lulus. Walau bagaimanapun, skor kredit anda rendah. Bayar RM800 sebagai jaminan ke akaun CIMB 7620-XXXX-33 (NURUL AIN) untuk pelepasan dana."
+SCAM,ms,loan_upfront_fee,PINJAMAN SEGERA LULUS 100%!! Senarai hitam pun boleh! Bayar yuran proses RM199 sahaja. WhatsApp 012-555 0000 SEKARANG.
+SCAM,mixed,loan_upfront_fee,"Hi, loan RM15k awak dah approve! Tapi kena bayar processing fee RM300 dulu sebelum disburse. Transfer ke akaun agent, then duit masuk within 30 minit. WhatsApp 011-6666 1111."
+SCAM,mixed,loan_upfront_fee,Bank Islam Personal Financing: Your application approved. Sila bayar takaful fee RM420 dahulu untuk release dana. Details: bimb-financing.live/release
+SCAM,en,job_hr_deposit,"HR Department, Petronas Dagangan: You have been shortlisted for the position of Admin Executive (RM4,800/month). To confirm your interview slot, pay the RM150 medical screening fee and send your IC copy and bank details to hr-petronas-careers.online."
+SCAM,en,job_hr_deposit,"Welcome aboard! As part of onboarding, please submit a photo of your bank card (front and back) and your online banking login so payroll can link your salary account. HR, Shopee Xpress."
+SCAM,en,job_hr_deposit,Part-time job: Like YouTube videos and earn RM200-RM800 daily. No experience needed. Deposit RM100 to activate your task account. Telegram @hr_tasks_my or WhatsApp +60 11-7777 1111.
+SCAM,en,job_hr_deposit,AirAsia Recruitment: Your application for Cabin Crew has passed the first screening. A uniform deposit of RM350 is required before training on 17/11. Pay to Public Bank 4417-XXXX-20 (recruiting officer).
+SCAM,ms,job_hr_deposit,"Jabatan Sumber Manusia: Tahniah, anda ditawarkan jawatan Pembantu Tadbir N19. Sila jelaskan bayaran pemprosesan dan pemeriksaan kesihatan RM250 sebelum 13/11 ke akaun pegawai yang diberikan. Hubungi 011-8888 1111."
+SCAM,ms,job_hr_deposit,"Kerja kosong sambilan dari rumah, gaji RM150 sehari. Hanya perlu like dan follow. Deposit RM50 diperlukan untuk aktifkan akaun tugasan. Daftar di kerja-online-my.club"
+SCAM,ms,job_hr_deposit,"HR Mydin: Permohonan anda sebagai juruwang telah diterima. Untuk tujuan pendaftaran gaji, sila hantar salinan MyKad, nombor akaun bank, serta kata laluan perbankan internet melalui WhatsApp 012-666 0000."
+SCAM,ms,job_hr_deposit,"JAWATAN KOSONG PETRONAS OFFSHORE!! Gaji RM9,000!! Bayar yuran kursus keselamatan RM480 untuk sahkan tempat. TERHAD 10 ORANG SAHAJA. Hubungi 011-9999 2222"
+SCAM,ms,job_hr_deposit,"Tuan/Puan, sesi suai kenal pekerja baharu akan diadakan pada 18/11. Bagi pengeluaran kad akses dan pakaian seragam, deposit RM180 perlu dibayar ke akaun Maybank 1620-XXXX-5571 atas nama penyelia, FAIZAH BT ISMAIL. – Unit HR"
+SCAM,mixed,job_hr_deposit,"Hi, kami dari HR Lazada. You terpilih utk part time job, komisen RM300/hari. Just top up RM80 as deposit untuk start task pertama. Interested? WhatsApp 011-0000 4444."
+SCAM,mixed,job_hr_deposit,"Tahniah! You're hired as data entry clerk (WFH). Please bagi bank account number, IC & bayar laptop deposit RM200 before orientation. HR Admin."
+SCAM,en,ecommerce_order_refund_link,Shopee: Your order 2611047JQK8M2P could not be processed because of a payment error. A refund of RM129.90 has been initiated. Confirm your bank account at shopee-refund.top/confirm
+SCAM,en,ecommerce_order_refund_link,"Lazada: The item in order #48820173341 is out of stock. To receive your refund, our agent needs your card number and the OTP sent to your phone. Chat on WhatsApp +60 11-1111 4444."
+SCAM,en,ecommerce_order_refund_link,TikTok Shop: Your account has been flagged for an abnormal order. Verify within 24 hours at tiktokshop-verify.online or your pending orders will be cancelled.
+SCAM,en,ecommerce_order_refund_link,Shopee Customer Service: We accidentally charged you twice for your recent purchase. Scan the QR sent by our officer and enter the amount RM1 to activate the refund channel.
+SCAM,en,ecommerce_order_refund_link,"Zalora: Your return for order ZA-90417726 has been approved. Because the original payment method has expired, please re-enter your card details at zalora-returns.cc to receive RM248.00."
+SCAM,ms,ecommerce_order_refund_link,Shopee: Pesanan anda 261108KD77XA tidak dapat dihantar kerana masalah pembayaran. Bayaran balik RM89.00 sedang diproses. Sahkan akaun bank anda di shopee-bayarbalik.site
+SCAM,ms,ecommerce_order_refund_link,"Lazada: Barang yang dipesan rosak semasa penghantaran. Untuk tuntutan bayaran balik RM215.50, sila isi borang di lazada-tuntutan.info dan masukkan butiran kad debit anda."
+SCAM,ms,ecommerce_order_refund_link,Khidmat Pelanggan Shopee: Akaun anda dibekukan kerana pesanan mencurigakan. Hubungi pegawai kami di 011-2222 4444 dan berikan kod pengesahan untuk nyahbeku.
+SCAM,ms,ecommerce_order_refund_link,TIKTOK SHOP: Anda MENANG baucar RM500!! Tuntut dalam 1 JAM di bit.ly/ttshop-baucar500
+SCAM,mixed,ecommerce_order_refund_link,Shopee: Order anda failed sebab payment issue. Refund RM67.80 akan dikreditkan after you verify bank details kat shopee-my-refund.xyz.
+SCAM,mixed,ecommerce_order_refund_link,"Hi dear, saya CS Lazada. Parcel you rosak so kami nak refund. Please bagi no kad & OTP ya, nanti duit masuk dalam 10 minit."
+SCAM,en,subscription_renewal_failure,Netflix: We couldn't process your payment for the next billing cycle. Update your payment details at netflix-billing-my.top to keep watching.
+SCAM,en,subscription_renewal_failure,"Your Spotify Premium renewal failed. To avoid losing your playlists, re-enter your card at spotify-renew.online within 48 hours."
+SCAM,en,subscription_renewal_failure,Astro: Your subscription (Acc 0941xxxx) is suspended due to a failed auto-debit of RM139.90. Reactivate at astro-reactivate.info or call 03-1111 5555.
+SCAM,en,subscription_renewal_failure,Apple: Your iCloud storage is full and your payment method was declined. Your photos will be DELETED today. Update now: icloud-storage-my.xyz
+SCAM,en,subscription_renewal_failure,"Microsoft 365: Your licence expired on 08/11. Renew for RM1.00 promotional price by confirming your card number, expiry and CVV at ms365-renewal.cc."
+SCAM,ms,subscription_renewal_failure,Netflix: Pembayaran langganan anda gagal. Kemas kini maklumat kad di netflix-bayaran.site dalam tempoh 24 jam untuk mengelakkan akaun digantung.
+SCAM,ms,subscription_renewal_failure,Astro: Akaun anda digantung kerana bayaran auto-debit RM99.90 tidak berjaya. Aktifkan semula di astro-aktif.online atau hubungi 03-2222 5555.
+SCAM,ms,subscription_renewal_failure,Disney+ Hotstar: Langganan tahunan anda akan tamat hari ini. Perbaharui dengan harga promosi RM5 sahaja di hotstar-promo.top. Butiran kad diperlukan.
+SCAM,ms,subscription_renewal_failure,AKAUN NETFLIX ANDA AKAN DIPADAM DALAM 12 JAM!! Kemaskini kad SEKARANG di bit.ly/nflx-my-kad
+SCAM,mixed,subscription_renewal_failure,"Netflix: Payment anda declined. Sila update card details kat netflix-update-my.live sebelum esok, kalau tak account kena suspend."
+SCAM,mixed,subscription_renewal_failure,Spotify: Premium you dah expired. Renew sekarang RM2 je untuk 3 bulan! Masukkan card info di spotify-promo-my.club. Limited time.
+SCAM,en,insurance_claim_fee,"Great Eastern: Your medical claim GE-CLM-2611-7740 for RM4,860.00 has been approved. A claim release fee of RM120 is payable before disbursement. Pay at greateastern-claims.top"
+SCAM,en,insurance_claim_fee,"Prudential: You are the named beneficiary of an unclaimed policy payout of RM28,000. To proceed, pay the administrative and stamping charge of RM650 to our appointed agent. Call 011-3333 5555."
+SCAM,en,insurance_claim_fee,AIA: Your policy will lapse today due to a missed premium. Pay RM210.40 via aia-premium-pay.online to maintain coverage. Policy No: P40-771xxx.
+SCAM,en,insurance_claim_fee,"Etiqa Motor Claims: The other party has admitted liability for your accident. Compensation RM3,500 is ready. Kindly provide your card number and TAC to our claims officer on WhatsApp +60 11-4444 5555."
+SCAM,ms,insurance_claim_fee,"Etiqa Takaful: Tuntutan anda No. ET/TK/26/40771 sebanyak RM3,200.00 telah diluluskan. Yuran pemprosesan RM95 perlu dijelaskan sebelum bayaran dibuat. Bayar di etiqa-tuntutan.site"
+SCAM,ms,insurance_claim_fee,"PERKESO: Tuntutan faedah hilang upaya anda diluluskan berjumlah RM6,400. Sila bayar caj pengesahan dokumen RM180 ke akaun pegawai kes (BSN 0410-XXXX-889, HASNAH BT DAUD)."
+SCAM,ms,insurance_claim_fee,Takaful Ikhlas: Sijil takaful anda akan luput esok. Jelaskan sumbangan tertunggak RM165.00 di takaful-bayar.online untuk mengekalkan perlindungan.
+SCAM,ms,insurance_claim_fee,"Prudential BSN: Anda mempunyai pulangan tunai polisi RM1,950 yang belum dituntut. Hubungi ejen kami Pn. Mei Ling di 012-777 0000 dan sediakan nombor kad ATM serta PIN."
+SCAM,ms,insurance_claim_fee,"TAHNIAH! Tuntutan insurans RM50,000 atas nama anda LULUS! Bayar cukai tuntutan RM1,500 HARI INI atau tuntutan DIBATALKAN. Hubungi 011-5555 5555"
+SCAM,mixed,insurance_claim_fee,"AIA: Claim hospital you RM2,750 dah approved. Just bayar processing fee RM80 kat aia-claim-release.xyz then duit masuk dalam 24 jam."
+SCAM,mixed,insurance_claim_fee,"Allianz: Polisi kereta anda expired today. Renew now at allianz-renew-my.live dapat 40% discount, bayar guna debit card + OTP."
+SCAM,en,parcel_cod,"Your COD parcel (RM79.00) from SK Beauty Store is out for delivery. If you will not be home, prepay via this link to authorise drop-off: cod-prepay.top/SK7741"
+SCAM,en,parcel_cod,"Rider here. I have a COD parcel for you, RM149. I'm not able to wait, please transfer to Maybank 1147-XXXX-3320 (AHMAD F***) and I will leave it at the guardhouse."
+SCAM,en,parcel_cod,J&T COD: Parcel JT6204417739 is addressed to you with RM59.90 to be collected. Confirm acceptance and pay online at jt-cod-confirm.online to avoid return.
+SCAM,en,parcel_cod,Pos Laju COD NOTICE: You ordered an item worth RM199. Refusal to accept will incur a RM50 penalty and legal action. Pay now: bit.ly/cod-pay-199
+SCAM,ms,parcel_cod,"Bungkusan COD anda (RM68.00) akan dihantar hari ini. Jika tiada di rumah, sila buat bayaran awal di cod-bayar.site/NV4417 supaya bungkusan boleh ditinggalkan."
+SCAM,ms,parcel_cod,"Salam, saya rider Ninja Van. Ada parcel COD atas nama puan, RM120. Saya tak dapat tunggu lama, boleh puan bank in ke TNG 011-6666 5555 dahulu? Nanti saya letak depan pintu."
+SCAM,ms,parcel_cod,J&T Express: Bungkusan COD No. JT5507193342 bernilai RM45.90 menunggu pengesahan. Sahkan dan bayar di jnt-cod-sahkan.info dalam 24 jam.
+SCAM,ms,parcel_cod,AMARAN: Anda telah MENOLAK bungkusan COD RM250. Denda RM100 dikenakan. Bayar SEGERA ke akaun CIMB 7044-XXXX-18 atau laporan polis dibuat!
+SCAM,ms,parcel_cod,"DHL eCommerce: Penghantaran COD anda dijadualkan esok. Untuk mempercepat proses, bayar RM88.00 lebih awal melalui kad di dhl-cod-my.top. No. Rujukan: DE-2611-90044."
+SCAM,mixed,parcel_cod,"Hi, ada parcel COD untuk you RM99. Saya rider, dah sampai area tapi you takde kat rumah. Boleh transfer dulu ke 012-888 0000 (TNG)? Nanti I drop kat pondok guard."
+SCAM,mixed,parcel_cod,Shopee Xpress COD: Parcel anda RM135 akan return to seller kalau tak bayar today. Pay online je kat spx-cod-pay.xyz.

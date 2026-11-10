@@ -2,7 +2,7 @@
 
 ## Learn the implementation
 
-- [Message detector upgrade — bilingual model v2, rules v4, fusion v4, sealed challenge set v3 (10 November 2026)](IMPROVEMENTS_2026-11-10.md) and its [error analysis](ERROR_ANALYSIS_2026-11-09.md)
+- [Message detector upgrade — bilingual model v3, rules v4, fusion v5, sealed challenge sets v3 and v4 (10 November 2026)](IMPROVEMENTS_2026-11-10.md) and its [error analysis](ERROR_ANALYSIS_2026-11-09.md)
 - [Improvements — embedded link/phone checks, trusted domains, phishing feed, context questions, feedback, Gemini option (7 November 2026)](IMPROVEMENTS_2026-11-07.md)
 - [Accuracy upgrade — calibrated Message score, scam tactics, URL brand impersonation, Phone and QR checks (6 November 2026)](ACCURACY_UPGRADE_2026-11-06.md)
 - [Beginner code walkthrough, presentation navigation, 30 viva questions and 10 exercises](SCAMGUARD_CODE_WALKTHROUGH_FOR_BEGINNERS.md)

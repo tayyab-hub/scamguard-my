@@ -36,7 +36,21 @@ _NOT_HOSTS = re.compile(
 )
 ORDER = ["INSUFFICIENT_EVIDENCE", "LOW", "CAUTION", "ELEVATED", "HIGH"]
 # URL-engine evidence labels for hand-reviewed popular sites and registry-restricted domains.
-TRUSTED_SITE_LABELS = frozenset({"Well-known website", "Government or education domain"})
+TRUSTED_SITE_LABELS = frozenset(
+    {"Well-known website", "Government or education domain", "Listed official domain"}
+)
+# Hosts on trusted domains where anyone can publish a form, file or page. A link there says
+# nothing about who wrote the content, so it is never treated as an official channel.
+USER_CONTENT_HOSTS = (
+    "docs.google.com",
+    "forms.gle",
+    "drive.google.com",
+    "sites.google.com",
+    "forms.office.com",
+    "forms.microsoft.com",
+    "1drv.ms",
+    "dropbox.com",
+)
 # Addresses written without http(s):// or www. must end in a commonly used ending. Casual text
 # often omits the space after a full stop ("friday.hope", "days.so"), and some such endings are
 # real but rare top-level domains.
@@ -126,7 +140,9 @@ def assess_embedded(text: str, url_engine, phone_engine) -> list[EmbeddedFinding
                     result.recommended_actions,
                     assumed,
                     source=link,
-                    trusted=str(result.risk_level) == "LOW" and recognised,
+                    trusted=str(result.risk_level) == "LOW"
+                    and recognised
+                    and not host.lower().endswith(USER_CONTENT_HOSTS),
                 )
             )
     if phone_engine is not None:

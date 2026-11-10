@@ -23,7 +23,7 @@ from app.ml.rules import assess_rules
 
 @pytest.fixture(scope="module")
 def classifier():
-    path = Path(__file__).resolve().parents[1] / "app/ml/artifacts/message_tfidf_v2.json"
+    path = Path(__file__).resolve().parents[1] / "app/ml/artifacts/message_tfidf_v3.json"
     return MessageClassifier(path)
 
 
@@ -83,7 +83,7 @@ def test_classifier_exposes_distinct_measured_classes(classifier):
     result = classifier.predict("Claim your prize now by clicking this link")
     assert set(result.probabilities) == {"LEGITIMATE", "SPAM", "SCAM"}
     assert sum(result.probabilities.values()) == pytest.approx(1.0)
-    assert result.model_version == "message-tfidf-logreg-v2"
+    assert result.model_version == "message-tfidf-logreg-v3"
 
 
 def test_short_context_returns_insufficient_evidence(classifier):

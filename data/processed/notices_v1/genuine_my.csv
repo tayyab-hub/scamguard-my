@@ -1,0 +1,221 @@
+label,language,category,text
+LEGITIMATE,ms,bank_transaction,"RM0 Maybank: Pindahan wang RM250.00 ke akaun 1122****7788 (AHMAD FAIZAL) berjaya pada 03/11/2026 14:22. Ruj: MBB8841207. Jika bukan anda, hubungi nombor di belakang kad anda."
+LEGITIMATE,ms,bank_transaction,CIMB: Kad kredit anda berakhir 4410 telah dicaj RM89.90 di KEDAI BUKU SERI MURNI pada 05-11-26 10:15. Semak transaksi di aplikasi CIMB OCTO atau cimb.com.my.
+LEGITIMATE,ms,bank_transaction,"Bank Islam: DuitNow masuk RM1,200.00 daripada NURUL HUDA BT RAZALI ke akaun anda ****3306 pada 01 Nov 2026, 9.04 pagi. Baki boleh disemak di bankislam.com."
+LEGITIMATE,ms,bank_transaction,RM0 Bank Rakyat: Pembayaran FPX RM312.45 kepada SYARIKAT AIR NEGERI berjaya. No. rujukan FPX 2611080045127. Terima kasih. Semak di bankrakyat.com.my.
+LEGITIMATE,ms,bank_transaction,"Public Bank: Pengeluaran ATM RM500.00 daripada akaun ****9021 pada 07/11/26 jam 20:41 di ATM Jalan Bunga Raya. Jika anda tidak melakukan transaksi ini, sila hubungi 1-300-88-1234. Maklumat lanjut di pbebank.com."
+LEGITIMATE,mixed,bank_transaction,"Maybank: Your DuitNow QR payment RM18.50 kat WARUNG KAK TIMAH dah berjaya, 08/11 1:07PM. Ref 55120934. Boleh check dalam app MAE."
+LEGITIMATE,ms,bank_transaction,RHB: Arahan tetap bulanan RM650.00 ke akaun pembiayaan ****5512 telah didebitkan pada 05/11/2026. Tiada tindakan diperlukan. Sejarah transaksi tersedia di rhbgroup.com.
+LEGITIMATE,ms,bank_transaction,"Hong Leong Bank: Kredit masuk RM3,480.25 ke akaun simpanan anda berakhir 7714 pada 25/10/2026. Semak penyata melalui aplikasi HLB Connect. Butiran juga di hlb.com.my."
+LEGITIMATE,ms,bank_transaction,"AmBank: Transaksi kad debit ****2087 sebanyak RM46.00 di STESEN MINYAK TAMAN DAMAI, 09/11/26 07:52. Baki tersedia: RM1,204.36. Butiran di ambank.com.my."
+LEGITIMATE,mixed,bank_transaction,CIMB: Transfer RM75.00 to LIM WEI JIE (DuitNow No. Telefon) berjaya 06/11 9:33PM. Ref: CTB20261106883. Bukan anda? Call nombor di belakang kad.
+LEGITIMATE,ms,bank_transaction,"BSN: Bayaran bil melalui JomPAY RM128.70 (Kod Pengebil 12345, Ruj-1 0098123456) telah berjaya pada 04/11/2026. Simpan mesej ini sebagai rujukan."
+LEGITIMATE,ms,bank_transaction,"RM0 Maybank: Pembayaran balik kad kredit berakhir 6032 sebanyak RM1,000.00 telah diterima pada 02/11/2026. Terima kasih. Semak baki di maybank2u.com.my."
+LEGITIMATE,ms,otp_tac,"RM0 Maybank: TAC anda ialah 482913 untuk pindahan RM250.00 ke akaun ****7788. Jangan kongsi TAC ini dengan sesiapa, termasuk kakitangan bank."
+LEGITIMATE,ms,otp_tac,CIMB: Kod OTP anda 730156 bagi pembelian dalam talian RM89.90 di KEDAI ATAS TALIAN. Sah selama 3 minit. JANGAN KONGSI kod ini.
+LEGITIMATE,ms,otp_tac,"Bank Islam: 615204 ialah kod TAC untuk menambah penerima kegemaran baharu. Jika anda tidak memohon, abaikan mesej ini dan hubungi kami di nombor di belakang kad. Jangan kongsi kod."
+LEGITIMATE,ms,otp_tac,Kod pengesahan Touch 'n Go eWallet anda: 908231. Jangan kongsi kod ini dengan sesiapa. Kakitangan kami tidak akan memintanya.
+LEGITIMATE,mixed,otp_tac,"Your Shopee verification code is 274905. Jangan share kod ni dengan sesiapa pun, termasuk staff Shopee. Valid for 15 minit."
+LEGITIMATE,ms,otp_tac,LHDN: Kod OTP MyTax anda ialah 553871. Kod sah selama 5 minit. Jangan kongsi kod ini dengan mana-mana pihak. Log masuk hanya di mytax.hasil.gov.my.
+LEGITIMATE,ms,otp_tac,RM0 Bank Rakyat: TAC 119046 untuk pembayaran FPX RM312.45. Jangan dedahkan TAC kepada sesiapa. Pihak bank tidak akan meminta TAC anda melalui panggilan telefon.
+LEGITIMATE,mixed,otp_tac,"Grab: 660318 is your GrabPay verification code. Jangan kongsi dengan orang lain ya, Grab takkan call minta kod ni."
+LEGITIMATE,ms,otp_tac,"KWSP: Kod TAC i-Akaun anda ialah 842760, sah untuk 5 minit. Jangan kongsi dengan sesiapa. Rujuk kwsp.gov.my untuk maklumat lanjut."
+LEGITIMATE,ms,otp_tac,"Public Bank: PAC 307715 untuk transaksi PBe RM1,500.00 pada 08/11/2026 11:20. Jangan kongsi PAC. Jika bukan anda, hubungi 03-1234 5678."
+LEGITIMATE,ms,otp_tac,MyDigital ID: Kod pengesahan anda ialah 291643. Kod ini sulit; jangan berikan kepada sesiapa walaupun mengaku pegawai kerajaan.
+LEGITIMATE,ms,otp_tac,RHB: OTP 760092 untuk log masuk ke RHB Online Banking. Tidak memohon? Abaikan SMS ini. Jangan sesekali kongsi OTP anda.
+LEGITIMATE,ms,security_alert,"RM0 Maybank: Log masuk ke Maybank2u dikesan daripada peranti baharu pada 09/11/2026 21:14. Jika ini anda, tiada tindakan diperlukan. Jika bukan, hubungi nombor di belakang kad anda."
+LEGITIMATE,ms,security_alert,CIMB: SecureTAC telah berjaya diaktifkan pada peranti anda pada 07/11/2026. Tempoh bertenang 12 jam dikenakan sebelum transaksi tertentu boleh dibuat. Maklumat lanjut di cimb.com.my.
+LEGITIMATE,ms,security_alert,"Bank Islam: Kata laluan perbankan internet anda telah berjaya ditukar pada 06 Nov 2026, 8.45 malam. Jika anda tidak membuat perubahan ini, sila hubungi cawangan terdekat atau talian di belakang kad. Maklumat lanjut di bankislam.com."
+LEGITIMATE,mixed,security_alert,"Shopee: Ada login baru ke akaun anda from Chrome (Windows) pada 10/11 2:16AM. If this was you, boleh abaikan. Kalau bukan, tukar password dalam app Shopee > Tetapan Akaun."
+LEGITIMATE,ms,security_alert,"Touch 'n Go eWallet: Akaun anda telah dilog masuk pada peranti baharu (model SM-A546). Jika bukan anda, buka aplikasi dan pilih Tetapan > Keselamatan untuk log keluar semua peranti."
+LEGITIMATE,ms,security_alert,"AmBank: Had pindahan harian anda telah dikemas kini kepada RM5,000.00 pada 05/11/2026. Jika anda tidak membuat permintaan ini, hubungi 1-300-80-1234 atau rujuk ambank.com.my."
+LEGITIMATE,ms,security_alert,Hong Leong Bank: Kad debit anda berakhir 3381 telah disekat sementara atas permintaan anda melalui aplikasi HLB Connect pada 08/11/2026 16:02.
+LEGITIMATE,ms,security_alert,"LHDN: Akaun MyTax anda telah dilog masuk pada 04/11/2026 jam 10:32 pagi. Sekiranya bukan anda, tukar kata laluan di mytax.hasil.gov.my."
+LEGITIMATE,mixed,security_alert,"Maybank: New device registered untuk Secure2u pada 03/11/2026. Kalau bukan anda yang buat, please call the number at the back of your card."
+LEGITIMATE,ms,security_alert,"Public Bank: Beberapa percubaan log masuk yang tidak berjaya dikesan pada ID pengguna anda. Demi keselamatan, akses dikunci sementara. Tetapan semula boleh dibuat di pbebank.com atau di mana-mana cawangan."
+LEGITIMATE,ms,security_alert,"CelcomDigi: Kad SIM bagi nombor 019-XXX 4421 telah diganti di pusat khidmat Jalan Kenari pada 09/11/2026. Jika anda tidak membuat penggantian ini, hubungi khidmat pelanggan daripada telefon bimbit anda."
+LEGITIMATE,ms,security_alert,"KWSP: Nombor telefon bimbit bagi i-Akaun anda telah dikemas kini pada 02/11/2026. Jika anda tidak membuat perubahan ini, sila hadir ke mana-mana cawangan KWSP. Rujuk kwsp.gov.my untuk lokasi cawangan."
+LEGITIMATE,ms,card_financing_status,"Bank Rakyat: Pembiayaan Peribadi-i anda sebanyak RM30,000.00 telah dikreditkan ke akaun ****4471 pada 06/11/2026. Jadual bayaran boleh disemak di bankrakyat.com.my."
+LEGITIMATE,ms,card_financing_status,RM0 Maybank: Kad kredit baharu anda berakhir 6032 telah dihantar melalui kurier pada 04/11/2026. Aktifkan kad melalui aplikasi MAE selepas diterima. Panduan di maybank2u.com.my.
+LEGITIMATE,ms,card_financing_status,CIMB: Permohonan kad kredit anda (Ruj: CC2611-00873) sedang diproses. Kami akan memaklumkan keputusan dalam tempoh 7 hari bekerja. Semakan status di cimb.com.my.
+LEGITIMATE,ms,card_financing_status,"Bank Islam: Bayaran bulanan pembiayaan perumahan RM1,412.00 bagi akaun ****8830 telah diterima pada 01/11/2026. Terima kasih. Penyata tersedia di bankislam.com."
+LEGITIMATE,mixed,card_financing_status,"Maybank: Your new debit card dah sampai kat cawangan Taman Melawati. Boleh collect during waktu operasi, bawa kad pengenalan asal ya."
+LEGITIMATE,ms,card_financing_status,"RHB: Had kredit kad anda berakhir 9925 telah dinaikkan kepada RM12,000 berkuat kuasa 10/11/2026 seperti permohonan anda. Butiran di aplikasi RHB Mobile Banking."
+LEGITIMATE,ms,card_financing_status,"Public Bank: Penyata kad kredit Oktober 2026 telah sedia. Jumlah perlu dibayar RM2,318.40, bayaran minimum RM115.92, tarikh akhir 25/11/2026. Lihat e-Penyata di pbebank.com."
+LEGITIMATE,ms,card_financing_status,AmBank: Pembiayaan kenderaan anda no. ****6610 telah selesai dibayar sepenuhnya. Surat pelepasan tuntutan milik akan dipos ke alamat berdaftar dalam 14 hari bekerja.
+LEGITIMATE,ms,card_financing_status,Hong Leong Bank: Kad kredit anda berakhir 3381 telah berjaya diaktifkan pada 08/11/2026. Selamat menggunakan kad anda.
+LEGITIMATE,mixed,card_financing_status,"CIMB: Your Cash Plus application approved. RM15,000.00 akan dikreditkan ke akaun ****2204 dalam 1 hari bekerja. Check status dalam CIMB OCTO app."
+LEGITIMATE,ms,card_financing_status,PTPTN: Bayaran balik pinjaman RM200.00 melalui potongan gaji bagi bulan Oktober 2026 telah diterima. Baki boleh disemak di ptptn.gov.my atau aplikasi myPTPTN.
+LEGITIMATE,ms,card_financing_status,BSN: Permohonan pembiayaan peribadi anda memerlukan dokumen tambahan. Sila hadir ke cawangan BSN tempat anda memohon dengan slip gaji 3 bulan terkini. Senarai dokumen ada di bsn.com.my.
+LEGITIMATE,ms,ewallet,Touch 'n Go eWallet: Tambah nilai RM50.00 berjaya pada 09/11/2026 08:12. Baki semasa RM73.40.
+LEGITIMATE,ms,ewallet,TNG eWallet: Bayaran tol RM4.30 di Plaza Tol Sungai Besi telah ditolak daripada baki eWallet anda melalui RFID. Baki: RM31.85.
+LEGITIMATE,mixed,ewallet,GrabPay: You paid RM12.90 kat KOPITIAM PAK LAH. Baki wallet RM40.10. Tengok resit dalam app Grab > Aktiviti.
+LEGITIMATE,ms,ewallet,Boost: Anda menerima RM20.00 daripada SITI AMINAH. Baki dompet anda kini RM58.75.
+LEGITIMATE,mixed,ewallet,ShopeePay: Top up RM100.00 berjaya! Baki sekarang RM142.30. Transaction ID SP2611098871.
+LEGITIMATE,ms,ewallet,MAE: Pembayaran kod QR RM9.00 kepada GERAI BUAH HAJI ROSLAN berjaya pada 10/11/2026 12:40.
+LEGITIMATE,ms,ewallet,Touch 'n Go eWallet: Auto-tambah nilai RM100.00 telah dilakukan kerana baki anda di bawah RM20.00. Anda boleh mengurus tetapan ini dalam aplikasi atau rujuk touchngo.com.my.
+LEGITIMATE,mixed,ewallet,Setel: Fuel payment RM60.00 di Petronas Jalan Kebun pump 4 dah selesai. You earned 60 Mesra points. Terima kasih!
+LEGITIMATE,ms,ewallet,BigPay: Kad anda berakhir 5527 digunakan untuk RM34.50 di PASAR RAYA SEGAR pada 07/11/2026 18:26. Baki: RM212.08.
+LEGITIMATE,ms,ewallet,"TNG eWallet: Pulangan GO+ harian anda sebanyak RM0.12 telah dikreditkan. Jumlah baki GO+: RM1,460.22."
+LEGITIMATE,mixed,ewallet,Boost: Bill payment untuk Unifi RM139.00 success. Ref BST88120477. Resit ada dalam app under Sejarah.
+LEGITIMATE,ms,ewallet,"Touch 'n Go eWallet: Pengesahan identiti akaun anda telah berjaya. Had dompet anda kini RM20,000. Terma penuh di touchngo.com.my."
+LEGITIMATE,ms,telco,Maxis: Bil anda bagi bulan Oktober 2026 berjumlah RM98.00 telah sedia. Tarikh akhir bayaran 20/11/2026. Lihat bil di aplikasi Maxis atau maxis.com.my.
+LEGITIMATE,ms,telco,CelcomDigi: Anda telah menggunakan 80% daripada kuota data 40GB. Kuota akan diperbaharui pada 15/11/2026. Semak penggunaan di aplikasi atau celcomdigi.com.
+LEGITIMATE,ms,telco,"RM0 U Mobile: Tambah nilai RM30 berjaya. Baki kredit: RM32.15, sah sehingga 09/12/2026."
+LEGITIMATE,mixed,telco,Hotlink: Your RM35 Prepaid Unlimited pass dah aktif. Valid sampai 10/12/2026. Check baki guna app Hotlink.
+LEGITIMATE,ms,telco,unifi Mobile: Terima kasih. Bayaran RM59.00 bagi akaun 10****8823 telah diterima pada 06/11/2026. Resit tersedia di unifi.com.my.
+LEGITIMATE,mixed,telco,Yes 5G: Roaming pass Singapore you dah habis quota 3GB. Internet akan sambung semula bila pass baru dibeli melalui app MyYes.
+LEGITIMATE,ms,telco,Maxis: Kontrak peranti anda bagi talian 012-XXX 6690 akan tamat pada 30/11/2026. Tiada tindakan diperlukan; pelan anda akan diteruskan seperti biasa.
+LEGITIMATE,mixed,telco,Digi: Internet pass harian RM3 auto-renew berjaya. Nak stop auto-renew? Buka app CelcomDigi > Langganan.
+LEGITIMATE,ms,telco,CelcomDigi: Bil bulan November RM65.30 telah dijelaskan melalui autodebit kad berakhir 4410. Terima kasih. Resit tersedia di celcomdigi.com.
+LEGITIMATE,ms,telco,"U Mobile: Permohonan tukar pelan kepada pascabayar 68 telah berjaya dan berkuat kuasa pada kitaran bil seterusnya, 01/12/2026. Maklumat lanjut di u.com.my."
+LEGITIMATE,mixed,telco,redONE: Bill Oct RM38.00 dah ready. Due date 18/11. Bayar di app redONE atau mana-mana kaunter yang biasa. TQ.
+LEGITIMATE,ms,telco,Tune Talk: Kredit anda akan tamat tempoh pada 14/11/2026. Tambah nilai boleh dibuat di kedai serbaneka atau aplikasi Tune Talk untuk mengekalkan talian aktif.
+LEGITIMATE,ms,utility_bill,TNB: Bil elektrik anda bagi akaun 2200****5512 berjumlah RM142.65 telah sedia. Tarikh akhir bayaran 28/11/2026. Semak di aplikasi myTNB atau tnb.com.my.
+LEGITIMATE,ms,utility_bill,Air Selangor: Bil air November 2026 bagi akaun ****7701 ialah RM38.20. Sila jelaskan sebelum 30/11/2026 melalui aplikasi Air Selangor atau airselangor.com.
+LEGITIMATE,ms,utility_bill,unifi: Bil anda RM139.00 (akaun 10****4456) kini tersedia di aplikasi MyUnifi dan unifi.com.my. Bayar sebelum 22/11/2026.
+LEGITIMATE,ms,utility_bill,TNB: Terima kasih. Bayaran RM142.65 untuk akaun 2200****5512 telah diterima pada 10/11/2026. No. resit 884120557. Rekod bayaran di tnb.com.my.
+LEGITIMATE,mixed,utility_bill,TIME Internet: Your November bill RM129.00 dah charged to card ending 2087. Invoice boleh download dari portal Self Care.
+LEGITIMATE,ms,utility_bill,"TNB: Makluman gangguan bekalan berjadual di Taman Seri Indah pada 14/11/2026, 9.00 pagi hingga 1.00 petang bagi kerja penyelenggaraan. Harap maaf atas kesulitan. Kemas kini di tnb.com.my."
+LEGITIMATE,ms,utility_bill,Indah Water: Bil pembetungan bagi tempoh Jul-Dis 2026 sebanyak RM48.00 telah dikeluarkan untuk akaun ****3390. Bayaran boleh dibuat melalui JomPAY atau kaunter IWK.
+LEGITIMATE,mixed,utility_bill,"Unifi: Technician appointment confirmed pada 12/11/2026, slot 2PM-4PM. Pasukan kami akan call sebelum sampai. Nak tukar tarikh, guna app MyUnifi."
+LEGITIMATE,ms,utility_bill,"Ranhill SAJ: Bacaan meter anda bagi November telah direkodkan. Jumlah bil RM27.85, tarikh akhir 05/12/2026."
+LEGITIMATE,ms,utility_bill,Air Selangor: Bekalan air di kawasan Seksyen 7 telah pulih sepenuhnya pada jam 6.30 petang. Terima kasih atas kesabaran anda. Kemas kini lanjut di airselangor.com.
+LEGITIMATE,mixed,utility_bill,"Maxis Fibre: Bill Nov RM99.00 is ready. Auto-debit akan jalan pada 18/11, so tak perlu buat apa-apa."
+LEGITIMATE,ms,utility_bill,TNB: Rebat elektrik RM40.00 di bawah program bantuan kerajaan telah ditolak secara automatik daripada bil November anda. Tiada permohonan diperlukan.
+LEGITIMATE,ms,government,LHDN: Bayaran balik cukai pendapatan Tahun Taksiran 2025 sebanyak RM412.30 telah dikreditkan ke akaun bank berdaftar anda. Semakan di mytax.hasil.gov.my.
+LEGITIMATE,ms,government,"JPJ: Lesen memandu anda akan tamat tempoh pada 15/12/2026. Pembaharuan boleh dibuat melalui aplikasi MyJPJ, jpj.gov.my atau kaunter JPJ."
+LEGITIMATE,ms,government,JPN: MyKad anda telah sedia untuk diambil di JPN Cawangan Petaling Jaya mulai 12/11/2026. Sila bawa resit permohonan. Waktu operasi di jpn.gov.my.
+LEGITIMATE,ms,government,"Imigresen: Pasport anda (No. permohonan PJ2611-004512) sedia diambil di Pejabat Imigresen UTC Sentul. Waktu kutipan 8.00 pagi - 4.30 petang, Isnin hingga Jumaat. Maklumat lanjut di imi.gov.my."
+LEGITIMATE,ms,government,MBPJ: Bil cukai taksiran penggal pertama 2027 bagi akaun ****2291 berjumlah RM186.00. Tarikh akhir bayaran 28/02/2027. Bayaran di kaunter MBPJ atau mbpj.gov.my.
+LEGITIMATE,ms,government,STR: Bayaran Sumbangan Tunai Rahmah Fasa 4 sebanyak RM300 telah dikreditkan terus ke akaun bank anda pada 05/11/2026. Tiada tindakan diperlukan. Semakan status di bantuantunai.hasil.gov.my.
+LEGITIMATE,ms,government,LHDN: Peringatan mesra. Tarikh akhir e-Filing Borang BE bagi Tahun Taksiran 2026 ialah 30 April 2027. Hantar melalui mytax.hasil.gov.my.
+LEGITIMATE,ms,government,JPJ: Cukai jalan kenderaan WXX 1234 telah berjaya diperbaharui sehingga 09/11/2027. Paparan digital tersedia dalam aplikasi MyJPJ. Rekod juga boleh disemak di jpj.gov.my.
+LEGITIMATE,ms,government,KWSP: Caruman bulan Oktober 2026 sebanyak RM715.00 daripada majikan anda telah dikreditkan. Semak penyata di aplikasi KWSP i-Akaun atau kwsp.gov.my.
+LEGITIMATE,mixed,government,PERKESO: Claim faedah hilang upaya sementara anda dah diluluskan. RM640.00 akan masuk akaun bank berdaftar dalam 7 hari bekerja. Info lanjut di perkeso.gov.my.
+LEGITIMATE,ms,government,DBKL: Kompaun letak kereta no. K2611****87 sebanyak RM30.00 telah dijelaskan. Terima kasih. No. resit 20261108-5521. Semakan di dbkl.gov.my.
+LEGITIMATE,ms,government,Bantuan SARA: Kredit RM100 bagi bulan November telah dimasukkan ke MyKad anda. Gunakan di kedai yang menyertai program. Tiada pendaftaran semula diperlukan.
+LEGITIMATE,ms,delivery_courier,Pos Malaysia: Bungkusan anda EP123456789MY telah tiba di Pusat Mel Shah Alam dan akan dihantar hari ini. Jejak di pos.com.my.
+LEGITIMATE,mixed,delivery_courier,J&T Express: Parcel 630012345678 is out for delivery harini. Rider akan call sebelum sampai ya.
+LEGITIMATE,mixed,delivery_courier,Ninja Van: Hi! Parcel anda dari KEDAI NORA dah delivered & diterima oleh 'Aiman (adik)' pada 09/11 3:42PM.
+LEGITIMATE,ms,delivery_courier,Pos Laju: Cubaan penghantaran bagi item EH987654321MY tidak berjaya kerana tiada penerima. Item boleh dituntut di Pejabat Pos Bangi dalam masa 5 hari bekerja dengan membawa kad pengenalan. Jejak di pos.com.my.
+LEGITIMATE,mixed,delivery_courier,SPX Express: Your parcel SPXMY0412345678 dah sampai hub Puchong. Expected delivery esok 11/11. Track dalam app Shopee.
+LEGITIMATE,ms,delivery_courier,"DHL eCommerce: Bungkusan anda no. 5412****9087 telah diserahkan di kaunter peti surat pangsapuri pada 08/11/2026, 11.20 pagi."
+LEGITIMATE,mixed,delivery_courier,GDEX: Consignment MY55120098 delay sikit sebab cuaca. New ETA 12/11. Sorry for the inconvenience.
+LEGITIMATE,ms,delivery_courier,City-Link: Penghantaran anda 0602****4471 dijadualkan pada 11/11/2026 antara 9 pagi hingga 6 petang.
+LEGITIMATE,mixed,delivery_courier,"Flash Express: COD parcel RM45.00 dari BUTIK HANA akan sampai today. Kalau tak ada kat rumah, rider akan cuba lagi esok."
+LEGITIMATE,ms,delivery_courier,Pos Malaysia: Item berdaftar RR456123789MY telah diterima dan ditandatangani oleh penerima pada 07/11/2026. Rekod penghantaran di pos.com.my.
+LEGITIMATE,mixed,delivery_courier,"Lalamove: Driver Encik Rahman (van, VBX 4412) dah pickup barang you. Anggaran sampai 25 minit."
+LEGITIMATE,ms,delivery_courier,Skynet: Bungkusan 2388****1205 kini berada di depoh Kuantan. Anggaran penghantaran: 12/11/2026.
+LEGITIMATE,mixed,ecommerce_order,Shopee: Order 2611093KXY88 dah shipped! Seller guna SPX Express. Track your parcel dalam app atau shopee.com.my.
+LEGITIMATE,ms,ecommerce_order,Lazada: Pesanan anda #3384****9120 telah disahkan. Jumlah RM67.80 dibayar melalui FPX. Jangkaan penghantaran 12-14 Nov. Semak di lazada.com.my.
+LEGITIMATE,ms,ecommerce_order,Shopee: Bayaran balik RM35.90 bagi pesanan 2610284MNP21 telah dikreditkan ke ShopeePay anda.
+LEGITIMATE,mixed,ecommerce_order,"TikTok Shop: Your order is confirmed. 2 item, total RM48.00. Seller akan pos dalam 2 hari."
+LEGITIMATE,ms,ecommerce_order,Lazada: Pesanan #3384****9120 telah berjaya dihantar. Terima kasih kerana membeli-belah bersama kami. Butiran pesanan di lazada.com.my.
+LEGITIMATE,mixed,ecommerce_order,"Zalora: Return request diterima. Drop parcel kat mana-mana kaunter Pos Laju sebelum 15/11, refund diproses lepas kami terima barang."
+LEGITIMATE,ms,ecommerce_order,Shopee: Penjual telah membatalkan pesanan 2611051QRS77 kerana kehabisan stok. Bayaran RM120.00 akan dipulangkan ke kaedah pembayaran asal dalam 3-5 hari bekerja. Butiran di shopee.com.my.
+LEGITIMATE,mixed,ecommerce_order,"Hi Puan Suraya, order tudung bawal 3 helai (RM87) dah siap packing, esok pagi kami pos. Tracking number kami WhatsApp kemudian. - Butik Seri Kasih"
+LEGITIMATE,ms,ecommerce_order,Mudah.my: Iklan anda 'Meja makan kayu jati' telah diluluskan dan kini dipaparkan.
+LEGITIMATE,ms,ecommerce_order,"Lazada: Baucar penghantaran percuma anda akan tamat pada 11/11/2026, 11.59 malam. Baucar tersedia di halaman 'Baucar Saya' dalam aplikasi."
+LEGITIMATE,mixed,ecommerce_order,"IKEA: Order 1234567890 ready for collection kat IKEA Cheras, kaunter Click & Collect. Bawa email pengesahan sekali."
+LEGITIMATE,ms,ecommerce_order,Shopee: Pesanan 2611093KXY88 telah diterima. Dana RM54.20 telah dilepaskan kepada penjual. Anda boleh menilai produk dalam aplikasi atau di shopee.com.my.
+LEGITIMATE,mixed,ride_food,"Grab: Driver anda, Hafiz (Perodua Bezza, WA 5521 K) dah sampai pickup point. Please be ready ya."
+LEGITIMATE,mixed,ride_food,foodpanda: Order #k9x2-4471 dari NASI KANDAR BESTARI on the way! Rider sampai lebih kurang 12 minit.
+LEGITIMATE,ms,ride_food,Grab: Resit perjalanan anda pada 09/11/2026. Tambang RM14.00 dibayar dengan GrabPay. Terima kasih kerana menggunakan Grab.
+LEGITIMATE,mixed,ride_food,"GrabFood: Sorry, restoran dah tutup awal so order you dibatalkan. Refund RM23.50 masuk balik GrabPay wallet dalam beberapa minit."
+LEGITIMATE,mixed,ride_food,ShopeeFood: Rider dah collect makanan you dari AYAM PENYET WAK DIN. Sila standby kat lobby.
+LEGITIMATE,ms,ride_food,"AirAsia Ride: Tempahan perjalanan anda ke KLIA2 pada 12/11/2026, 4.30 pagi telah disahkan. Butiran pemandu akan dihantar 15 minit sebelum waktu ambil."
+LEGITIMATE,mixed,ride_food,Grab: Your ride ke Mid Valley dah completed. Total RM11.00 (tunai). Jangan lupa rate driver.
+LEGITIMATE,ms,ride_food,foodpanda: Pesanan anda telah dihantar. Jumlah RM31.40 dibayar dengan kad berakhir 4410. Selamat menjamu selera!
+LEGITIMATE,mixed,ride_food,"Maxim: Driver on the way, Proton Saga putih JQR 8810, ETA 4 min. Tambang anggaran RM7."
+LEGITIMATE,ms,ride_food,Grab: Pemandu anda telah membatalkan perjalanan. Kami sedang mencari pemandu lain untuk anda. Tiada caj dikenakan.
+LEGITIMATE,mixed,ride_food,"Hai, saya rider foodpanda. Dah sampai depan guard house, tapi guard tak bagi masuk. Boleh turun ambil kat pondok? Order nasi lemak 2 bungkus."
+LEGITIMATE,ms,ride_food,GrabFood: Pesanan #GF-5512 sedang disediakan oleh restoran. Anggaran masa penghantaran: 1.15 tengah hari.
+LEGITIMATE,ms,healthcare,"Klinik Kesihatan Bandar Baru: Peringatan temu janji anda pada 13/11/2026, 8.30 pagi di Bilik 4. Sila bawa kad temu janji dan MyKad."
+LEGITIMATE,mixed,healthcare,"Hi Encik Azlan, reminder appointment scaling di Klinik Pergigian Damai esok 11/11 pukul 3.00pm. Kalau tak dapat hadir, call 03-1234 5678 ya."
+LEGITIMATE,ms,healthcare,Hospital Sultanah Aminah: Keputusan ujian darah anda telah sedia. Sila hadir ke Klinik Pakar Perubatan pada tarikh temu janji 18/11/2026 untuk perbincangan bersama doktor.
+LEGITIMATE,mixed,healthcare,"Klinik Dr. Farah: Ubat repeat you dah ready, boleh collect kat kaunter farmasi anytime waktu klinik (9am-9pm). Bawa kad rawatan."
+LEGITIMATE,ms,healthcare,"MySejahtera: Temu janji vaksin influenza anda disahkan pada 14/11/2026, 10.00 pagi di Klinik Kesihatan Seksyen 19."
+LEGITIMATE,mixed,healthcare,"Hospital Pakar Seri Damai: Your appointment dengan Dr. Tan (Ortopedik) confirmed 20/11/2026, 11.15am, Level 2 Klinik 2-08. Please datang 15 minit awal untuk registration."
+LEGITIMATE,ms,healthcare,Pusat Darah Negara: Terima kasih kerana menderma darah pada 01/11/2026. Anda layak menderma semula selepas 01/02/2027.
+LEGITIMATE,mixed,healthcare,"Farmasi Sihat: Puan Rohani, supplement yang you order (Vit D3 60 biji) dah sampai stok. Boleh datang ambil, kami simpan sampai Sabtu."
+LEGITIMATE,ms,healthcare,"Hospital Kuala Lumpur: Temu janji klinik mata anda pada 17/11/2026 telah ditunda ke 24/11/2026, 2.00 petang kerana pakar bercuti. Harap maklum."
+LEGITIMATE,mixed,healthcare,"Lab report untuk medical check-up tuan dah siap. Soft copy kami dah email, hard copy boleh ambil di kaunter. - Klinik Medijaya Jalan Tujuh"
+LEGITIMATE,ms,healthcare,"Klinik Kanak-Kanak Aisyah: Imunisasi 18 bulan bagi anak anda, Adam Mikhail, dijadualkan pada 19/11/2026. Sila bawa buku rekod kesihatan."
+LEGITIMATE,ms,education,"SK Taman Permata: Makluman kepada ibu bapa. Hari Anugerah Kecemerlangan akan diadakan pada 21/11/2026, 8.00 pagi di dewan sekolah. Murid hadir berpakaian seragam lengkap."
+LEGITIMATE,mixed,education,"Tadika Ceria: Dear parents, esok Rabu ada sukaneka. Anak-anak pakai baju sukan & bawa botol air. Balik awal pukul 11.30am ya."
+LEGITIMATE,ms,education,"UiTM: Keputusan peperiksaan akhir semester boleh disemak melalui portal pelajar mulai 12/11/2026, 12.00 tengah hari."
+LEGITIMATE,mixed,education,"Group Kelas 5 Bestari: Assalamualaikum ibu bapa, mesyuarat PIBG hari Sabtu ni 9am kat dewan. Parking dalam kawasan sekolah, masuk ikut pintu B. Sarapan disediakan."
+LEGITIMATE,ms,education,Universiti Malaya: Pendaftaran kursus bagi Semester 2 Sesi 2026/2027 dibuka dari 16 hingga 20 November 2026 melalui sistem pelajar universiti.
+LEGITIMATE,mixed,education,"Cikgu Liyana: Reminder, homework Matematik muka surat 45-46 hantar Khamis. Parents tolong check buku latihan anak ya, thank you."
+LEGITIMATE,ms,education,SMK Seri Mutiara: Sesi persekolahan pada 13/11/2026 digantikan dengan pembelajaran di rumah kerana dewan digunakan sebagai pusat peperiksaan SPM. Jadual dihantar melalui guru kelas.
+LEGITIMATE,mixed,education,Pusat Tuisyen Bijak: Kelas Add Maths Form 5 malam ni postponed ke Sabtu 10am sebab cikgu demam. Sorry semua.
+LEGITIMATE,ms,education,KPM: Bantuan Awal Persekolahan RM150 bagi murid berdaftar akan disalurkan melalui pihak sekolah. Ibu bapa tidak perlu membuat sebarang permohonan. Maklumat rasmi di moe.gov.my.
+LEGITIMATE,mixed,education,Taska Permata Hati: Fees bulan November RM380 dah kami terima. Terima kasih mommy Aqil! Resit dalam beg anak.
+LEGITIMATE,ms,education,Politeknik Shah Alam: Majlis konvokesyen ke-25 akan berlangsung pada 28/11/2026. Graduan boleh mengambil jubah di Unit Hal Ehwal Pelajar mulai 23/11/2026.
+LEGITIMATE,ms,insurance_takaful,"Etiqa Takaful: Sijil takaful motor anda bagi kenderaan WXX 1234 akan tamat pada 05/12/2026. Pembaharuan boleh dibuat di etiqa.com.my, aplikasi Etiqa+ atau melalui ejen anda."
+LEGITIMATE,ms,insurance_takaful,Takaful Ikhlas: Sumbangan bulanan RM150.00 bagi sijil ****4471 telah berjaya didebit pada 05/11/2026. Terima kasih.
+LEGITIMATE,mixed,insurance_takaful,"Hi Puan Zainab, ni Farid agent takaful puan. Roadtax & insurance kereta Myvi expire 30/11. Quotation tahun ni RM612, NCD 55% macam biasa. Nak proceed nanti bagitahu je ya."
+LEGITIMATE,ms,insurance_takaful,"Prudential BSN Takaful: Tuntutan perubatan anda (Ruj: CLM-2611-00392) telah diluluskan. Bayaran RM1,280.00 akan dikreditkan ke akaun berdaftar dalam 5 hari bekerja."
+LEGITIMATE,ms,insurance_takaful,AIA: Penyata tahunan polisi ****8802 bagi 2026 kini tersedia di aplikasi My AIA dan aia.com.my.
+LEGITIMATE,ms,insurance_takaful,Zurich Takaful: Perlindungan takaful kebakaran bagi rumah anda telah diperbaharui sehingga 14/11/2027. e-Sijil dihantar ke e-mel berdaftar.
+LEGITIMATE,mixed,insurance_takaful,Allianz: Your motor claim untuk WXX 1234 dah assigned ke panel workshop Bengkel Jaya Auto. Workshop akan contact you untuk tarikh repair.
+LEGITIMATE,ms,insurance_takaful,"Great Eastern Takaful: Peringatan mesra, sumbangan tahunan RM2,400.00 bagi sijil ****1190 perlu dijelaskan sebelum 30/11/2026 melalui aplikasi atau kaunter kami."
+LEGITIMATE,ms,insurance_takaful,Etiqa: e-Nota perlindungan motor anda (No. ****7730) telah dikeluarkan dan rekod JPJ telah dikemas kini. Tiada salinan bercetak diperlukan. Semak di etiqa.com.my.
+LEGITIMATE,mixed,insurance_takaful,"Takaful Malaysia: Cash back 15% untuk sijil motor tahun lepas, RM88.20, dah credited ke akaun bank you. No action needed."
+LEGITIMATE,ms,insurance_takaful,PERKESO: Caruman Skim Keselamatan Sosial Pekerjaan Sendiri anda aktif sehingga 31/10/2027. Sijil boleh dimuat turun di perkeso.gov.my.
+LEGITIMATE,ms,subscription,Astro: Bil November RM104.95 bagi akaun ****6652 telah sedia. Bayaran autodebit akan dibuat pada 15/11/2026. Butiran di aplikasi My Astro atau astro.com.my.
+LEGITIMATE,mixed,subscription,Netflix: Your membership dah renew. RM44.90 charged ke kad ending 4410 pada 08/11/2026.
+LEGITIMATE,mixed,subscription,Spotify Premium: Payment RM17.50 berjaya. Next billing date 09/12/2026. Manage plan dalam account settings.
+LEGITIMATE,ms,subscription,Touch 'n Go: Langganan PayDirect bagi kad ****7781 kekal aktif. Tiada caj tambahan dikenakan. Rujuk touchngo.com.my.
+LEGITIMATE,mixed,subscription,"FitZone Gym: Membership bulanan you auto-renew 01/12, RM120 debit dari kad yang sama. Nak freeze, inform kaunter before 25/11."
+LEGITIMATE,ms,subscription,Google Play: Langganan storan 100GB anda telah diperbaharui pada 07/11/2026. RM8.49 dicaj melalui bil telefon.
+LEGITIMATE,ms,subscription,Akhbar digital: Langganan tahunan anda akan tamat pada 30/11/2026. Pembaharuan automatik dimatikan; tiada caj akan dikenakan.
+LEGITIMATE,mixed,subscription,"Disney+ Hotstar: Plan tahunan you expire 20/11/2026. Auto-renew is ON, RM199.90 akan dicaj pada tarikh tu."
+LEGITIMATE,ms,subscription,"Apple: Resit anda. iCloud+ 50GB, RM3.90, dicaj pada 06/11/2026 kepada kaedah pembayaran berdaftar."
+LEGITIMATE,mixed,subscription,"Kak Mah Catering: Langganan lunch box bulan Nov (22 hari, RM264) confirm ya dik. Start hantar Isnin, macam biasa letak kat guard."
+LEGITIMATE,ms,subscription,YouTube Premium: Tempoh percubaan percuma anda tamat pada 13/11/2026. Selepas itu RM17.90 sebulan akan dicaj. Anda boleh membatalkan pada bila-bila masa dalam tetapan akaun.
+LEGITIMATE,ms,employer_hr,HR: Gaji bulan Oktober 2026 telah dikreditkan pada 28/10/2026. Slip gaji boleh dimuat turun melalui portal pekerja.
+LEGITIMATE,mixed,employer_hr,"Team, reminder: claim bulan Oktober kena submit dalam system before Friday 5pm. Lambat masuk payroll bulan depan. - Finance"
+LEGITIMATE,mixed,employer_hr,"Hi Aina, cuti tahunan you 17-18 Nov dah approved by Encik Kamal. Baki cuti: 6 hari."
+LEGITIMATE,ms,employer_hr,Makluman HR: Pejabat akan ditutup pada 20/11/2026 sempena cuti peristiwa. Operasi disambung semula pada 23/11/2026.
+LEGITIMATE,mixed,employer_hr,"Shift esok tukar sikit ya: Danial masuk 7am-3pm, Mei Ling 3pm-11pm. Any problem inform supervisor malam ni."
+LEGITIMATE,ms,employer_hr,Jabatan Sumber Manusia: Borang EA bagi tahun 2026 akan diedarkan melalui e-mel rasmi sebelum 28 Februari 2027. Panduan e-Filing di hasil.gov.my.
+LEGITIMATE,mixed,employer_hr,"Dear all, townhall Q4 pada Khamis 19/11, 10am kat Level 5 auditorium. Attendance wajib untuk semua department."
+LEGITIMATE,ms,employer_hr,Payroll: Bonus tahunan akan dibayar bersama gaji Disember pada 24/12/2026. Potongan KWSP dan PCB tertakluk seperti biasa.
+LEGITIMATE,mixed,employer_hr,"Encik Rizal, medical claim RM85 (klinik panel) dah reimbursed sekali dengan gaji bulan ni. Thanks."
+LEGITIMATE,ms,employer_hr,"HR: Pengesahan jawatan anda berkuat kuasa 01/11/2026 telah diluluskan. Surat rasmi boleh diambil di Unit Sumber Manusia, Aras 3."
+LEGITIMATE,mixed,employer_hr,"Reminder staff: training keselamatan kebakaran esok 9.00am, kumpul kat assembly point B. Pakai kasut tertutup."
+LEGITIMATE,mixed,recruiter_interview,"Hi Encik Syafiq, saya Amira dari HR Teguh Logistik Sdn Bhd. We'd like to invite you untuk interview jawatan Admin Executive pada 14/11, 10am di office kami di Shah Alam. Boleh confirm kehadiran?"
+LEGITIMATE,ms,recruiter_interview,Suruhanjaya Perkhidmatan Awam: Anda dipanggil menghadiri temu duga jawatan Pembantu Tadbir N19 pada 25/11/2026. Semak butiran di portal rasmi spa.gov.my.
+LEGITIMATE,mixed,recruiter_interview,"Hi Mei Yee, thanks for applying. Interview second round dengan Head of Marketing akan buat online, Rabu 18/11 2.30pm. Link meeting kami hantar ke email you."
+LEGITIMATE,mixed,recruiter_interview,"Salam, ini dari Restoran Selera Kampung. Awak ada apply kerja waiter kan? Boleh datang walk-in interview esok pukul 3 petang, bawa resume je."
+LEGITIMATE,ms,recruiter_interview,Terima kasih kerana memohon jawatan Jurutera Projek di Binaan Maju Sdn Bhd. Permohonan anda sedang disemak dan calon yang disenarai pendek akan dihubungi dalam masa dua minggu.
+LEGITIMATE,mixed,recruiter_interview,"Hi Hakim, sorry nak reschedule interview you dari Isnin ke Selasa 17/11, same time 11am. Interviewer ada meeting urgent. Is that okay?"
+LEGITIMATE,ms,recruiter_interview,Dukacita dimaklumkan permohonan anda bagi jawatan Pegawai Khidmat Pelanggan tidak berjaya pada kali ini. Kami menghargai minat anda dan akan menyimpan resume anda untuk kekosongan akan datang.
+LEGITIMATE,mixed,recruiter_interview,"Tahniah Puan Nadia! You berjaya untuk position Account Assistant. Offer letter kami email hari ni, please sign & reply by 16/11. Start date 1 Dec."
+LEGITIMATE,mixed,recruiter_interview,JobStreet: Majikan Seri Tech Solutions dah view application you untuk Junior Developer. Check status dalam app.
+LEGITIMATE,ms,recruiter_interview,MYFutureJobs: Terdapat 3 kekosongan baharu yang sepadan dengan profil anda. Log masuk ke portal MYFutureJobs untuk melihat butiran.
+LEGITIMATE,mixed,recruiter_interview,"Reminder interview esok 9.30am, Menara Harmoni Level 12. Parking visitor kat B2, daftar dulu di kaunter lobby. Jumpa esok! - Amira HR"
+LEGITIMATE,ms,booking_confirmation,"KTMB: Tempahan tiket ETS anda disahkan. KL Sentral - Ipoh, 15/11/2026, 9.10 pagi, Koc C Tempat Duduk 12A. No. tempahan 8841****20. Semak di ktmb.com.my."
+LEGITIMATE,mixed,booking_confirmation,"AirAsia: Booking confirmed! KUL-KBR 21/11/2026 7.25am, booking no. QX7K2M. Web check-in dah buka dalam app AirAsia MOVE. Urus tempahan di airasia.com."
+LEGITIMATE,mixed,booking_confirmation,"Hi, booking meja untuk 6 orang at Restoran Tepi Sawah pada Sabtu 14/11, 8pm dah confirm atas nama Puan Lina. Jumpa nanti!"
+LEGITIMATE,ms,booking_confirmation,Malaysia Airlines: Penerbangan MH1432 KUL-LGK pada 22/11/2026 berlepas 14:05. Daftar masuk dalam talian dibuka 48 jam sebelum berlepas di malaysiaairlines.com.
+LEGITIMATE,mixed,booking_confirmation,"Homestay D'Sawah: Booking 2 malam (28-30 Nov) confirm. Deposit RM100 received, balance RM260 bayar masa check-in. Check-in 3pm."
+LEGITIMATE,ms,booking_confirmation,"GSC: Tempahan anda berjaya. 2 tiket, Dewan 5, 13/11/2026 9.00 malam, tempat duduk H7-H8. Tunjukkan kod QR dalam aplikasi di pintu masuk."
+LEGITIMATE,mixed,booking_confirmation,Salun Rania: Appointment rebonding you confirm Ahad 15/11 pukul 11am dengan stylist Kak Wani. Kalau lambat lebih 15 minit slot terlepas ya.
+LEGITIMATE,ms,booking_confirmation,"JPJ: Slot temu janji anda di JPJ Wangsa Maju pada 16/11/2026, 10.30 pagi bagi urusan tukar hak milik telah disahkan. Sila hadir 10 minit lebih awal. Senarai dokumen di jpj.gov.my."
+LEGITIMATE,mixed,booking_confirmation,"Bengkel Ah Seng: Servis kereta WXX 1234 booked for Jumaat 13/11, 9am. Estimate RM280 (minyak hitam + filter). Kereta boleh ambil petang."
+LEGITIMATE,ms,booking_confirmation,"Agoda: Tempahan anda di Hotel Seri Pantai, Kuala Terengganu disahkan. Daftar masuk 05/12/2026, daftar keluar 07/12/2026. ID tempahan 9912****45."
+LEGITIMATE,ms,booking_confirmation,Dewan Komuniti Taman Bukit Indah: Tempahan dewan bagi majlis kenduri pada 06/12/2026 telah diluluskan. Kunci boleh diambil di pejabat pengurusan sehari sebelum majlis.
+LEGITIMATE,ms,safety_awareness,"RM0 Maybank: Kami tidak akan meminta kata laluan, TAC atau nombor kad anda melalui SMS, panggilan atau e-mel. Sentiasa taip maybank2u.com.my sendiri di pelayar anda."
+LEGITIMATE,ms,safety_awareness,"CIMB: Peringatan keselamatan. CIMB tidak menghantar pautan melalui SMS. Jika anda menerima SMS berpautan atas nama kami, jangan klik. Maklumat lanjut di cimb.com.my."
+LEGITIMATE,ms,safety_awareness,"BNM: Bank Negara Malaysia tidak pernah menghubungi orang awam untuk meminta pindahan wang ke akaun pihak ketiga. Jika ragu-ragu, hubungi bank anda atau Pusat Respons Scam Kebangsaan 997. Rujuk bnm.gov.my."
+LEGITIMATE,ms,safety_awareness,"Bank Islam: Jangan sesekali berkongsi ID pengguna, kata laluan atau kod TAC. Kakitangan kami tidak akan memintanya. Layari bankislam.com hanya dengan menaip alamat tersebut sendiri."
+LEGITIMATE,ms,safety_awareness,LHDN: LHDN tidak menghantar pautan bayaran balik cukai melalui SMS atau WhatsApp. Semua urusan dibuat melalui mytax.hasil.gov.my sahaja.
+LEGITIMATE,mixed,safety_awareness,"Touch 'n Go eWallet: Reminder, kami takkan call minta PIN atau OTP you. Kalau ada yang minta, itu bukan kami. Report melalui Help Centre dalam app."
+LEGITIMATE,ms,safety_awareness,PDRM: Semak nombor akaun dan nombor telefon yang mencurigakan di portal Semak Mule sebelum membuat sebarang pindahan wang. Mangsa penipuan boleh menghubungi talian 997.
+LEGITIMATE,ms,safety_awareness,Bank Rakyat: Pihak bank tidak akan meminta anda memuat turun aplikasi daripada pautan atau fail APK. Muat turun aplikasi rasmi hanya daripada gedung aplikasi rasmi. Rujuk bankrakyat.com.my.
+LEGITIMATE,ms,safety_awareness,"KWSP: KWSP tidak melantik ejen bagi urusan pengeluaran. Semua perkhidmatan adalah percuma di kaunter, aplikasi i-Akaun dan kwsp.gov.my."
+LEGITIMATE,mixed,safety_awareness,"Shopee: Friendly reminder, jangan buat payment di luar platform Shopee walaupun seller minta. Semua urusan rasmi hanya dalam app atau shopee.com.my."
+LEGITIMATE,ms,safety_awareness,Pos Malaysia: Kami tidak mengenakan sebarang caj penghantaran semula melalui pautan SMS. Semak status bungkusan anda hanya di pos.com.my atau aplikasi Pos Malaysia.

@@ -59,6 +59,8 @@ spam-versus-scam distinction. It was therefore not merged into Task 3 training d
 
 Model v2 adds 1,377 machine translations of training-split rows of the source above (CC BY 4.0,
 attribution kept); see [the data card](../data/processed/malay_translation/README.md). Validation,
-test and challenge rows were never translated. Challenge set v3 (`data/challenge_v3`) is
-evaluation-only and was used once on 10 November 2026; see
+test and challenge rows were never translated. Model v3 also adds 600 AI-written
+institutional notices ([data card](../data/processed/notices_v1/README.md)). Challenge sets v3
+and v4 (`data/challenge_v3`, `data/challenge_v4`) are evaluation-only and were each used once on
+10 November 2026; see
 [the upgrade record](IMPROVEMENTS_2026-11-10.md).

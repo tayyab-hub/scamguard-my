@@ -1,0 +1,110 @@
+{
+  "engine": {
+    "model": "message-tfidf-logreg-v3",
+    "rules": "message-rules-v4",
+    "fusion": "message-fusion-v5"
+  },
+  "levels_by_label": {
+    "SCAM": {
+      "HIGH": 50,
+      "ELEVATED": 26,
+      "CAUTION": 17,
+      "LOW": 7
+    },
+    "SPAM": {
+      "CAUTION": 7,
+      "LOW": 13,
+      "HIGH": 1,
+      "ELEVATED": 4
+    },
+    "LEGITIMATE": {
+      "LOW": 78,
+      "ELEVATED": 6,
+      "CAUTION": 31
+    }
+  },
+  "all": {
+    "scam_warned": [
+      0.93,
+      100
+    ],
+    "scam_elevated_or_high": [
+      0.76,
+      100
+    ],
+    "scam_missed": [
+      0.07,
+      100
+    ],
+    "legitimate_warned": [
+      0.3217,
+      115
+    ],
+    "legitimate_elevated_or_high": [
+      0.0522,
+      115
+    ],
+    "spam_warned": [
+      0.48,
+      25
+    ]
+  },
+  "english": {
+    "scam_elevated_or_high": [
+      0.6863,
+      51
+    ],
+    "scam_missed": [
+      0.098,
+      51
+    ],
+    "legitimate_warned": [
+      0.3509,
+      57
+    ]
+  },
+  "malay_or_mixed": {
+    "scam_elevated_or_high": [
+      0.8367,
+      49
+    ],
+    "scam_missed": [
+      0.0408,
+      49
+    ],
+    "legitimate_warned": [
+      0.2931,
+      58
+    ]
+  },
+  "scams_with_link_elevated_or_high": [
+    0.9444,
+    36
+  ],
+  "scams_with_phone_elevated_or_high": [
+    0.8333,
+    18
+  ],
+  "scams_no_link_or_phone_elevated_or_high": [
+    0.587,
+    46
+  ],
+  "legitimate_with_link_warned": [
+    0.1786,
+    28
+  ],
+  "legitimate_without_link_warned": [
+    0.3678,
+    87
+  ],
+  "excluding_ambiguous": {
+    "scam_elevated_or_high": [
+      0.7917,
+      96
+    ],
+    "legitimate_warned": [
+      0.3158,
+      114
+    ]
+  }
+}

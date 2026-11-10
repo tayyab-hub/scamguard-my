@@ -1,4 +1,4 @@
-# Versioned Message advisory policy (message-fusion-v4). A logistic calibrator learned from
+# Versioned Message advisory policy (message-fusion-v5). A logistic calibrator learned from
 # out-of-fold data combines model class probabilities with the rule score into a calibrated
 # share of similar historical messages that were scams. Fixed probability bands map that score to
 # a category; documented scam-tactic playbooks can only raise it. Confidence stays separate.
@@ -18,10 +18,10 @@ from app.ml.ai_review import AIReview, AIStatus
 from app.ml.classifier import Classification
 from app.ml.rules import SAFETY_CONTEXT, TACTIC_CATEGORIES, RuleAssessment
 
-FUSION_VERSION = "message-fusion-v4"
-CALIBRATOR_PATH = Path(__file__).resolve().parent / "artifacts" / "message_fusion_v4.json"
+FUSION_VERSION = "message-fusion-v5"
+CALIBRATOR_PATH = Path(__file__).resolve().parent / "artifacts" / "message_fusion_v5.json"
 # Pinned like the model artifact: a changed calibrator must be regenerated and re-reviewed.
-EXPECTED_CALIBRATOR_SHA256 = "40276ce2d916b0e14158cfa3bce3db54e0132a3766dfca3c071198df0e580ee8"
+EXPECTED_CALIBRATOR_SHA256 = "a7f2fd7267d1e4a27f645786a3ff667193271720b81da3e818d2b3adfcd7814f"
 MIN_RULE_CONTEXT = 0.25
 MIN_MODEL_CONFIDENCE = 0.55
 STRONG_RULE_SCORE = 0.72
@@ -31,9 +31,9 @@ AI_MAX_CONTRIBUTION = 0.18
 CONFIDENCE_MODEL_WEIGHT = 0.7
 CONFIDENCE_EVIDENCE_WEIGHT = 0.3
 EPSILON = 1e-3  # extreme model outputs must not let one logit swamp the others
-# Class shares of the 6,014 v4 calibration rows (738 SCAM, 609 SPAM: 4,637 English plus 1,377
-# Malay/Manglish translations), used when no vocabulary matches.
-NO_FEATURE_PRIOR = {"LEGITIMATE": 0.7760, "SCAM": 0.1227, "SPAM": 0.1013}
+# Class shares of the 6,614 v5 calibration rows (938 SCAM, 609 SPAM: 4,637 English, 1,377
+# Malay/Manglish translations and 600 written notices), used when no vocabulary matches.
+NO_FEATURE_PRIOR = {"LEGITIMATE": 0.7661, "SCAM": 0.1418, "SPAM": 0.0921}
 
 # Playbooks that are well documented in public scam advisories but nearly absent from the
 # training SMS data. They set a minimum category rather than a learned probability, so the score

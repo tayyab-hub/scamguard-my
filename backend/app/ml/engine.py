@@ -87,6 +87,7 @@ class MessageIntelligenceEngine:
             )
         result = fuse(text, classification, rules, ai)
         result = self._apply_embedded(result, embedded)
+        result = self._official_channel(result, rules, embedded)
         return self._present(classification, rules, ai, result, embedded)
 
     # A risky link or number inside the message raises the Message category to the same level;
@@ -112,6 +113,40 @@ class MessageIntelligenceEngine:
             risk_level=RiskLevel(top.risk_level),
             risk_score=round(max(result.risk_score or 0.0, floor), 4),
             reason="EMBEDDED_LINK" if top.kind == "LINK" else "EMBEDDED_PHONE",
+        )
+
+    # A notice whose only way to act is a recognised official site, with no phone number, no
+    # other link and no request, threat, deadline or other tactic, gives a scammer nothing to
+    # gain. The model's resemblance to scam wording is then capped: below Caution when the rules
+    # found at most a sender name or delivery wording, at Caution when money words also appear.
+    @staticmethod
+    def _official_channel(
+        result: FusionResult, rules: RuleAssessment, embedded: list[EmbeddedFinding]
+    ) -> FusionResult:
+        links = [f for f in embedded if f.kind == "LINK"]
+        if (
+            not links
+            or not all(f.trusted for f in links)
+            or any(f.kind == "PHONE" for f in embedded)
+            or result.risk_score is None
+            or result.reason not in {"CALIBRATED_SIGNALS", "UNCORROBORATED_MODEL", "LIKELY_SPAM"}
+        ):
+            return result
+        categories = {indicator.category for indicator in rules.indicators}
+        bands = thresholds()
+        if categories <= {"IMPERSONATION", "DELIVERY_ACCOUNT"}:
+            cap, level = bands["CAUTION"] - 0.0001, RiskLevel.LOW
+        elif categories <= {"IMPERSONATION", "DELIVERY_ACCOUNT", "FINANCIAL"}:
+            cap, level = bands["ELEVATED"] - 0.0001, RiskLevel.CAUTION
+        else:
+            return result
+        if result.risk_score <= cap:
+            return result
+        return replace(
+            result,
+            risk_level=level,
+            risk_score=round(cap, 4),
+            reason="OFFICIAL_CHANNEL_NOTICE",
         )
 
     # Turn component evidence and FusionResult into user-readable reasons/actions plus saved
@@ -325,6 +360,11 @@ class MessageIntelligenceEngine:
                 "The text warns the reader not to share or act and asks for nothing, which is "
                 "typical of genuine notices; the warning is capped at Caution."
             ),
+            "OFFICIAL_CHANNEL_NOTICE": (
+                "The only way to act on this text is a recognised official site, and it asks for "
+                "no reply, call, details or payment elsewhere; the model's resemblance to scam "
+                "wording is capped. Type the address yourself rather than trusting the sender."
+            ),
             "SERVICE_NOTICE": (
                 "The text reads like a service notice that points to a channel you already "
                 "have and asks for no link, details or payment; the warning is capped at Caution."
@@ -401,8 +441,9 @@ class MessageIntelligenceEngine:
             limitations=[
                 "This is decision support, not proof that a message or sender is safe or "
                 "fraudulent.",
-                "The local model was evaluated on an imbalanced, mainly English historical "
-                "SMS dataset.",
+                "The local model learned from an imbalanced, mainly English historical SMS "
+                "dataset, machine translations of it into Malay and Manglish, and written "
+                "examples of notices; real messages can differ.",
                 "Links and phone numbers in the text are checked offline for structure only; "
                 "they are never opened or contacted. Identities and claims are not verified.",
                 "The risk score is calibrated on historical SMS data, not on this sender; "
@@ -424,7 +465,7 @@ def build_message_engine(settings: Settings) -> MessageIntelligenceEngine:
     artifact_path = (
         Path(settings.message_model_path)
         if settings.message_model_path
-        else Path(__file__).resolve().parent / "artifacts/message_tfidf_v2.json"
+        else Path(__file__).resolve().parent / "artifacts/message_tfidf_v3.json"
     )
     if settings.message_model_path and not artifact_path.is_absolute():
         artifact_path = Path(__file__).resolve().parents[3] / artifact_path

@@ -1,0 +1,601 @@
+id,label,language,category,text
+n0001,LEGITIMATE,en,bank_transaction_alert,"RM0 Maybank: You have transferred RM250.00 to AHMAD FAIZAL BIN ROSLI via DuitNow on 03/11/2026 14:22. Ref: 2611034471. If this was not you, call the number on the back of your card."
+n0002,LEGITIMATE,en,bank_transaction_alert,"CIMB: Your card ending 4821 was charged RM89.90 at AEON BIG SUBANG on 05-11-2026. Available limit: RM6,410.10. See details in the CIMB OCTO app or at cimb.com.my."
+n0003,LEGITIMATE,en,bank_transaction_alert,PBB: FPX payment of RM132.45 to TNB from A/C ****3390 was successful. 07 Nov 2026 09:14. FPX ID 2611070914338821.
+n0004,LEGITIMATE,en,bank_transaction_alert,"RHB: RM3,480.00 credited to your savings account xxxx7765 on 01/11/26 (IBG SALARY). View your balance at rhbgroup.com or in the RHB Mobile Banking app."
+n0005,LEGITIMATE,en,bank_transaction_alert,"Hong Leong Bank: DuitNow QR payment of RM14.50 to KEDAI KOPI SIN HENG at 8:41AM, 9 Nov. Not you? Call 1-300-88-1234 or visit hlb.com.my for branch locations."
+n0006,LEGITIMATE,en,bank_transaction_alert,RM0 Maybank: Debit card 5196 used for RM45.00 at SHELL KOTA DAMANSARA 06NOV26 18:05. View your transactions at maybank2u.com.my.
+n0007,LEGITIMATE,en,bank_transaction_alert,AmBank: Standing instruction of RM650.00 to account ****2018 was processed on 10/11/2026. No action is needed. Manage instructions at ambank.com.my.
+n0008,LEGITIMATE,en,bank_transaction_alert,Bank Islam: Transfer of RM75.00 to NURUL AIN (DuitNow mobile ending 6677) completed. Ref BI26110588123.
+n0009,LEGITIMATE,en,bank_transaction_alert,CIMB: ATM withdrawal of RM300.00 from account ending 9042 at CIMB Jalan Ipoh on 08/11/2026 at 20:17.
+n0010,LEGITIMATE,en,bank_transaction_alert,"UOB: We have received your credit card payment of RM2,150.00 on 04 Nov 2026. Thank you. Statements are available at uob.com.my."
+n0011,LEGITIMATE,en,otp_tac_notice,"RM0 Maybank: TAC 482913 for transfer of RM500.00 to account ending 7712. Never share this code with anyone, including bank staff."
+n0012,LEGITIMATE,en,otp_tac_notice,CIMB: Your OTP is 730156 for online purchase of RM219.00 at LAZADA. Valid for 3 minutes. Do not share it. CIMB will never ask you for this code.
+n0013,LEGITIMATE,en,otp_tac_notice,"615204 is your Shopee verification code. It is valid for 15 minutes. Do not share this code with others, including Shopee staff."
+n0014,LEGITIMATE,en,otp_tac_notice,Your Touch 'n Go eWallet verification code is 904417. Keep it to yourself. Our staff will never ask for it.
+n0015,LEGITIMATE,en,otp_tac_notice,PBB: PAC 258840 to add favourite payee ending 4471. Requested 10/11/2026 16:40. Do not disclose this number to anyone.
+n0016,LEGITIMATE,en,otp_tac_notice,"RHB: 119763 is your OTP for card ending 3308, MYR 64.20 at GRAB. If you did not request this, call the number at the back of your card."
+n0017,LEGITIMATE,en,otp_tac_notice,MyDigital ID: your one-time code is 347790. It expires in 5 minutes. Do not share this code with anyone.
+n0018,LEGITIMATE,en,otp_tac_notice,"Grab: 880215 is your verification code. Never share it, even with someone who says they are from Grab."
+n0019,LEGITIMATE,en,otp_tac_notice,"HLB Connect: TAC 566021 requested for DuitNow transfer RM1,000.00 on 10/11/2026 11:02. Did not request it? Do not share the code and call 03-1234 5678."
+n0020,LEGITIMATE,en,otp_tac_notice,Maxis: Use 402918 to sign in to the Maxis app. This code expires in 10 minutes. Please do not share it.
+n0021,LEGITIMATE,en,login_security_alert,"RM0 Maybank: Your MAE app was activated on a new device (Samsung A55) on 09/11/2026 21:14. If this was not you, call the hotline printed on the back of your card."
+n0022,LEGITIMATE,en,login_security_alert,CIMB: You logged in to CIMB Clicks on 10 Nov 2026 at 07:52. No action is needed if this was you. Always log in by typing cimb.com.my yourself.
+n0023,LEGITIMATE,en,login_security_alert,"Shopee: New login to your account from Chrome on Windows, Kuala Lumpur, 08-11-2026 22:03. Not you? Change your password in the Shopee app under Account Security."
+n0024,LEGITIMATE,en,login_security_alert,"PBB: Your PBe password was changed successfully on 06/11/2026. If you did not do this, please visit any Public Bank branch (locations at publicbank.com.my) or call the number on your card."
+n0025,LEGITIMATE,en,login_security_alert,"Google: A new sign-in to your account on an iPhone was detected. If this was you, you can ignore this message. Otherwise, review your devices in your Google Account settings."
+n0026,LEGITIMATE,en,login_security_alert,"RHB: Secure Plus has been enabled on your phone. For your protection, selected transactions will be available after a 12-hour cooling-off period. Read more at rhbgroup.com."
+n0027,LEGITIMATE,en,login_security_alert,"Touch 'n Go eWallet: Your account was signed in on another device at 3:27PM, 7 Nov. You have been logged out of the previous device. Help is available at touchngo.com.my."
+n0028,LEGITIMATE,en,login_security_alert,Bank Islam: Three unsuccessful login attempts were recorded on your GO account today. Access is paused for 30 minutes. You may try again later or reset access at any branch.
+n0029,LEGITIMATE,en,login_security_alert,"Hong Leong Bank: Your daily online transfer limit was updated to RM5,000 on 05/11/2026. If you did not make this change, call 03-1234 5678."
+n0030,LEGITIMATE,en,login_security_alert,"Lazada: Your account email address was updated on 02 Nov 2026. If you did not make this change, contact us through Help Centre at lazada.com.my."
+n0031,LEGITIMATE,en,card_loan_status,CIMB: Your new credit card ending 7730 has been sent by courier and should arrive within 5 working days. Activate it in the CIMB OCTO app once received.
+n0032,LEGITIMATE,en,card_loan_status,"Maybank: Your personal loan application (Ref PL2611-00482) has been approved. RM15,000.00 will be credited to your account ****6104 within 2 working days. Track it in the MAE app or at maybank2u.com.my."
+n0033,LEGITIMATE,en,card_loan_status,"PBB: Your credit card statement dated 05/11/2026 is ready. Amount due RM1,284.60, minimum RM64.23, due 25/11/2026. View your e-statement at publicbank.com.my."
+n0034,LEGITIMATE,en,card_loan_status,RHB: Hire purchase instalment of RM782.00 for vehicle VDK 4127 was deducted on 01/11/2026. Remaining tenure: 38 months. Statements at rhbgroup.com.
+n0035,LEGITIMATE,en,card_loan_status,AmBank: We have received your request to replace debit card ending 2256. Your new card will be ready for collection at AmBank Bangsar from 14 Nov 2026.
+n0036,LEGITIMATE,en,card_loan_status,"HLB: Your home loan interest rate has been revised to 4.15% p.a. effective 01/12/2026. Your new monthly instalment is RM1,912.00. Details are in your HLB Connect inbox."
+n0037,LEGITIMATE,en,card_loan_status,Maybank: Your credit card ending 3318 will expire in 12/2026. A renewal card will be mailed to your registered address. No action is required. Card services: maybank2u.com.my.
+n0038,LEGITIMATE,en,card_loan_status,"Bank Rakyat: Your Personal Financing-i documents are complete. Disbursement of RM30,000.00 is scheduled for 12/11/2026."
+n0039,LEGITIMATE,en,card_loan_status,"CIMB: Your credit limit review is complete. The limit for card ending 4821 remains at RM8,000. For enquiries, visit cimb.com.my or any branch."
+n0040,LEGITIMATE,en,card_loan_status,UOB: Thank you. Your annual fee of RM195.00 for card ending 9004 has been waived for this year.
+n0041,LEGITIMATE,en,ewallet_notice,Touch 'n Go eWallet: Reload of RM50.00 successful via FPX. Balance: RM83.20. Ref 20261109TNG55187.
+n0042,LEGITIMATE,en,ewallet_notice,You paid RM6.50 to RESTORAN AL-SAFA with GrabPay. Your wallet balance is RM41.75.
+n0043,LEGITIMATE,en,ewallet_notice,Boost: You received RM20.00 from LIM WEI JIAN. Open the Boost app to see your updated balance. Help: myboost.com.my.
+n0044,LEGITIMATE,en,ewallet_notice,TNG eWallet: Auto-reload of RM100.00 was triggered because your balance fell below RM20.00. Charged to card ending 5196.
+n0045,LEGITIMATE,en,ewallet_notice,ShopeePay: Payment of RM32.90 at 99 SPEEDMART TAMAN MELATI on 08/11/2026 12:46 was successful. View it in the Shopee app or at shopee.com.my.
+n0046,LEGITIMATE,en,ewallet_notice,MAE: RM15.00 has been added to your Tabung 'Raya 2027'. You are 42% of the way to your goal.
+n0047,LEGITIMATE,en,ewallet_notice,"Touch 'n Go: PayDirect toll charge RM2.10 at PLAZA TOL SUNGAI BESI, 07:18, 10 Nov. Vehicle WYQ 8842."
+n0048,LEGITIMATE,en,ewallet_notice,BigPay: Your card top-up of RM200.00 is complete. Transaction ID BP-88204417. View it in the app under Transactions.
+n0049,LEGITIMATE,en,ewallet_notice,GrabPay: Your refund of RM18.40 for order A-7XK29Q4 has been returned to your wallet.
+n0050,LEGITIMATE,en,ewallet_notice,Touch 'n Go eWallet: Your GO+ daily earnings of RM0.09 have been credited. Learn more about GO+ at touchngo.com.my.
+n0051,LEGITIMATE,en,telco_notice,Maxis: Your bill for Nov 2026 is ready. Amount due RM98.00 by 28/11/2026. View or pay in the Maxis app or at maxis.com.my.
+n0052,LEGITIMATE,en,telco_notice,CelcomDigi: You have used 80% of your 40GB monthly internet. Your quota renews on 15/11/2026. Check usage in the app or at celcomdigi.com.
+n0053,LEGITIMATE,en,telco_notice,"U Mobile: Top-up of RM30.00 successful. New balance RM34.15, valid until 09/12/2026. Manage your line in the MyUMobile app or at u.com.my."
+n0054,LEGITIMATE,en,telco_notice,Hotlink: Your Prepaid Unlimited RM35 plan has been renewed for 30 days. Next renewal: 10 Dec 2026.
+n0055,LEGITIMATE,en,telco_notice,Yes 5G: Thank you for your payment of RM58.00 received on 06/11/2026. Receipt no. YS26110644821.
+n0056,LEGITIMATE,en,telco_notice,unifi Mobile: Your postpaid bill of RM39.00 is due on 20 Nov 2026. Pay via the MyUnifi app or unifi.com.my.
+n0057,LEGITIMATE,en,telco_notice,"CelcomDigi: Welcome to Thailand. Roaming rates: data RM10/day with Roam Pass. To manage roaming, use the CelcomDigi app."
+n0058,LEGITIMATE,en,telco_notice,Maxis: Your number 012-XXX 4471 has been successfully switched to Maxis Postpaid 79 with effect from 08/11/2026.
+n0059,LEGITIMATE,en,telco_notice,redONE: Your line will be auto-debited RM28.00 on 12/11/2026 from card ending 6630. No action is required.
+n0060,LEGITIMATE,en,telco_notice,"U Mobile: Your SIM replacement request is complete and your eSIM is now active. If you did not request this, please visit any U Mobile store."
+n0061,LEGITIMATE,en,utility_bill,"TNB: Your electricity bill for account ending 4410 is RM146.35, due 30/11/2026. Pay through the myTNB app or tnb.com.my."
+n0062,LEGITIMATE,en,utility_bill,Air Selangor: Bill for Oct 2026 is RM28.60. Due date 25 Nov 2026. Account no. ****8823. Pay in the Air Selangor app or at airselangor.com.
+n0063,LEGITIMATE,en,utility_bill,unifi: Your Nov bill of RM139.00 is ready. Auto-pay will deduct from your card ending 2256 on 18/11/2026.
+n0064,LEGITIMATE,en,utility_bill,TNB: Payment of RM146.35 received on 09/11/2026. Thank you. Ref TNB2611098844. View your payment history at tnb.com.my.
+n0065,LEGITIMATE,en,utility_bill,"IWK: Your sewerage services bill of RM48.00 for Jul-Dec 2026 has been issued. Pay at iwk.com.my, JomPAY or any post office."
+n0066,LEGITIMATE,en,utility_bill,"TNB: Scheduled maintenance in Taman Sri Gombak on 14/11/2026, 9.00AM-1.00PM. Supply will be interrupted during this time. We apologise for the inconvenience."
+n0067,LEGITIMATE,en,utility_bill,TIME: Your fibre broadband invoice INV-2611-33871 for RM99.00 has been emailed. Due 22/11/2026. You can also view it in the self-care portal at time.com.my.
+n0068,LEGITIMATE,en,utility_bill,Air Selangor: Water supply in Seksyen 7 Shah Alam has been fully restored as of 6.30PM today. Thank you for your patience.
+n0069,LEGITIMATE,en,utility_bill,unifi: Your installation appointment is confirmed for 13 Nov 2026 between 2PM and 5PM. Order no. 1-98234471. Reschedule in the MyUnifi app.
+n0070,LEGITIMATE,en,utility_bill,"Gas Malaysia: Your meter reading for Oct 2026 was recorded on 31/10/2026. Bill amount RM22.80, due 21/11/2026."
+n0071,LEGITIMATE,en,government_reminder,LHDN: Your tax refund of RM412.50 for Year of Assessment 2025 has been credited to your bank account. Check your status in MyTax at hasil.gov.my.
+n0072,LEGITIMATE,en,government_reminder,"JPJ: The road tax for vehicle WXX 3182 expires on 30/11/2026. Renew at jpj.gov.my, the MyJPJ app or any JPJ counter."
+n0073,LEGITIMATE,en,government_reminder,"JPN: Your MyKad is ready for collection at JPN Putrajaya. Please bring your temporary slip. Counter hours 8.00AM-4.30PM, Monday to Friday. Information: jpn.gov.my."
+n0074,LEGITIMATE,en,government_reminder,Imigresen: Your passport renewal (application no. P2611-447102) is ready. Collect at UTC Pudu Sentral within 90 days. Office hours are listed at imi.gov.my.
+n0075,LEGITIMATE,en,government_reminder,MBPJ: Assessment tax for the second half of 2026 is RM312.40. Account ****5521. Pay at mbpj.gov.my or at the council counter.
+n0076,LEGITIMATE,en,government_reminder,LHDN reminder: e-Filing for Form BE (Year of Assessment 2025) is open in MyTax until 15 May. Log in through hasil.gov.my.
+n0077,LEGITIMATE,en,government_reminder,JPJ: Your driving licence expires on 18/12/2026. You may renew up to one year early through the MyJPJ app or at any post office.
+n0078,LEGITIMATE,en,government_reminder,"KWSP: Your employer's contribution of RM1,104.00 for Oct 2026 has been credited. View your statement in the KWSP i-Akaun app or at kwsp.gov.my."
+n0079,LEGITIMATE,en,government_reminder,"PDRM: As of 10/11/2026, no outstanding traffic summons is recorded for vehicle BQR 7705. Thank you for driving safely."
+n0080,LEGITIMATE,en,government_reminder,DBKL: Your business licence renewal for 2027 has been approved. Licence no. DBKL/L/26/08841. Download it from the eLesen portal at dbkl.gov.my.
+n0081,LEGITIMATE,en,delivery_courier_update,Pos Malaysia: Your parcel EP482917365MY is out for delivery today. Track at pos.com.my.
+n0082,LEGITIMATE,en,delivery_courier_update,J&T Express: Parcel 630048821774 has arrived at the Cheras hub and will be delivered within 1-2 days. Track at jtexpress.my.
+n0083,LEGITIMATE,en,delivery_courier_update,Ninja Van: We delivered your parcel NVMY26110447 at 2:14PM. It was received by GUARD HOUSE.
+n0084,LEGITIMATE,en,delivery_courier_update,DHL eCommerce: Delivery attempt for shipment 5320118847 was unsuccessful as no one was home. We will try again on the next working day.
+n0085,LEGITIMATE,en,delivery_courier_update,Pos Laju: Item ER771204558MY is ready for collection at Pos Malaysia Wangsa Maju until 20/11/2026. Please bring your IC and this notice. Branch hours at pos.com.my.
+n0086,LEGITIMATE,en,delivery_courier_update,SPX Express: Your parcel is with the rider (Hafiz) and will arrive today before 6PM. Tracking no. SPXMY048821190.
+n0087,LEGITIMATE,en,delivery_courier_update,GDEX: Consignment MY88204417 was picked up from the sender on 08 Nov 2026. Estimated delivery: 11 Nov. Track at gdexpress.com.
+n0088,LEGITIMATE,en,delivery_courier_update,City-Link: Your shipment 060211884470 has been delayed due to bad weather on the East Coast. New estimated delivery date: 13/11/2026.
+n0089,LEGITIMATE,en,delivery_courier_update,FedEx: Your package 7748 2210 3381 cleared customs in Sepang and is on its way. No duties are payable.
+n0090,LEGITIMATE,en,delivery_courier_update,"Flash Express: Parcel MY26110558821 has been placed in the parcel locker at Residensi Aman, Block B. The locker code was sent to your Flash app."
+n0091,LEGITIMATE,en,ecommerce_order_update,Shopee: Your order 2611087KQ4PX2M has been shipped. Track it under To Receive in the app or at shopee.com.my.
+n0092,LEGITIMATE,en,ecommerce_order_update,Lazada: Good news. Order 488120447712 has been delivered. Tell us how it went by rating the product in the app or at lazada.com.my.
+n0093,LEGITIMATE,en,ecommerce_order_update,Shopee: Your refund of RM57.80 for order 261104TT82HN9 has been approved and returned to your ShopeePay balance.
+n0094,LEGITIMATE,en,ecommerce_order_update,"Zalora: We have received your return for order MY2611-88047. Your refund of RM129.00 will be processed in 5-7 working days. Status: zalora.com.my, under My Orders."
+n0095,LEGITIMATE,en,ecommerce_order_update,Lazada: The seller has cancelled item 'USB-C Cable 2m' in order 488120991203 as it is out of stock. RM12.90 will be refunded to your original payment method.
+n0096,LEGITIMATE,en,ecommerce_order_update,TikTok Shop: Your order has been confirmed and the seller is preparing it. Order ID 5788102244719. Estimated delivery 12-14 Nov.
+n0097,LEGITIMATE,en,ecommerce_order_update,IKEA: Your order 1482207719 is confirmed for delivery on 15/11/2026 between 10AM and 2PM. Manage your order at ikea.com.my.
+n0098,LEGITIMATE,en,ecommerce_order_update,Shopee: Payment of RM204.30 for your order has been received. The seller has until 12/11/2026 to ship. Follow the order at shopee.com.my.
+n0099,LEGITIMATE,en,ecommerce_order_update,Watsons: Your Click & Collect order W26118842 is ready at Watsons Mid Valley. Please collect by 16 Nov 2026 and show your order confirmation email.
+n0100,LEGITIMATE,en,ride_food_delivery,"Grab: Your driver Kumar (Perodua Bezza, VFG 2291) is arriving in 3 minutes at Lobby A."
+n0101,LEGITIMATE,en,ride_food_delivery,foodpanda: Your order from Nasi Kandar Pelita is on the way. The rider should reach you by 1:05PM.
+n0102,LEGITIMATE,en,ride_food_delivery,GrabFood: Order A-8LM44P2 delivered. Total RM23.40 paid with GrabPay. Enjoy your meal. Receipts are kept in the app and at grab.com.
+n0103,LEGITIMATE,en,ride_food_delivery,"Grab: Receipt for your ride on 09 Nov 2026, KL Sentral to Bangsar South. Fare RM11.00, paid by card ending 4821."
+n0104,LEGITIMATE,en,ride_food_delivery,"ShopeeFood: Sorry, the restaurant could not fulfil your order. RM18.90 has been refunded to your ShopeePay."
+n0105,LEGITIMATE,en,ride_food_delivery,airasia ride: Your booking for 5:30AM tomorrow to KLIA2 is confirmed. Driver details will be sent 15 minutes before pick-up.
+n0106,LEGITIMATE,en,ride_food_delivery,foodpanda: Your pandamart order is delayed by about 10 minutes due to heavy rain. Thank you for your patience. Live tracking is in the app or at foodpanda.my.
+n0107,LEGITIMATE,en,ride_food_delivery,Grab: Your rider has arrived at the guardhouse with your order. Please collect it from the food delivery rack.
+n0108,LEGITIMATE,en,ride_food_delivery,"Maxim: Trip completed. Distance 7.2 km, fare RM9.50 (cash). Thank you for riding with us."
+n0109,LEGITIMATE,en,medical_appointment,Klinik Kesihatan Kelana Jaya: Reminder of your appointment on 12/11/2026 at 9.30AM. Please bring your appointment card and MyKad.
+n0110,LEGITIMATE,en,medical_appointment,"Sunway Medical Centre: Your appointment with Dr. Tan Mei Ling (Cardiology) is confirmed for 14 Nov 2026, 11:00AM, Tower A Level 3. To reschedule, call +60 3-1234 5678."
+n0111,LEGITIMATE,en,medical_appointment,BP Healthcare: Your blood test report is ready. You can collect it at the Damansara Utama branch or view it in the BP app.
+n0112,LEGITIMATE,en,medical_appointment,"Dear Ms Farah, this is Klinik Pergigian Seri Dental. Your scaling appointment is tomorrow at 3PM. Reply to this message or call the clinic if you need to change the time."
+n0113,LEGITIMATE,en,medical_appointment,"Hospital Kuala Lumpur: Your MRI is scheduled for 20/11/2026 at 8.00AM, Radiology Department. Please fast for 6 hours before the scan."
+n0114,LEGITIMATE,en,medical_appointment,"MySejahtera: Your booster appointment is on 13 Nov 2026, 2:15PM at Klinik Kesihatan Bandar Tun Razak. Check details in the MySejahtera app."
+n0115,LEGITIMATE,en,medical_appointment,Pantai Hospital: Thank you for visiting us on 07/11/2026. Your bill of RM186.00 has been settled. Receipt no. PH-26-1107-4481.
+n0116,LEGITIMATE,en,medical_appointment,Klinik Mediviron Setapak: Your medication is ready for pick-up. We are open daily from 8AM to 10PM.
+n0117,LEGITIMATE,en,medical_appointment,Columbia Asia: Dr. Rajesh's clinic on 15 Nov is cancelled. Your appointment has been moved to 22 Nov 2026 at 10:30AM. We apologise for the inconvenience.
+n0118,LEGITIMATE,en,school_university_notice,"SMK Taman Desa: Parent-teacher meeting for Form 4 will be held on Saturday, 21/11/2026, 8.30AM at the school hall."
+n0119,LEGITIMATE,en,school_university_notice,Universiti Malaya: Semester 1 2026/2027 examination results are now available in the MAYA student portal.
+n0120,LEGITIMATE,en,school_university_notice,"Taylor's University: Tuition fee invoice for the January 2027 semester (RM11,400.00) is available in Campus Central. Due date 15/12/2026."
+n0121,LEGITIMATE,en,school_university_notice,SK Bukit Jelutong: School will close early at 12.00PM on 13/11/2026 for a staff meeting. Transport operators have been informed.
+n0122,LEGITIMATE,en,school_university_notice,UiTM: Course registration for the March 2027 session opens on 01/12/2026 through the student portal. Refer to the academic calendar for details.
+n0123,LEGITIMATE,en,school_university_notice,Sunway College: Reminder that the library book 'Principles of Marketing' is due on 12 Nov. You can renew it online or at the counter.
+n0124,LEGITIMATE,en,school_university_notice,"Tadika Sinar Ceria: Our year-end concert is on 28 Nov at 9AM. Each family receives 2 tickets, sent home in your child's bag today."
+n0125,LEGITIMATE,en,school_university_notice,"MCKL: Your student ID card is ready for collection at the Registrar's Office, Monday to Friday, 9AM-5PM."
+n0126,LEGITIMATE,en,school_university_notice,UTAR: Congratulations. Your application for the Bachelor of Accounting (Hons) has been successful. The offer letter has been sent to your registered email.
+n0127,LEGITIMATE,en,insurance_takaful_renewal,"Etiqa: Your motor takaful for WXX 3182 expires on 30/11/2026. Renewal contribution RM1,042.00. Renew at etiqa.com.my or through your agent."
+n0128,LEGITIMATE,en,insurance_takaful_renewal,AIA: Premium of RM210.00 for policy ending 4471 was successfully deducted from your card on 05/11/2026. Thank you.
+n0129,LEGITIMATE,en,insurance_takaful_renewal,Prudential: Your annual policy statement is now available in PRUServices. Log in to view your coverage and fund value at prudential.com.my.
+n0130,LEGITIMATE,en,insurance_takaful_renewal,Allianz: Thank you for renewing your motor insurance. Your e-policy for VDK 4127 has been emailed. Cover period 01/12/2026 to 30/11/2027. Policy services: allianz.com.my.
+n0131,LEGITIMATE,en,insurance_takaful_renewal,Great Eastern: Your claim GE-CL-2611-0338 has been approved. RM860.00 will be credited to your bank account within 7 working days.
+n0132,LEGITIMATE,en,insurance_takaful_renewal,"Takaful Ikhlas: Friendly reminder that your family takaful contribution of RM150.00 is due on 20 Nov 2026. If you have paid, please disregard this message."
+n0133,LEGITIMATE,en,insurance_takaful_renewal,Zurich: We have received your documents for claim ref ZM26110921. Our team will update you within 5 working days.
+n0134,LEGITIMATE,en,insurance_takaful_renewal,AIA: Your medical card for the 2027 policy year has been posted to your mailing address. A digital copy is in the My AIA app. Panel hospitals are listed at aia.com.my.
+n0135,LEGITIMATE,en,insurance_takaful_renewal,"Tune Protect: Your travel insurance for Kuala Lumpur to Osaka, 18-25 Nov 2026, is active. Certificate no. TP-TRV-88204."
+n0136,LEGITIMATE,en,subscription_renewal,Netflix: Your membership has been renewed. RM44.90 was charged to card ending 4821 on 08 Nov 2026. Manage your plan at netflix.com under Account.
+n0137,LEGITIMATE,en,subscription_renewal,Spotify: Your Premium Individual plan renews on 15/11/2026 for RM17.50. Manage your plan at spotify.com under Account.
+n0138,LEGITIMATE,en,subscription_renewal,"Astro: Your bill for Nov 2026 is RM109.99, due 24/11/2026. View it in the My Astro app or at astro.com.my."
+n0139,LEGITIMATE,en,subscription_renewal,Apple: Your iCloud+ 200GB subscription has been renewed for RM11.90. You can view your receipts under Purchase History.
+n0140,LEGITIMATE,en,subscription_renewal,Disney+ Hotstar: Your annual plan ends on 01/12/2026 and will not renew because auto-renewal is turned off.
+n0141,LEGITIMATE,en,subscription_renewal,Celebrity Fitness: Monthly membership fee of RM168.00 was debited from account ****6104 on 01/11/2026.
+n0142,LEGITIMATE,en,subscription_renewal,The Star: Your digital subscription has been renewed for 12 months. Thank you for your support. Invoice TS-2611-55102.
+n0143,LEGITIMATE,en,subscription_renewal,YouTube Premium: We could not process your payment this month. We will try again in a few days. No action is needed if your card details are up to date.
+n0144,LEGITIMATE,en,subscription_renewal,Microsoft 365: Your Family plan will renew on 03 Dec 2026 for RM429.00. You can review or change this any time from your Microsoft account.
+n0145,LEGITIMATE,en,employer_hr_payroll,HR: Your payslip for October 2026 is now available in the employee self-service portal.
+n0146,LEGITIMATE,en,employer_hr_payroll,Payroll notice: November salaries will be credited on 26/11/2026 instead of the 28th because of the weekend.
+n0147,LEGITIMATE,en,employer_hr_payroll,"Hi Aiman, your annual leave from 17 to 19 Nov 2026 has been approved by your manager. Remaining balance: 6 days."
+n0148,LEGITIMATE,en,employer_hr_payroll,HR Dept: Your EA Form for 2025 has been uploaded to the HR portal under My Documents for your tax filing.
+n0149,LEGITIMATE,en,employer_hr_payroll,Reminder from Admin: the office will be closed on 20 Nov for pest control. Please work from home that day.
+n0150,LEGITIMATE,en,employer_hr_payroll,Your medical claim of RM85.00 (Claim ID MC-26-3381) has been approved and will be paid with your November salary.
+n0151,LEGITIMATE,en,employer_hr_payroll,HR: Annual performance appraisal forms are due by 30/11/2026. Complete yours in the HR system and discuss it with your supervisor.
+n0152,LEGITIMATE,en,employer_hr_payroll,"Team, the fire drill is scheduled for Thursday at 10.30AM. Please use the staircase and assemble at the car park, Zone C."
+n0153,LEGITIMATE,en,employer_hr_payroll,PERKESO: Your employer's SOCSO contribution for Oct 2026 has been recorded. Check your record at perkeso.gov.my.
+n0154,LEGITIMATE,en,recruiter_interview,"Hi Mei Ling, this is Suresh from the Talent team at Petrosains Tech. We would like to invite you for an interview for the Data Analyst role on 13 Nov, 10AM, at our office in Bangsar South. Please let me know if the time suits you."
+n0155,LEGITIMATE,en,recruiter_interview,JobStreet: Your application for Junior Accountant at Syarikat Harmoni Sdn Bhd has been viewed by the employer. See your applications at jobstreet.com.my.
+n0156,LEGITIMATE,en,recruiter_interview,"Dear Mr Haziq, your second-round interview is confirmed for 17/11/2026 at 2.30PM via Microsoft Teams. The meeting invite has been sent to your email."
+n0157,LEGITIMATE,en,recruiter_interview,"Thank you for attending the interview yesterday. We will get back to you with an outcome by the end of next week. Regards, HR, Lotus Retail."
+n0158,LEGITIMATE,en,recruiter_interview,"Hello Priya, I'm Aina from Maju Engineering HR. Are you available for a 20-minute phone screening tomorrow between 3 and 5PM for the Site Engineer position you applied for on JobStreet?"
+n0159,LEGITIMATE,en,recruiter_interview,"Interview reminder: Customer Service Executive, tomorrow 9.00AM, Level 12, Menara Sentral. Please bring a copy of your resume and certificates. Ask for Ms Wong at reception."
+n0160,LEGITIMATE,en,recruiter_interview,"Hi Daniel, we are pleased to offer you the Graphic Designer position. The offer letter has been emailed to you. Do review it and let us know by Friday."
+n0161,LEGITIMATE,en,recruiter_interview,LinkedIn: Your application was sent to Bintang Logistics. You can track it under My Jobs.
+n0162,LEGITIMATE,en,recruiter_interview,"Dear candidate, the walk-in interview for the internship programme has been moved to 19 Nov 2026 (Thursday), 10AM-4PM, same venue. Sorry for the short notice."
+n0163,LEGITIMATE,en,travel_booking_confirmation,"AirAsia: Booking confirmed. AK6124 KUL-PEN, 21 Nov 2026, 07:35. Booking no. Q8XK2M. Check in on the app or at airasia.com."
+n0164,LEGITIMATE,en,travel_booking_confirmation,Malaysia Airlines: Online check-in is now open for MH2612 to Kota Kinabalu departing 14NOV 09:10. Check in at malaysiaairlines.com.
+n0165,LEGITIMATE,en,travel_booking_confirmation,"KTMB: Your ETS ticket from KL Sentral to Ipoh on 15/11/2026 at 08:50, Coach C Seat 12A, is confirmed. Booking no. KT88204417. Manage your trip in the KITS app or at ktmb.com.my."
+n0166,LEGITIMATE,en,travel_booking_confirmation,Agoda: Your booking at Hotel Seri Malaysia Melaka for 22-24 Nov 2026 is confirmed. Booking ID 1482207719. Pay at the hotel.
+n0167,LEGITIMATE,en,travel_booking_confirmation,Batik Air: Flight OD1904 on 18 Nov has been retimed. New departure 16:20 (previously 15:40). We apologise for the change. Manage your booking at batikair.com.my.
+n0168,LEGITIMATE,en,travel_booking_confirmation,"redBus: Ticket confirmed. TBS to Kuantan, 13 Nov 2026, 10:30PM, Seat 7. Please arrive 30 minutes early and show your e-ticket at the counter."
+n0169,LEGITIMATE,en,travel_booking_confirmation,"Booking.com: Your free cancellation for Cameron Highlands Resort ends on 19 Nov 2026. Your stay is 21-23 Nov, confirmation no. 4471.208.836."
+n0170,LEGITIMATE,en,travel_booking_confirmation,Firefly: Your boarding pass for FY1432 SZB-JHB is ready. Gate closes 20 minutes before departure.
+n0171,LEGITIMATE,en,travel_booking_confirmation,"Trip.com: Payment of RM1,286.00 received. Your e-tickets for Kuala Lumpur to Bangkok, 05 Dec 2026, have been emailed. Order no. 30488120447."
+n0172,LEGITIMATE,en,bank_safety_awareness,RM0 Maybank: We will never send you SMS with links. Always type maybank2u.com.my yourself or use the MAE app.
+n0173,LEGITIMATE,en,bank_safety_awareness,"CIMB: Scam alert. CIMB will never call to ask for your OTP, password or card number. If in doubt, hang up and call the number on the back of your card."
+n0174,LEGITIMATE,en,bank_safety_awareness,PBB reminder: Only download banking apps from the official app stores. Learn more about staying safe at publicbank.com.my.
+n0175,LEGITIMATE,en,bank_safety_awareness,"RHB: Lost money to a scam? Call the National Scam Response Centre at 997 (8AM-8PM daily) as soon as possible, then inform your bank. More tips at rhbgroup.com."
+n0176,LEGITIMATE,en,bank_safety_awareness,"Bank Negara Malaysia: Before investing, check that the company is licensed. Refer to the Financial Consumer Alert List at bnm.gov.my."
+n0177,LEGITIMATE,en,bank_safety_awareness,Hong Leong Bank: Check the recipient's account on Semak Mule (semakmule.rmp.gov.my) before transferring to someone you do not know.
+n0178,LEGITIMATE,en,bank_safety_awareness,AmBank: Do not install apps from files (APK) sent through chat. Our staff will never ask you to do so. Security tips: ambank.com.my.
+n0179,LEGITIMATE,en,bank_safety_awareness,Bank Islam: Stay alert this festive season. Verify any unusual call with us at a branch or through the hotline on your card before acting.
+n0180,LEGITIMATE,en,bank_safety_awareness,Maybank: Use the Kill Switch in the MAE app or at maybank2u.com.my to freeze your accounts immediately if you suspect unauthorised access.
+n0181,LEGITIMATE,ms,bank_transaction,"RM0 Maybank: Pindahan wang RM250.00 ke akaun 1122****7788 (AHMAD FAIZAL) berjaya pada 03/11/2026 14:22. Ruj: MBB8841207. Jika bukan anda, hubungi nombor di belakang kad anda."
+n0182,LEGITIMATE,ms,bank_transaction,CIMB: Kad kredit anda berakhir 4410 telah dicaj RM89.90 di KEDAI BUKU SERI MURNI pada 05-11-26 10:15. Semak transaksi di aplikasi CIMB OCTO atau cimb.com.my.
+n0183,LEGITIMATE,ms,bank_transaction,"Bank Islam: DuitNow masuk RM1,200.00 daripada NURUL HUDA BT RAZALI ke akaun anda ****3306 pada 01 Nov 2026, 9.04 pagi. Baki boleh disemak di bankislam.com."
+n0184,LEGITIMATE,ms,bank_transaction,RM0 Bank Rakyat: Pembayaran FPX RM312.45 kepada SYARIKAT AIR NEGERI berjaya. No. rujukan FPX 2611080045127. Terima kasih. Semak di bankrakyat.com.my.
+n0185,LEGITIMATE,ms,bank_transaction,"Public Bank: Pengeluaran ATM RM500.00 daripada akaun ****9021 pada 07/11/26 jam 20:41 di ATM Jalan Bunga Raya. Jika anda tidak melakukan transaksi ini, sila hubungi 1-300-88-1234. Maklumat lanjut di pbebank.com."
+n0186,LEGITIMATE,mixed,bank_transaction,"Maybank: Your DuitNow QR payment RM18.50 kat WARUNG KAK TIMAH dah berjaya, 08/11 1:07PM. Ref 55120934. Boleh check dalam app MAE."
+n0187,LEGITIMATE,ms,bank_transaction,RHB: Arahan tetap bulanan RM650.00 ke akaun pembiayaan ****5512 telah didebitkan pada 05/11/2026. Tiada tindakan diperlukan. Sejarah transaksi tersedia di rhbgroup.com.
+n0188,LEGITIMATE,ms,bank_transaction,"Hong Leong Bank: Kredit masuk RM3,480.25 ke akaun simpanan anda berakhir 7714 pada 25/10/2026. Semak penyata melalui aplikasi HLB Connect. Butiran juga di hlb.com.my."
+n0189,LEGITIMATE,ms,bank_transaction,"AmBank: Transaksi kad debit ****2087 sebanyak RM46.00 di STESEN MINYAK TAMAN DAMAI, 09/11/26 07:52. Baki tersedia: RM1,204.36. Butiran di ambank.com.my."
+n0190,LEGITIMATE,mixed,bank_transaction,CIMB: Transfer RM75.00 to LIM WEI JIE (DuitNow No. Telefon) berjaya 06/11 9:33PM. Ref: CTB20261106883. Bukan anda? Call nombor di belakang kad.
+n0191,LEGITIMATE,ms,bank_transaction,"BSN: Bayaran bil melalui JomPAY RM128.70 (Kod Pengebil 12345, Ruj-1 0098123456) telah berjaya pada 04/11/2026. Simpan mesej ini sebagai rujukan."
+n0192,LEGITIMATE,ms,bank_transaction,"RM0 Maybank: Pembayaran balik kad kredit berakhir 6032 sebanyak RM1,000.00 telah diterima pada 02/11/2026. Terima kasih. Semak baki di maybank2u.com.my."
+n0193,LEGITIMATE,ms,otp_tac,"RM0 Maybank: TAC anda ialah 482913 untuk pindahan RM250.00 ke akaun ****7788. Jangan kongsi TAC ini dengan sesiapa, termasuk kakitangan bank."
+n0194,LEGITIMATE,ms,otp_tac,CIMB: Kod OTP anda 730156 bagi pembelian dalam talian RM89.90 di KEDAI ATAS TALIAN. Sah selama 3 minit. JANGAN KONGSI kod ini.
+n0195,LEGITIMATE,ms,otp_tac,"Bank Islam: 615204 ialah kod TAC untuk menambah penerima kegemaran baharu. Jika anda tidak memohon, abaikan mesej ini dan hubungi kami di nombor di belakang kad. Jangan kongsi kod."
+n0196,LEGITIMATE,ms,otp_tac,Kod pengesahan Touch 'n Go eWallet anda: 908231. Jangan kongsi kod ini dengan sesiapa. Kakitangan kami tidak akan memintanya.
+n0197,LEGITIMATE,mixed,otp_tac,"Your Shopee verification code is 274905. Jangan share kod ni dengan sesiapa pun, termasuk staff Shopee. Valid for 15 minit."
+n0198,LEGITIMATE,ms,otp_tac,LHDN: Kod OTP MyTax anda ialah 553871. Kod sah selama 5 minit. Jangan kongsi kod ini dengan mana-mana pihak. Log masuk hanya di mytax.hasil.gov.my.
+n0199,LEGITIMATE,ms,otp_tac,RM0 Bank Rakyat: TAC 119046 untuk pembayaran FPX RM312.45. Jangan dedahkan TAC kepada sesiapa. Pihak bank tidak akan meminta TAC anda melalui panggilan telefon.
+n0200,LEGITIMATE,mixed,otp_tac,"Grab: 660318 is your GrabPay verification code. Jangan kongsi dengan orang lain ya, Grab takkan call minta kod ni."
+n0201,LEGITIMATE,ms,otp_tac,"KWSP: Kod TAC i-Akaun anda ialah 842760, sah untuk 5 minit. Jangan kongsi dengan sesiapa. Rujuk kwsp.gov.my untuk maklumat lanjut."
+n0202,LEGITIMATE,ms,otp_tac,"Public Bank: PAC 307715 untuk transaksi PBe RM1,500.00 pada 08/11/2026 11:20. Jangan kongsi PAC. Jika bukan anda, hubungi 03-1234 5678."
+n0203,LEGITIMATE,ms,otp_tac,MyDigital ID: Kod pengesahan anda ialah 291643. Kod ini sulit; jangan berikan kepada sesiapa walaupun mengaku pegawai kerajaan.
+n0204,LEGITIMATE,ms,otp_tac,RHB: OTP 760092 untuk log masuk ke RHB Online Banking. Tidak memohon? Abaikan SMS ini. Jangan sesekali kongsi OTP anda.
+n0205,LEGITIMATE,ms,security_alert,"RM0 Maybank: Log masuk ke Maybank2u dikesan daripada peranti baharu pada 09/11/2026 21:14. Jika ini anda, tiada tindakan diperlukan. Jika bukan, hubungi nombor di belakang kad anda."
+n0206,LEGITIMATE,ms,security_alert,CIMB: SecureTAC telah berjaya diaktifkan pada peranti anda pada 07/11/2026. Tempoh bertenang 12 jam dikenakan sebelum transaksi tertentu boleh dibuat. Maklumat lanjut di cimb.com.my.
+n0207,LEGITIMATE,ms,security_alert,"Bank Islam: Kata laluan perbankan internet anda telah berjaya ditukar pada 06 Nov 2026, 8.45 malam. Jika anda tidak membuat perubahan ini, sila hubungi cawangan terdekat atau talian di belakang kad. Maklumat lanjut di bankislam.com."
+n0208,LEGITIMATE,mixed,security_alert,"Shopee: Ada login baru ke akaun anda from Chrome (Windows) pada 10/11 2:16AM. If this was you, boleh abaikan. Kalau bukan, tukar password dalam app Shopee > Tetapan Akaun."
+n0209,LEGITIMATE,ms,security_alert,"Touch 'n Go eWallet: Akaun anda telah dilog masuk pada peranti baharu (model SM-A546). Jika bukan anda, buka aplikasi dan pilih Tetapan > Keselamatan untuk log keluar semua peranti."
+n0210,LEGITIMATE,ms,security_alert,"AmBank: Had pindahan harian anda telah dikemas kini kepada RM5,000.00 pada 05/11/2026. Jika anda tidak membuat permintaan ini, hubungi 1-300-80-1234 atau rujuk ambank.com.my."
+n0211,LEGITIMATE,ms,security_alert,Hong Leong Bank: Kad debit anda berakhir 3381 telah disekat sementara atas permintaan anda melalui aplikasi HLB Connect pada 08/11/2026 16:02.
+n0212,LEGITIMATE,ms,security_alert,"LHDN: Akaun MyTax anda telah dilog masuk pada 04/11/2026 jam 10:32 pagi. Sekiranya bukan anda, tukar kata laluan di mytax.hasil.gov.my."
+n0213,LEGITIMATE,mixed,security_alert,"Maybank: New device registered untuk Secure2u pada 03/11/2026. Kalau bukan anda yang buat, please call the number at the back of your card."
+n0214,LEGITIMATE,ms,security_alert,"Public Bank: Beberapa percubaan log masuk yang tidak berjaya dikesan pada ID pengguna anda. Demi keselamatan, akses dikunci sementara. Tetapan semula boleh dibuat di pbebank.com atau di mana-mana cawangan."
+n0215,LEGITIMATE,ms,security_alert,"CelcomDigi: Kad SIM bagi nombor 019-XXX 4421 telah diganti di pusat khidmat Jalan Kenari pada 09/11/2026. Jika anda tidak membuat penggantian ini, hubungi khidmat pelanggan daripada telefon bimbit anda."
+n0216,LEGITIMATE,ms,security_alert,"KWSP: Nombor telefon bimbit bagi i-Akaun anda telah dikemas kini pada 02/11/2026. Jika anda tidak membuat perubahan ini, sila hadir ke mana-mana cawangan KWSP. Rujuk kwsp.gov.my untuk lokasi cawangan."
+n0217,LEGITIMATE,ms,card_financing_status,"Bank Rakyat: Pembiayaan Peribadi-i anda sebanyak RM30,000.00 telah dikreditkan ke akaun ****4471 pada 06/11/2026. Jadual bayaran boleh disemak di bankrakyat.com.my."
+n0218,LEGITIMATE,ms,card_financing_status,RM0 Maybank: Kad kredit baharu anda berakhir 6032 telah dihantar melalui kurier pada 04/11/2026. Aktifkan kad melalui aplikasi MAE selepas diterima. Panduan di maybank2u.com.my.
+n0219,LEGITIMATE,ms,card_financing_status,CIMB: Permohonan kad kredit anda (Ruj: CC2611-00873) sedang diproses. Kami akan memaklumkan keputusan dalam tempoh 7 hari bekerja. Semakan status di cimb.com.my.
+n0220,LEGITIMATE,ms,card_financing_status,"Bank Islam: Bayaran bulanan pembiayaan perumahan RM1,412.00 bagi akaun ****8830 telah diterima pada 01/11/2026. Terima kasih. Penyata tersedia di bankislam.com."
+n0221,LEGITIMATE,mixed,card_financing_status,"Maybank: Your new debit card dah sampai kat cawangan Taman Melawati. Boleh collect during waktu operasi, bawa kad pengenalan asal ya."
+n0222,LEGITIMATE,ms,card_financing_status,"RHB: Had kredit kad anda berakhir 9925 telah dinaikkan kepada RM12,000 berkuat kuasa 10/11/2026 seperti permohonan anda. Butiran di aplikasi RHB Mobile Banking."
+n0223,LEGITIMATE,ms,card_financing_status,"Public Bank: Penyata kad kredit Oktober 2026 telah sedia. Jumlah perlu dibayar RM2,318.40, bayaran minimum RM115.92, tarikh akhir 25/11/2026. Lihat e-Penyata di pbebank.com."
+n0224,LEGITIMATE,ms,card_financing_status,AmBank: Pembiayaan kenderaan anda no. ****6610 telah selesai dibayar sepenuhnya. Surat pelepasan tuntutan milik akan dipos ke alamat berdaftar dalam 14 hari bekerja.
+n0225,LEGITIMATE,ms,card_financing_status,Hong Leong Bank: Kad kredit anda berakhir 3381 telah berjaya diaktifkan pada 08/11/2026. Selamat menggunakan kad anda.
+n0226,LEGITIMATE,mixed,card_financing_status,"CIMB: Your Cash Plus application approved. RM15,000.00 akan dikreditkan ke akaun ****2204 dalam 1 hari bekerja. Check status dalam CIMB OCTO app."
+n0227,LEGITIMATE,ms,card_financing_status,PTPTN: Bayaran balik pinjaman RM200.00 melalui potongan gaji bagi bulan Oktober 2026 telah diterima. Baki boleh disemak di ptptn.gov.my atau aplikasi myPTPTN.
+n0228,LEGITIMATE,ms,card_financing_status,BSN: Permohonan pembiayaan peribadi anda memerlukan dokumen tambahan. Sila hadir ke cawangan BSN tempat anda memohon dengan slip gaji 3 bulan terkini. Senarai dokumen ada di bsn.com.my.
+n0229,LEGITIMATE,ms,ewallet,Touch 'n Go eWallet: Tambah nilai RM50.00 berjaya pada 09/11/2026 08:12. Baki semasa RM73.40.
+n0230,LEGITIMATE,ms,ewallet,TNG eWallet: Bayaran tol RM4.30 di Plaza Tol Sungai Besi telah ditolak daripada baki eWallet anda melalui RFID. Baki: RM31.85.
+n0231,LEGITIMATE,mixed,ewallet,GrabPay: You paid RM12.90 kat KOPITIAM PAK LAH. Baki wallet RM40.10. Tengok resit dalam app Grab > Aktiviti.
+n0232,LEGITIMATE,ms,ewallet,Boost: Anda menerima RM20.00 daripada SITI AMINAH. Baki dompet anda kini RM58.75.
+n0233,LEGITIMATE,mixed,ewallet,ShopeePay: Top up RM100.00 berjaya! Baki sekarang RM142.30. Transaction ID SP2611098871.
+n0234,LEGITIMATE,ms,ewallet,MAE: Pembayaran kod QR RM9.00 kepada GERAI BUAH HAJI ROSLAN berjaya pada 10/11/2026 12:40.
+n0235,LEGITIMATE,ms,ewallet,Touch 'n Go eWallet: Auto-tambah nilai RM100.00 telah dilakukan kerana baki anda di bawah RM20.00. Anda boleh mengurus tetapan ini dalam aplikasi atau rujuk touchngo.com.my.
+n0236,LEGITIMATE,mixed,ewallet,Setel: Fuel payment RM60.00 di Petronas Jalan Kebun pump 4 dah selesai. You earned 60 Mesra points. Terima kasih!
+n0237,LEGITIMATE,ms,ewallet,BigPay: Kad anda berakhir 5527 digunakan untuk RM34.50 di PASAR RAYA SEGAR pada 07/11/2026 18:26. Baki: RM212.08.
+n0238,LEGITIMATE,ms,ewallet,"TNG eWallet: Pulangan GO+ harian anda sebanyak RM0.12 telah dikreditkan. Jumlah baki GO+: RM1,460.22."
+n0239,LEGITIMATE,mixed,ewallet,Boost: Bill payment untuk Unifi RM139.00 success. Ref BST88120477. Resit ada dalam app under Sejarah.
+n0240,LEGITIMATE,ms,ewallet,"Touch 'n Go eWallet: Pengesahan identiti akaun anda telah berjaya. Had dompet anda kini RM20,000. Terma penuh di touchngo.com.my."
+n0241,LEGITIMATE,ms,telco,Maxis: Bil anda bagi bulan Oktober 2026 berjumlah RM98.00 telah sedia. Tarikh akhir bayaran 20/11/2026. Lihat bil di aplikasi Maxis atau maxis.com.my.
+n0242,LEGITIMATE,ms,telco,CelcomDigi: Anda telah menggunakan 80% daripada kuota data 40GB. Kuota akan diperbaharui pada 15/11/2026. Semak penggunaan di aplikasi atau celcomdigi.com.
+n0243,LEGITIMATE,ms,telco,"RM0 U Mobile: Tambah nilai RM30 berjaya. Baki kredit: RM32.15, sah sehingga 09/12/2026."
+n0244,LEGITIMATE,mixed,telco,Hotlink: Your RM35 Prepaid Unlimited pass dah aktif. Valid sampai 10/12/2026. Check baki guna app Hotlink.
+n0245,LEGITIMATE,ms,telco,unifi Mobile: Terima kasih. Bayaran RM59.00 bagi akaun 10****8823 telah diterima pada 06/11/2026. Resit tersedia di unifi.com.my.
+n0246,LEGITIMATE,mixed,telco,Yes 5G: Roaming pass Singapore you dah habis quota 3GB. Internet akan sambung semula bila pass baru dibeli melalui app MyYes.
+n0247,LEGITIMATE,ms,telco,Maxis: Kontrak peranti anda bagi talian 012-XXX 6690 akan tamat pada 30/11/2026. Tiada tindakan diperlukan; pelan anda akan diteruskan seperti biasa.
+n0248,LEGITIMATE,mixed,telco,Digi: Internet pass harian RM3 auto-renew berjaya. Nak stop auto-renew? Buka app CelcomDigi > Langganan.
+n0249,LEGITIMATE,ms,telco,CelcomDigi: Bil bulan November RM65.30 telah dijelaskan melalui autodebit kad berakhir 4410. Terima kasih. Resit tersedia di celcomdigi.com.
+n0250,LEGITIMATE,ms,telco,"U Mobile: Permohonan tukar pelan kepada pascabayar 68 telah berjaya dan berkuat kuasa pada kitaran bil seterusnya, 01/12/2026. Maklumat lanjut di u.com.my."
+n0251,LEGITIMATE,mixed,telco,redONE: Bill Oct RM38.00 dah ready. Due date 18/11. Bayar di app redONE atau mana-mana kaunter yang biasa. TQ.
+n0252,LEGITIMATE,ms,telco,Tune Talk: Kredit anda akan tamat tempoh pada 14/11/2026. Tambah nilai boleh dibuat di kedai serbaneka atau aplikasi Tune Talk untuk mengekalkan talian aktif.
+n0253,LEGITIMATE,ms,utility_bill,TNB: Bil elektrik anda bagi akaun 2200****5512 berjumlah RM142.65 telah sedia. Tarikh akhir bayaran 28/11/2026. Semak di aplikasi myTNB atau tnb.com.my.
+n0254,LEGITIMATE,ms,utility_bill,Air Selangor: Bil air November 2026 bagi akaun ****7701 ialah RM38.20. Sila jelaskan sebelum 30/11/2026 melalui aplikasi Air Selangor atau airselangor.com.
+n0255,LEGITIMATE,ms,utility_bill,unifi: Bil anda RM139.00 (akaun 10****4456) kini tersedia di aplikasi MyUnifi dan unifi.com.my. Bayar sebelum 22/11/2026.
+n0256,LEGITIMATE,ms,utility_bill,TNB: Terima kasih. Bayaran RM142.65 untuk akaun 2200****5512 telah diterima pada 10/11/2026. No. resit 884120557. Rekod bayaran di tnb.com.my.
+n0257,LEGITIMATE,mixed,utility_bill,TIME Internet: Your November bill RM129.00 dah charged to card ending 2087. Invoice boleh download dari portal Self Care.
+n0258,LEGITIMATE,ms,utility_bill,"TNB: Makluman gangguan bekalan berjadual di Taman Seri Indah pada 14/11/2026, 9.00 pagi hingga 1.00 petang bagi kerja penyelenggaraan. Harap maaf atas kesulitan. Kemas kini di tnb.com.my."
+n0259,LEGITIMATE,ms,utility_bill,Indah Water: Bil pembetungan bagi tempoh Jul-Dis 2026 sebanyak RM48.00 telah dikeluarkan untuk akaun ****3390. Bayaran boleh dibuat melalui JomPAY atau kaunter IWK.
+n0260,LEGITIMATE,mixed,utility_bill,"Unifi: Technician appointment confirmed pada 12/11/2026, slot 2PM-4PM. Pasukan kami akan call sebelum sampai. Nak tukar tarikh, guna app MyUnifi."
+n0261,LEGITIMATE,ms,utility_bill,"Ranhill SAJ: Bacaan meter anda bagi November telah direkodkan. Jumlah bil RM27.85, tarikh akhir 05/12/2026."
+n0262,LEGITIMATE,ms,utility_bill,Air Selangor: Bekalan air di kawasan Seksyen 7 telah pulih sepenuhnya pada jam 6.30 petang. Terima kasih atas kesabaran anda. Kemas kini lanjut di airselangor.com.
+n0263,LEGITIMATE,mixed,utility_bill,"Maxis Fibre: Bill Nov RM99.00 is ready. Auto-debit akan jalan pada 18/11, so tak perlu buat apa-apa."
+n0264,LEGITIMATE,ms,utility_bill,TNB: Rebat elektrik RM40.00 di bawah program bantuan kerajaan telah ditolak secara automatik daripada bil November anda. Tiada permohonan diperlukan.
+n0265,LEGITIMATE,ms,government,LHDN: Bayaran balik cukai pendapatan Tahun Taksiran 2025 sebanyak RM412.30 telah dikreditkan ke akaun bank berdaftar anda. Semakan di mytax.hasil.gov.my.
+n0266,LEGITIMATE,ms,government,"JPJ: Lesen memandu anda akan tamat tempoh pada 15/12/2026. Pembaharuan boleh dibuat melalui aplikasi MyJPJ, jpj.gov.my atau kaunter JPJ."
+n0267,LEGITIMATE,ms,government,JPN: MyKad anda telah sedia untuk diambil di JPN Cawangan Petaling Jaya mulai 12/11/2026. Sila bawa resit permohonan. Waktu operasi di jpn.gov.my.
+n0268,LEGITIMATE,ms,government,"Imigresen: Pasport anda (No. permohonan PJ2611-004512) sedia diambil di Pejabat Imigresen UTC Sentul. Waktu kutipan 8.00 pagi - 4.30 petang, Isnin hingga Jumaat. Maklumat lanjut di imi.gov.my."
+n0269,LEGITIMATE,ms,government,MBPJ: Bil cukai taksiran penggal pertama 2027 bagi akaun ****2291 berjumlah RM186.00. Tarikh akhir bayaran 28/02/2027. Bayaran di kaunter MBPJ atau mbpj.gov.my.
+n0270,LEGITIMATE,ms,government,STR: Bayaran Sumbangan Tunai Rahmah Fasa 4 sebanyak RM300 telah dikreditkan terus ke akaun bank anda pada 05/11/2026. Tiada tindakan diperlukan. Semakan status di bantuantunai.hasil.gov.my.
+n0271,LEGITIMATE,ms,government,LHDN: Peringatan mesra. Tarikh akhir e-Filing Borang BE bagi Tahun Taksiran 2026 ialah 30 April 2027. Hantar melalui mytax.hasil.gov.my.
+n0272,LEGITIMATE,ms,government,JPJ: Cukai jalan kenderaan WXX 1234 telah berjaya diperbaharui sehingga 09/11/2027. Paparan digital tersedia dalam aplikasi MyJPJ. Rekod juga boleh disemak di jpj.gov.my.
+n0273,LEGITIMATE,ms,government,KWSP: Caruman bulan Oktober 2026 sebanyak RM715.00 daripada majikan anda telah dikreditkan. Semak penyata di aplikasi KWSP i-Akaun atau kwsp.gov.my.
+n0274,LEGITIMATE,mixed,government,PERKESO: Claim faedah hilang upaya sementara anda dah diluluskan. RM640.00 akan masuk akaun bank berdaftar dalam 7 hari bekerja. Info lanjut di perkeso.gov.my.
+n0275,LEGITIMATE,ms,government,DBKL: Kompaun letak kereta no. K2611****87 sebanyak RM30.00 telah dijelaskan. Terima kasih. No. resit 20261108-5521. Semakan di dbkl.gov.my.
+n0276,LEGITIMATE,ms,government,Bantuan SARA: Kredit RM100 bagi bulan November telah dimasukkan ke MyKad anda. Gunakan di kedai yang menyertai program. Tiada pendaftaran semula diperlukan.
+n0277,LEGITIMATE,ms,delivery_courier,Pos Malaysia: Bungkusan anda EP123456789MY telah tiba di Pusat Mel Shah Alam dan akan dihantar hari ini. Jejak di pos.com.my.
+n0278,LEGITIMATE,mixed,delivery_courier,J&T Express: Parcel 630012345678 is out for delivery harini. Rider akan call sebelum sampai ya.
+n0279,LEGITIMATE,mixed,delivery_courier,Ninja Van: Hi! Parcel anda dari KEDAI NORA dah delivered & diterima oleh 'Aiman (adik)' pada 09/11 3:42PM.
+n0280,LEGITIMATE,ms,delivery_courier,Pos Laju: Cubaan penghantaran bagi item EH987654321MY tidak berjaya kerana tiada penerima. Item boleh dituntut di Pejabat Pos Bangi dalam masa 5 hari bekerja dengan membawa kad pengenalan. Jejak di pos.com.my.
+n0281,LEGITIMATE,mixed,delivery_courier,SPX Express: Your parcel SPXMY0412345678 dah sampai hub Puchong. Expected delivery esok 11/11. Track dalam app Shopee.
+n0282,LEGITIMATE,ms,delivery_courier,"DHL eCommerce: Bungkusan anda no. 5412****9087 telah diserahkan di kaunter peti surat pangsapuri pada 08/11/2026, 11.20 pagi."
+n0283,LEGITIMATE,mixed,delivery_courier,GDEX: Consignment MY55120098 delay sikit sebab cuaca. New ETA 12/11. Sorry for the inconvenience.
+n0284,LEGITIMATE,ms,delivery_courier,City-Link: Penghantaran anda 0602****4471 dijadualkan pada 11/11/2026 antara 9 pagi hingga 6 petang.
+n0285,LEGITIMATE,mixed,delivery_courier,"Flash Express: COD parcel RM45.00 dari BUTIK HANA akan sampai today. Kalau tak ada kat rumah, rider akan cuba lagi esok."
+n0286,LEGITIMATE,ms,delivery_courier,Pos Malaysia: Item berdaftar RR456123789MY telah diterima dan ditandatangani oleh penerima pada 07/11/2026. Rekod penghantaran di pos.com.my.
+n0287,LEGITIMATE,mixed,delivery_courier,"Lalamove: Driver Encik Rahman (van, VBX 4412) dah pickup barang you. Anggaran sampai 25 minit."
+n0288,LEGITIMATE,ms,delivery_courier,Skynet: Bungkusan 2388****1205 kini berada di depoh Kuantan. Anggaran penghantaran: 12/11/2026.
+n0289,LEGITIMATE,mixed,ecommerce_order,Shopee: Order 2611093KXY88 dah shipped! Seller guna SPX Express. Track your parcel dalam app atau shopee.com.my.
+n0290,LEGITIMATE,ms,ecommerce_order,Lazada: Pesanan anda #3384****9120 telah disahkan. Jumlah RM67.80 dibayar melalui FPX. Jangkaan penghantaran 12-14 Nov. Semak di lazada.com.my.
+n0291,LEGITIMATE,ms,ecommerce_order,Shopee: Bayaran balik RM35.90 bagi pesanan 2610284MNP21 telah dikreditkan ke ShopeePay anda.
+n0292,LEGITIMATE,mixed,ecommerce_order,"TikTok Shop: Your order is confirmed. 2 item, total RM48.00. Seller akan pos dalam 2 hari."
+n0293,LEGITIMATE,ms,ecommerce_order,Lazada: Pesanan #3384****9120 telah berjaya dihantar. Terima kasih kerana membeli-belah bersama kami. Butiran pesanan di lazada.com.my.
+n0294,LEGITIMATE,mixed,ecommerce_order,"Zalora: Return request diterima. Drop parcel kat mana-mana kaunter Pos Laju sebelum 15/11, refund diproses lepas kami terima barang."
+n0295,LEGITIMATE,ms,ecommerce_order,Shopee: Penjual telah membatalkan pesanan 2611051QRS77 kerana kehabisan stok. Bayaran RM120.00 akan dipulangkan ke kaedah pembayaran asal dalam 3-5 hari bekerja. Butiran di shopee.com.my.
+n0296,LEGITIMATE,mixed,ecommerce_order,"Hi Puan Suraya, order tudung bawal 3 helai (RM87) dah siap packing, esok pagi kami pos. Tracking number kami WhatsApp kemudian. - Butik Seri Kasih"
+n0297,LEGITIMATE,ms,ecommerce_order,Mudah.my: Iklan anda 'Meja makan kayu jati' telah diluluskan dan kini dipaparkan.
+n0298,LEGITIMATE,ms,ecommerce_order,"Lazada: Baucar penghantaran percuma anda akan tamat pada 11/11/2026, 11.59 malam. Baucar tersedia di halaman 'Baucar Saya' dalam aplikasi."
+n0299,LEGITIMATE,mixed,ecommerce_order,"IKEA: Order 1234567890 ready for collection kat IKEA Cheras, kaunter Click & Collect. Bawa email pengesahan sekali."
+n0300,LEGITIMATE,ms,ecommerce_order,Shopee: Pesanan 2611093KXY88 telah diterima. Dana RM54.20 telah dilepaskan kepada penjual. Anda boleh menilai produk dalam aplikasi atau di shopee.com.my.
+n0301,LEGITIMATE,mixed,ride_food,"Grab: Driver anda, Hafiz (Perodua Bezza, WA 5521 K) dah sampai pickup point. Please be ready ya."
+n0302,LEGITIMATE,mixed,ride_food,foodpanda: Order #k9x2-4471 dari NASI KANDAR BESTARI on the way! Rider sampai lebih kurang 12 minit.
+n0303,LEGITIMATE,ms,ride_food,Grab: Resit perjalanan anda pada 09/11/2026. Tambang RM14.00 dibayar dengan GrabPay. Terima kasih kerana menggunakan Grab.
+n0304,LEGITIMATE,mixed,ride_food,"GrabFood: Sorry, restoran dah tutup awal so order you dibatalkan. Refund RM23.50 masuk balik GrabPay wallet dalam beberapa minit."
+n0305,LEGITIMATE,mixed,ride_food,ShopeeFood: Rider dah collect makanan you dari AYAM PENYET WAK DIN. Sila standby kat lobby.
+n0306,LEGITIMATE,ms,ride_food,"AirAsia Ride: Tempahan perjalanan anda ke KLIA2 pada 12/11/2026, 4.30 pagi telah disahkan. Butiran pemandu akan dihantar 15 minit sebelum waktu ambil."
+n0307,LEGITIMATE,mixed,ride_food,Grab: Your ride ke Mid Valley dah completed. Total RM11.00 (tunai). Jangan lupa rate driver.
+n0308,LEGITIMATE,ms,ride_food,foodpanda: Pesanan anda telah dihantar. Jumlah RM31.40 dibayar dengan kad berakhir 4410. Selamat menjamu selera!
+n0309,LEGITIMATE,mixed,ride_food,"Maxim: Driver on the way, Proton Saga putih JQR 8810, ETA 4 min. Tambang anggaran RM7."
+n0310,LEGITIMATE,ms,ride_food,Grab: Pemandu anda telah membatalkan perjalanan. Kami sedang mencari pemandu lain untuk anda. Tiada caj dikenakan.
+n0311,LEGITIMATE,mixed,ride_food,"Hai, saya rider foodpanda. Dah sampai depan guard house, tapi guard tak bagi masuk. Boleh turun ambil kat pondok? Order nasi lemak 2 bungkus."
+n0312,LEGITIMATE,ms,ride_food,GrabFood: Pesanan #GF-5512 sedang disediakan oleh restoran. Anggaran masa penghantaran: 1.15 tengah hari.
+n0313,LEGITIMATE,ms,healthcare,"Klinik Kesihatan Bandar Baru: Peringatan temu janji anda pada 13/11/2026, 8.30 pagi di Bilik 4. Sila bawa kad temu janji dan MyKad."
+n0314,LEGITIMATE,mixed,healthcare,"Hi Encik Azlan, reminder appointment scaling di Klinik Pergigian Damai esok 11/11 pukul 3.00pm. Kalau tak dapat hadir, call 03-1234 5678 ya."
+n0315,LEGITIMATE,ms,healthcare,Hospital Sultanah Aminah: Keputusan ujian darah anda telah sedia. Sila hadir ke Klinik Pakar Perubatan pada tarikh temu janji 18/11/2026 untuk perbincangan bersama doktor.
+n0316,LEGITIMATE,mixed,healthcare,"Klinik Dr. Farah: Ubat repeat you dah ready, boleh collect kat kaunter farmasi anytime waktu klinik (9am-9pm). Bawa kad rawatan."
+n0317,LEGITIMATE,ms,healthcare,"MySejahtera: Temu janji vaksin influenza anda disahkan pada 14/11/2026, 10.00 pagi di Klinik Kesihatan Seksyen 19."
+n0318,LEGITIMATE,mixed,healthcare,"Hospital Pakar Seri Damai: Your appointment dengan Dr. Tan (Ortopedik) confirmed 20/11/2026, 11.15am, Level 2 Klinik 2-08. Please datang 15 minit awal untuk registration."
+n0319,LEGITIMATE,ms,healthcare,Pusat Darah Negara: Terima kasih kerana menderma darah pada 01/11/2026. Anda layak menderma semula selepas 01/02/2027.
+n0320,LEGITIMATE,mixed,healthcare,"Farmasi Sihat: Puan Rohani, supplement yang you order (Vit D3 60 biji) dah sampai stok. Boleh datang ambil, kami simpan sampai Sabtu."
+n0321,LEGITIMATE,ms,healthcare,"Hospital Kuala Lumpur: Temu janji klinik mata anda pada 17/11/2026 telah ditunda ke 24/11/2026, 2.00 petang kerana pakar bercuti. Harap maklum."
+n0322,LEGITIMATE,mixed,healthcare,"Lab report untuk medical check-up tuan dah siap. Soft copy kami dah email, hard copy boleh ambil di kaunter. - Klinik Medijaya Jalan Tujuh"
+n0323,LEGITIMATE,ms,healthcare,"Klinik Kanak-Kanak Aisyah: Imunisasi 18 bulan bagi anak anda, Adam Mikhail, dijadualkan pada 19/11/2026. Sila bawa buku rekod kesihatan."
+n0324,LEGITIMATE,ms,education,"SK Taman Permata: Makluman kepada ibu bapa. Hari Anugerah Kecemerlangan akan diadakan pada 21/11/2026, 8.00 pagi di dewan sekolah. Murid hadir berpakaian seragam lengkap."
+n0325,LEGITIMATE,mixed,education,"Tadika Ceria: Dear parents, esok Rabu ada sukaneka. Anak-anak pakai baju sukan & bawa botol air. Balik awal pukul 11.30am ya."
+n0326,LEGITIMATE,ms,education,"UiTM: Keputusan peperiksaan akhir semester boleh disemak melalui portal pelajar mulai 12/11/2026, 12.00 tengah hari."
+n0327,LEGITIMATE,mixed,education,"Group Kelas 5 Bestari: Assalamualaikum ibu bapa, mesyuarat PIBG hari Sabtu ni 9am kat dewan. Parking dalam kawasan sekolah, masuk ikut pintu B. Sarapan disediakan."
+n0328,LEGITIMATE,ms,education,Universiti Malaya: Pendaftaran kursus bagi Semester 2 Sesi 2026/2027 dibuka dari 16 hingga 20 November 2026 melalui sistem pelajar universiti.
+n0329,LEGITIMATE,mixed,education,"Cikgu Liyana: Reminder, homework Matematik muka surat 45-46 hantar Khamis. Parents tolong check buku latihan anak ya, thank you."
+n0330,LEGITIMATE,ms,education,SMK Seri Mutiara: Sesi persekolahan pada 13/11/2026 digantikan dengan pembelajaran di rumah kerana dewan digunakan sebagai pusat peperiksaan SPM. Jadual dihantar melalui guru kelas.
+n0331,LEGITIMATE,mixed,education,Pusat Tuisyen Bijak: Kelas Add Maths Form 5 malam ni postponed ke Sabtu 10am sebab cikgu demam. Sorry semua.
+n0332,LEGITIMATE,ms,education,KPM: Bantuan Awal Persekolahan RM150 bagi murid berdaftar akan disalurkan melalui pihak sekolah. Ibu bapa tidak perlu membuat sebarang permohonan. Maklumat rasmi di moe.gov.my.
+n0333,LEGITIMATE,mixed,education,Taska Permata Hati: Fees bulan November RM380 dah kami terima. Terima kasih mommy Aqil! Resit dalam beg anak.
+n0334,LEGITIMATE,ms,education,Politeknik Shah Alam: Majlis konvokesyen ke-25 akan berlangsung pada 28/11/2026. Graduan boleh mengambil jubah di Unit Hal Ehwal Pelajar mulai 23/11/2026.
+n0335,LEGITIMATE,ms,insurance_takaful,"Etiqa Takaful: Sijil takaful motor anda bagi kenderaan WXX 1234 akan tamat pada 05/12/2026. Pembaharuan boleh dibuat di etiqa.com.my, aplikasi Etiqa+ atau melalui ejen anda."
+n0336,LEGITIMATE,ms,insurance_takaful,Takaful Ikhlas: Sumbangan bulanan RM150.00 bagi sijil ****4471 telah berjaya didebit pada 05/11/2026. Terima kasih.
+n0337,LEGITIMATE,mixed,insurance_takaful,"Hi Puan Zainab, ni Farid agent takaful puan. Roadtax & insurance kereta Myvi expire 30/11. Quotation tahun ni RM612, NCD 55% macam biasa. Nak proceed nanti bagitahu je ya."
+n0338,LEGITIMATE,ms,insurance_takaful,"Prudential BSN Takaful: Tuntutan perubatan anda (Ruj: CLM-2611-00392) telah diluluskan. Bayaran RM1,280.00 akan dikreditkan ke akaun berdaftar dalam 5 hari bekerja."
+n0339,LEGITIMATE,ms,insurance_takaful,AIA: Penyata tahunan polisi ****8802 bagi 2026 kini tersedia di aplikasi My AIA dan aia.com.my.
+n0340,LEGITIMATE,ms,insurance_takaful,Zurich Takaful: Perlindungan takaful kebakaran bagi rumah anda telah diperbaharui sehingga 14/11/2027. e-Sijil dihantar ke e-mel berdaftar.
+n0341,LEGITIMATE,mixed,insurance_takaful,Allianz: Your motor claim untuk WXX 1234 dah assigned ke panel workshop Bengkel Jaya Auto. Workshop akan contact you untuk tarikh repair.
+n0342,LEGITIMATE,ms,insurance_takaful,"Great Eastern Takaful: Peringatan mesra, sumbangan tahunan RM2,400.00 bagi sijil ****1190 perlu dijelaskan sebelum 30/11/2026 melalui aplikasi atau kaunter kami."
+n0343,LEGITIMATE,ms,insurance_takaful,Etiqa: e-Nota perlindungan motor anda (No. ****7730) telah dikeluarkan dan rekod JPJ telah dikemas kini. Tiada salinan bercetak diperlukan. Semak di etiqa.com.my.
+n0344,LEGITIMATE,mixed,insurance_takaful,"Takaful Malaysia: Cash back 15% untuk sijil motor tahun lepas, RM88.20, dah credited ke akaun bank you. No action needed."
+n0345,LEGITIMATE,ms,insurance_takaful,PERKESO: Caruman Skim Keselamatan Sosial Pekerjaan Sendiri anda aktif sehingga 31/10/2027. Sijil boleh dimuat turun di perkeso.gov.my.
+n0346,LEGITIMATE,ms,subscription,Astro: Bil November RM104.95 bagi akaun ****6652 telah sedia. Bayaran autodebit akan dibuat pada 15/11/2026. Butiran di aplikasi My Astro atau astro.com.my.
+n0347,LEGITIMATE,mixed,subscription,Netflix: Your membership dah renew. RM44.90 charged ke kad ending 4410 pada 08/11/2026.
+n0348,LEGITIMATE,mixed,subscription,Spotify Premium: Payment RM17.50 berjaya. Next billing date 09/12/2026. Manage plan dalam account settings.
+n0349,LEGITIMATE,ms,subscription,Touch 'n Go: Langganan PayDirect bagi kad ****7781 kekal aktif. Tiada caj tambahan dikenakan. Rujuk touchngo.com.my.
+n0350,LEGITIMATE,mixed,subscription,"FitZone Gym: Membership bulanan you auto-renew 01/12, RM120 debit dari kad yang sama. Nak freeze, inform kaunter before 25/11."
+n0351,LEGITIMATE,ms,subscription,Google Play: Langganan storan 100GB anda telah diperbaharui pada 07/11/2026. RM8.49 dicaj melalui bil telefon.
+n0352,LEGITIMATE,ms,subscription,Akhbar digital: Langganan tahunan anda akan tamat pada 30/11/2026. Pembaharuan automatik dimatikan; tiada caj akan dikenakan.
+n0353,LEGITIMATE,mixed,subscription,"Disney+ Hotstar: Plan tahunan you expire 20/11/2026. Auto-renew is ON, RM199.90 akan dicaj pada tarikh tu."
+n0354,LEGITIMATE,ms,subscription,"Apple: Resit anda. iCloud+ 50GB, RM3.90, dicaj pada 06/11/2026 kepada kaedah pembayaran berdaftar."
+n0355,LEGITIMATE,mixed,subscription,"Kak Mah Catering: Langganan lunch box bulan Nov (22 hari, RM264) confirm ya dik. Start hantar Isnin, macam biasa letak kat guard."
+n0356,LEGITIMATE,ms,subscription,YouTube Premium: Tempoh percubaan percuma anda tamat pada 13/11/2026. Selepas itu RM17.90 sebulan akan dicaj. Anda boleh membatalkan pada bila-bila masa dalam tetapan akaun.
+n0357,LEGITIMATE,ms,employer_hr,HR: Gaji bulan Oktober 2026 telah dikreditkan pada 28/10/2026. Slip gaji boleh dimuat turun melalui portal pekerja.
+n0358,LEGITIMATE,mixed,employer_hr,"Team, reminder: claim bulan Oktober kena submit dalam system before Friday 5pm. Lambat masuk payroll bulan depan. - Finance"
+n0359,LEGITIMATE,mixed,employer_hr,"Hi Aina, cuti tahunan you 17-18 Nov dah approved by Encik Kamal. Baki cuti: 6 hari."
+n0360,LEGITIMATE,ms,employer_hr,Makluman HR: Pejabat akan ditutup pada 20/11/2026 sempena cuti peristiwa. Operasi disambung semula pada 23/11/2026.
+n0361,LEGITIMATE,mixed,employer_hr,"Shift esok tukar sikit ya: Danial masuk 7am-3pm, Mei Ling 3pm-11pm. Any problem inform supervisor malam ni."
+n0362,LEGITIMATE,ms,employer_hr,Jabatan Sumber Manusia: Borang EA bagi tahun 2026 akan diedarkan melalui e-mel rasmi sebelum 28 Februari 2027. Panduan e-Filing di hasil.gov.my.
+n0363,LEGITIMATE,mixed,employer_hr,"Dear all, townhall Q4 pada Khamis 19/11, 10am kat Level 5 auditorium. Attendance wajib untuk semua department."
+n0364,LEGITIMATE,ms,employer_hr,Payroll: Bonus tahunan akan dibayar bersama gaji Disember pada 24/12/2026. Potongan KWSP dan PCB tertakluk seperti biasa.
+n0365,LEGITIMATE,mixed,employer_hr,"Encik Rizal, medical claim RM85 (klinik panel) dah reimbursed sekali dengan gaji bulan ni. Thanks."
+n0366,LEGITIMATE,ms,employer_hr,"HR: Pengesahan jawatan anda berkuat kuasa 01/11/2026 telah diluluskan. Surat rasmi boleh diambil di Unit Sumber Manusia, Aras 3."
+n0367,LEGITIMATE,mixed,employer_hr,"Reminder staff: training keselamatan kebakaran esok 9.00am, kumpul kat assembly point B. Pakai kasut tertutup."
+n0368,LEGITIMATE,mixed,recruiter_interview,"Hi Encik Syafiq, saya Amira dari HR Teguh Logistik Sdn Bhd. We'd like to invite you untuk interview jawatan Admin Executive pada 14/11, 10am di office kami di Shah Alam. Boleh confirm kehadiran?"
+n0369,LEGITIMATE,ms,recruiter_interview,Suruhanjaya Perkhidmatan Awam: Anda dipanggil menghadiri temu duga jawatan Pembantu Tadbir N19 pada 25/11/2026. Semak butiran di portal rasmi spa.gov.my.
+n0370,LEGITIMATE,mixed,recruiter_interview,"Hi Mei Yee, thanks for applying. Interview second round dengan Head of Marketing akan buat online, Rabu 18/11 2.30pm. Link meeting kami hantar ke email you."
+n0371,LEGITIMATE,mixed,recruiter_interview,"Salam, ini dari Restoran Selera Kampung. Awak ada apply kerja waiter kan? Boleh datang walk-in interview esok pukul 3 petang, bawa resume je."
+n0372,LEGITIMATE,ms,recruiter_interview,Terima kasih kerana memohon jawatan Jurutera Projek di Binaan Maju Sdn Bhd. Permohonan anda sedang disemak dan calon yang disenarai pendek akan dihubungi dalam masa dua minggu.
+n0373,LEGITIMATE,mixed,recruiter_interview,"Hi Hakim, sorry nak reschedule interview you dari Isnin ke Selasa 17/11, same time 11am. Interviewer ada meeting urgent. Is that okay?"
+n0374,LEGITIMATE,ms,recruiter_interview,Dukacita dimaklumkan permohonan anda bagi jawatan Pegawai Khidmat Pelanggan tidak berjaya pada kali ini. Kami menghargai minat anda dan akan menyimpan resume anda untuk kekosongan akan datang.
+n0375,LEGITIMATE,mixed,recruiter_interview,"Tahniah Puan Nadia! You berjaya untuk position Account Assistant. Offer letter kami email hari ni, please sign & reply by 16/11. Start date 1 Dec."
+n0376,LEGITIMATE,mixed,recruiter_interview,JobStreet: Majikan Seri Tech Solutions dah view application you untuk Junior Developer. Check status dalam app.
+n0377,LEGITIMATE,ms,recruiter_interview,MYFutureJobs: Terdapat 3 kekosongan baharu yang sepadan dengan profil anda. Log masuk ke portal MYFutureJobs untuk melihat butiran.
+n0378,LEGITIMATE,mixed,recruiter_interview,"Reminder interview esok 9.30am, Menara Harmoni Level 12. Parking visitor kat B2, daftar dulu di kaunter lobby. Jumpa esok! - Amira HR"
+n0379,LEGITIMATE,ms,booking_confirmation,"KTMB: Tempahan tiket ETS anda disahkan. KL Sentral - Ipoh, 15/11/2026, 9.10 pagi, Koc C Tempat Duduk 12A. No. tempahan 8841****20. Semak di ktmb.com.my."
+n0380,LEGITIMATE,mixed,booking_confirmation,"AirAsia: Booking confirmed! KUL-KBR 21/11/2026 7.25am, booking no. QX7K2M. Web check-in dah buka dalam app AirAsia MOVE. Urus tempahan di airasia.com."
+n0381,LEGITIMATE,mixed,booking_confirmation,"Hi, booking meja untuk 6 orang at Restoran Tepi Sawah pada Sabtu 14/11, 8pm dah confirm atas nama Puan Lina. Jumpa nanti!"
+n0382,LEGITIMATE,ms,booking_confirmation,Malaysia Airlines: Penerbangan MH1432 KUL-LGK pada 22/11/2026 berlepas 14:05. Daftar masuk dalam talian dibuka 48 jam sebelum berlepas di malaysiaairlines.com.
+n0383,LEGITIMATE,mixed,booking_confirmation,"Homestay D'Sawah: Booking 2 malam (28-30 Nov) confirm. Deposit RM100 received, balance RM260 bayar masa check-in. Check-in 3pm."
+n0384,LEGITIMATE,ms,booking_confirmation,"GSC: Tempahan anda berjaya. 2 tiket, Dewan 5, 13/11/2026 9.00 malam, tempat duduk H7-H8. Tunjukkan kod QR dalam aplikasi di pintu masuk."
+n0385,LEGITIMATE,mixed,booking_confirmation,Salun Rania: Appointment rebonding you confirm Ahad 15/11 pukul 11am dengan stylist Kak Wani. Kalau lambat lebih 15 minit slot terlepas ya.
+n0386,LEGITIMATE,ms,booking_confirmation,"JPJ: Slot temu janji anda di JPJ Wangsa Maju pada 16/11/2026, 10.30 pagi bagi urusan tukar hak milik telah disahkan. Sila hadir 10 minit lebih awal. Senarai dokumen di jpj.gov.my."
+n0387,LEGITIMATE,mixed,booking_confirmation,"Bengkel Ah Seng: Servis kereta WXX 1234 booked for Jumaat 13/11, 9am. Estimate RM280 (minyak hitam + filter). Kereta boleh ambil petang."
+n0388,LEGITIMATE,ms,booking_confirmation,"Agoda: Tempahan anda di Hotel Seri Pantai, Kuala Terengganu disahkan. Daftar masuk 05/12/2026, daftar keluar 07/12/2026. ID tempahan 9912****45."
+n0389,LEGITIMATE,ms,booking_confirmation,Dewan Komuniti Taman Bukit Indah: Tempahan dewan bagi majlis kenduri pada 06/12/2026 telah diluluskan. Kunci boleh diambil di pejabat pengurusan sehari sebelum majlis.
+n0390,LEGITIMATE,ms,safety_awareness,"RM0 Maybank: Kami tidak akan meminta kata laluan, TAC atau nombor kad anda melalui SMS, panggilan atau e-mel. Sentiasa taip maybank2u.com.my sendiri di pelayar anda."
+n0391,LEGITIMATE,ms,safety_awareness,"CIMB: Peringatan keselamatan. CIMB tidak menghantar pautan melalui SMS. Jika anda menerima SMS berpautan atas nama kami, jangan klik. Maklumat lanjut di cimb.com.my."
+n0392,LEGITIMATE,ms,safety_awareness,"BNM: Bank Negara Malaysia tidak pernah menghubungi orang awam untuk meminta pindahan wang ke akaun pihak ketiga. Jika ragu-ragu, hubungi bank anda atau Pusat Respons Scam Kebangsaan 997. Rujuk bnm.gov.my."
+n0393,LEGITIMATE,ms,safety_awareness,"Bank Islam: Jangan sesekali berkongsi ID pengguna, kata laluan atau kod TAC. Kakitangan kami tidak akan memintanya. Layari bankislam.com hanya dengan menaip alamat tersebut sendiri."
+n0394,LEGITIMATE,ms,safety_awareness,LHDN: LHDN tidak menghantar pautan bayaran balik cukai melalui SMS atau WhatsApp. Semua urusan dibuat melalui mytax.hasil.gov.my sahaja.
+n0395,LEGITIMATE,mixed,safety_awareness,"Touch 'n Go eWallet: Reminder, kami takkan call minta PIN atau OTP you. Kalau ada yang minta, itu bukan kami. Report melalui Help Centre dalam app."
+n0396,LEGITIMATE,ms,safety_awareness,PDRM: Semak nombor akaun dan nombor telefon yang mencurigakan di portal Semak Mule sebelum membuat sebarang pindahan wang. Mangsa penipuan boleh menghubungi talian 997.
+n0397,LEGITIMATE,ms,safety_awareness,Bank Rakyat: Pihak bank tidak akan meminta anda memuat turun aplikasi daripada pautan atau fail APK. Muat turun aplikasi rasmi hanya daripada gedung aplikasi rasmi. Rujuk bankrakyat.com.my.
+n0398,LEGITIMATE,ms,safety_awareness,"KWSP: KWSP tidak melantik ejen bagi urusan pengeluaran. Semua perkhidmatan adalah percuma di kaunter, aplikasi i-Akaun dan kwsp.gov.my."
+n0399,LEGITIMATE,mixed,safety_awareness,"Shopee: Friendly reminder, jangan buat payment di luar platform Shopee walaupun seller minta. Semua urusan rasmi hanya dalam app atau shopee.com.my."
+n0400,LEGITIMATE,ms,safety_awareness,Pos Malaysia: Kami tidak mengenakan sebarang caj penghantaran semula melalui pautan SMS. Semak status bungkusan anda hanya di pos.com.my atau aplikasi Pos Malaysia.
+n0401,SCAM,en,bank_phishing_link,"Maybank2u: We noticed a sign-in from a new device (Samsung A54, Johor Bahru) on 09/11 at 22:14. If this was not you, review your account at https://maybank2u-secure.top/verify within 24 hours to keep access."
+n0402,SCAM,en,bank_phishing_link,CIMB Clicks Notice: Your Secure Device binding expires today. Re-register at cimbclicks-update.online to avoid interruption. Ref: CC-88213904
+n0403,SCAM,en,bank_phishing_link,"Dear customer, as part of Bank Negara's 2026 e-KYC refresh, Public Bank requires all online banking users to reconfirm their details. Please complete the form at pbebank-ekyc.info/form before 15 November. Thank you for banking with us."
+n0404,SCAM,en,bank_phishing_link,"RHB: Your statement for October is ready. View securely: bit.ly/rhb-estmt-7731 (login with username, password and card PIN required)"
+n0405,SCAM,en,bank_phishing_link,HONG LEONG CONNECT ALERT!!! Your account will be LOCKED in 2 HOURS due to incomplete verification. Click NOW http://hlb-connect-verify.xyz
+n0406,SCAM,ms,bank_phishing_link,Maybank: Akaun anda telah dikemas kini kepada sistem keselamatan baharu. Sila sahkan maklumat anda di m2u-pengesahan.site sebelum 12/11 bagi mengelakkan sekatan perkhidmatan.
+n0407,SCAM,ms,bank_phishing_link,"Bank Islam: Tuan/Puan, peranti baharu telah didaftarkan untuk GO Secure pada 08/11 jam 9.42 malam. Jika bukan anda, batalkan segera di bankislam-go.online/batal. No. Ruj: BI2611-40917"
+n0408,SCAM,ms,bank_phishing_link,PERHATIAN! Akaun BSN anda akan DITUTUP hari ini kerana maklumat tidak lengkap. Kemaskini SEKARANG: mybsn-kemaskini.top
+n0409,SCAM,ms,bank_phishing_link,"Pelanggan AmBank yang dihormati, mata ganjaran AmBonus anda berjumlah 18,450 mata akan luput pada 30/11. Tebus sekarang dengan log masuk di ambank-rewards.club dan masukkan nombor kad serta CVV untuk pengesahan."
+n0410,SCAM,ms,bank_phishing_link,"RHB Now: Had pindahan harian anda telah ditukar kepada RM50,000. Sekiranya anda tidak membuat permohonan ini, sila log masuk di rhbnow-semak.cc untuk membatalkan."
+n0411,SCAM,mixed,bank_phishing_link,"Maybank: Your MAE app perlu update security certificate sebelum 11/11. Tekan link ni utk update: mae-secure-update.top/app. Kalau tak update, akaun akan temporarily disabled ya."
+n0412,SCAM,mixed,bank_phishing_link,"CIMB: Dear customer, akaun anda detected unusual login dari Kuching. Sila verify identity anda di cimb-octo-verify.live dalam masa 12 jam. TQ."
+n0413,SCAM,en,fake_transaction_alert_callback,"RM 2,899.00 was charged to your Maybank Visa card ending 4417 at LAZADA*TECHSTORE on 09/11. If you did not make this purchase, call our Card Fraud Unit at 03-1234 5678 immediately."
+n0414,SCAM,en,fake_transaction_alert_callback,CIMB: Card ending 8820 used for USD 612.40 at APPLE.COM/BILL. Not you? Contact 011-2345 6789 (24h) to dispute. Do not reply to this SMS.
+n0415,SCAM,en,fake_transaction_alert_callback,"Public Bank Alert: A transfer of RM4,500.00 to TAN W** K** (Acc ****3391) is pending approval. To cancel, WhatsApp our officer at +60 11-1111 2222 within 30 minutes."
+n0416,SCAM,en,fake_transaction_alert_callback,"Your HSBC credit card has been used for an overseas transaction of RM7,230.15 (Ref HS-2611-55102). If unauthorised, please call 1-300-00-1234 and have your card number and expiry date ready for verification."
+n0417,SCAM,en,fake_transaction_alert_callback,"Standard Chartered: We declined a card-not-present transaction of RM 899.00 at NETFLIX.COM. To confirm whether this was you, kindly return our call on 03-2222 0000 and quote case SC-4471906."
+n0418,SCAM,ms,fake_transaction_alert_callback,"RHB: Transaksi RM3,150.00 di SHOPEE*GADGETHUB menggunakan kad berakhir 2093 telah diluluskan. Jika bukan anda, hubungi 03-0000 1234 dengan segera untuk sekatan kad."
+n0419,SCAM,ms,fake_transaction_alert_callback,"Bank Rakyat: Pengeluaran ATM RM2,000 di Kota Bharu pada 09/11 5.12 pagi. Sekiranya tidak dilakukan oleh tuan/puan, sila hubungi Unit Pemantauan Kad di 012-345 6789."
+n0420,SCAM,ms,fake_transaction_alert_callback,"AMARAN MAYBANK: Kad anda digunakan RM5,999 di luar negara!! Hubungi SEGERA 011-0000 9999 sebelum wang ditolak!!"
+n0421,SCAM,ms,fake_transaction_alert_callback,"Hong Leong Bank: Pembayaran ansuran RM1,288.00 kepada AEON CREDIT telah dijadualkan daripada akaun anda pada 11/11. Untuk bantahan, hubungi pegawai kami En. Farid di 03-1111 0000 (waktu pejabat). No. Ruj: HL-774102."
+n0422,SCAM,mixed,fake_transaction_alert_callback,"Maybank2u: RM1,980.00 telah didebit dari akaun anda utk DuitNow transfer ke LIM *** HUAT. If bukan anda, call hotline 03-1234 0000 now untuk cancel transaction."
+n0423,SCAM,mixed,fake_transaction_alert_callback,"CIMB Alert: Kad kredit anda charge RM4,210 kat AGODA. Tak buat? Terus WhatsApp +60 11-2222 3333, officer on duty akan freeze card."
+n0424,SCAM,en,account_freeze_suspension,"Your Maybank account has been temporarily restricted following multiple failed login attempts. To restore access, confirm your identity at maybank-restore.help within 48 hours. Case ID: MBB-30917726."
+n0425,SCAM,en,account_freeze_suspension,CIMB: We have suspended outgoing transfers on your account pending verification of recent activity. Please reply with your full name and IC number so that an officer can assist.
+n0426,SCAM,en,account_freeze_suspension,URGENT: Your bank account is FROZEN under AMLA. Call 011-3333 4444 NOW or all funds will be forfeited within 24 HOURS.
+n0427,SCAM,en,account_freeze_suspension,Touch 'n Go eWallet: Your wallet has been suspended due to a mismatch in your registered details. Restore it at tng-ewallet-restore.site by entering your 6-digit PIN.
+n0428,SCAM,ms,account_freeze_suspension,Akaun Bank Islam anda telah dibekukan sementara kerana aktiviti mencurigakan. Sila sahkan identiti di bankislam-nyahbeku.online dalam tempoh 24 jam. No. Kes: BIMB/2611/0481.
+n0429,SCAM,ms,account_freeze_suspension,"Public Bank: Akses PBe anda digantung. Untuk pengaktifan semula, sila hubungi Pegawai Pematuhan, Pn. Suraya, di 03-1234 9999 dan sediakan nombor kad ATM serta PIN anda."
+n0430,SCAM,ms,account_freeze_suspension,NOTIS AKHIR: Akaun simpanan anda akan dibekukan oleh Bank Negara dalam masa 3 jam. Pindahkan baki ke akaun selamat yang diberikan pegawai. Hubungi 011-4444 5555.
+n0431,SCAM,ms,account_freeze_suspension,GXBank: Akaun anda disekat buat sementara waktu kerana dokumen pengenalan telah tamat tempoh. Muat naik gambar MyKad depan dan belakang di gxbank-dokumen.app untuk meneruskan penggunaan.
+n0432,SCAM,ms,account_freeze_suspension,"Tuan/Puan, sistem kami mendapati akaun AmBank anda tidak aktif melebihi 12 bulan dan akan digantung pada 14/11. Bagi mengekalkan akaun, sila buat pengesahan di amonline-aktif.info. Terima kasih."
+n0433,SCAM,mixed,account_freeze_suspension,"Maybank: Akaun anda kena temporary hold sebab ada suspicious login. Please verify dekat m2u-unlock.top sebelum 6pm hari ni, kalau tak akaun terus suspended."
+n0434,SCAM,mixed,account_freeze_suspension,"Boost: Your wallet dah kena freeze sbb gagal verify. Reply mesej ni dengan nama penuh, no IC & PIN utk reactivate."
+n0435,SCAM,en,otp_tac_request,"Maybank: A TAC was sent to your phone in error for a transaction you did not request. To cancel it, please reply to this message with the 6-digit code you received."
+n0436,SCAM,en,otp_tac_request,"Hi, this is CIMB customer care. We are reversing a wrong debit of RM350 to your account. You will receive an OTP shortly, kindly reply with the OTP to complete the refund."
+n0437,SCAM,en,otp_tac_request,WhatsApp Support: Your account is being registered on another device. Send us the 6-digit code sent by SMS to keep your account. Failure to do so will result in deactivation today.
+n0438,SCAM,en,otp_tac_request,"Shopee Security: To stop the unauthorised login to your account, share the verification code we just sent to you with our agent on WhatsApp +60 11-5555 6666."
+n0439,SCAM,en,otp_tac_request,"GrabPay: We're processing your RM50 goodwill credit. For security, please tell the agent calling from 03-3333 0000 the one-time PIN sent to this number."
+n0440,SCAM,ms,otp_tac_request,"Bank Rakyat: Kod TAC telah dihantar ke nombor anda bagi pembatalan transaksi RM1,200. Sila balas SMS ini dengan kod TAC tersebut untuk mengesahkan pembatalan."
+n0441,SCAM,ms,otp_tac_request,"Salam tuan, saya Aiman dari Unit Keselamatan Maybank. Kami sedang menyekat cubaan pindahan dari akaun tuan. Mohon berikan nombor OTP yang baru diterima supaya sekatan dapat dibuat segera."
+n0442,SCAM,ms,otp_tac_request,"Touch 'n Go eWallet: Permintaan tukar nombor telefon telah diterima. Jika bukan anda, balas dengan kod pengesahan 6 digit dan PIN eWallet anda untuk membatalkan."
+n0443,SCAM,ms,otp_tac_request,MAXIS: SIM anda sedang dipindahkan ke telefon lain. BALAS kod OTP SEKARANG untuk HALANG pemindahan!!!
+n0444,SCAM,mixed,otp_tac_request,"Hi sis, sorry ganggu. Saya tersalah masukkan no phone sis masa register akaun bank. Nanti ada 6 digit code masuk, boleh tolong forward kat saya tak? Urgent sangat ni."
+n0445,SCAM,mixed,otp_tac_request,"RHB: Kami detect login dari device baru. Untuk block, sila reply TAC number yang anda terima dalam masa 5 minit. Thank you."
+n0446,SCAM,en,ewallet_reward_phishing,Touch 'n Go eWallet: You've earned RM88 cashback from the Year-End Rewards campaign. Claim before 12/11 at tngo-cashback.top/claim
+n0447,SCAM,en,ewallet_reward_phishing,Congratulations! Your GrabPay wallet has been selected for an RM200 loyalty rebate. Verify your wallet at grab-rebate.online and enter your GrabPay PIN to receive the credit.
+n0448,SCAM,en,ewallet_reward_phishing,Boost: Your 11.11 reward of RM111 is pending. Tap bit.ly/boost1111-rm to confirm your bank details for crediting. Offer ends midnight.
+n0449,SCAM,en,ewallet_reward_phishing,"ShopeePay: A refund voucher worth RM60 has been issued to your account. To activate, log in via shopeepay-voucher.club within 24 hours."
+n0450,SCAM,ms,ewallet_reward_phishing,Touch 'n Go eWallet: Tahniah! Anda layak menerima rebat tol RM150 bagi tahun 2026. Tuntut di tng-rebat-tol.site dengan mengisi nombor kad bank anda.
+n0451,SCAM,ms,ewallet_reward_phishing,eWallet MAE: Baki ganjaran RM75.00 anda akan luput esok. Sila tebus melalui pautan mae-ganjaran.online dan sahkan dengan kata laluan Maybank2u.
+n0452,SCAM,ms,ewallet_reward_phishing,"TAHNIAH!!! Anda pemenang bertuah Boost RM5,000! Hubungi 011-6666 7777 dan bayar yuran pemprosesan RM99 untuk tuntut hadiah HARI INI JUGA."
+n0453,SCAM,ms,ewallet_reward_phishing,Setel: Anda menerima kredit petrol percuma RM40 sempena kempen hujung tahun. Aktifkan dalam masa 48 jam di setel-kredit.info. Kod: STL-90417.
+n0454,SCAM,ms,ewallet_reward_phishing,"BigPay: Bayaran balik RM32.90 daripada transaksi gagal sedia untuk dikreditkan. Sahkan butiran kad anda (nombor kad, tarikh luput, CVV) di bigpay-bayarbalik.top."
+n0455,SCAM,mixed,ewallet_reward_phishing,"TNG eWallet: Cashback RM120 anda belum claim lagi! Click tng-claimnow.xyz, login & masukkan PIN untuk terus masuk wallet. Valid today only."
+n0456,SCAM,mixed,ewallet_reward_phishing,"GrabPay: Bro/sis, you layak dapat rebate RM50 sbb top-up bulan lepas. Just verify akaun kat grabpay-my-reward.live, 2 minit je siap."
+n0457,SCAM,en,courier_redelivery_customs_fee,Pos Malaysia: Your parcel EM204417735MY could not be delivered because of an incomplete address. Update your details and pay the RM1.90 redelivery fee at posmy-redeliver.top
+n0458,SCAM,en,courier_redelivery_customs_fee,J&T Express: Delivery attempt failed on 09/11. Please reschedule within 48 hours at jnt-reschedule.online/track or the parcel will be returned to sender.
+n0459,SCAM,en,courier_redelivery_customs_fee,DHL: Your shipment 4471 9082 13 is held at KLIA customs. A duty of RM38.50 is payable before release. Pay securely: dhl-customs-my.info
+n0460,SCAM,en,courier_redelivery_customs_fee,"Ninja Van: We tried to deliver your parcel today but nobody was home. Kindly WhatsApp our rider at +60 11-7777 8888 with your full name, address and IC number to arrange redelivery."
+n0461,SCAM,en,courier_redelivery_customs_fee,FINAL NOTICE: Your package will be DESTROYED in 24 hours!! Pay customs tax RM25 now: bit.ly/pkg-tax-my
+n0462,SCAM,ms,courier_redelivery_customs_fee,Pos Laju: Bungkusan anda (No. EP883201746MY) tertahan di pusat mel kerana alamat tidak lengkap. Kemas kini alamat dan jelaskan caj RM2.50 di poslaju-kemaskini.site
+n0463,SCAM,ms,courier_redelivery_customs_fee,J&T: Penghantaran gagal. Sila tetapkan semula tarikh penghantaran di jtexpress-hantar.cc dalam tempoh 24 jam. Bungkusan akan dipulangkan selepas tempoh tersebut.
+n0464,SCAM,ms,courier_redelivery_customs_fee,Kastam Diraja Malaysia: Barangan anda dari luar negara ditahan kerana cukai belum dijelaskan. Bayar RM86.00 ke akaun Maybank 5121-XXXX-7730 (NORLIZA BT AHMAD) dan hantar resit ke 012-000 1111.
+n0465,SCAM,ms,courier_redelivery_customs_fee,Ninja Van: Pakej NVMY00417239 anda tiba di hab Shah Alam tetapi nombor rumah tidak jelas. Sahkan alamat di ninjavan-alamat.online. Caj penghantaran semula: RM3.00.
+n0466,SCAM,mixed,courier_redelivery_customs_fee,Pos Laju: Parcel anda tak dapat deliver sbb alamat incomplete. Please update address & bayar fee RM2 kat poslaju-redelivery.xyz dalam 12 jam.
+n0467,SCAM,mixed,courier_redelivery_customs_fee,"Hi, saya rider Flash Express. Parcel awak stuck kat warehouse, kena bayar storage fee RM15 dulu. Boleh transfer ke TNG 011-8888 9999 then saya hantar petang ni."
+n0468,SCAM,en,government_aid_refund_phishing,"LHDN: You are eligible for an income tax refund of RM1,246.80 for Year of Assessment 2025. Submit your bank details at lhdn-refund.online by 15 November to receive payment."
+n0469,SCAM,en,government_aid_refund_phishing,MyGov: Your application for the Sumbangan Tunai Rahmah Phase 4 payment of RM300 has been approved. Confirm your account at str-payment.top/confirm
+n0470,SCAM,en,government_aid_refund_phishing,"Inland Revenue Board: Our records show an overpayment of RM874.00. To process your refund, an officer requires your online banking username and password. Contact 03-4444 0000."
+n0471,SCAM,en,government_aid_refund_phishing,Government eMadani credit: RM100 is waiting to be claimed. Register with your MyKad number and card details at emadani-claim.site before the closing date.
+n0472,SCAM,ms,government_aid_refund_phishing,LHDN: Tuan/Puan layak menerima bayaran balik cukai berjumlah RM982.40. Sila kemas kini maklumat akaun bank di hasil-bayaranbalik.info sebelum 14/11/2026. No. Ruj: LHDN/BB/2611/30477.
+n0473,SCAM,ms,government_aid_refund_phishing,STR 2026: Bantuan Fasa 4 sebanyak RM500 telah diluluskan. Semak status dan sahkan akaun penerima di semakan-str.online menggunakan no. MyKad dan kata laluan perbankan anda.
+n0474,SCAM,ms,government_aid_refund_phishing,"TAHNIAH! Anda terpilih terima Bantuan Khas Kerajaan RM3,000!! Daftar SEGERA di bit.ly/bantuan-khas-rm3k sebelum kuota penuh!"
+n0475,SCAM,ms,government_aid_refund_phishing,"Jabatan Kebajikan Masyarakat: Permohonan bantuan bulanan anda diluluskan. Yuran pendaftaran RM50 perlu dijelaskan ke akaun pegawai (CIMB 7061-XXXX-21, MOHD HAFIZ) sebelum bantuan disalurkan."
+n0476,SCAM,ms,government_aid_refund_phishing,Baitulmal: Bantuan zakat khas hujung tahun RM800 sedia untuk disalurkan. Sila hubungi Ustaz Rahim di 011-9999 0000 dan berikan nombor kad ATM untuk pengkreditan.
+n0477,SCAM,mixed,government_aid_refund_phishing,"LHDN: Refund cukai anda RM650.20 dah approved. Sila update bank account kat lhdn-ezrefund.xyz within 3 days, kalau tak refund akan forfeited."
+n0478,SCAM,mixed,government_aid_refund_phishing,"Bantuan STR: Duit RM300 dah boleh claim! Just isi form dekat str-claim-now.club, perlu no IC + online banking login utk verify."
+n0479,SCAM,en,fake_summons_fine_link,JPJ: You have an outstanding summons (No. AK7741902) for exceeding the speed limit on 02/11. Pay RM150 before 13/11 to enjoy the 50% discount: myjpj-saman.top
+n0480,SCAM,en,fake_summons_fine_link,PDRM Traffic: An unpaid compound is recorded against vehicle W** 4127. Settle online at pdrm-esaman.online within 7 days to avoid blacklisting.
+n0481,SCAM,en,fake_summons_fine_link,MySikap Notice: Your driving licence will be suspended due to 2 unpaid AES summonses. Check and pay now at aes-semak.info/pay
+n0482,SCAM,en,fake_summons_fine_link,WARNING: WARRANT OF ARREST will be issued for unpaid traffic fine RM300. Pay within 6 HOURS at bit.ly/saman-bayar or call 011-1234 0000.
+n0483,SCAM,en,fake_summons_fine_link,Road Transport Department: Our system shows your road tax renewal is blocked by a pending summons of RM200. Clear the block by paying with your debit card at jpj-roadtax-clear.cc. Ref: RTD/26/118204.
+n0484,SCAM,ms,fake_summons_fine_link,JPJ: Kenderaan anda mempunyai saman tertunggak No. 88A40217 berjumlah RM300. Bayar sebelum 12/11 untuk diskaun 50% di jpj-bayarsaman.site
+n0485,SCAM,ms,fake_summons_fine_link,PDRM: Saman trafik anda (Seksyen 79(2) APJ 1987) belum dijelaskan. Semak dan bayar di mybayar-saman.online. Kegagalan boleh menyebabkan senarai hitam.
+n0486,SCAM,ms,fake_summons_fine_link,MBPJ: Kompaun letak kereta No. PJ2611-55871 berjumlah RM100 masih tertunggak. Bayar RM30 sahaja jika dijelaskan hari ini melalui mbpj-kompaun.top.
+n0487,SCAM,ms,fake_summons_fine_link,NOTIS MAHKAMAH: Waran tangkap akan dikeluarkan kerana saman AES tidak dibayar. Hubungi Sarjan Kamal 011-2345 0000 dan bayar ke akaun yang diberi SEBELUM 5 PETANG.
+n0488,SCAM,mixed,fake_summons_fine_link,"JPJ: Anda ada 1 saman outstanding RM150. Pay sekarang dapat discount 70%, link: jpj-esaman-pay.xyz. Offer tamat malam ni."
+n0489,SCAM,mixed,fake_summons_fine_link,"DBKL: Kompaun parking you belum settle (RM80). Bayar online kat dbkl-epay.live before Friday, else kereta kena clamp & blacklist."
+n0490,SCAM,en,authority_investigation_macau,"This is Inspector Razak from Bukit Aman Commercial Crime Division. Your identity card has been linked to a money laundering case (Report No. BA/CCID/4471/26). Call 03-5555 0000 at once. Do not discuss this matter with anyone, including family."
+n0491,SCAM,en,authority_investigation_macau,"Bank Negara Malaysia: Your accounts are under investigation. To protect your savings, transfer all balances to the BNM safe custody account given by the officer in charge. Funds will be returned after 48 hours of audit."
+n0492,SCAM,en,authority_investigation_macau,"Magistrate's Court Kuala Lumpur: You failed to attend a hearing on 03/11 (Case MA-83-1127-10/2026). To avoid an arrest warrant, press 9 or call the court officer at 011-0000 2222."
+n0493,SCAM,en,authority_investigation_macau,"Dear Sir/Madam, a parcel registered under your name containing 8 ATM cards and a forged passport was intercepted at KLIA. This call is being transferred to Sabah police HQ. You must keep the investigation confidential and remain reachable on WhatsApp +60 11-3333 0000."
+n0494,SCAM,en,authority_investigation_macau,MACC Notice: You are named in a bribery probe. Cooperate by declaring your bank balances to Officer Lim at 03-6666 0000. Disclosure of this notice to third parties is an offence.
+n0495,SCAM,ms,authority_investigation_macau,Saya Sarjan Azman dari IPD Dang Wangi. Nombor MyKad tuan didapati terlibat dalam kes pengubahan wang haram dan dadah. Tuan dikehendaki bekerjasama dan tidak memberitahu sesiapa mengenai siasatan ini. Hubungi 011-4444 0000.
+n0496,SCAM,ms,authority_investigation_macau,"Bank Negara Malaysia: Akaun anda disyaki digunakan oleh sindiket. Bagi tujuan audit, pindahkan semua wang simpanan ke akaun selamat 1640-XXXX-9912 (Unit Siasatan Khas). Wang akan dipulangkan selepas siasatan selesai."
+n0497,SCAM,ms,authority_investigation_macau,MAHKAMAH TINGGI: Anda mempunyai kes tertunggak. Waran tangkap akan dikeluarkan dalam 2 JAM. Tekan pautan mahkamah-ekes.top atau hubungi 03-7777 0000 SEGERA.
+n0498,SCAM,ms,authority_investigation_macau,"LHDN & PDRM: Tuan/Puan mempunyai tunggakan cukai syarikat RM38,400 atas nama anda. Panggilan ini akan disambung ke Balai Polis Kota Kinabalu. Sila sediakan butiran akaun bank untuk semakan dan rahsiakan perkara ini."
+n0499,SCAM,ms,authority_investigation_macau,SPRM: Nama anda disenaraikan dalam siasatan. Pegawai penyiasat Tuan Hakimi akan menghubungi melalui WhatsApp 012-111 0000. Anda perlu memuat turun aplikasi pengesahan di sprm-semakan.app dan log masuk dengan ID perbankan.
+n0500,SCAM,mixed,authority_investigation_macau,"Ini Inspektor Faizal dari Bukit Aman. IC awak involved dalam kes money laundering. Jangan bagitau family or kawan, this is confidential investigation. Transfer duit ke akaun selamat yang kami bagi untuk freeze sementara."
+n0501,SCAM,mixed,authority_investigation_macau,"Bank Negara officer here. Akaun you dalam siasatan AMLA. Untuk elak kena freeze, please pindahkan savings ke safe account dulu. Call 03-8888 0000, jangan inform bank staff."
+n0502,SCAM,en,telco_line_termination,Maxis: Your line will be terminated within 24 hours because your SIM registration could not be verified. Press 1 or call 03-9999 0000 to speak to an officer.
+n0503,SCAM,en,telco_line_termination,CelcomDigi: Your October bill of RM128.60 is overdue. Avoid suspension by paying at celcomdigi-billpay.top today.
+n0504,SCAM,en,telco_line_termination,MCMC Notice: Your mobile number was used to send illegal messages and will be barred in 2 hours. Contact the MCMC officer at 011-5555 0000 to file an objection.
+n0505,SCAM,en,telco_line_termination,"U Mobile: You have 4,820 reward points expiring today. Redeem a RM50 bill rebate at umobile-points.online by entering your card details."
+n0506,SCAM,ms,telco_line_termination,Maxis: Talian anda akan ditamatkan dalam tempoh 24 jam kerana pendaftaran SIM tidak lengkap. Kemas kini MyKad anda di maxis-daftarsim.site.
+n0507,SCAM,ms,telco_line_termination,CelcomDigi: Bil tertunggak RM96.40 belum dijelaskan. Bayar sebelum 11/11 di celcomdigi-bayar.info untuk mengelakkan pemotongan talian. No. Akaun: 1.0449xxxx
+n0508,SCAM,ms,telco_line_termination,SKMM: Nombor telefon anda didaftarkan untuk aktiviti penipuan dan akan DISEKAT dalam 2 JAM. Tekan 9 untuk bercakap dengan pegawai atau hubungi 03-0000 5555.
+n0509,SCAM,ms,telco_line_termination,Unifi: Perkhidmatan internet anda akan digantung esok kerana bil tertunggak RM179.00. Jelaskan bayaran ke akaun CIMB 8003-XXXX-45 (AZLAN B. YUSOF) dan WhatsApp resit ke 011-6666 0000.
+n0510,SCAM,ms,telco_line_termination,Yes 5G: Pelan anda gagal diperbaharui. Kemas kini kad pembayaran di yes5g-pembaharuan.top dalam 12 jam bagi mengelakkan penamatan talian.
+n0511,SCAM,mixed,telco_line_termination,"Maxis: Line anda akan kena terminate esok sbb SIM belum re-register. Please update IC dekat maxis-simreg.xyz, 5 minit je."
+n0512,SCAM,mixed,telco_line_termination,"Digi: Bill bulan ni RM88 overdue dah. Bayar now kat digi-paybill.live to avoid barring. Kalau dah bayar, ignore je msg ni."
+n0513,SCAM,en,utility_disconnection_personal_account,"TNB: Your electricity supply at the registered premises will be disconnected today at 4.00pm due to arrears of RM412.75. To stop the disconnection, pay to Maybank 1122-XXXX-8840 (ROSLAN BIN OMAR, TNB field officer) and call 012-222 0000."
+n0514,SCAM,en,utility_disconnection_personal_account,Air Selangor: Final reminder. Outstanding balance RM96.30. Pay at airselangor-ebill.top within 24 hours to avoid water supply disconnection.
+n0515,SCAM,en,utility_disconnection_personal_account,Indah Water: Your account shows 14 months of unpaid sewerage charges (RM224.00). Our contractor will attend tomorrow. Settle by DuitNow to 011-7777 0000 to cancel the visit.
+n0516,SCAM,en,utility_disconnection_personal_account,TNB DISCONNECTION TEAM: Power will be CUT in 30 MINUTES. Transfer RM350 NOW to our technician account and send the slip to +60 11-8888 0000!!
+n0517,SCAM,ms,utility_disconnection_personal_account,"TNB: Bekalan elektrik ke premis anda akan dipotong hari ini jam 3.00 petang kerana tunggakan RM286.40. Untuk mengelakkan pemotongan, buat bayaran ke akaun Bank Islam 1407-XXXX-663 (SITI NORAINI) dan hantar resit ke 011-0000 3333."
+n0518,SCAM,ms,utility_disconnection_personal_account,Air Selangor: Bil air anda tertunggak RM74.85. Bekalan akan dipotong dalam masa 24 jam. Bayar segera di airselangor-bayarbil.site.
+n0519,SCAM,ms,utility_disconnection_personal_account,"SAJ Ranhill: Meter air anda perlu ditukar mengikut arahan baharu. Caj pemasangan RM120 hendaklah dibayar terus kepada juruteknik, En. Zul (TNG 012-333 0000), sebelum lawatan esok."
+n0520,SCAM,ms,utility_disconnection_personal_account,Indah Water: Notis terakhir. Tunggakan RM198.00. Bayar melalui pautan iwk-epay.online sebelum 5 petang ini atau tindakan mahkamah akan diambil.
+n0521,SCAM,ms,utility_disconnection_personal_account,"Gas Malaysia: Akaun anda mempunyai baki tertunggak RM65.20. Sila jelaskan dalam tempoh 48 jam melalui pindahan ke akaun RHB 2140-XXXX-07 atas nama pegawai kutipan, LEE M** H**."
+n0522,SCAM,mixed,utility_disconnection_personal_account,"TNB: Elektrik rumah anda akan kena potong today 5pm sebab bil overdue RM310. Nak elak, transfer terus ke akaun officer kami & WhatsApp receipt ke 011-1111 3333."
+n0523,SCAM,mixed,utility_disconnection_personal_account,"Air Selangor: Your bil tertunggak RM58.90. Pay now at airselangor-quickpay.xyz, kalau tak water supply cut tomorrow morning."
+n0524,SCAM,en,epf_kwsp_withdrawal_phishing,"KWSP: Your application for the Flexible Account withdrawal of RM3,200 is ready for crediting. Confirm your bank account at kwsp-iakaun.top within 3 working days."
+n0525,SCAM,en,epf_kwsp_withdrawal_phishing,EPF: You have an unclaimed dividend adjustment of RM412.18 for 2025. Log in with your i-Akaun ID and password at epf-dividend.online to claim.
+n0526,SCAM,en,epf_kwsp_withdrawal_phishing,"EPF Special Withdrawal 2026 is now open. Get up to RM10,000 from Account 2 in 24 hours. Our agent will handle everything for a 10% service fee. WhatsApp +60 11-9999 1111."
+n0527,SCAM,en,epf_kwsp_withdrawal_phishing,KWSP Notice: Your i-Akaun will be deactivated on 13/11 because your phone number is not verified. Verify at kwsp-verify.info/tac and enter the TAC sent to you.
+n0528,SCAM,ms,epf_kwsp_withdrawal_phishing,"KWSP: Permohonan pengeluaran Akaun Fleksibel anda berjumlah RM2,500 telah diluluskan. Sahkan nombor akaun bank di kwsp-pengeluaran.site sebelum 14/11/2026."
+n0529,SCAM,ms,epf_kwsp_withdrawal_phishing,KWSP i-Akaun: Kata laluan anda akan tamat tempoh dalam 24 jam. Tetapkan semula di iakaun-kwsp.online untuk mengelakkan akaun dikunci.
+n0530,SCAM,ms,epf_kwsp_withdrawal_phishing,"PENGELUARAN KHAS KWSP RM10,000 DIBUKA SEMULA! Mohon cepat di bit.ly/kwsp-khas10k. Kuota TERHAD!!"
+n0531,SCAM,ms,epf_kwsp_withdrawal_phishing,"Salam, saya ejen berdaftar KWSP. Tuan/puan boleh keluarkan simpanan Akaun 1 lebih awal. Hanya perlu berikan ID i-Akaun, kata laluan dan bayar caj urusan RM200. Hubungi Pn. Zaiton 012-444 0000."
+n0532,SCAM,ms,epf_kwsp_withdrawal_phishing,KWSP: Dividen tambahan RM318.60 belum dituntut. Sila kemas kini penama dan akaun bank di kwsp-dividen.top. No. Ruj: KWSP/DIV/26/774120.
+n0533,SCAM,mixed,epf_kwsp_withdrawal_phishing,"KWSP: Withdrawal Akaun Fleksibel anda RM1,800 dah approved. Sila confirm bank account dekat kwsp-flexi.xyz, perlu masukkan i-Akaun password & TAC."
+n0534,SCAM,mixed,epf_kwsp_withdrawal_phishing,"EPF: Nak keluarkan duit Akaun 2 cepat? Kami boleh tolong settle within 1 day, just bagi IC, i-Akaun login & fee RM150. PM 011-2222 1111."
+n0535,SCAM,en,loan_upfront_fee,"Congratulations, your personal loan of RM30,000 from Bank Rakyat has been approved at 3.2% p.a. To release the funds, a refundable processing fee of RM450 must be paid today. Contact Mr. Daniel at 011-3333 1111."
+n0536,SCAM,en,loan_upfront_fee,"AEON Credit: Pre-approved cash financing up to RM50,000, no documents, no CTOS check. Pay stamp duty RM280 first and receive funds in 1 hour. Apply: aeon-easycash.top"
+n0537,SCAM,en,loan_upfront_fee,"Your loan application LN-2611-40822 is at the final stage. Before disbursement, a loan insurance premium of RM600 is required. Please transfer to Maybank 5540-XXXX-1192 (KUMAR A/L RAJAN) and send the slip."
+n0538,SCAM,en,loan_upfront_fee,"LOAN APPROVED!!! RM100,000 blacklist OK!! Just pay lawyer fee RM999 and get cash TODAY. WhatsApp +60 11-4444 1111"
+n0539,SCAM,en,loan_upfront_fee,"RHB Easy: We are pleased to inform you that your financing of RM25,000 is approved. As your account failed our verification, please deposit RM1,000 to activate the disbursement channel. The deposit will be returned together with the loan."
+n0540,SCAM,ms,loan_upfront_fee,"Tahniah! Pinjaman peribadi anda sebanyak RM20,000 telah diluluskan oleh pihak bank. Sila jelaskan yuran guaman dan duti setem RM350 sebelum wang dikreditkan. Hubungi En. Shahrul 011-5555 1111."
+n0541,SCAM,ms,loan_upfront_fee,"Koperasi Sejahtera: Pembiayaan sehingga RM80,000 untuk kakitangan kerajaan dan swasta. Kelulusan segera tanpa penjamin. Bayaran deposit insurans RM500 diperlukan. Mohon di koperasi-pinjaman.online"
+n0542,SCAM,ms,loan_upfront_fee,"Permohonan pinjaman anda (No. Ruj: PJ/26/110-774) telah lulus. Walau bagaimanapun, skor kredit anda rendah. Bayar RM800 sebagai jaminan ke akaun CIMB 7620-XXXX-33 (NURUL AIN) untuk pelepasan dana."
+n0543,SCAM,ms,loan_upfront_fee,PINJAMAN SEGERA LULUS 100%!! Senarai hitam pun boleh! Bayar yuran proses RM199 sahaja. WhatsApp 012-555 0000 SEKARANG.
+n0544,SCAM,mixed,loan_upfront_fee,"Hi, loan RM15k awak dah approve! Tapi kena bayar processing fee RM300 dulu sebelum disburse. Transfer ke akaun agent, then duit masuk within 30 minit. WhatsApp 011-6666 1111."
+n0545,SCAM,mixed,loan_upfront_fee,Bank Islam Personal Financing: Your application approved. Sila bayar takaful fee RM420 dahulu untuk release dana. Details: bimb-financing.live/release
+n0546,SCAM,en,job_hr_deposit,"HR Department, Petronas Dagangan: You have been shortlisted for the position of Admin Executive (RM4,800/month). To confirm your interview slot, pay the RM150 medical screening fee and send your IC copy and bank details to hr-petronas-careers.online."
+n0547,SCAM,en,job_hr_deposit,"Welcome aboard! As part of onboarding, please submit a photo of your bank card (front and back) and your online banking login so payroll can link your salary account. HR, Shopee Xpress."
+n0548,SCAM,en,job_hr_deposit,Part-time job: Like YouTube videos and earn RM200-RM800 daily. No experience needed. Deposit RM100 to activate your task account. Telegram @hr_tasks_my or WhatsApp +60 11-7777 1111.
+n0549,SCAM,en,job_hr_deposit,AirAsia Recruitment: Your application for Cabin Crew has passed the first screening. A uniform deposit of RM350 is required before training on 17/11. Pay to Public Bank 4417-XXXX-20 (recruiting officer).
+n0550,SCAM,ms,job_hr_deposit,"Jabatan Sumber Manusia: Tahniah, anda ditawarkan jawatan Pembantu Tadbir N19. Sila jelaskan bayaran pemprosesan dan pemeriksaan kesihatan RM250 sebelum 13/11 ke akaun pegawai yang diberikan. Hubungi 011-8888 1111."
+n0551,SCAM,ms,job_hr_deposit,"Kerja kosong sambilan dari rumah, gaji RM150 sehari. Hanya perlu like dan follow. Deposit RM50 diperlukan untuk aktifkan akaun tugasan. Daftar di kerja-online-my.club"
+n0552,SCAM,ms,job_hr_deposit,"HR Mydin: Permohonan anda sebagai juruwang telah diterima. Untuk tujuan pendaftaran gaji, sila hantar salinan MyKad, nombor akaun bank, serta kata laluan perbankan internet melalui WhatsApp 012-666 0000."
+n0553,SCAM,ms,job_hr_deposit,"JAWATAN KOSONG PETRONAS OFFSHORE!! Gaji RM9,000!! Bayar yuran kursus keselamatan RM480 untuk sahkan tempat. TERHAD 10 ORANG SAHAJA. Hubungi 011-9999 2222"
+n0554,SCAM,ms,job_hr_deposit,"Tuan/Puan, sesi suai kenal pekerja baharu akan diadakan pada 18/11. Bagi pengeluaran kad akses dan pakaian seragam, deposit RM180 perlu dibayar ke akaun Maybank 1620-XXXX-5571 atas nama penyelia, FAIZAH BT ISMAIL. – Unit HR"
+n0555,SCAM,mixed,job_hr_deposit,"Hi, kami dari HR Lazada. You terpilih utk part time job, komisen RM300/hari. Just top up RM80 as deposit untuk start task pertama. Interested? WhatsApp 011-0000 4444."
+n0556,SCAM,mixed,job_hr_deposit,"Tahniah! You're hired as data entry clerk (WFH). Please bagi bank account number, IC & bayar laptop deposit RM200 before orientation. HR Admin."
+n0557,SCAM,en,ecommerce_order_refund_link,Shopee: Your order 2611047JQK8M2P could not be processed because of a payment error. A refund of RM129.90 has been initiated. Confirm your bank account at shopee-refund.top/confirm
+n0558,SCAM,en,ecommerce_order_refund_link,"Lazada: The item in order #48820173341 is out of stock. To receive your refund, our agent needs your card number and the OTP sent to your phone. Chat on WhatsApp +60 11-1111 4444."
+n0559,SCAM,en,ecommerce_order_refund_link,TikTok Shop: Your account has been flagged for an abnormal order. Verify within 24 hours at tiktokshop-verify.online or your pending orders will be cancelled.
+n0560,SCAM,en,ecommerce_order_refund_link,Shopee Customer Service: We accidentally charged you twice for your recent purchase. Scan the QR sent by our officer and enter the amount RM1 to activate the refund channel.
+n0561,SCAM,en,ecommerce_order_refund_link,"Zalora: Your return for order ZA-90417726 has been approved. Because the original payment method has expired, please re-enter your card details at zalora-returns.cc to receive RM248.00."
+n0562,SCAM,ms,ecommerce_order_refund_link,Shopee: Pesanan anda 261108KD77XA tidak dapat dihantar kerana masalah pembayaran. Bayaran balik RM89.00 sedang diproses. Sahkan akaun bank anda di shopee-bayarbalik.site
+n0563,SCAM,ms,ecommerce_order_refund_link,"Lazada: Barang yang dipesan rosak semasa penghantaran. Untuk tuntutan bayaran balik RM215.50, sila isi borang di lazada-tuntutan.info dan masukkan butiran kad debit anda."
+n0564,SCAM,ms,ecommerce_order_refund_link,Khidmat Pelanggan Shopee: Akaun anda dibekukan kerana pesanan mencurigakan. Hubungi pegawai kami di 011-2222 4444 dan berikan kod pengesahan untuk nyahbeku.
+n0565,SCAM,ms,ecommerce_order_refund_link,TIKTOK SHOP: Anda MENANG baucar RM500!! Tuntut dalam 1 JAM di bit.ly/ttshop-baucar500
+n0566,SCAM,mixed,ecommerce_order_refund_link,Shopee: Order anda failed sebab payment issue. Refund RM67.80 akan dikreditkan after you verify bank details kat shopee-my-refund.xyz.
+n0567,SCAM,mixed,ecommerce_order_refund_link,"Hi dear, saya CS Lazada. Parcel you rosak so kami nak refund. Please bagi no kad & OTP ya, nanti duit masuk dalam 10 minit."
+n0568,SCAM,en,subscription_renewal_failure,Netflix: We couldn't process your payment for the next billing cycle. Update your payment details at netflix-billing-my.top to keep watching.
+n0569,SCAM,en,subscription_renewal_failure,"Your Spotify Premium renewal failed. To avoid losing your playlists, re-enter your card at spotify-renew.online within 48 hours."
+n0570,SCAM,en,subscription_renewal_failure,Astro: Your subscription (Acc 0941xxxx) is suspended due to a failed auto-debit of RM139.90. Reactivate at astro-reactivate.info or call 03-1111 5555.
+n0571,SCAM,en,subscription_renewal_failure,Apple: Your iCloud storage is full and your payment method was declined. Your photos will be DELETED today. Update now: icloud-storage-my.xyz
+n0572,SCAM,en,subscription_renewal_failure,"Microsoft 365: Your licence expired on 08/11. Renew for RM1.00 promotional price by confirming your card number, expiry and CVV at ms365-renewal.cc."
+n0573,SCAM,ms,subscription_renewal_failure,Netflix: Pembayaran langganan anda gagal. Kemas kini maklumat kad di netflix-bayaran.site dalam tempoh 24 jam untuk mengelakkan akaun digantung.
+n0574,SCAM,ms,subscription_renewal_failure,Astro: Akaun anda digantung kerana bayaran auto-debit RM99.90 tidak berjaya. Aktifkan semula di astro-aktif.online atau hubungi 03-2222 5555.
+n0575,SCAM,ms,subscription_renewal_failure,Disney+ Hotstar: Langganan tahunan anda akan tamat hari ini. Perbaharui dengan harga promosi RM5 sahaja di hotstar-promo.top. Butiran kad diperlukan.
+n0576,SCAM,ms,subscription_renewal_failure,AKAUN NETFLIX ANDA AKAN DIPADAM DALAM 12 JAM!! Kemaskini kad SEKARANG di bit.ly/nflx-my-kad
+n0577,SCAM,mixed,subscription_renewal_failure,"Netflix: Payment anda declined. Sila update card details kat netflix-update-my.live sebelum esok, kalau tak account kena suspend."
+n0578,SCAM,mixed,subscription_renewal_failure,Spotify: Premium you dah expired. Renew sekarang RM2 je untuk 3 bulan! Masukkan card info di spotify-promo-my.club. Limited time.
+n0579,SCAM,en,insurance_claim_fee,"Great Eastern: Your medical claim GE-CLM-2611-7740 for RM4,860.00 has been approved. A claim release fee of RM120 is payable before disbursement. Pay at greateastern-claims.top"
+n0580,SCAM,en,insurance_claim_fee,"Prudential: You are the named beneficiary of an unclaimed policy payout of RM28,000. To proceed, pay the administrative and stamping charge of RM650 to our appointed agent. Call 011-3333 5555."
+n0581,SCAM,en,insurance_claim_fee,AIA: Your policy will lapse today due to a missed premium. Pay RM210.40 via aia-premium-pay.online to maintain coverage. Policy No: P40-771xxx.
+n0582,SCAM,en,insurance_claim_fee,"Etiqa Motor Claims: The other party has admitted liability for your accident. Compensation RM3,500 is ready. Kindly provide your card number and TAC to our claims officer on WhatsApp +60 11-4444 5555."
+n0583,SCAM,ms,insurance_claim_fee,"Etiqa Takaful: Tuntutan anda No. ET/TK/26/40771 sebanyak RM3,200.00 telah diluluskan. Yuran pemprosesan RM95 perlu dijelaskan sebelum bayaran dibuat. Bayar di etiqa-tuntutan.site"
+n0584,SCAM,ms,insurance_claim_fee,"PERKESO: Tuntutan faedah hilang upaya anda diluluskan berjumlah RM6,400. Sila bayar caj pengesahan dokumen RM180 ke akaun pegawai kes (BSN 0410-XXXX-889, HASNAH BT DAUD)."
+n0585,SCAM,ms,insurance_claim_fee,Takaful Ikhlas: Sijil takaful anda akan luput esok. Jelaskan sumbangan tertunggak RM165.00 di takaful-bayar.online untuk mengekalkan perlindungan.
+n0586,SCAM,ms,insurance_claim_fee,"Prudential BSN: Anda mempunyai pulangan tunai polisi RM1,950 yang belum dituntut. Hubungi ejen kami Pn. Mei Ling di 012-777 0000 dan sediakan nombor kad ATM serta PIN."
+n0587,SCAM,ms,insurance_claim_fee,"TAHNIAH! Tuntutan insurans RM50,000 atas nama anda LULUS! Bayar cukai tuntutan RM1,500 HARI INI atau tuntutan DIBATALKAN. Hubungi 011-5555 5555"
+n0588,SCAM,mixed,insurance_claim_fee,"AIA: Claim hospital you RM2,750 dah approved. Just bayar processing fee RM80 kat aia-claim-release.xyz then duit masuk dalam 24 jam."
+n0589,SCAM,mixed,insurance_claim_fee,"Allianz: Polisi kereta anda expired today. Renew now at allianz-renew-my.live dapat 40% discount, bayar guna debit card + OTP."
+n0590,SCAM,en,parcel_cod,"Your COD parcel (RM79.00) from SK Beauty Store is out for delivery. If you will not be home, prepay via this link to authorise drop-off: cod-prepay.top/SK7741"
+n0591,SCAM,en,parcel_cod,"Rider here. I have a COD parcel for you, RM149. I'm not able to wait, please transfer to Maybank 1147-XXXX-3320 (AHMAD F***) and I will leave it at the guardhouse."
+n0592,SCAM,en,parcel_cod,J&T COD: Parcel JT6204417739 is addressed to you with RM59.90 to be collected. Confirm acceptance and pay online at jt-cod-confirm.online to avoid return.
+n0593,SCAM,en,parcel_cod,Pos Laju COD NOTICE: You ordered an item worth RM199. Refusal to accept will incur a RM50 penalty and legal action. Pay now: bit.ly/cod-pay-199
+n0594,SCAM,ms,parcel_cod,"Bungkusan COD anda (RM68.00) akan dihantar hari ini. Jika tiada di rumah, sila buat bayaran awal di cod-bayar.site/NV4417 supaya bungkusan boleh ditinggalkan."
+n0595,SCAM,ms,parcel_cod,"Salam, saya rider Ninja Van. Ada parcel COD atas nama puan, RM120. Saya tak dapat tunggu lama, boleh puan bank in ke TNG 011-6666 5555 dahulu? Nanti saya letak depan pintu."
+n0596,SCAM,ms,parcel_cod,J&T Express: Bungkusan COD No. JT5507193342 bernilai RM45.90 menunggu pengesahan. Sahkan dan bayar di jnt-cod-sahkan.info dalam 24 jam.
+n0597,SCAM,ms,parcel_cod,AMARAN: Anda telah MENOLAK bungkusan COD RM250. Denda RM100 dikenakan. Bayar SEGERA ke akaun CIMB 7044-XXXX-18 atau laporan polis dibuat!
+n0598,SCAM,ms,parcel_cod,"DHL eCommerce: Penghantaran COD anda dijadualkan esok. Untuk mempercepat proses, bayar RM88.00 lebih awal melalui kad di dhl-cod-my.top. No. Rujukan: DE-2611-90044."
+n0599,SCAM,mixed,parcel_cod,"Hi, ada parcel COD untuk you RM99. Saya rider, dah sampai area tapi you takde kat rumah. Boleh transfer dulu ke 012-888 0000 (TNG)? Nanti I drop kat pondok guard."
+n0600,SCAM,mixed,parcel_cod,Shopee Xpress COD: Parcel anda RM135 akan return to seller kalau tak bayar today. Pay online je kat spx-cod-pay.xyz.

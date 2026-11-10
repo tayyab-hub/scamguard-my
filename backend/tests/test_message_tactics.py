@@ -78,7 +78,7 @@ def test_genuine_notices_are_not_escalated(engine, text):
 def test_low_result_does_not_claim_safety(engine):
     result = engine.analyse("Running 10 mins late, grab a table and order me a latte please")
     assert "does not confirm" in result.summary
-    assert result.components["fusion"]["version"] == "message-fusion-v4"
+    assert result.components["fusion"]["version"] == "message-fusion-v5"
 
 
 def test_calibrator_artifact_is_checksum_pinned_and_ordered():
@@ -100,3 +100,76 @@ def test_engine_startup_rejects_a_tampered_calibrator(monkeypatch):
             build_message_engine(Settings(persistence_enabled=False, ai_review_enabled=False))
     finally:
         fusion.calibrator.cache_clear()
+
+
+# --- rules v4 / fusion v5 / model v3 (November 2026) ---
+
+
+@pytest.fixture(scope="module")
+def full_engine():
+    # As in the running app: links and numbers in the text are checked by the URL/Phone engines.
+    from app.phone_intelligence.engine import build_phone_engine
+    from app.url_intelligence.engine import build_url_engine
+
+    class _URLSettings:
+        url_model_path = None
+
+    built = build_message_engine(Settings(persistence_enabled=False, ai_review_enabled=False))
+    built.attach_engines(build_url_engine(_URLSettings()), build_phone_engine())
+    return built
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "Sorry I accidentally sent my OTP to your number, can you forward it to me? thanks",
+        "Hai, saya terhantar kod pengesahan ke nombor awak. Boleh screenshot dan hantar balik?",
+        "Notis Bank Negara: akaun anda dikaitkan dengan sindiket. Pindahkan semua baki ke akaun "
+        "selamat yang diberikan pegawai kami.",
+        "Nak duit lebih? Sewa akaun bank anda kepada kami RM500 seminggu. Serah kad ATM & TAC.",
+        "Bank Islam: Akaun anda telah disekat. Sila balas dengan No IC, nombor kad ATM dan "
+        "password perbankan untuk pengaktifan semula.",
+    ],
+)
+def test_v4_tactics_are_warned_strongly_in_english_and_malay(engine, text):
+    assert engine.analyse(text).risk_level in {"ELEVATED", "HIGH"}
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "JPJ: Lesen memandu anda tamat tempoh pada 15/12/2026. Perbaharui di kaunter JPJ atau "
+        "dalam talian melalui www.jpj.gov.my",
+        "Lazada: Your package is out for delivery today. Track it at lazada.com.my/order-tracking.",
+    ],
+)
+def test_notice_pointing_only_to_an_official_site_is_not_warned(full_engine, text):
+    result = full_engine.analyse(text)
+    assert result.risk_level == "LOW"
+    assert any("official" in item for item in result.components["assessment_basis"]["mitigating"])
+
+
+def test_official_channel_cap_needs_an_official_link_and_nothing_else(full_engine):
+    lookalike = full_engine.analyse(
+        "JPJ: Lesen memandu anda tamat tempoh. Perbaharui segera di jpj-renew-lesen.top/bayar"
+    )
+    assert lookalike.risk_level in {"ELEVATED", "HIGH"}
+    with_number = full_engine.analyse(
+        "Maybank: unusual login detected. See maybank2u.com.my or call our officer at "
+        "+60 11-2345 6789 now."
+    )
+    assert with_number.components["fusion"]["reason"] != "OFFICIAL_CHANNEL_NOTICE"
+    # A form on a trusted domain is user content, not an official channel.
+    form = full_engine.analyse(
+        "Bank update: fill in your account number and IC at https://docs.google.com/forms/d/e/abc"
+    )
+    assert form.components["fusion"]["reason"] != "OFFICIAL_CHANNEL_NOTICE"
+    assert form.risk_level != "LOW"
+
+
+def test_protective_statements_in_malay_and_english_are_not_requests(engine):
+    for text in [
+        "LHDN tidak meminta maklumat bank melalui SMS.",
+        "Bank Negara Malaysia does not ask the public to move money into any 'safe account'.",
+    ]:
+        assert engine.analyse(text).risk_level in {"LOW", "CAUTION", "INSUFFICIENT_EVIDENCE"}
