@@ -212,17 +212,16 @@ export function RiskScoreDisplay({
         </div>
       )}
       <div className="min-w-0 flex-1">
-        <p id={`${id}-label`} className="text-[13px] font-semibold text-ink">
-          Risk score
+        <p className="flex items-baseline gap-1.5">
+          <span id={`${id}-label`} className="text-[13px] font-semibold text-ink">
+            Risk score
+          </span>
+          {score.value !== null && (
+            <span className="whitespace-nowrap text-[12px] text-muted">out of 100</span>
+          )}
         </p>
         <p className="text-[12px] leading-4 text-muted">
-          {score.value === null ? (
-            'Unavailable'
-          ) : (
-            <>
-              <span>{score.kind}</span> · out of 100
-            </>
-          )}
+          {score.value === null ? 'Unavailable' : score.kind}
         </p>
         {score.value === null && (
           <p className="mt-1 text-[12px] leading-4 text-muted">
