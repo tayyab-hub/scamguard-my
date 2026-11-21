@@ -28,6 +28,21 @@ const metrics = [
   { label: 'Latest analysis', hint: 'Your most recent check', icon: Clock3 },
 ]
 
+const readingSteps = [
+  {
+    title: 'Start with the verdict',
+    body: 'Risk describes the observed warning signs. It never proves fraud or safety.',
+  },
+  {
+    title: 'Check the evidence',
+    body: 'Read the detected indicators and any uncertainty before deciding what to do.',
+  },
+  {
+    title: 'Verify independently',
+    body: 'Use an official contact channel you locate yourself, especially before sharing codes or paying.',
+  },
+]
+
 const inputLabels = { MESSAGE: 'Message', URL: 'URL', PHONE: 'Phone', QR: 'QR' } as const
 
 // Render count cards, recent rows and mode shortcuts from validated query data. Distribution
@@ -188,6 +203,35 @@ export function DashboardPage() {
                     : 'No live statistics are being collected or displayed.'}
                 </div>
               </section>
+              <section className="panel p-5 sm:p-6" aria-labelledby="reading-results-heading">
+                <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
+                  <h2 id="reading-results-heading" className="text-sm font-semibold text-ink">
+                    How to read a result
+                  </h2>
+                  <Link
+                    to="/help"
+                    className="action-link inline-flex min-h-11 items-center gap-2 text-xs font-semibold text-accent"
+                  >
+                    Understanding assessments <ArrowRight size={15} aria-hidden="true" />
+                  </Link>
+                </div>
+                <ol className="mt-3 grid gap-5 text-xs leading-6 text-body md:grid-cols-3">
+                  {readingSteps.map(({ title, body }, index) => (
+                    <li key={title} className="flex gap-3">
+                      <span className="step-number" aria-hidden="true">
+                        {index + 1}
+                      </span>
+                      <span className="min-w-0">
+                        <strong className="block text-ink">
+                          <span className="sr-only">{index + 1}. </span>
+                          {title}
+                        </strong>
+                        {body}
+                      </span>
+                    </li>
+                  ))}
+                </ol>
+              </section>
             </div>
             <aside className="motion-enter motion-delay-4 space-y-5">
               <section className="panel p-5" aria-label="Quick analysis actions">
@@ -206,32 +250,6 @@ export function DashboardPage() {
                   ))}
                 </div>
               </section>
-              <section className="panel p-5" aria-labelledby="reading-results-heading">
-                <h2 id="reading-results-heading" className="text-sm font-semibold text-ink">
-                  How to read a result
-                </h2>
-                <ol className="mt-4 space-y-4 text-xs leading-6 text-body">
-                  <li>
-                    <strong className="block text-ink">1. Start with the verdict</strong>Risk
-                    describes the observed warning signs. It never proves fraud or safety.
-                  </li>
-                  <li>
-                    <strong className="block text-ink">2. Check the evidence</strong>Read the
-                    detected indicators and any uncertainty before deciding what to do.
-                  </li>
-                  <li>
-                    <strong className="block text-ink">3. Verify independently</strong>Use an
-                    official contact channel you locate yourself, especially before sharing codes or
-                    paying.
-                  </li>
-                </ol>
-                <Link
-                  to="/help"
-                  className="action-link mt-4 inline-flex min-h-11 items-center gap-2 text-xs font-semibold text-accent"
-                >
-                  Understanding assessments <ArrowRight size={15} aria-hidden="true" />
-                </Link>
-              </section>
               <section className="panel p-5">
                 <div className="mb-4 flex items-center justify-between">
                   <h2 className="text-sm font-semibold">Workspace status</h2>
@@ -240,7 +258,7 @@ export function DashboardPage() {
                     aria-hidden="true"
                   />
                 </div>
-                <dl className="space-y-4 text-xs">
+                <dl className="space-y-3 text-xs">
                   <div className="flex justify-between gap-3">
                     <dt className="text-muted">Analysis service</dt>
                     <dd
